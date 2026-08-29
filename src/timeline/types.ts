@@ -216,6 +216,15 @@ export interface SimulateInput {
   rng: ScoreRng;
   /** 丸めポリシー（既定 "sequential"。T4/T5 で判定） */
   roundingPolicy?: RoundingPolicy;
+  /**
+   * 【一時・T5調査用】未確定仕様の仮説切替。T5確定後に削除する。
+   * - extensionMode: effect_extension の適用範囲（all=延長可能な全インスタンス / longest=最長残りのみ）
+   * - comboBasis: コンボ係数の基準コンボ数（lane=レーン別状態 / global=処理済みビートノート数）
+   */
+  debugOptions?: {
+    extensionMode?: "all" | "longest";
+    comboBasis?: "lane" | "global";
+  };
 }
 
 /** 発動1件のトレース（T4: 発動ログとの突合用） */

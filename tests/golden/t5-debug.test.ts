@@ -10,7 +10,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { computeDeckStatus } from "../../src/formula/baseStatus.js";
-import { pctToPermil } from "../../src/rounding.js";
+import { mulPermil, pctToPermil } from "../../src/rounding.js";
 import { computeEventScore } from "../../src/formula/scoreEvent.js";
 import { simulateTimeline } from "../../src/timeline/engine.js";
 import type {
@@ -244,7 +244,10 @@ class NeutralRng implements ScoreRng {
   }
 }
 
-function buildInput(lanes: LaneInput[]): SimulateInput {
+function buildInput(
+  lanes: LaneInput[],
+  debugOptions?: { extensionMode?: "all" | "longest"; comboBasis?: "lane" | "global" },
+): SimulateInput {
   const notes: ChartNote[] = chart.notes.map((n) => ({
     beat: n.beat,
     noteType: n.type as 1 | 2 | 3,
@@ -270,6 +273,7 @@ function buildInput(lanes: LaneInput[]): SimulateInput {
       t5.critFlags.find((f) => f.beat === beat)?.yellow_lanes?.includes(String(lane)) ?? false,
     rng: new NeutralRng(),
     roundingPolicy: "sequential",
+    debugOptions,
   };
 }
 
@@ -349,6 +353,392 @@ describe("T5 debug: 全ビート比検査", () => {
       l1samples.push(`b${bt.beat}:pop=${pop}:basic=${e.basicScore}:b1=${e.b1Permil}:cb=${e.comboFactorPermil}:A=${(pop / denom).toFixed(5)}`);
     }
     console.log("[FIT] L1 samples:", l1samples.join(" | "));
+  });
+
+  it("仮説グリッド: extension方式×コンボ基準 の4組合せでレーン別A系列を比較", () => {
+    const W: Record<number, number> = { 1: 0.6, 2: 0.6, 3: 0.6, 4: 0.25, 5: 0.6 };
+    const POSITION_TO_LANE_ = [3, 2, 4, 1, 5];
+    for (const ext of ["all", "longest"] as const) {
+      for (const cb of ["lane", "global"] as const) {
+        const res = simulateTimeline(buildInput(buildLanes(), { extensionMode: ext, comboBasis: cb }));
+        // --- ビートノート: per-unit-w A 系列 ---
+        const acc: Record<number, Array<{ beat: number; a: number }>> = {};
+        for (const bt of res.beats) {
+          if (bt.beat <= 3 || bt.noteType !== 1) continue;
+          const row = t5.timeline.find((t) => t.beat === bt.beat);
+          if (!row) continue;
+          for (const e of bt.events) {
+            if (e.critFactorPermil !== 1000) continue;
+            const pop = row.pops?.[String(e.lane)];
+            if (pop == null || pop === 0) continue;
+            const denom =
+              e.basicScore *
+              (e.b1Permil / 1000) *
+              (e.comboFactorPermil / 1000) *
+              (e.fanFactorPermil / 1000) *
+              (e.critFactorPermil / 1000);
+            if (denom <= 0) continue;
+            (acc[e.lane] ??= []).push({ beat: bt.beat, a: pop / denom / (W[e.lane] ?? 0.6) });
+          }
+        }
+        const parts: string[] = [];
+        for (const lane of [1, 2, 3, 4, 5]) {
+          const vals = acc[lane];
+          if (!vals || vals.length === 0) {
+            parts.push(`L${lane}:n=0`);
+            continue;
+          }
+          const as = vals.map((v) => v.a);
+          const sorted = [...as].sort((x, y) => x - y);
+          const median = sorted[Math.floor(sorted.length / 2)] ?? 0;
+          const mean = as.reduce((s, v) => s + v, 0) / as.length;
+          const sd = Math.sqrt(as.reduce((s, v) => s + (v - mean) ** 2, 0) / as.length);
+          const inRange = as.filter((v) => Math.abs(v / median - 1) <= 0.05).length;
+          // 5分割バケット中央値（ドリフト/跳ねの検出）
+          const bucketN = Math.ceil(as.length / 5);
+          const buckets: number[] = [];
+          for (let i = 0; i < 5; i++) {
+            const seg = sorted.slice(i * bucketN, (i + 1) * bucketN);
+            const m = seg[Math.floor(seg.length / 2)];
+            if (seg.length > 0 && m !== undefined) buckets.push(m);
+          }
+          // 外れビート（|dev|>10%）
+          const outliers = vals
+            .filter((v) => Math.abs(v.a / median - 1) > 0.1)
+            .slice(0, 12)
+            .map((v) => `b${v.beat}:${(v.a * 1000).toFixed(0)}`);
+          parts.push(
+            `L${lane}:med=${(median * 1000).toFixed(1)} sd%=${((sd / mean) * 100).toFixed(1)} in5%=${inRange}/${as.length} buckets=[${buckets.map((b) => (b * 1000).toFixed(0)).join(",")}] out=[${outliers.join(" ")}]`,
+          );
+        }
+        // --- A/SP 離散乱数検定（オーナーレーンポップ） ---
+        let ok = 0;
+        const outList: string[] = [];
+        for (const bt of res.beats) {
+          if (bt.noteType === 1 || bt.beat < 4) continue;
+          const owner = POSITION_TO_LANE_[bt.position - 1];
+          const row = t5.timeline.find((t) => t.beat === bt.beat);
+          if (!row) continue;
+          const pop = row.pops?.[String(owner)];
+          if (pop == null || pop === 0) continue;
+          const evs = bt.events.filter((e) => e.lane === owner);
+          const e1000 = evs.reduce(
+            (s, e) =>
+              s +
+              computeEventScore({
+                basicScore: e.basicScore,
+                skillPowerPermil: e.skillPowerPermil,
+                b1Permil: e.b1Permil,
+                comboFactorPermil: e.comboFactorPermil,
+                fanFactorPermil: e.fanFactorPermil,
+                stageFactorPermil: 1000,
+                randPermil: 1000,
+                critFactorPermil: e.critFactorPermil,
+                roundingPolicy: "sequential",
+              }),
+            0,
+          );
+          const r = (pop / e1000) * 1000;
+          if (r >= 950 && r <= 1050) {
+            ok++;
+          } else {
+            outList.push(`b${bt.beat}:r=${r.toFixed(0)}`);
+          }
+        }
+        console.log(
+          `[GRID] ext=${ext} cb=${cb} A/SP-ok=${ok}\n  ${parts.join("\n  ")}`,
+        );
+        if (outList.length > 0) console.log(`  A/SP-OUT: ${outList.join(" ")}`);
+      }
+    }
+  });
+
+  it("統合仮説検証: 総和basic×テンション入りB1（トレース後掛けで4変種比較）", () => {
+    // 仮説: ビートbasic = Σ_s deck[s]×w_s×liveMult_s（全レーン共通・liveMultはvocalのみ変動）
+    //        ビートB1 = 1000 + 25×su + 50×tension + bonus.beat（S2の「テンション不入」を修正）
+    //        λ = 8/156（S2）なら A = med/(basic_sum×b1_t/1000×…) が全レーン ~51 で平坦になるはず
+    const lanes = buildLanes();
+    const res = simulateTimeline(buildInput(lanes));
+    const liveMultV = (snap: { vocal_up: number; vocal_up_extreme: number; vocal_boost: number }) =>
+      1000 + 50 * (snap.vocal_up + snap.vocal_up_extreme) + 75 * snap.vocal_boost;
+    for (const basicMode of ["sum"] as const) {
+      for (const b1Mode of ["beat", "beat+asu", "beat+asu+ten"] as const) {
+        const acc: Record<number, number[]> = {};
+        const tensionSample: Record<number, number[]> = {};
+        for (const bt of res.beats) {
+          if (bt.beat <= 3 || bt.noteType !== 1) continue;
+          const row = t5.timeline.find((t) => t.beat === bt.beat);
+          if (!row) continue;
+          // P/フォトの score_get が同じビートで発動 → pop 列が混入するため除外
+          const polluted = new Set(
+            bt.activations
+              .filter((a) => a.success && a.gainedScore != null)
+              .map((a) => a.lane),
+          );
+          for (const e of bt.events) {
+            if (e.critFactorPermil !== 1000) continue;
+            if (polluted.has(e.lane)) continue;
+            const pop = row.pops?.[String(e.lane)];
+            if (pop == null || pop === 0) continue;
+            const laneIdx = e.lane - 1;
+            const lane = lanes[laneIdx];
+            const snap = bt.buffSnapshots[laneIdx];
+            if (!lane || !snap) continue;
+            if (!lane || !snap) continue;
+            const basic =
+              mulPermil(mulPermil(lane.deck.vocal, liveMultV(snap)), 600) +
+              mulPermil(lane.deck.dance, 250) +
+              mulPermil(lane.deck.visual, 150);
+            const b1 =
+              b1Mode === "beat"
+                ? e.b1Permil
+                : b1Mode === "beat+asu"
+                  ? e.b1Permil + 50 * snap.a_skill_score_up
+                  : e.b1Permil + 50 * snap.a_skill_score_up + 50 * snap.tension_up;
+            const denom =
+              basic *
+              (b1 / 1000) *
+              (e.comboFactorPermil / 1000) *
+              (e.fanFactorPermil / 1000) *
+              (e.critFactorPermil / 1000);
+            if (denom <= 0) continue;
+            (acc[e.lane] ??= []).push(pop / denom);
+            if (bt.beat === 10 || bt.beat === 60 || bt.beat === 120) {
+              (tensionSample[e.lane] ??= []).push(snap.tension_up);
+            }
+          }
+        }
+        const parts: string[] = [];
+        for (const lane of [1, 2, 3, 4, 5]) {
+          const vals = acc[lane];
+          if (!vals || vals.length === 0) {
+            parts.push(`L${lane}:n=0`);
+            continue;
+          }
+          const sorted = [...vals].sort((x, y) => x - y);
+          const median = sorted[Math.floor(sorted.length / 2)] ?? 0;
+          const mean = vals.reduce((s, v) => s + v, 0) / vals.length;
+          const sd = Math.sqrt(vals.reduce((s, v) => s + (v - mean) ** 2, 0) / vals.length);
+          const inRange = vals.filter((v) => Math.abs(v / median - 1) <= 0.05).length;
+          const bucketN = Math.ceil(sorted.length / 5);
+          const buckets: number[] = [];
+          for (let i = 0; i < 5; i++) {
+            const seg = sorted.slice(i * bucketN, (i + 1) * bucketN);
+            const m = seg[Math.floor(seg.length / 2)];
+            if (seg.length > 0 && m !== undefined) buckets.push(m);
+          }
+          const s = tensionSample[lane] ?? [];
+          parts.push(
+            `L${lane}:med=${median.toFixed(4)}(λ比=${(median / (8 / 156)).toFixed(3)}) sd%=${((sd / mean) * 100).toFixed(1)} in5%=${inRange}/${vals.length} buckets=[${buckets.map((b) => b.toFixed(3)).join(",")}] ten=[${s.join(",")}]`,
+          );
+        }
+        console.log(`[HYP] basic=${basicMode} b1=${b1Mode}\n  ${parts.join("\n  ")}`);
+      }
+    }
+  });
+
+  it("残差回帰: basic_sum×b1(beat) 除外後のb1_true推定 vs スナップショット段数", () => {
+    const lanes = buildLanes();
+    const res = simulateTimeline(buildInput(lanes));
+    const liveMultV = (snap: { vocal_up: number; vocal_up_extreme: number; vocal_boost: number }) =>
+      1000 + 50 * (snap.vocal_up + snap.vocal_up_extreme) + 75 * snap.vocal_boost;
+    const LAMBDA = 8 / 156;
+    for (const laneNo of [1, 3]) {
+      const rows: string[] = [];
+      for (const bt of res.beats) {
+        if (bt.beat <= 3 || bt.noteType !== 1) continue;
+        const row = t5.timeline.find((t) => t.beat === bt.beat);
+        if (!row) continue;
+        const polluted = new Set(
+          bt.activations.filter((a) => a.success && a.gainedScore != null).map((a) => a.lane),
+        );
+        const e = bt.events.find((x) => x.lane === laneNo);
+        if (!e || e.critFactorPermil !== 1000 || polluted.has(laneNo as LaneNumber)) continue;
+        const pop = row.pops?.[String(laneNo)];
+        if (pop == null || pop === 0) continue;
+        const laneIdx = laneNo - 1;
+        const lane = lanes[laneIdx];
+        const snap = bt.buffSnapshots[laneIdx];
+        if (!lane || !snap) continue;
+        const statMeasured = row.stat?.[String(laneNo)];
+        const basicSum =
+          laneNo === 3 && statMeasured
+            ? mulPermil(statMeasured, 600) +
+              mulPermil(lane.deck.dance, 250) +
+              mulPermil(lane.deck.visual, 150)
+            : mulPermil(mulPermil(lane.deck.vocal, liveMultV(snap)), 600) +
+              mulPermil(lane.deck.dance, 250) +
+              mulPermil(lane.deck.visual, 150);
+        const rest =
+          (e.comboFactorPermil / 1000) * (e.fanFactorPermil / 1000) * (e.critFactorPermil / 1000);
+        const b1True = pop / (basicSum * rest * LAMBDA);
+        const extra = b1True - e.b1Permil;
+        rows.push(
+          `b${bt.beat} extra=${extra.toFixed(0)} su=${snap.score_up} asu=${snap.a_skill_score_up} ssu=${snap.sp_skill_score_up} ten=${snap.tension_up} csu=${snap.combo_score_up} foc=${snap.focus} cb=${e.comboFactorPermil} statSim=${mulPermil(lane.deck.vocal, liveMultV(snap))} statMeas=${statMeasured ?? "-"}`,
+        );
+      }
+      const step = Math.max(1, Math.floor(rows.length / 22));
+      console.log(`[REG] L${laneNo} (every ${step}th of ${rows.length}):`);
+      for (let i = 0; i < rows.length; i += step) console.log("  " + rows[i]);
+    }
+  });
+
+  it("λスキャン: implied乱数の離散性でλとb1係数を特定", () => {
+    const lanes = buildLanes();
+    const res = simulateTimeline(buildInput(lanes));
+    const liveMultV = (snap: { vocal_up: number; vocal_up_extreme: number; vocal_boost: number }) =>
+      1000 + 50 * (snap.vocal_up + snap.vocal_up_extreme) + 75 * snap.vocal_boost;
+    interface Sample {
+      lane: number;
+      a: number; // pop/(basic×(b1/1000)×rest)
+    }
+    for (const suCoef of [25, 50] as const) {
+      const samples: Sample[] = [];
+      const samples3: Sample[] = [];
+      for (const bt of res.beats) {
+        if (bt.beat <= 3 || bt.noteType !== 1) continue;
+        const row = t5.timeline.find((t) => t.beat === bt.beat);
+        if (!row) continue;
+        const polluted = new Set(
+          bt.activations.filter((a) => a.success && a.gainedScore != null).map((a) => a.lane),
+        );
+        for (const e of bt.events) {
+          if (e.critFactorPermil !== 1000 || polluted.has(e.lane)) continue;
+          const pop = row.pops?.[String(e.lane)];
+          if (pop == null || pop === 0) continue;
+          const laneIdx = e.lane - 1;
+          const lane = lanes[laneIdx];
+          const snap = bt.buffSnapshots[laneIdx];
+          if (!lane || !snap) continue;
+          const statMeasured = row.stat?.[String(e.lane)];
+          // L3のみ実測stat列（表示上限飽和前）でvocal成分を置換
+          const useMeasured = e.lane === 3 && statMeasured != null && statMeasured < 3.75 * lane.deck.vocal;
+          const vocalPart = useMeasured
+            ? mulPermil(statMeasured, 600)
+            : mulPermil(mulPermil(lane.deck.vocal, liveMultV(snap)), 600);
+          const basic = vocalPart + mulPermil(lane.deck.dance, 250) + mulPermil(lane.deck.visual, 150);
+          const b1 = 1000 + suCoef * snap.score_up + (e.b1Permil - 1000 - 25 * snap.score_up);
+          const rest =
+            (e.comboFactorPermil / 1000) * (e.fanFactorPermil / 1000) * (e.critFactorPermil / 1000);
+          const a = pop / (basic * (b1 / 1000) * rest);
+          (e.lane === 3 ? samples3 : samples).push({ lane: e.lane, a });
+        }
+      }
+      let best = { lambda: 0, frac: 0 };
+      const top: Array<{ lambda: number; frac: number }> = [];
+      for (let lam = 0.0555; lam <= 0.0585; lam += 0.000005) {
+        let ok = 0;
+        for (const s of samples) {
+          const r = (s.a / lam) * 1000;
+          const rr = Math.round(r);
+          if (Math.abs(r - rr) < 1.5 && rr >= 945 && rr <= 1055) ok++;
+        }
+        const frac = ok / samples.length;
+        top.push({ lambda: lam, frac });
+        if (frac > best.frac) best = { lambda: lam, frac };
+      }
+      top.sort((x, y) => y.frac - x.frac);
+      console.log(
+        `[SCAN-TOP] su=${suCoef}‰ ` +
+          top.slice(0, 6).map((t) => `λ=${t.lambda.toFixed(6)}:${t.frac.toFixed(3)}`).join(" "),
+      );
+      const perLane = [1, 2, 4, 5]
+        .map((ln) => {
+          const ss = samples.filter((s) => s.lane === ln);
+          const ok = ss.filter((s) => {
+            const r = (s.a / best.lambda) * 1000;
+            const rr = Math.round(r);
+            return Math.abs(r - rr) < 1.5 && rr >= 945 && rr <= 1055;
+          }).length;
+          const med = [...ss.map((s) => s.a)].sort((x, y) => x - y)[Math.floor(ss.length / 2)] ?? 0;
+          return `L${ln}:${ok}/${ss.length}(medA=${(med * 1000).toFixed(1)})`;
+        })
+        .join(" ");
+      const ok3 = samples3.filter((s) => {
+        const r = (s.a / best.lambda) * 1000;
+        const rr = Math.round(r);
+        return Math.abs(r - rr) < 1.5 && rr >= 945 && rr <= 1055;
+      }).length;
+      console.log(
+        `[SCAN] su=${suCoef}‰ bestλ=${best.lambda.toFixed(6)} beat-ok=${best.frac.toFixed(3)} | ${perLane} | L3(meas-stat):${ok3}/${samples3.length}`,
+      );
+      // L3 の implied 乱数系列（ドリフト形状）
+      const l3s = samples3.slice(0, 41);
+      console.log(
+        `[SCAN] L3 implied-r: ${l3s.map((s) => Math.round((s.a / best.lambda) * 1000)).join(",")}`,
+      );
+      // L1 の implied 乱数系列（ドリフトの有無）
+      const l1 = samples.filter((s) => s.lane === 1).slice(0, 127);
+      const rSeries = l1
+        .map((s, i) => `b${i * 5 + 4}:${Math.round((s.a / best.lambda) * 1000)}`)
+        .slice(0, 26)
+        .join(" ");
+      console.log(`[SCAN] L1 implied-r (every 5th): ${rSeries}`);
+    }
+  });
+
+  it("λ確定: 高精度popの整数ランダム候補交集 + L3のb1×cb実効比", () => {
+    const lanes = buildLanes();
+    const res = simulateTimeline(buildInput(lanes));
+    const liveMultV = (snap: { vocal_up: number; vocal_up_extreme: number; vocal_boost: number }) =>
+      1000 + 50 * (snap.vocal_up + snap.vocal_up_extreme) + 75 * snap.vocal_boost;
+    // A = pop/(basic×(b1/1000)×rest) = λ×r/1000（r=離散乱数） → λ = A×1000/r, r∈[950,1050]
+    const all: Array<{ lane: number; beat: number; a: number; pop: number; snap: (typeof res.beats)[0]["buffSnapshots"][0]; b1: number; cb: number; basicMeas: number }> = [];
+    for (const bt of res.beats) {
+      if (bt.beat <= 3 || bt.noteType !== 1) continue;
+      const row = t5.timeline.find((t) => t.beat === bt.beat);
+      if (!row) continue;
+      const polluted = new Set(
+        bt.activations.filter((a) => a.success && a.gainedScore != null).map((a) => a.lane),
+      );
+      for (const e of bt.events) {
+        if (e.critFactorPermil !== 1000 || polluted.has(e.lane)) continue;
+        const pop = row.pops?.[String(e.lane)];
+        if (pop == null || pop === 0) continue;
+        const laneIdx = e.lane - 1;
+        const lane = lanes[laneIdx];
+        const snap = bt.buffSnapshots[laneIdx];
+        if (!lane || !snap) continue;
+        const statMeasured = row.stat?.[String(e.lane)];
+        const useMeasured = e.lane === 3 && statMeasured != null && statMeasured < 3.75 * lane.deck.vocal;
+        const vocalPart = useMeasured
+          ? mulPermil(statMeasured, 600)
+          : mulPermil(mulPermil(lane.deck.vocal, liveMultV(snap)), 600);
+        const basic = vocalPart + mulPermil(lane.deck.dance, 250) + mulPermil(lane.deck.visual, 150);
+        const rest =
+          (e.fanFactorPermil / 1000) * (e.critFactorPermil / 1000);
+        const a = pop / (basic * (e.b1Permil / 1000) * (e.comboFactorPermil / 1000) * rest);
+        all.push({ lane: e.lane, beat: bt.beat, a, pop, snap, b1: e.b1Permil, cb: e.comboFactorPermil, basicMeas: basic });
+      }
+    }
+    // 高精度（pop≥1e6）サンプルから λ 候補の交集
+    const precise = [...all].filter((s) => s.pop >= 1e6).sort((x, y) => y.pop - x.pop).slice(0, 8);
+    let candidates: number[] = [];
+    for (const s of precise) {
+      const set: number[] = [];
+      for (let r = 950; r <= 1050; r++) set.push((s.a * 1000) / r);
+      if (candidates.length === 0) {
+        candidates = set;
+      } else {
+        const tol = 1e-9;
+        candidates = candidates.filter((c) => set.some((v) => Math.abs(v - c) < tol * c));
+      }
+      if (candidates.length <= 2) break;
+    }
+    console.log(
+      `[LAM] precise n=${precise.length} surviving-λ=${candidates.length}: ` +
+        candidates.slice(0, 8).map((c) => c.toFixed(8)).join(" ") +
+        (candidates.length > 0 ? ` (8/140=${(8 / 140).toFixed(8)})` : ""),
+    );
+    // L3: 実測stat基本での (b1×cb)_true 推定と sim 値の比
+    for (const s of all.filter((x) => x.lane === 3).slice(0, 40)) {
+      const fan = 1.62;
+      const trueB1cb = s.pop / (s.basicMeas * fan * (8 / 140));
+      const simB1cb = (s.b1 / 1000) * (s.cb / 1000);
+      console.log(
+        `[L3R] b${s.beat} true=${trueB1cb.toFixed(4)} sim=${simB1cb.toFixed(4)} ratio=${(trueB1cb / simB1cb).toFixed(4)} su=${s.snap.score_up} asu=${s.snap.a_skill_score_up} csu=${s.snap.combo_score_up} foc=${s.snap.focus} ten=${s.snap.tension_up} statMeas=${s.basicMeas}`,
+      );
+    }
   });
 
   it("A/SP イベントの離散乱数検定（バフ進化+type36検証）", () => {

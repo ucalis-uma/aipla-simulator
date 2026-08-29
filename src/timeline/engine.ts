@@ -85,6 +85,10 @@ interface EngineCtx {
   readonly policy: RoundingPolicy;
   /** 累積総スコア（ratio 型スキルの基本スコア基準・§5.2） */
   readonly cumulative: { value: number };
+  /** 【一時・T5調査用】仮説切替（既定: all / lane。SimulateInput.debugOptions 参照） */
+  readonly debug: { extensionMode: "all" | "longest"; comboBasis: "lane" | "global" };
+  /** 処理済みビートノート数（comboBasis="global" 時のコンボ基準。増加前値を使用） */
+  readonly beatNotesProcessed: { value: number };
 }
 
 /**
@@ -116,6 +120,11 @@ export function simulateTimeline(input: SimulateInput): TimelineResult {
     successBase: input.successBasePermil ?? 1000,
     policy: input.roundingPolicy ?? "sequential",
     cumulative: { value: 0 },
+    debug: {
+      extensionMode: input.debugOptions?.extensionMode ?? "all",
+      comboBasis: input.debugOptions?.comboBasis ?? "lane",
+    },
+    beatNotesProcessed: { value: 0 },
   };
 
   const states: LaneState[] = lanes.map((laneInput) => ({
@@ -181,6 +190,7 @@ function processBeat(
   // ---- ステップ8: SP/A/ビートの発動・スコア精算 ----
   if (note.noteType === 1) {
     settleBeatNote(note, ctx, states, snapshotsAtScoring, events);
+    ctx.beatNotesProcessed.value += 1;
     for (const state of states) {
       state.combo += 1; // ビートノートは常に成功【Estimate: research/13 §9-1】
     }
@@ -602,9 +612,23 @@ function applyEffect(
     case "effect_extension": {
       const value = effect.value ?? 0;
       for (const target of resolveTargets(effect.target, self, states)) {
-        for (const active of target.effects) {
-          if (active.remainingBeats < PERMANENT_BEATS) {
-            active.remainingBeats += value;
+        if (ctx.debug.extensionMode === "longest") {
+          // 仮説: 増強と同様に「残りビート最長の1インスタンスのみ」延長
+          const extendable = target.effects.filter((a) => a.remainingBeats < PERMANENT_BEATS);
+          let longest: ActiveEffect | null = null;
+          for (const active of extendable) {
+            if (longest === null || active.remainingBeats > longest.remainingBeats) {
+              longest = active;
+            }
+          }
+          if (longest !== null) {
+            longest.remainingBeats += value;
+          }
+        } else {
+          for (const active of target.effects) {
+            if (active.remainingBeats < PERMANENT_BEATS) {
+              active.remainingBeats += value;
+            }
           }
         }
       }
@@ -686,7 +710,7 @@ function settleScoreGet(
   const kind: B1Kind =
     skill.kind === "A" ? "active" : skill.kind === "SP" ? "special" : "passive";
   const b1 = b1Permil(snap, kind, self.input.scoreBonusPct);
-  const comboF = isRatio ? 1000 : comboFactorPermil(self.combo, snap.combo_score_up, ctx.comboTable);
+  const comboF = isRatio ? 1000 : comboFactorPermil(comboForFactor(self, ctx), snap.combo_score_up, ctx.comboTable);
   const fanF = isRatio ? 1000 : fanFactorPermil(ctx.input.fanFactorPermil, snap.focus);
   const rand = ctx.input.rng.nextScoreRoll();
   const crit = ctx.input.criticalProvider(beat, self.input.lane);
@@ -727,6 +751,15 @@ function scalingStages(ref: string, snap: BuffSnapshot): number {
 }
 
 /**
+ * コンボ係数に用いるコンボ数（debugOptions.comboBasis）。
+ * lane = レーン別状態（FAILでリセットされ得る） / global = 処理済みビートノート数
+ * （表示コンボ=+1/beat厳密・A/SP不変・FAIL不変の実測に対応する候補）。
+ */
+function comboForFactor(self: LaneState, ctx: EngineCtx): number {
+  return ctx.debug.comboBasis === "global" ? ctx.beatNotesProcessed.value : self.combo;
+}
+
+/**
  * ビートノートの精算（§5.1）。全5レーンが独立イベント。
  * コンボは「増加前」の値で係数計算（research/02 §3.3 検算【Confirmed】）。
  */
@@ -746,7 +779,7 @@ function settleBeatNote(
     const live = mulPermil(state.input.deck[attr], liveStatusMultiplierPermil(snap, attr));
     const basic = mulPermil(live, ctx.input.stage.beatWeightsPermil[attr]);
     const b1 = b1Permil(snap, "beat", state.input.scoreBonusPct);
-    const comboF = comboFactorPermil(state.combo, snap.combo_score_up, ctx.comboTable);
+    const comboF = comboFactorPermil(comboForFactor(state, ctx), snap.combo_score_up, ctx.comboTable);
     const fanF = fanFactorPermil(ctx.input.fanFactorPermil, snap.focus);
     const rand = ctx.input.rng.nextScoreRoll();
     const crit = ctx.input.criticalProvider(note.beat, state.input.lane);
