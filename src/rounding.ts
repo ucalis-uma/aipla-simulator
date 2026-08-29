@@ -59,3 +59,17 @@ export function pctToPermil(pct: number): number {
   }
   return p;
 }
+
+/**
+ * 任意の有限実数に対する切り捨て（floor）。
+ *
+ * 千分率整数演算の枠外（例: FixedRng のクリティカル閾値 = floor(確率 × 2^32)）で
+ * 必要になった場合にのみ使用する。スコア計算コアでは mulPermil / floorDiv を使うこと。
+ * （規律: このモジュール以外で Math.floor を直接呼ばない）
+ */
+export function floorOf(x: number): number {
+  if (!Number.isFinite(x)) {
+    throw new Error(`floorOf requires a finite number, got ${x}`);
+  }
+  return Math.floor(x);
+}
