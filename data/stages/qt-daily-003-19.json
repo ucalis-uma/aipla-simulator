@@ -1,0 +1,37 @@
+{
+  "id": "qt-daily-003-19",
+  "name": "STAGE19",
+  "areaId": "area-daily-003",
+  "stageId": "stage-live-dome-01-04",
+  "musicId": "music-hsm-004",
+  "difficultyLevel": 286,
+  "order": 19,
+  "clearScore": 685000000,
+  "staminaRecoveryWeightPermil": 0,
+  "moodType": 0,
+  "liveSkipType": 2,
+  "ticketAmount": 1,
+  "unlockConditionId": "cd-manager_level_gte-280",
+  "questPressureId": "quest_pressure-2",
+  "laneAttributes": [
+    2,
+    2,
+    1,
+    2,
+    2
+  ],
+  "beatWeightsPermil": {
+    "vocal": 600,
+    "dance": 250,
+    "visual": 150
+  },
+  "skillWeightsPermil": {
+    "active": 1000,
+    "special": 1000,
+    "stamina": 1000
+  },
+  "maxCapacity": 80000,
+  "mentalThreshold": 3681,
+  "audienceAdvantageId": "quest_audience_advantage_1",
+  "musicChartPatternId": "chart-hsm-004-001"
+}

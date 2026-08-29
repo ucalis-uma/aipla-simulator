@@ -1,0 +1,4002 @@
+[
+  {
+    "audience": 10,
+    "advantagePermil": 1001
+  },
+  {
+    "audience": 20,
+    "advantagePermil": 1002
+  },
+  {
+    "audience": 30,
+    "advantagePermil": 1003
+  },
+  {
+    "audience": 40,
+    "advantagePermil": 1004
+  },
+  {
+    "audience": 50,
+    "advantagePermil": 1005
+  },
+  {
+    "audience": 60,
+    "advantagePermil": 1006
+  },
+  {
+    "audience": 70,
+    "advantagePermil": 1007
+  },
+  {
+    "audience": 80,
+    "advantagePermil": 1008
+  },
+  {
+    "audience": 90,
+    "advantagePermil": 1009
+  },
+  {
+    "audience": 100,
+    "advantagePermil": 1010
+  },
+  {
+    "audience": 110,
+    "advantagePermil": 1011
+  },
+  {
+    "audience": 120,
+    "advantagePermil": 1012
+  },
+  {
+    "audience": 130,
+    "advantagePermil": 1013
+  },
+  {
+    "audience": 140,
+    "advantagePermil": 1014
+  },
+  {
+    "audience": 150,
+    "advantagePermil": 1015
+  },
+  {
+    "audience": 160,
+    "advantagePermil": 1016
+  },
+  {
+    "audience": 170,
+    "advantagePermil": 1017
+  },
+  {
+    "audience": 180,
+    "advantagePermil": 1018
+  },
+  {
+    "audience": 190,
+    "advantagePermil": 1019
+  },
+  {
+    "audience": 200,
+    "advantagePermil": 1020
+  },
+  {
+    "audience": 210,
+    "advantagePermil": 1021
+  },
+  {
+    "audience": 220,
+    "advantagePermil": 1022
+  },
+  {
+    "audience": 230,
+    "advantagePermil": 1023
+  },
+  {
+    "audience": 240,
+    "advantagePermil": 1024
+  },
+  {
+    "audience": 250,
+    "advantagePermil": 1025
+  },
+  {
+    "audience": 260,
+    "advantagePermil": 1026
+  },
+  {
+    "audience": 270,
+    "advantagePermil": 1027
+  },
+  {
+    "audience": 280,
+    "advantagePermil": 1028
+  },
+  {
+    "audience": 290,
+    "advantagePermil": 1029
+  },
+  {
+    "audience": 300,
+    "advantagePermil": 1030
+  },
+  {
+    "audience": 310,
+    "advantagePermil": 1031
+  },
+  {
+    "audience": 320,
+    "advantagePermil": 1032
+  },
+  {
+    "audience": 330,
+    "advantagePermil": 1033
+  },
+  {
+    "audience": 340,
+    "advantagePermil": 1034
+  },
+  {
+    "audience": 350,
+    "advantagePermil": 1035
+  },
+  {
+    "audience": 360,
+    "advantagePermil": 1036
+  },
+  {
+    "audience": 370,
+    "advantagePermil": 1037
+  },
+  {
+    "audience": 380,
+    "advantagePermil": 1038
+  },
+  {
+    "audience": 390,
+    "advantagePermil": 1039
+  },
+  {
+    "audience": 400,
+    "advantagePermil": 1040
+  },
+  {
+    "audience": 410,
+    "advantagePermil": 1041
+  },
+  {
+    "audience": 420,
+    "advantagePermil": 1042
+  },
+  {
+    "audience": 430,
+    "advantagePermil": 1043
+  },
+  {
+    "audience": 440,
+    "advantagePermil": 1044
+  },
+  {
+    "audience": 450,
+    "advantagePermil": 1045
+  },
+  {
+    "audience": 460,
+    "advantagePermil": 1046
+  },
+  {
+    "audience": 470,
+    "advantagePermil": 1047
+  },
+  {
+    "audience": 480,
+    "advantagePermil": 1048
+  },
+  {
+    "audience": 490,
+    "advantagePermil": 1049
+  },
+  {
+    "audience": 500,
+    "advantagePermil": 1050
+  },
+  {
+    "audience": 510,
+    "advantagePermil": 1051
+  },
+  {
+    "audience": 520,
+    "advantagePermil": 1052
+  },
+  {
+    "audience": 530,
+    "advantagePermil": 1053
+  },
+  {
+    "audience": 540,
+    "advantagePermil": 1054
+  },
+  {
+    "audience": 550,
+    "advantagePermil": 1055
+  },
+  {
+    "audience": 560,
+    "advantagePermil": 1056
+  },
+  {
+    "audience": 570,
+    "advantagePermil": 1057
+  },
+  {
+    "audience": 580,
+    "advantagePermil": 1058
+  },
+  {
+    "audience": 590,
+    "advantagePermil": 1059
+  },
+  {
+    "audience": 600,
+    "advantagePermil": 1060
+  },
+  {
+    "audience": 610,
+    "advantagePermil": 1061
+  },
+  {
+    "audience": 620,
+    "advantagePermil": 1062
+  },
+  {
+    "audience": 630,
+    "advantagePermil": 1063
+  },
+  {
+    "audience": 640,
+    "advantagePermil": 1064
+  },
+  {
+    "audience": 650,
+    "advantagePermil": 1065
+  },
+  {
+    "audience": 660,
+    "advantagePermil": 1066
+  },
+  {
+    "audience": 670,
+    "advantagePermil": 1067
+  },
+  {
+    "audience": 680,
+    "advantagePermil": 1068
+  },
+  {
+    "audience": 690,
+    "advantagePermil": 1069
+  },
+  {
+    "audience": 700,
+    "advantagePermil": 1070
+  },
+  {
+    "audience": 710,
+    "advantagePermil": 1071
+  },
+  {
+    "audience": 720,
+    "advantagePermil": 1072
+  },
+  {
+    "audience": 730,
+    "advantagePermil": 1073
+  },
+  {
+    "audience": 740,
+    "advantagePermil": 1074
+  },
+  {
+    "audience": 750,
+    "advantagePermil": 1075
+  },
+  {
+    "audience": 760,
+    "advantagePermil": 1076
+  },
+  {
+    "audience": 770,
+    "advantagePermil": 1077
+  },
+  {
+    "audience": 780,
+    "advantagePermil": 1078
+  },
+  {
+    "audience": 790,
+    "advantagePermil": 1079
+  },
+  {
+    "audience": 800,
+    "advantagePermil": 1080
+  },
+  {
+    "audience": 810,
+    "advantagePermil": 1081
+  },
+  {
+    "audience": 820,
+    "advantagePermil": 1082
+  },
+  {
+    "audience": 830,
+    "advantagePermil": 1083
+  },
+  {
+    "audience": 840,
+    "advantagePermil": 1084
+  },
+  {
+    "audience": 850,
+    "advantagePermil": 1085
+  },
+  {
+    "audience": 860,
+    "advantagePermil": 1086
+  },
+  {
+    "audience": 870,
+    "advantagePermil": 1087
+  },
+  {
+    "audience": 880,
+    "advantagePermil": 1088
+  },
+  {
+    "audience": 890,
+    "advantagePermil": 1089
+  },
+  {
+    "audience": 900,
+    "advantagePermil": 1090
+  },
+  {
+    "audience": 910,
+    "advantagePermil": 1091
+  },
+  {
+    "audience": 920,
+    "advantagePermil": 1092
+  },
+  {
+    "audience": 930,
+    "advantagePermil": 1093
+  },
+  {
+    "audience": 940,
+    "advantagePermil": 1094
+  },
+  {
+    "audience": 950,
+    "advantagePermil": 1095
+  },
+  {
+    "audience": 960,
+    "advantagePermil": 1096
+  },
+  {
+    "audience": 970,
+    "advantagePermil": 1097
+  },
+  {
+    "audience": 980,
+    "advantagePermil": 1098
+  },
+  {
+    "audience": 990,
+    "advantagePermil": 1099
+  },
+  {
+    "audience": 1000,
+    "advantagePermil": 1100
+  },
+  {
+    "audience": 1020,
+    "advantagePermil": 1101
+  },
+  {
+    "audience": 1040,
+    "advantagePermil": 1102
+  },
+  {
+    "audience": 1060,
+    "advantagePermil": 1103
+  },
+  {
+    "audience": 1080,
+    "advantagePermil": 1104
+  },
+  {
+    "audience": 1100,
+    "advantagePermil": 1105
+  },
+  {
+    "audience": 1120,
+    "advantagePermil": 1106
+  },
+  {
+    "audience": 1140,
+    "advantagePermil": 1107
+  },
+  {
+    "audience": 1160,
+    "advantagePermil": 1108
+  },
+  {
+    "audience": 1180,
+    "advantagePermil": 1109
+  },
+  {
+    "audience": 1200,
+    "advantagePermil": 1110
+  },
+  {
+    "audience": 1220,
+    "advantagePermil": 1111
+  },
+  {
+    "audience": 1240,
+    "advantagePermil": 1112
+  },
+  {
+    "audience": 1260,
+    "advantagePermil": 1113
+  },
+  {
+    "audience": 1280,
+    "advantagePermil": 1114
+  },
+  {
+    "audience": 1300,
+    "advantagePermil": 1115
+  },
+  {
+    "audience": 1320,
+    "advantagePermil": 1116
+  },
+  {
+    "audience": 1340,
+    "advantagePermil": 1117
+  },
+  {
+    "audience": 1360,
+    "advantagePermil": 1118
+  },
+  {
+    "audience": 1380,
+    "advantagePermil": 1119
+  },
+  {
+    "audience": 1400,
+    "advantagePermil": 1120
+  },
+  {
+    "audience": 1420,
+    "advantagePermil": 1121
+  },
+  {
+    "audience": 1440,
+    "advantagePermil": 1122
+  },
+  {
+    "audience": 1460,
+    "advantagePermil": 1123
+  },
+  {
+    "audience": 1480,
+    "advantagePermil": 1124
+  },
+  {
+    "audience": 1500,
+    "advantagePermil": 1125
+  },
+  {
+    "audience": 1520,
+    "advantagePermil": 1126
+  },
+  {
+    "audience": 1540,
+    "advantagePermil": 1127
+  },
+  {
+    "audience": 1560,
+    "advantagePermil": 1128
+  },
+  {
+    "audience": 1580,
+    "advantagePermil": 1129
+  },
+  {
+    "audience": 1600,
+    "advantagePermil": 1130
+  },
+  {
+    "audience": 1620,
+    "advantagePermil": 1131
+  },
+  {
+    "audience": 1640,
+    "advantagePermil": 1132
+  },
+  {
+    "audience": 1660,
+    "advantagePermil": 1133
+  },
+  {
+    "audience": 1680,
+    "advantagePermil": 1134
+  },
+  {
+    "audience": 1700,
+    "advantagePermil": 1135
+  },
+  {
+    "audience": 1720,
+    "advantagePermil": 1136
+  },
+  {
+    "audience": 1740,
+    "advantagePermil": 1137
+  },
+  {
+    "audience": 1760,
+    "advantagePermil": 1138
+  },
+  {
+    "audience": 1780,
+    "advantagePermil": 1139
+  },
+  {
+    "audience": 1800,
+    "advantagePermil": 1140
+  },
+  {
+    "audience": 1820,
+    "advantagePermil": 1141
+  },
+  {
+    "audience": 1840,
+    "advantagePermil": 1142
+  },
+  {
+    "audience": 1860,
+    "advantagePermil": 1143
+  },
+  {
+    "audience": 1880,
+    "advantagePermil": 1144
+  },
+  {
+    "audience": 1900,
+    "advantagePermil": 1145
+  },
+  {
+    "audience": 1920,
+    "advantagePermil": 1146
+  },
+  {
+    "audience": 1940,
+    "advantagePermil": 1147
+  },
+  {
+    "audience": 1960,
+    "advantagePermil": 1148
+  },
+  {
+    "audience": 1980,
+    "advantagePermil": 1149
+  },
+  {
+    "audience": 2000,
+    "advantagePermil": 1150
+  },
+  {
+    "audience": 2020,
+    "advantagePermil": 1151
+  },
+  {
+    "audience": 2040,
+    "advantagePermil": 1152
+  },
+  {
+    "audience": 2060,
+    "advantagePermil": 1153
+  },
+  {
+    "audience": 2080,
+    "advantagePermil": 1154
+  },
+  {
+    "audience": 2100,
+    "advantagePermil": 1155
+  },
+  {
+    "audience": 2120,
+    "advantagePermil": 1156
+  },
+  {
+    "audience": 2140,
+    "advantagePermil": 1157
+  },
+  {
+    "audience": 2160,
+    "advantagePermil": 1158
+  },
+  {
+    "audience": 2180,
+    "advantagePermil": 1159
+  },
+  {
+    "audience": 2200,
+    "advantagePermil": 1160
+  },
+  {
+    "audience": 2220,
+    "advantagePermil": 1161
+  },
+  {
+    "audience": 2240,
+    "advantagePermil": 1162
+  },
+  {
+    "audience": 2260,
+    "advantagePermil": 1163
+  },
+  {
+    "audience": 2280,
+    "advantagePermil": 1164
+  },
+  {
+    "audience": 2300,
+    "advantagePermil": 1165
+  },
+  {
+    "audience": 2320,
+    "advantagePermil": 1166
+  },
+  {
+    "audience": 2340,
+    "advantagePermil": 1167
+  },
+  {
+    "audience": 2360,
+    "advantagePermil": 1168
+  },
+  {
+    "audience": 2380,
+    "advantagePermil": 1169
+  },
+  {
+    "audience": 2400,
+    "advantagePermil": 1170
+  },
+  {
+    "audience": 2420,
+    "advantagePermil": 1171
+  },
+  {
+    "audience": 2440,
+    "advantagePermil": 1172
+  },
+  {
+    "audience": 2460,
+    "advantagePermil": 1173
+  },
+  {
+    "audience": 2480,
+    "advantagePermil": 1174
+  },
+  {
+    "audience": 2500,
+    "advantagePermil": 1175
+  },
+  {
+    "audience": 2520,
+    "advantagePermil": 1176
+  },
+  {
+    "audience": 2540,
+    "advantagePermil": 1177
+  },
+  {
+    "audience": 2560,
+    "advantagePermil": 1178
+  },
+  {
+    "audience": 2580,
+    "advantagePermil": 1179
+  },
+  {
+    "audience": 2600,
+    "advantagePermil": 1180
+  },
+  {
+    "audience": 2620,
+    "advantagePermil": 1181
+  },
+  {
+    "audience": 2640,
+    "advantagePermil": 1182
+  },
+  {
+    "audience": 2660,
+    "advantagePermil": 1183
+  },
+  {
+    "audience": 2680,
+    "advantagePermil": 1184
+  },
+  {
+    "audience": 2700,
+    "advantagePermil": 1185
+  },
+  {
+    "audience": 2720,
+    "advantagePermil": 1186
+  },
+  {
+    "audience": 2740,
+    "advantagePermil": 1187
+  },
+  {
+    "audience": 2760,
+    "advantagePermil": 1188
+  },
+  {
+    "audience": 2780,
+    "advantagePermil": 1189
+  },
+  {
+    "audience": 2800,
+    "advantagePermil": 1190
+  },
+  {
+    "audience": 2820,
+    "advantagePermil": 1191
+  },
+  {
+    "audience": 2840,
+    "advantagePermil": 1192
+  },
+  {
+    "audience": 2860,
+    "advantagePermil": 1193
+  },
+  {
+    "audience": 2880,
+    "advantagePermil": 1194
+  },
+  {
+    "audience": 2900,
+    "advantagePermil": 1195
+  },
+  {
+    "audience": 2920,
+    "advantagePermil": 1196
+  },
+  {
+    "audience": 2940,
+    "advantagePermil": 1197
+  },
+  {
+    "audience": 2960,
+    "advantagePermil": 1198
+  },
+  {
+    "audience": 2980,
+    "advantagePermil": 1199
+  },
+  {
+    "audience": 3000,
+    "advantagePermil": 1200
+  },
+  {
+    "audience": 3020,
+    "advantagePermil": 1201
+  },
+  {
+    "audience": 3040,
+    "advantagePermil": 1202
+  },
+  {
+    "audience": 3060,
+    "advantagePermil": 1203
+  },
+  {
+    "audience": 3080,
+    "advantagePermil": 1204
+  },
+  {
+    "audience": 3100,
+    "advantagePermil": 1205
+  },
+  {
+    "audience": 3120,
+    "advantagePermil": 1206
+  },
+  {
+    "audience": 3140,
+    "advantagePermil": 1207
+  },
+  {
+    "audience": 3160,
+    "advantagePermil": 1208
+  },
+  {
+    "audience": 3180,
+    "advantagePermil": 1209
+  },
+  {
+    "audience": 3200,
+    "advantagePermil": 1210
+  },
+  {
+    "audience": 3220,
+    "advantagePermil": 1211
+  },
+  {
+    "audience": 3240,
+    "advantagePermil": 1212
+  },
+  {
+    "audience": 3260,
+    "advantagePermil": 1213
+  },
+  {
+    "audience": 3280,
+    "advantagePermil": 1214
+  },
+  {
+    "audience": 3300,
+    "advantagePermil": 1215
+  },
+  {
+    "audience": 3320,
+    "advantagePermil": 1216
+  },
+  {
+    "audience": 3340,
+    "advantagePermil": 1217
+  },
+  {
+    "audience": 3360,
+    "advantagePermil": 1218
+  },
+  {
+    "audience": 3380,
+    "advantagePermil": 1219
+  },
+  {
+    "audience": 3400,
+    "advantagePermil": 1220
+  },
+  {
+    "audience": 3420,
+    "advantagePermil": 1221
+  },
+  {
+    "audience": 3440,
+    "advantagePermil": 1222
+  },
+  {
+    "audience": 3460,
+    "advantagePermil": 1223
+  },
+  {
+    "audience": 3480,
+    "advantagePermil": 1224
+  },
+  {
+    "audience": 3500,
+    "advantagePermil": 1225
+  },
+  {
+    "audience": 3520,
+    "advantagePermil": 1226
+  },
+  {
+    "audience": 3540,
+    "advantagePermil": 1227
+  },
+  {
+    "audience": 3560,
+    "advantagePermil": 1228
+  },
+  {
+    "audience": 3580,
+    "advantagePermil": 1229
+  },
+  {
+    "audience": 3600,
+    "advantagePermil": 1230
+  },
+  {
+    "audience": 3620,
+    "advantagePermil": 1231
+  },
+  {
+    "audience": 3640,
+    "advantagePermil": 1232
+  },
+  {
+    "audience": 3660,
+    "advantagePermil": 1233
+  },
+  {
+    "audience": 3680,
+    "advantagePermil": 1234
+  },
+  {
+    "audience": 3700,
+    "advantagePermil": 1235
+  },
+  {
+    "audience": 3720,
+    "advantagePermil": 1236
+  },
+  {
+    "audience": 3740,
+    "advantagePermil": 1237
+  },
+  {
+    "audience": 3760,
+    "advantagePermil": 1238
+  },
+  {
+    "audience": 3780,
+    "advantagePermil": 1239
+  },
+  {
+    "audience": 3800,
+    "advantagePermil": 1240
+  },
+  {
+    "audience": 3820,
+    "advantagePermil": 1241
+  },
+  {
+    "audience": 3840,
+    "advantagePermil": 1242
+  },
+  {
+    "audience": 3860,
+    "advantagePermil": 1243
+  },
+  {
+    "audience": 3880,
+    "advantagePermil": 1244
+  },
+  {
+    "audience": 3900,
+    "advantagePermil": 1245
+  },
+  {
+    "audience": 3920,
+    "advantagePermil": 1246
+  },
+  {
+    "audience": 3940,
+    "advantagePermil": 1247
+  },
+  {
+    "audience": 3960,
+    "advantagePermil": 1248
+  },
+  {
+    "audience": 3980,
+    "advantagePermil": 1249
+  },
+  {
+    "audience": 4000,
+    "advantagePermil": 1250
+  },
+  {
+    "audience": 4020,
+    "advantagePermil": 1251
+  },
+  {
+    "audience": 4040,
+    "advantagePermil": 1252
+  },
+  {
+    "audience": 4060,
+    "advantagePermil": 1253
+  },
+  {
+    "audience": 4080,
+    "advantagePermil": 1254
+  },
+  {
+    "audience": 4100,
+    "advantagePermil": 1255
+  },
+  {
+    "audience": 4120,
+    "advantagePermil": 1256
+  },
+  {
+    "audience": 4140,
+    "advantagePermil": 1257
+  },
+  {
+    "audience": 4160,
+    "advantagePermil": 1258
+  },
+  {
+    "audience": 4180,
+    "advantagePermil": 1259
+  },
+  {
+    "audience": 4200,
+    "advantagePermil": 1260
+  },
+  {
+    "audience": 4220,
+    "advantagePermil": 1261
+  },
+  {
+    "audience": 4240,
+    "advantagePermil": 1262
+  },
+  {
+    "audience": 4260,
+    "advantagePermil": 1263
+  },
+  {
+    "audience": 4280,
+    "advantagePermil": 1264
+  },
+  {
+    "audience": 4300,
+    "advantagePermil": 1265
+  },
+  {
+    "audience": 4320,
+    "advantagePermil": 1266
+  },
+  {
+    "audience": 4340,
+    "advantagePermil": 1267
+  },
+  {
+    "audience": 4360,
+    "advantagePermil": 1268
+  },
+  {
+    "audience": 4380,
+    "advantagePermil": 1269
+  },
+  {
+    "audience": 4400,
+    "advantagePermil": 1270
+  },
+  {
+    "audience": 4420,
+    "advantagePermil": 1271
+  },
+  {
+    "audience": 4440,
+    "advantagePermil": 1272
+  },
+  {
+    "audience": 4460,
+    "advantagePermil": 1273
+  },
+  {
+    "audience": 4480,
+    "advantagePermil": 1274
+  },
+  {
+    "audience": 4500,
+    "advantagePermil": 1275
+  },
+  {
+    "audience": 4520,
+    "advantagePermil": 1276
+  },
+  {
+    "audience": 4540,
+    "advantagePermil": 1277
+  },
+  {
+    "audience": 4560,
+    "advantagePermil": 1278
+  },
+  {
+    "audience": 4580,
+    "advantagePermil": 1279
+  },
+  {
+    "audience": 4600,
+    "advantagePermil": 1280
+  },
+  {
+    "audience": 4620,
+    "advantagePermil": 1281
+  },
+  {
+    "audience": 4640,
+    "advantagePermil": 1282
+  },
+  {
+    "audience": 4660,
+    "advantagePermil": 1283
+  },
+  {
+    "audience": 4680,
+    "advantagePermil": 1284
+  },
+  {
+    "audience": 4700,
+    "advantagePermil": 1285
+  },
+  {
+    "audience": 4720,
+    "advantagePermil": 1286
+  },
+  {
+    "audience": 4740,
+    "advantagePermil": 1287
+  },
+  {
+    "audience": 4760,
+    "advantagePermil": 1288
+  },
+  {
+    "audience": 4780,
+    "advantagePermil": 1289
+  },
+  {
+    "audience": 4800,
+    "advantagePermil": 1290
+  },
+  {
+    "audience": 4820,
+    "advantagePermil": 1291
+  },
+  {
+    "audience": 4840,
+    "advantagePermil": 1292
+  },
+  {
+    "audience": 4860,
+    "advantagePermil": 1293
+  },
+  {
+    "audience": 4880,
+    "advantagePermil": 1294
+  },
+  {
+    "audience": 4900,
+    "advantagePermil": 1295
+  },
+  {
+    "audience": 4920,
+    "advantagePermil": 1296
+  },
+  {
+    "audience": 4940,
+    "advantagePermil": 1297
+  },
+  {
+    "audience": 4960,
+    "advantagePermil": 1298
+  },
+  {
+    "audience": 4980,
+    "advantagePermil": 1299
+  },
+  {
+    "audience": 5000,
+    "advantagePermil": 1300
+  },
+  {
+    "audience": 5040,
+    "advantagePermil": 1301
+  },
+  {
+    "audience": 5080,
+    "advantagePermil": 1302
+  },
+  {
+    "audience": 5120,
+    "advantagePermil": 1303
+  },
+  {
+    "audience": 5160,
+    "advantagePermil": 1304
+  },
+  {
+    "audience": 5200,
+    "advantagePermil": 1305
+  },
+  {
+    "audience": 5240,
+    "advantagePermil": 1306
+  },
+  {
+    "audience": 5280,
+    "advantagePermil": 1307
+  },
+  {
+    "audience": 5320,
+    "advantagePermil": 1308
+  },
+  {
+    "audience": 5360,
+    "advantagePermil": 1309
+  },
+  {
+    "audience": 5400,
+    "advantagePermil": 1310
+  },
+  {
+    "audience": 5440,
+    "advantagePermil": 1311
+  },
+  {
+    "audience": 5480,
+    "advantagePermil": 1312
+  },
+  {
+    "audience": 5520,
+    "advantagePermil": 1313
+  },
+  {
+    "audience": 5560,
+    "advantagePermil": 1314
+  },
+  {
+    "audience": 5600,
+    "advantagePermil": 1315
+  },
+  {
+    "audience": 5640,
+    "advantagePermil": 1316
+  },
+  {
+    "audience": 5680,
+    "advantagePermil": 1317
+  },
+  {
+    "audience": 5720,
+    "advantagePermil": 1318
+  },
+  {
+    "audience": 5760,
+    "advantagePermil": 1319
+  },
+  {
+    "audience": 5800,
+    "advantagePermil": 1320
+  },
+  {
+    "audience": 5840,
+    "advantagePermil": 1321
+  },
+  {
+    "audience": 5880,
+    "advantagePermil": 1322
+  },
+  {
+    "audience": 5920,
+    "advantagePermil": 1323
+  },
+  {
+    "audience": 5960,
+    "advantagePermil": 1324
+  },
+  {
+    "audience": 6000,
+    "advantagePermil": 1325
+  },
+  {
+    "audience": 6040,
+    "advantagePermil": 1326
+  },
+  {
+    "audience": 6080,
+    "advantagePermil": 1327
+  },
+  {
+    "audience": 6120,
+    "advantagePermil": 1328
+  },
+  {
+    "audience": 6160,
+    "advantagePermil": 1329
+  },
+  {
+    "audience": 6200,
+    "advantagePermil": 1330
+  },
+  {
+    "audience": 6240,
+    "advantagePermil": 1331
+  },
+  {
+    "audience": 6280,
+    "advantagePermil": 1332
+  },
+  {
+    "audience": 6320,
+    "advantagePermil": 1333
+  },
+  {
+    "audience": 6360,
+    "advantagePermil": 1334
+  },
+  {
+    "audience": 6400,
+    "advantagePermil": 1335
+  },
+  {
+    "audience": 6440,
+    "advantagePermil": 1336
+  },
+  {
+    "audience": 6480,
+    "advantagePermil": 1337
+  },
+  {
+    "audience": 6520,
+    "advantagePermil": 1338
+  },
+  {
+    "audience": 6560,
+    "advantagePermil": 1339
+  },
+  {
+    "audience": 6600,
+    "advantagePermil": 1340
+  },
+  {
+    "audience": 6640,
+    "advantagePermil": 1341
+  },
+  {
+    "audience": 6680,
+    "advantagePermil": 1342
+  },
+  {
+    "audience": 6720,
+    "advantagePermil": 1343
+  },
+  {
+    "audience": 6760,
+    "advantagePermil": 1344
+  },
+  {
+    "audience": 6800,
+    "advantagePermil": 1345
+  },
+  {
+    "audience": 6840,
+    "advantagePermil": 1346
+  },
+  {
+    "audience": 6880,
+    "advantagePermil": 1347
+  },
+  {
+    "audience": 6920,
+    "advantagePermil": 1348
+  },
+  {
+    "audience": 6960,
+    "advantagePermil": 1349
+  },
+  {
+    "audience": 7000,
+    "advantagePermil": 1350
+  },
+  {
+    "audience": 7040,
+    "advantagePermil": 1351
+  },
+  {
+    "audience": 7080,
+    "advantagePermil": 1352
+  },
+  {
+    "audience": 7120,
+    "advantagePermil": 1353
+  },
+  {
+    "audience": 7160,
+    "advantagePermil": 1354
+  },
+  {
+    "audience": 7200,
+    "advantagePermil": 1355
+  },
+  {
+    "audience": 7240,
+    "advantagePermil": 1356
+  },
+  {
+    "audience": 7280,
+    "advantagePermil": 1357
+  },
+  {
+    "audience": 7320,
+    "advantagePermil": 1358
+  },
+  {
+    "audience": 7360,
+    "advantagePermil": 1359
+  },
+  {
+    "audience": 7400,
+    "advantagePermil": 1360
+  },
+  {
+    "audience": 7440,
+    "advantagePermil": 1361
+  },
+  {
+    "audience": 7480,
+    "advantagePermil": 1362
+  },
+  {
+    "audience": 7520,
+    "advantagePermil": 1363
+  },
+  {
+    "audience": 7560,
+    "advantagePermil": 1364
+  },
+  {
+    "audience": 7600,
+    "advantagePermil": 1365
+  },
+  {
+    "audience": 7640,
+    "advantagePermil": 1366
+  },
+  {
+    "audience": 7680,
+    "advantagePermil": 1367
+  },
+  {
+    "audience": 7720,
+    "advantagePermil": 1368
+  },
+  {
+    "audience": 7760,
+    "advantagePermil": 1369
+  },
+  {
+    "audience": 7800,
+    "advantagePermil": 1370
+  },
+  {
+    "audience": 7840,
+    "advantagePermil": 1371
+  },
+  {
+    "audience": 7880,
+    "advantagePermil": 1372
+  },
+  {
+    "audience": 7920,
+    "advantagePermil": 1373
+  },
+  {
+    "audience": 7960,
+    "advantagePermil": 1374
+  },
+  {
+    "audience": 8000,
+    "advantagePermil": 1375
+  },
+  {
+    "audience": 8040,
+    "advantagePermil": 1376
+  },
+  {
+    "audience": 8080,
+    "advantagePermil": 1377
+  },
+  {
+    "audience": 8120,
+    "advantagePermil": 1378
+  },
+  {
+    "audience": 8160,
+    "advantagePermil": 1379
+  },
+  {
+    "audience": 8200,
+    "advantagePermil": 1380
+  },
+  {
+    "audience": 8240,
+    "advantagePermil": 1381
+  },
+  {
+    "audience": 8280,
+    "advantagePermil": 1382
+  },
+  {
+    "audience": 8320,
+    "advantagePermil": 1383
+  },
+  {
+    "audience": 8360,
+    "advantagePermil": 1384
+  },
+  {
+    "audience": 8400,
+    "advantagePermil": 1385
+  },
+  {
+    "audience": 8440,
+    "advantagePermil": 1386
+  },
+  {
+    "audience": 8480,
+    "advantagePermil": 1387
+  },
+  {
+    "audience": 8520,
+    "advantagePermil": 1388
+  },
+  {
+    "audience": 8560,
+    "advantagePermil": 1389
+  },
+  {
+    "audience": 8600,
+    "advantagePermil": 1390
+  },
+  {
+    "audience": 8640,
+    "advantagePermil": 1391
+  },
+  {
+    "audience": 8680,
+    "advantagePermil": 1392
+  },
+  {
+    "audience": 8720,
+    "advantagePermil": 1393
+  },
+  {
+    "audience": 8760,
+    "advantagePermil": 1394
+  },
+  {
+    "audience": 8800,
+    "advantagePermil": 1395
+  },
+  {
+    "audience": 8840,
+    "advantagePermil": 1396
+  },
+  {
+    "audience": 8880,
+    "advantagePermil": 1397
+  },
+  {
+    "audience": 8920,
+    "advantagePermil": 1398
+  },
+  {
+    "audience": 8960,
+    "advantagePermil": 1399
+  },
+  {
+    "audience": 9000,
+    "advantagePermil": 1400
+  },
+  {
+    "audience": 9040,
+    "advantagePermil": 1401
+  },
+  {
+    "audience": 9080,
+    "advantagePermil": 1402
+  },
+  {
+    "audience": 9120,
+    "advantagePermil": 1403
+  },
+  {
+    "audience": 9160,
+    "advantagePermil": 1404
+  },
+  {
+    "audience": 9200,
+    "advantagePermil": 1405
+  },
+  {
+    "audience": 9240,
+    "advantagePermil": 1406
+  },
+  {
+    "audience": 9280,
+    "advantagePermil": 1407
+  },
+  {
+    "audience": 9320,
+    "advantagePermil": 1408
+  },
+  {
+    "audience": 9360,
+    "advantagePermil": 1409
+  },
+  {
+    "audience": 9400,
+    "advantagePermil": 1410
+  },
+  {
+    "audience": 9440,
+    "advantagePermil": 1411
+  },
+  {
+    "audience": 9480,
+    "advantagePermil": 1412
+  },
+  {
+    "audience": 9520,
+    "advantagePermil": 1413
+  },
+  {
+    "audience": 9560,
+    "advantagePermil": 1414
+  },
+  {
+    "audience": 9600,
+    "advantagePermil": 1415
+  },
+  {
+    "audience": 9640,
+    "advantagePermil": 1416
+  },
+  {
+    "audience": 9680,
+    "advantagePermil": 1417
+  },
+  {
+    "audience": 9720,
+    "advantagePermil": 1418
+  },
+  {
+    "audience": 9760,
+    "advantagePermil": 1419
+  },
+  {
+    "audience": 9800,
+    "advantagePermil": 1420
+  },
+  {
+    "audience": 9802,
+    "advantagePermil": 1421
+  },
+  {
+    "audience": 9805,
+    "advantagePermil": 1422
+  },
+  {
+    "audience": 9807,
+    "advantagePermil": 1423
+  },
+  {
+    "audience": 9810,
+    "advantagePermil": 1424
+  },
+  {
+    "audience": 9812,
+    "advantagePermil": 1425
+  },
+  {
+    "audience": 9815,
+    "advantagePermil": 1426
+  },
+  {
+    "audience": 9817,
+    "advantagePermil": 1427
+  },
+  {
+    "audience": 9820,
+    "advantagePermil": 1428
+  },
+  {
+    "audience": 9822,
+    "advantagePermil": 1429
+  },
+  {
+    "audience": 9825,
+    "advantagePermil": 1430
+  },
+  {
+    "audience": 9827,
+    "advantagePermil": 1431
+  },
+  {
+    "audience": 9830,
+    "advantagePermil": 1432
+  },
+  {
+    "audience": 9832,
+    "advantagePermil": 1433
+  },
+  {
+    "audience": 9835,
+    "advantagePermil": 1434
+  },
+  {
+    "audience": 9837,
+    "advantagePermil": 1435
+  },
+  {
+    "audience": 9840,
+    "advantagePermil": 1436
+  },
+  {
+    "audience": 9842,
+    "advantagePermil": 1437
+  },
+  {
+    "audience": 9845,
+    "advantagePermil": 1438
+  },
+  {
+    "audience": 9847,
+    "advantagePermil": 1439
+  },
+  {
+    "audience": 9850,
+    "advantagePermil": 1440
+  },
+  {
+    "audience": 9852,
+    "advantagePermil": 1441
+  },
+  {
+    "audience": 9855,
+    "advantagePermil": 1442
+  },
+  {
+    "audience": 9857,
+    "advantagePermil": 1443
+  },
+  {
+    "audience": 9860,
+    "advantagePermil": 1444
+  },
+  {
+    "audience": 9862,
+    "advantagePermil": 1445
+  },
+  {
+    "audience": 9865,
+    "advantagePermil": 1446
+  },
+  {
+    "audience": 9867,
+    "advantagePermil": 1447
+  },
+  {
+    "audience": 9870,
+    "advantagePermil": 1448
+  },
+  {
+    "audience": 9872,
+    "advantagePermil": 1449
+  },
+  {
+    "audience": 9875,
+    "advantagePermil": 1450
+  },
+  {
+    "audience": 9877,
+    "advantagePermil": 1451
+  },
+  {
+    "audience": 9880,
+    "advantagePermil": 1452
+  },
+  {
+    "audience": 9882,
+    "advantagePermil": 1453
+  },
+  {
+    "audience": 9885,
+    "advantagePermil": 1454
+  },
+  {
+    "audience": 9887,
+    "advantagePermil": 1455
+  },
+  {
+    "audience": 9890,
+    "advantagePermil": 1456
+  },
+  {
+    "audience": 9892,
+    "advantagePermil": 1457
+  },
+  {
+    "audience": 9895,
+    "advantagePermil": 1458
+  },
+  {
+    "audience": 9897,
+    "advantagePermil": 1459
+  },
+  {
+    "audience": 9900,
+    "advantagePermil": 1460
+  },
+  {
+    "audience": 9902,
+    "advantagePermil": 1461
+  },
+  {
+    "audience": 9905,
+    "advantagePermil": 1462
+  },
+  {
+    "audience": 9907,
+    "advantagePermil": 1463
+  },
+  {
+    "audience": 9910,
+    "advantagePermil": 1464
+  },
+  {
+    "audience": 9912,
+    "advantagePermil": 1465
+  },
+  {
+    "audience": 9915,
+    "advantagePermil": 1466
+  },
+  {
+    "audience": 9917,
+    "advantagePermil": 1467
+  },
+  {
+    "audience": 9920,
+    "advantagePermil": 1468
+  },
+  {
+    "audience": 9922,
+    "advantagePermil": 1469
+  },
+  {
+    "audience": 9925,
+    "advantagePermil": 1470
+  },
+  {
+    "audience": 9927,
+    "advantagePermil": 1471
+  },
+  {
+    "audience": 9930,
+    "advantagePermil": 1472
+  },
+  {
+    "audience": 9932,
+    "advantagePermil": 1473
+  },
+  {
+    "audience": 9935,
+    "advantagePermil": 1474
+  },
+  {
+    "audience": 9937,
+    "advantagePermil": 1475
+  },
+  {
+    "audience": 9940,
+    "advantagePermil": 1476
+  },
+  {
+    "audience": 9942,
+    "advantagePermil": 1477
+  },
+  {
+    "audience": 9945,
+    "advantagePermil": 1478
+  },
+  {
+    "audience": 9947,
+    "advantagePermil": 1479
+  },
+  {
+    "audience": 9950,
+    "advantagePermil": 1480
+  },
+  {
+    "audience": 9952,
+    "advantagePermil": 1481
+  },
+  {
+    "audience": 9955,
+    "advantagePermil": 1482
+  },
+  {
+    "audience": 9957,
+    "advantagePermil": 1483
+  },
+  {
+    "audience": 9960,
+    "advantagePermil": 1484
+  },
+  {
+    "audience": 9962,
+    "advantagePermil": 1485
+  },
+  {
+    "audience": 9965,
+    "advantagePermil": 1486
+  },
+  {
+    "audience": 9967,
+    "advantagePermil": 1487
+  },
+  {
+    "audience": 9970,
+    "advantagePermil": 1488
+  },
+  {
+    "audience": 9972,
+    "advantagePermil": 1489
+  },
+  {
+    "audience": 9975,
+    "advantagePermil": 1490
+  },
+  {
+    "audience": 9977,
+    "advantagePermil": 1491
+  },
+  {
+    "audience": 9980,
+    "advantagePermil": 1492
+  },
+  {
+    "audience": 9982,
+    "advantagePermil": 1493
+  },
+  {
+    "audience": 9985,
+    "advantagePermil": 1494
+  },
+  {
+    "audience": 9987,
+    "advantagePermil": 1495
+  },
+  {
+    "audience": 9990,
+    "advantagePermil": 1496
+  },
+  {
+    "audience": 9992,
+    "advantagePermil": 1497
+  },
+  {
+    "audience": 9995,
+    "advantagePermil": 1498
+  },
+  {
+    "audience": 9997,
+    "advantagePermil": 1499
+  },
+  {
+    "audience": 10000,
+    "advantagePermil": 1500
+  },
+  {
+    "audience": 10050,
+    "advantagePermil": 1501
+  },
+  {
+    "audience": 10100,
+    "advantagePermil": 1502
+  },
+  {
+    "audience": 10150,
+    "advantagePermil": 1503
+  },
+  {
+    "audience": 10200,
+    "advantagePermil": 1504
+  },
+  {
+    "audience": 10250,
+    "advantagePermil": 1505
+  },
+  {
+    "audience": 10300,
+    "advantagePermil": 1506
+  },
+  {
+    "audience": 10350,
+    "advantagePermil": 1507
+  },
+  {
+    "audience": 10400,
+    "advantagePermil": 1508
+  },
+  {
+    "audience": 10450,
+    "advantagePermil": 1509
+  },
+  {
+    "audience": 10500,
+    "advantagePermil": 1510
+  },
+  {
+    "audience": 10550,
+    "advantagePermil": 1511
+  },
+  {
+    "audience": 10600,
+    "advantagePermil": 1512
+  },
+  {
+    "audience": 10650,
+    "advantagePermil": 1513
+  },
+  {
+    "audience": 10700,
+    "advantagePermil": 1514
+  },
+  {
+    "audience": 10750,
+    "advantagePermil": 1515
+  },
+  {
+    "audience": 10800,
+    "advantagePermil": 1516
+  },
+  {
+    "audience": 10850,
+    "advantagePermil": 1517
+  },
+  {
+    "audience": 10900,
+    "advantagePermil": 1518
+  },
+  {
+    "audience": 10950,
+    "advantagePermil": 1519
+  },
+  {
+    "audience": 11000,
+    "advantagePermil": 1520
+  },
+  {
+    "audience": 11050,
+    "advantagePermil": 1521
+  },
+  {
+    "audience": 11100,
+    "advantagePermil": 1522
+  },
+  {
+    "audience": 11150,
+    "advantagePermil": 1523
+  },
+  {
+    "audience": 11200,
+    "advantagePermil": 1524
+  },
+  {
+    "audience": 11250,
+    "advantagePermil": 1525
+  },
+  {
+    "audience": 11300,
+    "advantagePermil": 1526
+  },
+  {
+    "audience": 11350,
+    "advantagePermil": 1527
+  },
+  {
+    "audience": 11400,
+    "advantagePermil": 1528
+  },
+  {
+    "audience": 11450,
+    "advantagePermil": 1529
+  },
+  {
+    "audience": 11500,
+    "advantagePermil": 1530
+  },
+  {
+    "audience": 11550,
+    "advantagePermil": 1531
+  },
+  {
+    "audience": 11600,
+    "advantagePermil": 1532
+  },
+  {
+    "audience": 11650,
+    "advantagePermil": 1533
+  },
+  {
+    "audience": 11700,
+    "advantagePermil": 1534
+  },
+  {
+    "audience": 11750,
+    "advantagePermil": 1535
+  },
+  {
+    "audience": 11800,
+    "advantagePermil": 1536
+  },
+  {
+    "audience": 11850,
+    "advantagePermil": 1537
+  },
+  {
+    "audience": 11900,
+    "advantagePermil": 1538
+  },
+  {
+    "audience": 11950,
+    "advantagePermil": 1539
+  },
+  {
+    "audience": 12000,
+    "advantagePermil": 1540
+  },
+  {
+    "audience": 12050,
+    "advantagePermil": 1541
+  },
+  {
+    "audience": 12100,
+    "advantagePermil": 1542
+  },
+  {
+    "audience": 12150,
+    "advantagePermil": 1543
+  },
+  {
+    "audience": 12200,
+    "advantagePermil": 1544
+  },
+  {
+    "audience": 12250,
+    "advantagePermil": 1545
+  },
+  {
+    "audience": 12300,
+    "advantagePermil": 1546
+  },
+  {
+    "audience": 12350,
+    "advantagePermil": 1547
+  },
+  {
+    "audience": 12400,
+    "advantagePermil": 1548
+  },
+  {
+    "audience": 12450,
+    "advantagePermil": 1549
+  },
+  {
+    "audience": 12500,
+    "advantagePermil": 1550
+  },
+  {
+    "audience": 12550,
+    "advantagePermil": 1551
+  },
+  {
+    "audience": 12600,
+    "advantagePermil": 1552
+  },
+  {
+    "audience": 12650,
+    "advantagePermil": 1553
+  },
+  {
+    "audience": 12700,
+    "advantagePermil": 1554
+  },
+  {
+    "audience": 12750,
+    "advantagePermil": 1555
+  },
+  {
+    "audience": 12800,
+    "advantagePermil": 1556
+  },
+  {
+    "audience": 12850,
+    "advantagePermil": 1557
+  },
+  {
+    "audience": 12900,
+    "advantagePermil": 1558
+  },
+  {
+    "audience": 12950,
+    "advantagePermil": 1559
+  },
+  {
+    "audience": 13000,
+    "advantagePermil": 1560
+  },
+  {
+    "audience": 13050,
+    "advantagePermil": 1561
+  },
+  {
+    "audience": 13100,
+    "advantagePermil": 1562
+  },
+  {
+    "audience": 13150,
+    "advantagePermil": 1563
+  },
+  {
+    "audience": 13200,
+    "advantagePermil": 1564
+  },
+  {
+    "audience": 13250,
+    "advantagePermil": 1565
+  },
+  {
+    "audience": 13300,
+    "advantagePermil": 1566
+  },
+  {
+    "audience": 13350,
+    "advantagePermil": 1567
+  },
+  {
+    "audience": 13400,
+    "advantagePermil": 1568
+  },
+  {
+    "audience": 13450,
+    "advantagePermil": 1569
+  },
+  {
+    "audience": 13500,
+    "advantagePermil": 1570
+  },
+  {
+    "audience": 13550,
+    "advantagePermil": 1571
+  },
+  {
+    "audience": 13600,
+    "advantagePermil": 1572
+  },
+  {
+    "audience": 13650,
+    "advantagePermil": 1573
+  },
+  {
+    "audience": 13700,
+    "advantagePermil": 1574
+  },
+  {
+    "audience": 13750,
+    "advantagePermil": 1575
+  },
+  {
+    "audience": 13800,
+    "advantagePermil": 1576
+  },
+  {
+    "audience": 13850,
+    "advantagePermil": 1577
+  },
+  {
+    "audience": 13900,
+    "advantagePermil": 1578
+  },
+  {
+    "audience": 13950,
+    "advantagePermil": 1579
+  },
+  {
+    "audience": 14000,
+    "advantagePermil": 1580
+  },
+  {
+    "audience": 14050,
+    "advantagePermil": 1581
+  },
+  {
+    "audience": 14100,
+    "advantagePermil": 1582
+  },
+  {
+    "audience": 14150,
+    "advantagePermil": 1583
+  },
+  {
+    "audience": 14200,
+    "advantagePermil": 1584
+  },
+  {
+    "audience": 14250,
+    "advantagePermil": 1585
+  },
+  {
+    "audience": 14300,
+    "advantagePermil": 1586
+  },
+  {
+    "audience": 14350,
+    "advantagePermil": 1587
+  },
+  {
+    "audience": 14400,
+    "advantagePermil": 1588
+  },
+  {
+    "audience": 14450,
+    "advantagePermil": 1589
+  },
+  {
+    "audience": 14500,
+    "advantagePermil": 1590
+  },
+  {
+    "audience": 14550,
+    "advantagePermil": 1591
+  },
+  {
+    "audience": 14600,
+    "advantagePermil": 1592
+  },
+  {
+    "audience": 14650,
+    "advantagePermil": 1593
+  },
+  {
+    "audience": 14700,
+    "advantagePermil": 1594
+  },
+  {
+    "audience": 14750,
+    "advantagePermil": 1595
+  },
+  {
+    "audience": 14800,
+    "advantagePermil": 1596
+  },
+  {
+    "audience": 14850,
+    "advantagePermil": 1597
+  },
+  {
+    "audience": 14900,
+    "advantagePermil": 1598
+  },
+  {
+    "audience": 14950,
+    "advantagePermil": 1599
+  },
+  {
+    "audience": 15000,
+    "advantagePermil": 1600
+  },
+  {
+    "audience": 15050,
+    "advantagePermil": 1601
+  },
+  {
+    "audience": 15100,
+    "advantagePermil": 1602
+  },
+  {
+    "audience": 15150,
+    "advantagePermil": 1603
+  },
+  {
+    "audience": 15200,
+    "advantagePermil": 1604
+  },
+  {
+    "audience": 15250,
+    "advantagePermil": 1605
+  },
+  {
+    "audience": 15300,
+    "advantagePermil": 1606
+  },
+  {
+    "audience": 15350,
+    "advantagePermil": 1607
+  },
+  {
+    "audience": 15400,
+    "advantagePermil": 1608
+  },
+  {
+    "audience": 15450,
+    "advantagePermil": 1609
+  },
+  {
+    "audience": 15500,
+    "advantagePermil": 1610
+  },
+  {
+    "audience": 15550,
+    "advantagePermil": 1611
+  },
+  {
+    "audience": 15600,
+    "advantagePermil": 1612
+  },
+  {
+    "audience": 15650,
+    "advantagePermil": 1613
+  },
+  {
+    "audience": 15700,
+    "advantagePermil": 1614
+  },
+  {
+    "audience": 15750,
+    "advantagePermil": 1615
+  },
+  {
+    "audience": 15800,
+    "advantagePermil": 1616
+  },
+  {
+    "audience": 15850,
+    "advantagePermil": 1617
+  },
+  {
+    "audience": 15900,
+    "advantagePermil": 1618
+  },
+  {
+    "audience": 15950,
+    "advantagePermil": 1619
+  },
+  {
+    "audience": 16000,
+    "advantagePermil": 1620
+  },
+  {
+    "audience": 16050,
+    "advantagePermil": 1621
+  },
+  {
+    "audience": 16100,
+    "advantagePermil": 1622
+  },
+  {
+    "audience": 16150,
+    "advantagePermil": 1623
+  },
+  {
+    "audience": 16200,
+    "advantagePermil": 1624
+  },
+  {
+    "audience": 16250,
+    "advantagePermil": 1625
+  },
+  {
+    "audience": 16300,
+    "advantagePermil": 1626
+  },
+  {
+    "audience": 16350,
+    "advantagePermil": 1627
+  },
+  {
+    "audience": 16400,
+    "advantagePermil": 1628
+  },
+  {
+    "audience": 16450,
+    "advantagePermil": 1629
+  },
+  {
+    "audience": 16500,
+    "advantagePermil": 1630
+  },
+  {
+    "audience": 16550,
+    "advantagePermil": 1631
+  },
+  {
+    "audience": 16600,
+    "advantagePermil": 1632
+  },
+  {
+    "audience": 16650,
+    "advantagePermil": 1633
+  },
+  {
+    "audience": 16700,
+    "advantagePermil": 1634
+  },
+  {
+    "audience": 16750,
+    "advantagePermil": 1635
+  },
+  {
+    "audience": 16800,
+    "advantagePermil": 1636
+  },
+  {
+    "audience": 16850,
+    "advantagePermil": 1637
+  },
+  {
+    "audience": 16900,
+    "advantagePermil": 1638
+  },
+  {
+    "audience": 16950,
+    "advantagePermil": 1639
+  },
+  {
+    "audience": 17000,
+    "advantagePermil": 1640
+  },
+  {
+    "audience": 17050,
+    "advantagePermil": 1641
+  },
+  {
+    "audience": 17100,
+    "advantagePermil": 1642
+  },
+  {
+    "audience": 17150,
+    "advantagePermil": 1643
+  },
+  {
+    "audience": 17200,
+    "advantagePermil": 1644
+  },
+  {
+    "audience": 17250,
+    "advantagePermil": 1645
+  },
+  {
+    "audience": 17300,
+    "advantagePermil": 1646
+  },
+  {
+    "audience": 17350,
+    "advantagePermil": 1647
+  },
+  {
+    "audience": 17400,
+    "advantagePermil": 1648
+  },
+  {
+    "audience": 17450,
+    "advantagePermil": 1649
+  },
+  {
+    "audience": 17500,
+    "advantagePermil": 1650
+  },
+  {
+    "audience": 17550,
+    "advantagePermil": 1651
+  },
+  {
+    "audience": 17600,
+    "advantagePermil": 1652
+  },
+  {
+    "audience": 17650,
+    "advantagePermil": 1653
+  },
+  {
+    "audience": 17700,
+    "advantagePermil": 1654
+  },
+  {
+    "audience": 17750,
+    "advantagePermil": 1655
+  },
+  {
+    "audience": 17800,
+    "advantagePermil": 1656
+  },
+  {
+    "audience": 17850,
+    "advantagePermil": 1657
+  },
+  {
+    "audience": 17900,
+    "advantagePermil": 1658
+  },
+  {
+    "audience": 17950,
+    "advantagePermil": 1659
+  },
+  {
+    "audience": 18000,
+    "advantagePermil": 1660
+  },
+  {
+    "audience": 18050,
+    "advantagePermil": 1661
+  },
+  {
+    "audience": 18100,
+    "advantagePermil": 1662
+  },
+  {
+    "audience": 18150,
+    "advantagePermil": 1663
+  },
+  {
+    "audience": 18200,
+    "advantagePermil": 1664
+  },
+  {
+    "audience": 18250,
+    "advantagePermil": 1665
+  },
+  {
+    "audience": 18300,
+    "advantagePermil": 1666
+  },
+  {
+    "audience": 18350,
+    "advantagePermil": 1667
+  },
+  {
+    "audience": 18400,
+    "advantagePermil": 1668
+  },
+  {
+    "audience": 18450,
+    "advantagePermil": 1669
+  },
+  {
+    "audience": 18500,
+    "advantagePermil": 1670
+  },
+  {
+    "audience": 18550,
+    "advantagePermil": 1671
+  },
+  {
+    "audience": 18600,
+    "advantagePermil": 1672
+  },
+  {
+    "audience": 18650,
+    "advantagePermil": 1673
+  },
+  {
+    "audience": 18700,
+    "advantagePermil": 1674
+  },
+  {
+    "audience": 18750,
+    "advantagePermil": 1675
+  },
+  {
+    "audience": 18800,
+    "advantagePermil": 1676
+  },
+  {
+    "audience": 18850,
+    "advantagePermil": 1677
+  },
+  {
+    "audience": 18900,
+    "advantagePermil": 1678
+  },
+  {
+    "audience": 18950,
+    "advantagePermil": 1679
+  },
+  {
+    "audience": 19000,
+    "advantagePermil": 1680
+  },
+  {
+    "audience": 19050,
+    "advantagePermil": 1681
+  },
+  {
+    "audience": 19100,
+    "advantagePermil": 1682
+  },
+  {
+    "audience": 19150,
+    "advantagePermil": 1683
+  },
+  {
+    "audience": 19200,
+    "advantagePermil": 1684
+  },
+  {
+    "audience": 19250,
+    "advantagePermil": 1685
+  },
+  {
+    "audience": 19300,
+    "advantagePermil": 1686
+  },
+  {
+    "audience": 19350,
+    "advantagePermil": 1687
+  },
+  {
+    "audience": 19400,
+    "advantagePermil": 1688
+  },
+  {
+    "audience": 19450,
+    "advantagePermil": 1689
+  },
+  {
+    "audience": 19500,
+    "advantagePermil": 1690
+  },
+  {
+    "audience": 19550,
+    "advantagePermil": 1691
+  },
+  {
+    "audience": 19600,
+    "advantagePermil": 1692
+  },
+  {
+    "audience": 19650,
+    "advantagePermil": 1693
+  },
+  {
+    "audience": 19700,
+    "advantagePermil": 1694
+  },
+  {
+    "audience": 19750,
+    "advantagePermil": 1695
+  },
+  {
+    "audience": 19800,
+    "advantagePermil": 1696
+  },
+  {
+    "audience": 19850,
+    "advantagePermil": 1697
+  },
+  {
+    "audience": 19900,
+    "advantagePermil": 1698
+  },
+  {
+    "audience": 19950,
+    "advantagePermil": 1699
+  },
+  {
+    "audience": 20000,
+    "advantagePermil": 1700
+  },
+  {
+    "audience": 20100,
+    "advantagePermil": 1701
+  },
+  {
+    "audience": 20200,
+    "advantagePermil": 1702
+  },
+  {
+    "audience": 20300,
+    "advantagePermil": 1703
+  },
+  {
+    "audience": 20400,
+    "advantagePermil": 1704
+  },
+  {
+    "audience": 20500,
+    "advantagePermil": 1705
+  },
+  {
+    "audience": 20600,
+    "advantagePermil": 1706
+  },
+  {
+    "audience": 20700,
+    "advantagePermil": 1707
+  },
+  {
+    "audience": 20800,
+    "advantagePermil": 1708
+  },
+  {
+    "audience": 20900,
+    "advantagePermil": 1709
+  },
+  {
+    "audience": 21000,
+    "advantagePermil": 1710
+  },
+  {
+    "audience": 21100,
+    "advantagePermil": 1711
+  },
+  {
+    "audience": 21200,
+    "advantagePermil": 1712
+  },
+  {
+    "audience": 21300,
+    "advantagePermil": 1713
+  },
+  {
+    "audience": 21400,
+    "advantagePermil": 1714
+  },
+  {
+    "audience": 21500,
+    "advantagePermil": 1715
+  },
+  {
+    "audience": 21600,
+    "advantagePermil": 1716
+  },
+  {
+    "audience": 21700,
+    "advantagePermil": 1717
+  },
+  {
+    "audience": 21800,
+    "advantagePermil": 1718
+  },
+  {
+    "audience": 21900,
+    "advantagePermil": 1719
+  },
+  {
+    "audience": 22000,
+    "advantagePermil": 1720
+  },
+  {
+    "audience": 22100,
+    "advantagePermil": 1721
+  },
+  {
+    "audience": 22200,
+    "advantagePermil": 1722
+  },
+  {
+    "audience": 22300,
+    "advantagePermil": 1723
+  },
+  {
+    "audience": 22400,
+    "advantagePermil": 1724
+  },
+  {
+    "audience": 22500,
+    "advantagePermil": 1725
+  },
+  {
+    "audience": 22600,
+    "advantagePermil": 1726
+  },
+  {
+    "audience": 22700,
+    "advantagePermil": 1727
+  },
+  {
+    "audience": 22800,
+    "advantagePermil": 1728
+  },
+  {
+    "audience": 22900,
+    "advantagePermil": 1729
+  },
+  {
+    "audience": 23000,
+    "advantagePermil": 1730
+  },
+  {
+    "audience": 23100,
+    "advantagePermil": 1731
+  },
+  {
+    "audience": 23200,
+    "advantagePermil": 1732
+  },
+  {
+    "audience": 23300,
+    "advantagePermil": 1733
+  },
+  {
+    "audience": 23400,
+    "advantagePermil": 1734
+  },
+  {
+    "audience": 23500,
+    "advantagePermil": 1735
+  },
+  {
+    "audience": 23600,
+    "advantagePermil": 1736
+  },
+  {
+    "audience": 23700,
+    "advantagePermil": 1737
+  },
+  {
+    "audience": 23800,
+    "advantagePermil": 1738
+  },
+  {
+    "audience": 23900,
+    "advantagePermil": 1739
+  },
+  {
+    "audience": 24000,
+    "advantagePermil": 1740
+  },
+  {
+    "audience": 24100,
+    "advantagePermil": 1741
+  },
+  {
+    "audience": 24200,
+    "advantagePermil": 1742
+  },
+  {
+    "audience": 24300,
+    "advantagePermil": 1743
+  },
+  {
+    "audience": 24400,
+    "advantagePermil": 1744
+  },
+  {
+    "audience": 24500,
+    "advantagePermil": 1745
+  },
+  {
+    "audience": 24600,
+    "advantagePermil": 1746
+  },
+  {
+    "audience": 24700,
+    "advantagePermil": 1747
+  },
+  {
+    "audience": 24800,
+    "advantagePermil": 1748
+  },
+  {
+    "audience": 24900,
+    "advantagePermil": 1749
+  },
+  {
+    "audience": 25000,
+    "advantagePermil": 1750
+  },
+  {
+    "audience": 25100,
+    "advantagePermil": 1751
+  },
+  {
+    "audience": 25200,
+    "advantagePermil": 1752
+  },
+  {
+    "audience": 25300,
+    "advantagePermil": 1753
+  },
+  {
+    "audience": 25400,
+    "advantagePermil": 1754
+  },
+  {
+    "audience": 25500,
+    "advantagePermil": 1755
+  },
+  {
+    "audience": 25600,
+    "advantagePermil": 1756
+  },
+  {
+    "audience": 25700,
+    "advantagePermil": 1757
+  },
+  {
+    "audience": 25800,
+    "advantagePermil": 1758
+  },
+  {
+    "audience": 25900,
+    "advantagePermil": 1759
+  },
+  {
+    "audience": 26000,
+    "advantagePermil": 1760
+  },
+  {
+    "audience": 26100,
+    "advantagePermil": 1761
+  },
+  {
+    "audience": 26200,
+    "advantagePermil": 1762
+  },
+  {
+    "audience": 26300,
+    "advantagePermil": 1763
+  },
+  {
+    "audience": 26400,
+    "advantagePermil": 1764
+  },
+  {
+    "audience": 26500,
+    "advantagePermil": 1765
+  },
+  {
+    "audience": 26600,
+    "advantagePermil": 1766
+  },
+  {
+    "audience": 26700,
+    "advantagePermil": 1767
+  },
+  {
+    "audience": 26800,
+    "advantagePermil": 1768
+  },
+  {
+    "audience": 26900,
+    "advantagePermil": 1769
+  },
+  {
+    "audience": 27000,
+    "advantagePermil": 1770
+  },
+  {
+    "audience": 27100,
+    "advantagePermil": 1771
+  },
+  {
+    "audience": 27200,
+    "advantagePermil": 1772
+  },
+  {
+    "audience": 27300,
+    "advantagePermil": 1773
+  },
+  {
+    "audience": 27400,
+    "advantagePermil": 1774
+  },
+  {
+    "audience": 27500,
+    "advantagePermil": 1775
+  },
+  {
+    "audience": 27600,
+    "advantagePermil": 1776
+  },
+  {
+    "audience": 27700,
+    "advantagePermil": 1777
+  },
+  {
+    "audience": 27800,
+    "advantagePermil": 1778
+  },
+  {
+    "audience": 27900,
+    "advantagePermil": 1779
+  },
+  {
+    "audience": 28000,
+    "advantagePermil": 1780
+  },
+  {
+    "audience": 28100,
+    "advantagePermil": 1781
+  },
+  {
+    "audience": 28200,
+    "advantagePermil": 1782
+  },
+  {
+    "audience": 28300,
+    "advantagePermil": 1783
+  },
+  {
+    "audience": 28400,
+    "advantagePermil": 1784
+  },
+  {
+    "audience": 28500,
+    "advantagePermil": 1785
+  },
+  {
+    "audience": 28600,
+    "advantagePermil": 1786
+  },
+  {
+    "audience": 28700,
+    "advantagePermil": 1787
+  },
+  {
+    "audience": 28800,
+    "advantagePermil": 1788
+  },
+  {
+    "audience": 28900,
+    "advantagePermil": 1789
+  },
+  {
+    "audience": 29000,
+    "advantagePermil": 1790
+  },
+  {
+    "audience": 29100,
+    "advantagePermil": 1791
+  },
+  {
+    "audience": 29200,
+    "advantagePermil": 1792
+  },
+  {
+    "audience": 29300,
+    "advantagePermil": 1793
+  },
+  {
+    "audience": 29400,
+    "advantagePermil": 1794
+  },
+  {
+    "audience": 29500,
+    "advantagePermil": 1795
+  },
+  {
+    "audience": 29600,
+    "advantagePermil": 1796
+  },
+  {
+    "audience": 29700,
+    "advantagePermil": 1797
+  },
+  {
+    "audience": 29800,
+    "advantagePermil": 1798
+  },
+  {
+    "audience": 29900,
+    "advantagePermil": 1799
+  },
+  {
+    "audience": 30000,
+    "advantagePermil": 1800
+  },
+  {
+    "audience": 30100,
+    "advantagePermil": 1801
+  },
+  {
+    "audience": 30200,
+    "advantagePermil": 1802
+  },
+  {
+    "audience": 30300,
+    "advantagePermil": 1803
+  },
+  {
+    "audience": 30400,
+    "advantagePermil": 1804
+  },
+  {
+    "audience": 30500,
+    "advantagePermil": 1805
+  },
+  {
+    "audience": 30600,
+    "advantagePermil": 1806
+  },
+  {
+    "audience": 30700,
+    "advantagePermil": 1807
+  },
+  {
+    "audience": 30800,
+    "advantagePermil": 1808
+  },
+  {
+    "audience": 30900,
+    "advantagePermil": 1809
+  },
+  {
+    "audience": 31000,
+    "advantagePermil": 1810
+  },
+  {
+    "audience": 31100,
+    "advantagePermil": 1811
+  },
+  {
+    "audience": 31200,
+    "advantagePermil": 1812
+  },
+  {
+    "audience": 31300,
+    "advantagePermil": 1813
+  },
+  {
+    "audience": 31400,
+    "advantagePermil": 1814
+  },
+  {
+    "audience": 31500,
+    "advantagePermil": 1815
+  },
+  {
+    "audience": 31600,
+    "advantagePermil": 1816
+  },
+  {
+    "audience": 31700,
+    "advantagePermil": 1817
+  },
+  {
+    "audience": 31800,
+    "advantagePermil": 1818
+  },
+  {
+    "audience": 31900,
+    "advantagePermil": 1819
+  },
+  {
+    "audience": 32000,
+    "advantagePermil": 1820
+  },
+  {
+    "audience": 32100,
+    "advantagePermil": 1821
+  },
+  {
+    "audience": 32200,
+    "advantagePermil": 1822
+  },
+  {
+    "audience": 32300,
+    "advantagePermil": 1823
+  },
+  {
+    "audience": 32400,
+    "advantagePermil": 1824
+  },
+  {
+    "audience": 32500,
+    "advantagePermil": 1825
+  },
+  {
+    "audience": 32600,
+    "advantagePermil": 1826
+  },
+  {
+    "audience": 32700,
+    "advantagePermil": 1827
+  },
+  {
+    "audience": 32800,
+    "advantagePermil": 1828
+  },
+  {
+    "audience": 32900,
+    "advantagePermil": 1829
+  },
+  {
+    "audience": 33000,
+    "advantagePermil": 1830
+  },
+  {
+    "audience": 33100,
+    "advantagePermil": 1831
+  },
+  {
+    "audience": 33200,
+    "advantagePermil": 1832
+  },
+  {
+    "audience": 33300,
+    "advantagePermil": 1833
+  },
+  {
+    "audience": 33400,
+    "advantagePermil": 1834
+  },
+  {
+    "audience": 33500,
+    "advantagePermil": 1835
+  },
+  {
+    "audience": 33600,
+    "advantagePermil": 1836
+  },
+  {
+    "audience": 33700,
+    "advantagePermil": 1837
+  },
+  {
+    "audience": 33800,
+    "advantagePermil": 1838
+  },
+  {
+    "audience": 33900,
+    "advantagePermil": 1839
+  },
+  {
+    "audience": 34000,
+    "advantagePermil": 1840
+  },
+  {
+    "audience": 34100,
+    "advantagePermil": 1841
+  },
+  {
+    "audience": 34200,
+    "advantagePermil": 1842
+  },
+  {
+    "audience": 34300,
+    "advantagePermil": 1843
+  },
+  {
+    "audience": 34400,
+    "advantagePermil": 1844
+  },
+  {
+    "audience": 34500,
+    "advantagePermil": 1845
+  },
+  {
+    "audience": 34600,
+    "advantagePermil": 1846
+  },
+  {
+    "audience": 34700,
+    "advantagePermil": 1847
+  },
+  {
+    "audience": 34800,
+    "advantagePermil": 1848
+  },
+  {
+    "audience": 34900,
+    "advantagePermil": 1849
+  },
+  {
+    "audience": 35000,
+    "advantagePermil": 1850
+  },
+  {
+    "audience": 35100,
+    "advantagePermil": 1851
+  },
+  {
+    "audience": 35200,
+    "advantagePermil": 1852
+  },
+  {
+    "audience": 35300,
+    "advantagePermil": 1853
+  },
+  {
+    "audience": 35400,
+    "advantagePermil": 1854
+  },
+  {
+    "audience": 35500,
+    "advantagePermil": 1855
+  },
+  {
+    "audience": 35600,
+    "advantagePermil": 1856
+  },
+  {
+    "audience": 35700,
+    "advantagePermil": 1857
+  },
+  {
+    "audience": 35800,
+    "advantagePermil": 1858
+  },
+  {
+    "audience": 35900,
+    "advantagePermil": 1859
+  },
+  {
+    "audience": 36000,
+    "advantagePermil": 1860
+  },
+  {
+    "audience": 36100,
+    "advantagePermil": 1861
+  },
+  {
+    "audience": 36200,
+    "advantagePermil": 1862
+  },
+  {
+    "audience": 36300,
+    "advantagePermil": 1863
+  },
+  {
+    "audience": 36400,
+    "advantagePermil": 1864
+  },
+  {
+    "audience": 36500,
+    "advantagePermil": 1865
+  },
+  {
+    "audience": 36600,
+    "advantagePermil": 1866
+  },
+  {
+    "audience": 36700,
+    "advantagePermil": 1867
+  },
+  {
+    "audience": 36800,
+    "advantagePermil": 1868
+  },
+  {
+    "audience": 36900,
+    "advantagePermil": 1869
+  },
+  {
+    "audience": 37000,
+    "advantagePermil": 1870
+  },
+  {
+    "audience": 37100,
+    "advantagePermil": 1871
+  },
+  {
+    "audience": 37200,
+    "advantagePermil": 1872
+  },
+  {
+    "audience": 37300,
+    "advantagePermil": 1873
+  },
+  {
+    "audience": 37400,
+    "advantagePermil": 1874
+  },
+  {
+    "audience": 37500,
+    "advantagePermil": 1875
+  },
+  {
+    "audience": 37600,
+    "advantagePermil": 1876
+  },
+  {
+    "audience": 37700,
+    "advantagePermil": 1877
+  },
+  {
+    "audience": 37800,
+    "advantagePermil": 1878
+  },
+  {
+    "audience": 37900,
+    "advantagePermil": 1879
+  },
+  {
+    "audience": 38000,
+    "advantagePermil": 1880
+  },
+  {
+    "audience": 38100,
+    "advantagePermil": 1881
+  },
+  {
+    "audience": 38200,
+    "advantagePermil": 1882
+  },
+  {
+    "audience": 38300,
+    "advantagePermil": 1883
+  },
+  {
+    "audience": 38400,
+    "advantagePermil": 1884
+  },
+  {
+    "audience": 38500,
+    "advantagePermil": 1885
+  },
+  {
+    "audience": 38600,
+    "advantagePermil": 1886
+  },
+  {
+    "audience": 38700,
+    "advantagePermil": 1887
+  },
+  {
+    "audience": 38800,
+    "advantagePermil": 1888
+  },
+  {
+    "audience": 38900,
+    "advantagePermil": 1889
+  },
+  {
+    "audience": 39000,
+    "advantagePermil": 1890
+  },
+  {
+    "audience": 39100,
+    "advantagePermil": 1891
+  },
+  {
+    "audience": 39200,
+    "advantagePermil": 1892
+  },
+  {
+    "audience": 39300,
+    "advantagePermil": 1893
+  },
+  {
+    "audience": 39400,
+    "advantagePermil": 1894
+  },
+  {
+    "audience": 39500,
+    "advantagePermil": 1895
+  },
+  {
+    "audience": 39600,
+    "advantagePermil": 1896
+  },
+  {
+    "audience": 39700,
+    "advantagePermil": 1897
+  },
+  {
+    "audience": 39800,
+    "advantagePermil": 1898
+  },
+  {
+    "audience": 39900,
+    "advantagePermil": 1899
+  },
+  {
+    "audience": 40000,
+    "advantagePermil": 1900
+  },
+  {
+    "audience": 40100,
+    "advantagePermil": 1901
+  },
+  {
+    "audience": 40200,
+    "advantagePermil": 1902
+  },
+  {
+    "audience": 40300,
+    "advantagePermil": 1903
+  },
+  {
+    "audience": 40400,
+    "advantagePermil": 1904
+  },
+  {
+    "audience": 40500,
+    "advantagePermil": 1905
+  },
+  {
+    "audience": 40600,
+    "advantagePermil": 1906
+  },
+  {
+    "audience": 40700,
+    "advantagePermil": 1907
+  },
+  {
+    "audience": 40800,
+    "advantagePermil": 1908
+  },
+  {
+    "audience": 40900,
+    "advantagePermil": 1909
+  },
+  {
+    "audience": 41000,
+    "advantagePermil": 1910
+  },
+  {
+    "audience": 41100,
+    "advantagePermil": 1911
+  },
+  {
+    "audience": 41200,
+    "advantagePermil": 1912
+  },
+  {
+    "audience": 41300,
+    "advantagePermil": 1913
+  },
+  {
+    "audience": 41400,
+    "advantagePermil": 1914
+  },
+  {
+    "audience": 41500,
+    "advantagePermil": 1915
+  },
+  {
+    "audience": 41600,
+    "advantagePermil": 1916
+  },
+  {
+    "audience": 41700,
+    "advantagePermil": 1917
+  },
+  {
+    "audience": 41800,
+    "advantagePermil": 1918
+  },
+  {
+    "audience": 41900,
+    "advantagePermil": 1919
+  },
+  {
+    "audience": 42000,
+    "advantagePermil": 1920
+  },
+  {
+    "audience": 42100,
+    "advantagePermil": 1921
+  },
+  {
+    "audience": 42200,
+    "advantagePermil": 1922
+  },
+  {
+    "audience": 42300,
+    "advantagePermil": 1923
+  },
+  {
+    "audience": 42400,
+    "advantagePermil": 1924
+  },
+  {
+    "audience": 42500,
+    "advantagePermil": 1925
+  },
+  {
+    "audience": 42600,
+    "advantagePermil": 1926
+  },
+  {
+    "audience": 42700,
+    "advantagePermil": 1927
+  },
+  {
+    "audience": 42800,
+    "advantagePermil": 1928
+  },
+  {
+    "audience": 42900,
+    "advantagePermil": 1929
+  },
+  {
+    "audience": 43000,
+    "advantagePermil": 1930
+  },
+  {
+    "audience": 43100,
+    "advantagePermil": 1931
+  },
+  {
+    "audience": 43200,
+    "advantagePermil": 1932
+  },
+  {
+    "audience": 43300,
+    "advantagePermil": 1933
+  },
+  {
+    "audience": 43400,
+    "advantagePermil": 1934
+  },
+  {
+    "audience": 43500,
+    "advantagePermil": 1935
+  },
+  {
+    "audience": 43600,
+    "advantagePermil": 1936
+  },
+  {
+    "audience": 43700,
+    "advantagePermil": 1937
+  },
+  {
+    "audience": 43800,
+    "advantagePermil": 1938
+  },
+  {
+    "audience": 43900,
+    "advantagePermil": 1939
+  },
+  {
+    "audience": 44000,
+    "advantagePermil": 1940
+  },
+  {
+    "audience": 44100,
+    "advantagePermil": 1941
+  },
+  {
+    "audience": 44200,
+    "advantagePermil": 1942
+  },
+  {
+    "audience": 44300,
+    "advantagePermil": 1943
+  },
+  {
+    "audience": 44400,
+    "advantagePermil": 1944
+  },
+  {
+    "audience": 44500,
+    "advantagePermil": 1945
+  },
+  {
+    "audience": 44600,
+    "advantagePermil": 1946
+  },
+  {
+    "audience": 44700,
+    "advantagePermil": 1947
+  },
+  {
+    "audience": 44800,
+    "advantagePermil": 1948
+  },
+  {
+    "audience": 44900,
+    "advantagePermil": 1949
+  },
+  {
+    "audience": 45000,
+    "advantagePermil": 1950
+  },
+  {
+    "audience": 45100,
+    "advantagePermil": 1951
+  },
+  {
+    "audience": 45200,
+    "advantagePermil": 1952
+  },
+  {
+    "audience": 45300,
+    "advantagePermil": 1953
+  },
+  {
+    "audience": 45400,
+    "advantagePermil": 1954
+  },
+  {
+    "audience": 45500,
+    "advantagePermil": 1955
+  },
+  {
+    "audience": 45600,
+    "advantagePermil": 1956
+  },
+  {
+    "audience": 45700,
+    "advantagePermil": 1957
+  },
+  {
+    "audience": 45800,
+    "advantagePermil": 1958
+  },
+  {
+    "audience": 45900,
+    "advantagePermil": 1959
+  },
+  {
+    "audience": 46000,
+    "advantagePermil": 1960
+  },
+  {
+    "audience": 46100,
+    "advantagePermil": 1961
+  },
+  {
+    "audience": 46200,
+    "advantagePermil": 1962
+  },
+  {
+    "audience": 46300,
+    "advantagePermil": 1963
+  },
+  {
+    "audience": 46400,
+    "advantagePermil": 1964
+  },
+  {
+    "audience": 46500,
+    "advantagePermil": 1965
+  },
+  {
+    "audience": 46600,
+    "advantagePermil": 1966
+  },
+  {
+    "audience": 46700,
+    "advantagePermil": 1967
+  },
+  {
+    "audience": 46800,
+    "advantagePermil": 1968
+  },
+  {
+    "audience": 46900,
+    "advantagePermil": 1969
+  },
+  {
+    "audience": 47000,
+    "advantagePermil": 1970
+  },
+  {
+    "audience": 47100,
+    "advantagePermil": 1971
+  },
+  {
+    "audience": 47200,
+    "advantagePermil": 1972
+  },
+  {
+    "audience": 47300,
+    "advantagePermil": 1973
+  },
+  {
+    "audience": 47400,
+    "advantagePermil": 1974
+  },
+  {
+    "audience": 47500,
+    "advantagePermil": 1975
+  },
+  {
+    "audience": 47600,
+    "advantagePermil": 1976
+  },
+  {
+    "audience": 47700,
+    "advantagePermil": 1977
+  },
+  {
+    "audience": 47800,
+    "advantagePermil": 1978
+  },
+  {
+    "audience": 47900,
+    "advantagePermil": 1979
+  },
+  {
+    "audience": 48000,
+    "advantagePermil": 1980
+  },
+  {
+    "audience": 48100,
+    "advantagePermil": 1981
+  },
+  {
+    "audience": 48200,
+    "advantagePermil": 1982
+  },
+  {
+    "audience": 48300,
+    "advantagePermil": 1983
+  },
+  {
+    "audience": 48400,
+    "advantagePermil": 1984
+  },
+  {
+    "audience": 48500,
+    "advantagePermil": 1985
+  },
+  {
+    "audience": 48600,
+    "advantagePermil": 1986
+  },
+  {
+    "audience": 48700,
+    "advantagePermil": 1987
+  },
+  {
+    "audience": 48800,
+    "advantagePermil": 1988
+  },
+  {
+    "audience": 48900,
+    "advantagePermil": 1989
+  },
+  {
+    "audience": 49000,
+    "advantagePermil": 1990
+  },
+  {
+    "audience": 49100,
+    "advantagePermil": 1991
+  },
+  {
+    "audience": 49200,
+    "advantagePermil": 1992
+  },
+  {
+    "audience": 49300,
+    "advantagePermil": 1993
+  },
+  {
+    "audience": 49400,
+    "advantagePermil": 1994
+  },
+  {
+    "audience": 49500,
+    "advantagePermil": 1995
+  },
+  {
+    "audience": 49600,
+    "advantagePermil": 1996
+  },
+  {
+    "audience": 49700,
+    "advantagePermil": 1997
+  },
+  {
+    "audience": 49800,
+    "advantagePermil": 1998
+  },
+  {
+    "audience": 49900,
+    "advantagePermil": 1999
+  },
+  {
+    "audience": 50000,
+    "advantagePermil": 2000
+  }
+]

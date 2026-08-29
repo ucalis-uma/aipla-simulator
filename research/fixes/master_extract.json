@@ -1,0 +1,8359 @@
+{
+ "meta": {
+  "source": "https://github.com/MalitsPlus/ipr-master-diff (raw: https://raw.githubusercontent.com/MalitsPlus/ipr-master-diff/main/<Table>.json)",
+  "versionHash": "641f4aa886984c66c0393972e31f969fd4e24b3f9724e650b0bdedee57e2f364",
+  "lookupDate": "2026-08-29",
+  "tablesUsed": [
+   "Quest",
+   "Music",
+   "MusicChartPattern",
+   "Stage",
+   "QuestPressure",
+   "QuestAudienceAdvantage",
+   "ComboAdvantage",
+   "StaffLevel",
+   "StaffLevelLimitBreakRank",
+   "Skill",
+   "SkillEfficacy",
+   "SkillTrigger",
+   "SkillTarget",
+   "Card",
+   "PhotoAbility",
+   "PhotoAbilitySet",
+   "LiveAbility",
+   "Accessory",
+   "Item",
+   "StatusEffectName",
+   "QuestCharacterAdvantage"
+  ],
+  "note": "全値はマスタ引用。推測値は confidence フィールドで明示。"
+ },
+ "enums": {
+  "parameterType": {
+   "0": "Unknown",
+   "1": "dance",
+   "2": "vocal",
+   "3": "visual",
+   "4": "stamina",
+   "5": "mental",
+   "6": "technique(=クリティカル)"
+  },
+  "parameterTypeEnumEvidence": [
+   "Accessory.json: classification(dance/vocal/visual/stamina/mental/technique) と param1Type が 624行全てで 1対1 対応(dance=1, vocal=2, visual=3, stamina=4, mental=5, technique=6)",
+   "StatusEffectName.json: statusEffectType 1=ダンス上昇, 2=ボーカル上昇, 3=ビジュアル上昇",
+   "research/03_data_sources.md: 同一リポジトリ系の types/proto/proto_enum.ts ParameterType {Unknown=0, Dance=1, Vocal=2, Visual=3, Stamina=4, Mental=5, Technique=6}"
+  ],
+  "musicChartType": {
+   "0": "no-note(休止)",
+   "1": "Beat(通常ノーツ)",
+   "2": "ActiveSkill(Aノーツ)",
+   "3": "SpecialSkill(SPノーツ)"
+  },
+  "skillCategoryType": {
+   "1": "SP(特殊スキル)",
+   "2": "A(アクティブスキル)",
+   "3": "P(パッシブスキル)"
+  },
+  "cardTypeIsRoleNotAttribute": {
+   "1": "scorer(スコアラー)",
+   "2": "buffer(バッファー)",
+   "3": "supporter(サポーター)",
+   "evidence": "本実測5カードで type と発動ログの役割(スコアラー/バッファー/サポーター)が完全一致。type とスタット比(vocal/dance/visualRatioPermil)は無相関。カードの属性は最大比スタットと推定(vocalRatio最大→vocal属性)"
+  }
+ },
+ "stage_params": {
+  "questId": "qt-daily-003-19",
+  "questName": "STAGE19",
+  "areaId": "area-daily-003",
+  "stageId": "stage-live-dome-01-04",
+  "stageName": "横浜スカイスタジアム",
+  "musicId": "music-hsm-004",
+  "musicName": "The Sun, Moon and Stars",
+  "difficultyLevel": 286,
+  "musicChartPatternId": "chart-hsm-004-001",
+  "chartPatternEvidence": "Aノーツ16個のノート番号[2,23,30,38,47,60,69,80,86,94,106,115,128,136,144,156]が発動ログのAスキル16発火ビートと完全一致(-002は12個で不一致)。SPノーツはノート49(pos3: 琴乃SP未習得→FAIL)とノート103(pos1: 千紗『成宮すず』発火)。",
+  "noteCount": {
+   "totalNotes": 156,
+   "beatNotes": 138,
+   "activeSkillNotes": 16,
+   "specialSkillNotes": 2,
+   "measuredTotalBeats": 156,
+   "measuredMaxCombo": 155
+  },
+  "positionAttributeType": {
+   "position1": 2,
+   "position2": 2,
+   "position3": 1,
+   "position4": 2,
+   "position5": 2,
+   "resolved": {
+    "position1": "vocal",
+    "position2": "vocal",
+    "position3": "dance",
+    "position4": "vocal",
+    "position5": "vocal"
+   },
+   "note": "position1=センター(編成1番)。表示レーン左→右は[p4,p2,p1,p3,p5](センター配置順)。"
+  },
+  "deckMappingVerifiedByNotes": [
+   {
+    "displayLane": 1,
+    "position": 4,
+    "characterId": "char-yu",
+    "cardId": "card-yu-05-birt-02",
+    "idolName": "鈴村優",
+    "laneAttribute": 2,
+    "laneAttributeName": "vocal"
+   },
+   {
+    "displayLane": 2,
+    "position": 2,
+    "characterId": "char-ski",
+    "cardId": "card-ski-05-onep-00",
+    "idolName": "白石沙季(L2)",
+    "laneAttribute": 2,
+    "laneAttributeName": "vocal"
+   },
+   {
+    "displayLane": 3,
+    "position": 1,
+    "characterId": "char-chs",
+    "cardId": "card-chs-05-fest-03",
+    "idolName": "白石千紗",
+    "laneAttribute": 2,
+    "laneAttributeName": "vocal",
+    "isCenter": true
+   },
+   {
+    "displayLane": 4,
+    "position": 3,
+    "characterId": "char-ktn",
+    "cardId": "card-ktn-05-wedd-00",
+    "idolName": "長瀬琴乃",
+    "laneAttribute": 1,
+    "laneAttributeName": "dance"
+   },
+   {
+    "displayLane": 5,
+    "position": 5,
+    "characterId": "char-ski",
+    "cardId": "card-ski-05-waso-00",
+    "idolName": "白石沙季(L5)",
+    "laneAttribute": 2,
+    "laneAttributeName": "vocal"
+   }
+  ],
+  "beatWeightsPermil": {
+   "vocal": 600,
+   "dance": 250,
+   "visual": 150
+  },
+  "skillWeightsPermil": {
+   "activeSkill": 1000,
+   "specialSkill": 1000,
+   "skillStamina": 1000
+  },
+  "maxCapacity": 80000,
+  "mentalThreshold": 3681,
+  "questPressureId": "quest_pressure-2",
+  "questPressureName": "普通",
+  "questPressureWeightPermil": 999,
+  "questAudienceAdvantageId": "quest_audience_advantage_1",
+  "questCharacterAdvantageId": "",
+  "comboAdvantageId": "combo_advantage_1",
+  "clearScore": "685000000",
+  "staminaRecoveryWeightPermil": 0,
+  "moodType": 0,
+  "liveSkipType": 2,
+  "featureDisplayCheck": {
+   "userConfirmed": "ライブ特徴表示は「要求メンタル：普通」のみ",
+   "masterConsistency": "questPressure-2=「普通」+ 標準ビート重み600/250/150‰ → 倍率系特徴なしと整合",
+   "confidence": "high"
+  },
+  "musicVolumePermyriads": [
+   2466,
+   2937,
+   3041,
+   2871,
+   2715,
+   2653,
+   2636,
+   2839,
+   3199,
+   3227,
+   3350,
+   3325,
+   3257,
+   3470,
+   3633,
+   3765,
+   3690,
+   3541,
+   3292,
+   3158,
+   3094,
+   3019,
+   2982,
+   2923,
+   2887,
+   2815,
+   2887,
+   2947,
+   2961,
+   2960,
+   2951,
+   2916,
+   2954,
+   2934,
+   2915,
+   2972,
+   2895,
+   2917,
+   2868,
+   2803,
+   2911,
+   3007,
+   3139,
+   3256,
+   3305,
+   3393,
+   3485,
+   3590,
+   3603,
+   3479,
+   3297,
+   3092,
+   2968,
+   2989,
+   3041,
+   3030,
+   3054,
+   3025,
+   3085,
+   3014,
+   2917,
+   2956,
+   2833,
+   2893,
+   3030,
+   3036,
+   3105,
+   3066,
+   3089,
+   2997,
+   2906,
+   2804,
+   2655,
+   2511,
+   2330,
+   2374,
+   2368,
+   2751,
+   3146,
+   3239,
+   3403,
+   3290,
+   3192,
+   3158,
+   3094,
+   3127,
+   3064,
+   3127,
+   3165,
+   3182,
+   3161,
+   3232,
+   3174,
+   3107,
+   3067,
+   2967,
+   2986,
+   3031,
+   3016,
+   3077,
+   3058,
+   2981,
+   3006,
+   2919,
+   2938,
+   2989,
+   3049,
+   3186,
+   3247,
+   3286,
+   3305,
+   3226,
+   3204,
+   3170,
+   3146,
+   3187,
+   3158,
+   3179,
+   3178,
+   3188,
+   3113,
+   3102,
+   3091,
+   3011,
+   3037,
+   3143,
+   3249,
+   3264,
+   3329,
+   3190,
+   3125,
+   3209,
+   3153,
+   3188,
+   3150,
+   3195,
+   3366,
+   3304,
+   3382,
+   3367,
+   3220,
+   3311,
+   3311,
+   3290,
+   3318,
+   3246,
+   3251,
+   3176,
+   3051,
+   3068,
+   3067,
+   3088,
+   3315,
+   3537,
+   3582,
+   3753,
+   3751,
+   3673,
+   3947,
+   3886,
+   3809,
+   3834,
+   3562,
+   3444,
+   3448,
+   3381,
+   3379,
+   3371,
+   3500,
+   3587,
+   3594,
+   3552,
+   3318,
+   3298,
+   3302,
+   3310,
+   3498,
+   3424,
+   3271,
+   3355,
+   3165,
+   3158,
+   3146,
+   3127,
+   3245,
+   3219,
+   3284,
+   3354,
+   3294,
+   3259,
+   3295,
+   3230,
+   3346,
+   3525,
+   3487,
+   3421,
+   3398,
+   3355,
+   3356,
+   3484,
+   3514,
+   3495,
+   3504,
+   3461,
+   3328,
+   3317,
+   3308,
+   3326,
+   3489,
+   3504,
+   3536,
+   3539,
+   3359,
+   3336,
+   3279,
+   3206,
+   3248,
+   3288,
+   3319,
+   3432,
+   3434,
+   3320,
+   3389,
+   3350,
+   3393,
+   3432,
+   3467,
+   3575,
+   3562,
+   3529,
+   3499,
+   3545,
+   3659,
+   3629,
+   3617,
+   3475,
+   3314,
+   3327,
+   3278,
+   3262,
+   3348,
+   3379,
+   3449,
+   3518,
+   3343,
+   3336,
+   3230,
+   3161,
+   3332,
+   3291,
+   3287,
+   3315,
+   3375,
+   3508,
+   3572,
+   3479,
+   3271,
+   2972,
+   2584,
+   2097,
+   1679,
+   1302,
+   997,
+   724,
+   491,
+   251,
+   74,
+   10
+  ],
+  "musicVocalVolumePermyriads": [
+   1221,
+   1424,
+   1436,
+   1323,
+   1256,
+   1272,
+   1276,
+   1399,
+   1444,
+   1358,
+   1369,
+   1203,
+   1151,
+   1057,
+   814,
+   678,
+   390,
+   124,
+   29,
+   18,
+   12,
+   6,
+   3,
+   2,
+   2,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   5,
+   197,
+   838,
+   1158,
+   1281,
+   1362,
+   1246,
+   1075,
+   1113,
+   1166,
+   1175,
+   1245,
+   1249,
+   1304,
+   1210,
+   1046,
+   989,
+   807,
+   905,
+   1088,
+   1125,
+   1225,
+   1324,
+   1309,
+   1285,
+   1107,
+   817,
+   551,
+   55,
+   37,
+   25,
+   75,
+   785,
+   1179,
+   1296,
+   1551,
+   1468,
+   1373,
+   1392,
+   1207,
+   1219,
+   1101,
+   1187,
+   1313,
+   1356,
+   1423,
+   1440,
+   1429,
+   1393,
+   1239,
+   1196,
+   1178,
+   1176,
+   1297,
+   1259,
+   1181,
+   1115,
+   979,
+   946,
+   1000,
+   1031,
+   1244,
+   1350,
+   1395,
+   1407,
+   1421,
+   1366,
+   1333,
+   1386,
+   1346,
+   1371,
+   1387,
+   1320,
+   1264,
+   1312,
+   1174,
+   1202,
+   1222,
+   1086,
+   1142,
+   1155,
+   1218,
+   1234,
+   1320,
+   1287,
+   1254,
+   1312,
+   1228,
+   1277,
+   1278,
+   1325,
+   1438,
+   1318,
+   1320,
+   1332,
+   1231,
+   1435,
+   1471,
+   1443,
+   1492,
+   1363,
+   1403,
+   1349,
+   1196,
+   1251,
+   1261,
+   1350,
+   1542,
+   1688,
+   1661,
+   1591,
+   1379,
+   1027,
+   1641,
+   1764,
+   1878,
+   2041,
+   1668,
+   1583,
+   1654,
+   1614,
+   1567,
+   1500,
+   1518,
+   1539,
+   1574,
+   1553,
+   1318,
+   1479,
+   1555,
+   1585,
+   1825,
+   1705,
+   1540,
+   1630,
+   1453,
+   1419,
+   1415,
+   1420,
+   1460,
+   1464,
+   1426,
+   1376,
+   1308,
+   1097,
+   1146,
+   1105,
+   1248,
+   1476,
+   1498,
+   1468,
+   1489,
+   1534,
+   1522,
+   1632,
+   1597,
+   1509,
+   1442,
+   1276,
+   1061,
+   989,
+   973,
+   1125,
+   1531,
+   1649,
+   1734,
+   1753,
+   1471,
+   1330,
+   1261,
+   1167,
+   1273,
+   1341,
+   1357,
+   1473,
+   1447,
+   1340,
+   1423,
+   1387,
+   1482,
+   1575,
+   1682,
+   1905,
+   1897,
+   1801,
+   1839,
+   1864,
+   1921,
+   1922,
+   1803,
+   1562,
+   1357,
+   1463,
+   1415,
+   1352,
+   1475,
+   1474,
+   1574,
+   1638,
+   1516,
+   1555,
+   1450,
+   1421,
+   1518,
+   1448,
+   1409,
+   1390,
+   1446,
+   1534,
+   1477,
+   1244,
+   957,
+   514,
+   46,
+   19,
+   9,
+   5,
+   3,
+   2,
+   1,
+   1,
+   1,
+   1
+  ],
+  "musicTiming": {
+   "bars": [
+    67
+   ],
+   "beatsPerBar": [
+    4
+   ],
+   "bpms": [
+    180
+   ]
+  },
+  "aNotes": [
+   {
+    "noteIndex": 2,
+    "position": 1
+   },
+   {
+    "noteIndex": 23,
+    "position": 3
+   },
+   {
+    "noteIndex": 30,
+    "position": 5
+   },
+   {
+    "noteIndex": 38,
+    "position": 2
+   },
+   {
+    "noteIndex": 47,
+    "position": 4
+   },
+   {
+    "noteIndex": 60,
+    "position": 5
+   },
+   {
+    "noteIndex": 69,
+    "position": 1
+   },
+   {
+    "noteIndex": 80,
+    "position": 3
+   },
+   {
+    "noteIndex": 86,
+    "position": 2
+   },
+   {
+    "noteIndex": 94,
+    "position": 4
+   },
+   {
+    "noteIndex": 106,
+    "position": 3
+   },
+   {
+    "noteIndex": 115,
+    "position": 2
+   },
+   {
+    "noteIndex": 128,
+    "position": 5
+   },
+   {
+    "noteIndex": 136,
+    "position": 4
+   },
+   {
+    "noteIndex": 144,
+    "position": 2
+   },
+   {
+    "noteIndex": 156,
+    "position": 1
+   }
+  ],
+  "spNotes": [
+   {
+    "noteIndex": 49,
+    "position": 3
+   },
+   {
+    "noteIndex": 103,
+    "position": 1
+   }
+  ]
+ },
+ "audience_table": {
+  "table": "QuestAudienceAdvantage.json",
+  "id": "quest_audience_advantage_1",
+  "rows": [
+   {
+    "audienceAmount": 10,
+    "advantagePermil": 1001
+   },
+   {
+    "audienceAmount": 20,
+    "advantagePermil": 1002
+   },
+   {
+    "audienceAmount": 30,
+    "advantagePermil": 1003
+   },
+   {
+    "audienceAmount": 40,
+    "advantagePermil": 1004
+   },
+   {
+    "audienceAmount": 50,
+    "advantagePermil": 1005
+   },
+   {
+    "audienceAmount": 60,
+    "advantagePermil": 1006
+   },
+   {
+    "audienceAmount": 70,
+    "advantagePermil": 1007
+   },
+   {
+    "audienceAmount": 80,
+    "advantagePermil": 1008
+   },
+   {
+    "audienceAmount": 90,
+    "advantagePermil": 1009
+   },
+   {
+    "audienceAmount": 100,
+    "advantagePermil": 1010
+   },
+   {
+    "audienceAmount": 110,
+    "advantagePermil": 1011
+   },
+   {
+    "audienceAmount": 120,
+    "advantagePermil": 1012
+   },
+   {
+    "audienceAmount": 130,
+    "advantagePermil": 1013
+   },
+   {
+    "audienceAmount": 140,
+    "advantagePermil": 1014
+   },
+   {
+    "audienceAmount": 150,
+    "advantagePermil": 1015
+   },
+   {
+    "audienceAmount": 160,
+    "advantagePermil": 1016
+   },
+   {
+    "audienceAmount": 170,
+    "advantagePermil": 1017
+   },
+   {
+    "audienceAmount": 180,
+    "advantagePermil": 1018
+   },
+   {
+    "audienceAmount": 190,
+    "advantagePermil": 1019
+   },
+   {
+    "audienceAmount": 200,
+    "advantagePermil": 1020
+   },
+   {
+    "audienceAmount": 210,
+    "advantagePermil": 1021
+   },
+   {
+    "audienceAmount": 220,
+    "advantagePermil": 1022
+   },
+   {
+    "audienceAmount": 230,
+    "advantagePermil": 1023
+   },
+   {
+    "audienceAmount": 240,
+    "advantagePermil": 1024
+   },
+   {
+    "audienceAmount": 250,
+    "advantagePermil": 1025
+   },
+   {
+    "audienceAmount": 260,
+    "advantagePermil": 1026
+   },
+   {
+    "audienceAmount": 270,
+    "advantagePermil": 1027
+   },
+   {
+    "audienceAmount": 280,
+    "advantagePermil": 1028
+   },
+   {
+    "audienceAmount": 290,
+    "advantagePermil": 1029
+   },
+   {
+    "audienceAmount": 300,
+    "advantagePermil": 1030
+   },
+   {
+    "audienceAmount": 310,
+    "advantagePermil": 1031
+   },
+   {
+    "audienceAmount": 320,
+    "advantagePermil": 1032
+   },
+   {
+    "audienceAmount": 330,
+    "advantagePermil": 1033
+   },
+   {
+    "audienceAmount": 340,
+    "advantagePermil": 1034
+   },
+   {
+    "audienceAmount": 350,
+    "advantagePermil": 1035
+   },
+   {
+    "audienceAmount": 360,
+    "advantagePermil": 1036
+   },
+   {
+    "audienceAmount": 370,
+    "advantagePermil": 1037
+   },
+   {
+    "audienceAmount": 380,
+    "advantagePermil": 1038
+   },
+   {
+    "audienceAmount": 390,
+    "advantagePermil": 1039
+   },
+   {
+    "audienceAmount": 400,
+    "advantagePermil": 1040
+   },
+   {
+    "audienceAmount": 410,
+    "advantagePermil": 1041
+   },
+   {
+    "audienceAmount": 420,
+    "advantagePermil": 1042
+   },
+   {
+    "audienceAmount": 430,
+    "advantagePermil": 1043
+   },
+   {
+    "audienceAmount": 440,
+    "advantagePermil": 1044
+   },
+   {
+    "audienceAmount": 450,
+    "advantagePermil": 1045
+   },
+   {
+    "audienceAmount": 460,
+    "advantagePermil": 1046
+   },
+   {
+    "audienceAmount": 470,
+    "advantagePermil": 1047
+   },
+   {
+    "audienceAmount": 480,
+    "advantagePermil": 1048
+   },
+   {
+    "audienceAmount": 490,
+    "advantagePermil": 1049
+   },
+   {
+    "audienceAmount": 500,
+    "advantagePermil": 1050
+   },
+   {
+    "audienceAmount": 510,
+    "advantagePermil": 1051
+   },
+   {
+    "audienceAmount": 520,
+    "advantagePermil": 1052
+   },
+   {
+    "audienceAmount": 530,
+    "advantagePermil": 1053
+   },
+   {
+    "audienceAmount": 540,
+    "advantagePermil": 1054
+   },
+   {
+    "audienceAmount": 550,
+    "advantagePermil": 1055
+   },
+   {
+    "audienceAmount": 560,
+    "advantagePermil": 1056
+   },
+   {
+    "audienceAmount": 570,
+    "advantagePermil": 1057
+   },
+   {
+    "audienceAmount": 580,
+    "advantagePermil": 1058
+   },
+   {
+    "audienceAmount": 590,
+    "advantagePermil": 1059
+   },
+   {
+    "audienceAmount": 600,
+    "advantagePermil": 1060
+   },
+   {
+    "audienceAmount": 610,
+    "advantagePermil": 1061
+   },
+   {
+    "audienceAmount": 620,
+    "advantagePermil": 1062
+   },
+   {
+    "audienceAmount": 630,
+    "advantagePermil": 1063
+   },
+   {
+    "audienceAmount": 640,
+    "advantagePermil": 1064
+   },
+   {
+    "audienceAmount": 650,
+    "advantagePermil": 1065
+   },
+   {
+    "audienceAmount": 660,
+    "advantagePermil": 1066
+   },
+   {
+    "audienceAmount": 670,
+    "advantagePermil": 1067
+   },
+   {
+    "audienceAmount": 680,
+    "advantagePermil": 1068
+   },
+   {
+    "audienceAmount": 690,
+    "advantagePermil": 1069
+   },
+   {
+    "audienceAmount": 700,
+    "advantagePermil": 1070
+   },
+   {
+    "audienceAmount": 710,
+    "advantagePermil": 1071
+   },
+   {
+    "audienceAmount": 720,
+    "advantagePermil": 1072
+   },
+   {
+    "audienceAmount": 730,
+    "advantagePermil": 1073
+   },
+   {
+    "audienceAmount": 740,
+    "advantagePermil": 1074
+   },
+   {
+    "audienceAmount": 750,
+    "advantagePermil": 1075
+   },
+   {
+    "audienceAmount": 760,
+    "advantagePermil": 1076
+   },
+   {
+    "audienceAmount": 770,
+    "advantagePermil": 1077
+   },
+   {
+    "audienceAmount": 780,
+    "advantagePermil": 1078
+   },
+   {
+    "audienceAmount": 790,
+    "advantagePermil": 1079
+   },
+   {
+    "audienceAmount": 800,
+    "advantagePermil": 1080
+   },
+   {
+    "audienceAmount": 810,
+    "advantagePermil": 1081
+   },
+   {
+    "audienceAmount": 820,
+    "advantagePermil": 1082
+   },
+   {
+    "audienceAmount": 830,
+    "advantagePermil": 1083
+   },
+   {
+    "audienceAmount": 840,
+    "advantagePermil": 1084
+   },
+   {
+    "audienceAmount": 850,
+    "advantagePermil": 1085
+   },
+   {
+    "audienceAmount": 860,
+    "advantagePermil": 1086
+   },
+   {
+    "audienceAmount": 870,
+    "advantagePermil": 1087
+   },
+   {
+    "audienceAmount": 880,
+    "advantagePermil": 1088
+   },
+   {
+    "audienceAmount": 890,
+    "advantagePermil": 1089
+   },
+   {
+    "audienceAmount": 900,
+    "advantagePermil": 1090
+   },
+   {
+    "audienceAmount": 910,
+    "advantagePermil": 1091
+   },
+   {
+    "audienceAmount": 920,
+    "advantagePermil": 1092
+   },
+   {
+    "audienceAmount": 930,
+    "advantagePermil": 1093
+   },
+   {
+    "audienceAmount": 940,
+    "advantagePermil": 1094
+   },
+   {
+    "audienceAmount": 950,
+    "advantagePermil": 1095
+   },
+   {
+    "audienceAmount": 960,
+    "advantagePermil": 1096
+   },
+   {
+    "audienceAmount": 970,
+    "advantagePermil": 1097
+   },
+   {
+    "audienceAmount": 980,
+    "advantagePermil": 1098
+   },
+   {
+    "audienceAmount": 990,
+    "advantagePermil": 1099
+   },
+   {
+    "audienceAmount": 1000,
+    "advantagePermil": 1100
+   },
+   {
+    "audienceAmount": 1020,
+    "advantagePermil": 1101
+   },
+   {
+    "audienceAmount": 1040,
+    "advantagePermil": 1102
+   },
+   {
+    "audienceAmount": 1060,
+    "advantagePermil": 1103
+   },
+   {
+    "audienceAmount": 1080,
+    "advantagePermil": 1104
+   },
+   {
+    "audienceAmount": 1100,
+    "advantagePermil": 1105
+   },
+   {
+    "audienceAmount": 1120,
+    "advantagePermil": 1106
+   },
+   {
+    "audienceAmount": 1140,
+    "advantagePermil": 1107
+   },
+   {
+    "audienceAmount": 1160,
+    "advantagePermil": 1108
+   },
+   {
+    "audienceAmount": 1180,
+    "advantagePermil": 1109
+   },
+   {
+    "audienceAmount": 1200,
+    "advantagePermil": 1110
+   },
+   {
+    "audienceAmount": 1220,
+    "advantagePermil": 1111
+   },
+   {
+    "audienceAmount": 1240,
+    "advantagePermil": 1112
+   },
+   {
+    "audienceAmount": 1260,
+    "advantagePermil": 1113
+   },
+   {
+    "audienceAmount": 1280,
+    "advantagePermil": 1114
+   },
+   {
+    "audienceAmount": 1300,
+    "advantagePermil": 1115
+   },
+   {
+    "audienceAmount": 1320,
+    "advantagePermil": 1116
+   },
+   {
+    "audienceAmount": 1340,
+    "advantagePermil": 1117
+   },
+   {
+    "audienceAmount": 1360,
+    "advantagePermil": 1118
+   },
+   {
+    "audienceAmount": 1380,
+    "advantagePermil": 1119
+   },
+   {
+    "audienceAmount": 1400,
+    "advantagePermil": 1120
+   },
+   {
+    "audienceAmount": 1420,
+    "advantagePermil": 1121
+   },
+   {
+    "audienceAmount": 1440,
+    "advantagePermil": 1122
+   },
+   {
+    "audienceAmount": 1460,
+    "advantagePermil": 1123
+   },
+   {
+    "audienceAmount": 1480,
+    "advantagePermil": 1124
+   },
+   {
+    "audienceAmount": 1500,
+    "advantagePermil": 1125
+   },
+   {
+    "audienceAmount": 1520,
+    "advantagePermil": 1126
+   },
+   {
+    "audienceAmount": 1540,
+    "advantagePermil": 1127
+   },
+   {
+    "audienceAmount": 1560,
+    "advantagePermil": 1128
+   },
+   {
+    "audienceAmount": 1580,
+    "advantagePermil": 1129
+   },
+   {
+    "audienceAmount": 1600,
+    "advantagePermil": 1130
+   },
+   {
+    "audienceAmount": 1620,
+    "advantagePermil": 1131
+   },
+   {
+    "audienceAmount": 1640,
+    "advantagePermil": 1132
+   },
+   {
+    "audienceAmount": 1660,
+    "advantagePermil": 1133
+   },
+   {
+    "audienceAmount": 1680,
+    "advantagePermil": 1134
+   },
+   {
+    "audienceAmount": 1700,
+    "advantagePermil": 1135
+   },
+   {
+    "audienceAmount": 1720,
+    "advantagePermil": 1136
+   },
+   {
+    "audienceAmount": 1740,
+    "advantagePermil": 1137
+   },
+   {
+    "audienceAmount": 1760,
+    "advantagePermil": 1138
+   },
+   {
+    "audienceAmount": 1780,
+    "advantagePermil": 1139
+   },
+   {
+    "audienceAmount": 1800,
+    "advantagePermil": 1140
+   },
+   {
+    "audienceAmount": 1820,
+    "advantagePermil": 1141
+   },
+   {
+    "audienceAmount": 1840,
+    "advantagePermil": 1142
+   },
+   {
+    "audienceAmount": 1860,
+    "advantagePermil": 1143
+   },
+   {
+    "audienceAmount": 1880,
+    "advantagePermil": 1144
+   },
+   {
+    "audienceAmount": 1900,
+    "advantagePermil": 1145
+   },
+   {
+    "audienceAmount": 1920,
+    "advantagePermil": 1146
+   },
+   {
+    "audienceAmount": 1940,
+    "advantagePermil": 1147
+   },
+   {
+    "audienceAmount": 1960,
+    "advantagePermil": 1148
+   },
+   {
+    "audienceAmount": 1980,
+    "advantagePermil": 1149
+   },
+   {
+    "audienceAmount": 2000,
+    "advantagePermil": 1150
+   },
+   {
+    "audienceAmount": 2020,
+    "advantagePermil": 1151
+   },
+   {
+    "audienceAmount": 2040,
+    "advantagePermil": 1152
+   },
+   {
+    "audienceAmount": 2060,
+    "advantagePermil": 1153
+   },
+   {
+    "audienceAmount": 2080,
+    "advantagePermil": 1154
+   },
+   {
+    "audienceAmount": 2100,
+    "advantagePermil": 1155
+   },
+   {
+    "audienceAmount": 2120,
+    "advantagePermil": 1156
+   },
+   {
+    "audienceAmount": 2140,
+    "advantagePermil": 1157
+   },
+   {
+    "audienceAmount": 2160,
+    "advantagePermil": 1158
+   },
+   {
+    "audienceAmount": 2180,
+    "advantagePermil": 1159
+   },
+   {
+    "audienceAmount": 2200,
+    "advantagePermil": 1160
+   },
+   {
+    "audienceAmount": 2220,
+    "advantagePermil": 1161
+   },
+   {
+    "audienceAmount": 2240,
+    "advantagePermil": 1162
+   },
+   {
+    "audienceAmount": 2260,
+    "advantagePermil": 1163
+   },
+   {
+    "audienceAmount": 2280,
+    "advantagePermil": 1164
+   },
+   {
+    "audienceAmount": 2300,
+    "advantagePermil": 1165
+   },
+   {
+    "audienceAmount": 2320,
+    "advantagePermil": 1166
+   },
+   {
+    "audienceAmount": 2340,
+    "advantagePermil": 1167
+   },
+   {
+    "audienceAmount": 2360,
+    "advantagePermil": 1168
+   },
+   {
+    "audienceAmount": 2380,
+    "advantagePermil": 1169
+   },
+   {
+    "audienceAmount": 2400,
+    "advantagePermil": 1170
+   },
+   {
+    "audienceAmount": 2420,
+    "advantagePermil": 1171
+   },
+   {
+    "audienceAmount": 2440,
+    "advantagePermil": 1172
+   },
+   {
+    "audienceAmount": 2460,
+    "advantagePermil": 1173
+   },
+   {
+    "audienceAmount": 2480,
+    "advantagePermil": 1174
+   },
+   {
+    "audienceAmount": 2500,
+    "advantagePermil": 1175
+   },
+   {
+    "audienceAmount": 2520,
+    "advantagePermil": 1176
+   },
+   {
+    "audienceAmount": 2540,
+    "advantagePermil": 1177
+   },
+   {
+    "audienceAmount": 2560,
+    "advantagePermil": 1178
+   },
+   {
+    "audienceAmount": 2580,
+    "advantagePermil": 1179
+   },
+   {
+    "audienceAmount": 2600,
+    "advantagePermil": 1180
+   },
+   {
+    "audienceAmount": 2620,
+    "advantagePermil": 1181
+   },
+   {
+    "audienceAmount": 2640,
+    "advantagePermil": 1182
+   },
+   {
+    "audienceAmount": 2660,
+    "advantagePermil": 1183
+   },
+   {
+    "audienceAmount": 2680,
+    "advantagePermil": 1184
+   },
+   {
+    "audienceAmount": 2700,
+    "advantagePermil": 1185
+   },
+   {
+    "audienceAmount": 2720,
+    "advantagePermil": 1186
+   },
+   {
+    "audienceAmount": 2740,
+    "advantagePermil": 1187
+   },
+   {
+    "audienceAmount": 2760,
+    "advantagePermil": 1188
+   },
+   {
+    "audienceAmount": 2780,
+    "advantagePermil": 1189
+   },
+   {
+    "audienceAmount": 2800,
+    "advantagePermil": 1190
+   },
+   {
+    "audienceAmount": 2820,
+    "advantagePermil": 1191
+   },
+   {
+    "audienceAmount": 2840,
+    "advantagePermil": 1192
+   },
+   {
+    "audienceAmount": 2860,
+    "advantagePermil": 1193
+   },
+   {
+    "audienceAmount": 2880,
+    "advantagePermil": 1194
+   },
+   {
+    "audienceAmount": 2900,
+    "advantagePermil": 1195
+   },
+   {
+    "audienceAmount": 2920,
+    "advantagePermil": 1196
+   },
+   {
+    "audienceAmount": 2940,
+    "advantagePermil": 1197
+   },
+   {
+    "audienceAmount": 2960,
+    "advantagePermil": 1198
+   },
+   {
+    "audienceAmount": 2980,
+    "advantagePermil": 1199
+   },
+   {
+    "audienceAmount": 3000,
+    "advantagePermil": 1200
+   },
+   {
+    "audienceAmount": 3020,
+    "advantagePermil": 1201
+   },
+   {
+    "audienceAmount": 3040,
+    "advantagePermil": 1202
+   },
+   {
+    "audienceAmount": 3060,
+    "advantagePermil": 1203
+   },
+   {
+    "audienceAmount": 3080,
+    "advantagePermil": 1204
+   },
+   {
+    "audienceAmount": 3100,
+    "advantagePermil": 1205
+   },
+   {
+    "audienceAmount": 3120,
+    "advantagePermil": 1206
+   },
+   {
+    "audienceAmount": 3140,
+    "advantagePermil": 1207
+   },
+   {
+    "audienceAmount": 3160,
+    "advantagePermil": 1208
+   },
+   {
+    "audienceAmount": 3180,
+    "advantagePermil": 1209
+   },
+   {
+    "audienceAmount": 3200,
+    "advantagePermil": 1210
+   },
+   {
+    "audienceAmount": 3220,
+    "advantagePermil": 1211
+   },
+   {
+    "audienceAmount": 3240,
+    "advantagePermil": 1212
+   },
+   {
+    "audienceAmount": 3260,
+    "advantagePermil": 1213
+   },
+   {
+    "audienceAmount": 3280,
+    "advantagePermil": 1214
+   },
+   {
+    "audienceAmount": 3300,
+    "advantagePermil": 1215
+   },
+   {
+    "audienceAmount": 3320,
+    "advantagePermil": 1216
+   },
+   {
+    "audienceAmount": 3340,
+    "advantagePermil": 1217
+   },
+   {
+    "audienceAmount": 3360,
+    "advantagePermil": 1218
+   },
+   {
+    "audienceAmount": 3380,
+    "advantagePermil": 1219
+   },
+   {
+    "audienceAmount": 3400,
+    "advantagePermil": 1220
+   },
+   {
+    "audienceAmount": 3420,
+    "advantagePermil": 1221
+   },
+   {
+    "audienceAmount": 3440,
+    "advantagePermil": 1222
+   },
+   {
+    "audienceAmount": 3460,
+    "advantagePermil": 1223
+   },
+   {
+    "audienceAmount": 3480,
+    "advantagePermil": 1224
+   },
+   {
+    "audienceAmount": 3500,
+    "advantagePermil": 1225
+   },
+   {
+    "audienceAmount": 3520,
+    "advantagePermil": 1226
+   },
+   {
+    "audienceAmount": 3540,
+    "advantagePermil": 1227
+   },
+   {
+    "audienceAmount": 3560,
+    "advantagePermil": 1228
+   },
+   {
+    "audienceAmount": 3580,
+    "advantagePermil": 1229
+   },
+   {
+    "audienceAmount": 3600,
+    "advantagePermil": 1230
+   },
+   {
+    "audienceAmount": 3620,
+    "advantagePermil": 1231
+   },
+   {
+    "audienceAmount": 3640,
+    "advantagePermil": 1232
+   },
+   {
+    "audienceAmount": 3660,
+    "advantagePermil": 1233
+   },
+   {
+    "audienceAmount": 3680,
+    "advantagePermil": 1234
+   },
+   {
+    "audienceAmount": 3700,
+    "advantagePermil": 1235
+   },
+   {
+    "audienceAmount": 3720,
+    "advantagePermil": 1236
+   },
+   {
+    "audienceAmount": 3740,
+    "advantagePermil": 1237
+   },
+   {
+    "audienceAmount": 3760,
+    "advantagePermil": 1238
+   },
+   {
+    "audienceAmount": 3780,
+    "advantagePermil": 1239
+   },
+   {
+    "audienceAmount": 3800,
+    "advantagePermil": 1240
+   },
+   {
+    "audienceAmount": 3820,
+    "advantagePermil": 1241
+   },
+   {
+    "audienceAmount": 3840,
+    "advantagePermil": 1242
+   },
+   {
+    "audienceAmount": 3860,
+    "advantagePermil": 1243
+   },
+   {
+    "audienceAmount": 3880,
+    "advantagePermil": 1244
+   },
+   {
+    "audienceAmount": 3900,
+    "advantagePermil": 1245
+   },
+   {
+    "audienceAmount": 3920,
+    "advantagePermil": 1246
+   },
+   {
+    "audienceAmount": 3940,
+    "advantagePermil": 1247
+   },
+   {
+    "audienceAmount": 3960,
+    "advantagePermil": 1248
+   },
+   {
+    "audienceAmount": 3980,
+    "advantagePermil": 1249
+   },
+   {
+    "audienceAmount": 4000,
+    "advantagePermil": 1250
+   },
+   {
+    "audienceAmount": 4020,
+    "advantagePermil": 1251
+   },
+   {
+    "audienceAmount": 4040,
+    "advantagePermil": 1252
+   },
+   {
+    "audienceAmount": 4060,
+    "advantagePermil": 1253
+   },
+   {
+    "audienceAmount": 4080,
+    "advantagePermil": 1254
+   },
+   {
+    "audienceAmount": 4100,
+    "advantagePermil": 1255
+   },
+   {
+    "audienceAmount": 4120,
+    "advantagePermil": 1256
+   },
+   {
+    "audienceAmount": 4140,
+    "advantagePermil": 1257
+   },
+   {
+    "audienceAmount": 4160,
+    "advantagePermil": 1258
+   },
+   {
+    "audienceAmount": 4180,
+    "advantagePermil": 1259
+   },
+   {
+    "audienceAmount": 4200,
+    "advantagePermil": 1260
+   },
+   {
+    "audienceAmount": 4220,
+    "advantagePermil": 1261
+   },
+   {
+    "audienceAmount": 4240,
+    "advantagePermil": 1262
+   },
+   {
+    "audienceAmount": 4260,
+    "advantagePermil": 1263
+   },
+   {
+    "audienceAmount": 4280,
+    "advantagePermil": 1264
+   },
+   {
+    "audienceAmount": 4300,
+    "advantagePermil": 1265
+   },
+   {
+    "audienceAmount": 4320,
+    "advantagePermil": 1266
+   },
+   {
+    "audienceAmount": 4340,
+    "advantagePermil": 1267
+   },
+   {
+    "audienceAmount": 4360,
+    "advantagePermil": 1268
+   },
+   {
+    "audienceAmount": 4380,
+    "advantagePermil": 1269
+   },
+   {
+    "audienceAmount": 4400,
+    "advantagePermil": 1270
+   },
+   {
+    "audienceAmount": 4420,
+    "advantagePermil": 1271
+   },
+   {
+    "audienceAmount": 4440,
+    "advantagePermil": 1272
+   },
+   {
+    "audienceAmount": 4460,
+    "advantagePermil": 1273
+   },
+   {
+    "audienceAmount": 4480,
+    "advantagePermil": 1274
+   },
+   {
+    "audienceAmount": 4500,
+    "advantagePermil": 1275
+   },
+   {
+    "audienceAmount": 4520,
+    "advantagePermil": 1276
+   },
+   {
+    "audienceAmount": 4540,
+    "advantagePermil": 1277
+   },
+   {
+    "audienceAmount": 4560,
+    "advantagePermil": 1278
+   },
+   {
+    "audienceAmount": 4580,
+    "advantagePermil": 1279
+   },
+   {
+    "audienceAmount": 4600,
+    "advantagePermil": 1280
+   },
+   {
+    "audienceAmount": 4620,
+    "advantagePermil": 1281
+   },
+   {
+    "audienceAmount": 4640,
+    "advantagePermil": 1282
+   },
+   {
+    "audienceAmount": 4660,
+    "advantagePermil": 1283
+   },
+   {
+    "audienceAmount": 4680,
+    "advantagePermil": 1284
+   },
+   {
+    "audienceAmount": 4700,
+    "advantagePermil": 1285
+   },
+   {
+    "audienceAmount": 4720,
+    "advantagePermil": 1286
+   },
+   {
+    "audienceAmount": 4740,
+    "advantagePermil": 1287
+   },
+   {
+    "audienceAmount": 4760,
+    "advantagePermil": 1288
+   },
+   {
+    "audienceAmount": 4780,
+    "advantagePermil": 1289
+   },
+   {
+    "audienceAmount": 4800,
+    "advantagePermil": 1290
+   },
+   {
+    "audienceAmount": 4820,
+    "advantagePermil": 1291
+   },
+   {
+    "audienceAmount": 4840,
+    "advantagePermil": 1292
+   },
+   {
+    "audienceAmount": 4860,
+    "advantagePermil": 1293
+   },
+   {
+    "audienceAmount": 4880,
+    "advantagePermil": 1294
+   },
+   {
+    "audienceAmount": 4900,
+    "advantagePermil": 1295
+   },
+   {
+    "audienceAmount": 4920,
+    "advantagePermil": 1296
+   },
+   {
+    "audienceAmount": 4940,
+    "advantagePermil": 1297
+   },
+   {
+    "audienceAmount": 4960,
+    "advantagePermil": 1298
+   },
+   {
+    "audienceAmount": 4980,
+    "advantagePermil": 1299
+   },
+   {
+    "audienceAmount": 5000,
+    "advantagePermil": 1300
+   },
+   {
+    "audienceAmount": 5040,
+    "advantagePermil": 1301
+   },
+   {
+    "audienceAmount": 5080,
+    "advantagePermil": 1302
+   },
+   {
+    "audienceAmount": 5120,
+    "advantagePermil": 1303
+   },
+   {
+    "audienceAmount": 5160,
+    "advantagePermil": 1304
+   },
+   {
+    "audienceAmount": 5200,
+    "advantagePermil": 1305
+   },
+   {
+    "audienceAmount": 5240,
+    "advantagePermil": 1306
+   },
+   {
+    "audienceAmount": 5280,
+    "advantagePermil": 1307
+   },
+   {
+    "audienceAmount": 5320,
+    "advantagePermil": 1308
+   },
+   {
+    "audienceAmount": 5360,
+    "advantagePermil": 1309
+   },
+   {
+    "audienceAmount": 5400,
+    "advantagePermil": 1310
+   },
+   {
+    "audienceAmount": 5440,
+    "advantagePermil": 1311
+   },
+   {
+    "audienceAmount": 5480,
+    "advantagePermil": 1312
+   },
+   {
+    "audienceAmount": 5520,
+    "advantagePermil": 1313
+   },
+   {
+    "audienceAmount": 5560,
+    "advantagePermil": 1314
+   },
+   {
+    "audienceAmount": 5600,
+    "advantagePermil": 1315
+   },
+   {
+    "audienceAmount": 5640,
+    "advantagePermil": 1316
+   },
+   {
+    "audienceAmount": 5680,
+    "advantagePermil": 1317
+   },
+   {
+    "audienceAmount": 5720,
+    "advantagePermil": 1318
+   },
+   {
+    "audienceAmount": 5760,
+    "advantagePermil": 1319
+   },
+   {
+    "audienceAmount": 5800,
+    "advantagePermil": 1320
+   },
+   {
+    "audienceAmount": 5840,
+    "advantagePermil": 1321
+   },
+   {
+    "audienceAmount": 5880,
+    "advantagePermil": 1322
+   },
+   {
+    "audienceAmount": 5920,
+    "advantagePermil": 1323
+   },
+   {
+    "audienceAmount": 5960,
+    "advantagePermil": 1324
+   },
+   {
+    "audienceAmount": 6000,
+    "advantagePermil": 1325
+   },
+   {
+    "audienceAmount": 6040,
+    "advantagePermil": 1326
+   },
+   {
+    "audienceAmount": 6080,
+    "advantagePermil": 1327
+   },
+   {
+    "audienceAmount": 6120,
+    "advantagePermil": 1328
+   },
+   {
+    "audienceAmount": 6160,
+    "advantagePermil": 1329
+   },
+   {
+    "audienceAmount": 6200,
+    "advantagePermil": 1330
+   },
+   {
+    "audienceAmount": 6240,
+    "advantagePermil": 1331
+   },
+   {
+    "audienceAmount": 6280,
+    "advantagePermil": 1332
+   },
+   {
+    "audienceAmount": 6320,
+    "advantagePermil": 1333
+   },
+   {
+    "audienceAmount": 6360,
+    "advantagePermil": 1334
+   },
+   {
+    "audienceAmount": 6400,
+    "advantagePermil": 1335
+   },
+   {
+    "audienceAmount": 6440,
+    "advantagePermil": 1336
+   },
+   {
+    "audienceAmount": 6480,
+    "advantagePermil": 1337
+   },
+   {
+    "audienceAmount": 6520,
+    "advantagePermil": 1338
+   },
+   {
+    "audienceAmount": 6560,
+    "advantagePermil": 1339
+   },
+   {
+    "audienceAmount": 6600,
+    "advantagePermil": 1340
+   },
+   {
+    "audienceAmount": 6640,
+    "advantagePermil": 1341
+   },
+   {
+    "audienceAmount": 6680,
+    "advantagePermil": 1342
+   },
+   {
+    "audienceAmount": 6720,
+    "advantagePermil": 1343
+   },
+   {
+    "audienceAmount": 6760,
+    "advantagePermil": 1344
+   },
+   {
+    "audienceAmount": 6800,
+    "advantagePermil": 1345
+   },
+   {
+    "audienceAmount": 6840,
+    "advantagePermil": 1346
+   },
+   {
+    "audienceAmount": 6880,
+    "advantagePermil": 1347
+   },
+   {
+    "audienceAmount": 6920,
+    "advantagePermil": 1348
+   },
+   {
+    "audienceAmount": 6960,
+    "advantagePermil": 1349
+   },
+   {
+    "audienceAmount": 7000,
+    "advantagePermil": 1350
+   },
+   {
+    "audienceAmount": 7040,
+    "advantagePermil": 1351
+   },
+   {
+    "audienceAmount": 7080,
+    "advantagePermil": 1352
+   },
+   {
+    "audienceAmount": 7120,
+    "advantagePermil": 1353
+   },
+   {
+    "audienceAmount": 7160,
+    "advantagePermil": 1354
+   },
+   {
+    "audienceAmount": 7200,
+    "advantagePermil": 1355
+   },
+   {
+    "audienceAmount": 7240,
+    "advantagePermil": 1356
+   },
+   {
+    "audienceAmount": 7280,
+    "advantagePermil": 1357
+   },
+   {
+    "audienceAmount": 7320,
+    "advantagePermil": 1358
+   },
+   {
+    "audienceAmount": 7360,
+    "advantagePermil": 1359
+   },
+   {
+    "audienceAmount": 7400,
+    "advantagePermil": 1360
+   },
+   {
+    "audienceAmount": 7440,
+    "advantagePermil": 1361
+   },
+   {
+    "audienceAmount": 7480,
+    "advantagePermil": 1362
+   },
+   {
+    "audienceAmount": 7520,
+    "advantagePermil": 1363
+   },
+   {
+    "audienceAmount": 7560,
+    "advantagePermil": 1364
+   },
+   {
+    "audienceAmount": 7600,
+    "advantagePermil": 1365
+   },
+   {
+    "audienceAmount": 7640,
+    "advantagePermil": 1366
+   },
+   {
+    "audienceAmount": 7680,
+    "advantagePermil": 1367
+   },
+   {
+    "audienceAmount": 7720,
+    "advantagePermil": 1368
+   },
+   {
+    "audienceAmount": 7760,
+    "advantagePermil": 1369
+   },
+   {
+    "audienceAmount": 7800,
+    "advantagePermil": 1370
+   },
+   {
+    "audienceAmount": 7840,
+    "advantagePermil": 1371
+   },
+   {
+    "audienceAmount": 7880,
+    "advantagePermil": 1372
+   },
+   {
+    "audienceAmount": 7920,
+    "advantagePermil": 1373
+   },
+   {
+    "audienceAmount": 7960,
+    "advantagePermil": 1374
+   },
+   {
+    "audienceAmount": 8000,
+    "advantagePermil": 1375
+   },
+   {
+    "audienceAmount": 8040,
+    "advantagePermil": 1376
+   },
+   {
+    "audienceAmount": 8080,
+    "advantagePermil": 1377
+   },
+   {
+    "audienceAmount": 8120,
+    "advantagePermil": 1378
+   },
+   {
+    "audienceAmount": 8160,
+    "advantagePermil": 1379
+   },
+   {
+    "audienceAmount": 8200,
+    "advantagePermil": 1380
+   },
+   {
+    "audienceAmount": 8240,
+    "advantagePermil": 1381
+   },
+   {
+    "audienceAmount": 8280,
+    "advantagePermil": 1382
+   },
+   {
+    "audienceAmount": 8320,
+    "advantagePermil": 1383
+   },
+   {
+    "audienceAmount": 8360,
+    "advantagePermil": 1384
+   },
+   {
+    "audienceAmount": 8400,
+    "advantagePermil": 1385
+   },
+   {
+    "audienceAmount": 8440,
+    "advantagePermil": 1386
+   },
+   {
+    "audienceAmount": 8480,
+    "advantagePermil": 1387
+   },
+   {
+    "audienceAmount": 8520,
+    "advantagePermil": 1388
+   },
+   {
+    "audienceAmount": 8560,
+    "advantagePermil": 1389
+   },
+   {
+    "audienceAmount": 8600,
+    "advantagePermil": 1390
+   },
+   {
+    "audienceAmount": 8640,
+    "advantagePermil": 1391
+   },
+   {
+    "audienceAmount": 8680,
+    "advantagePermil": 1392
+   },
+   {
+    "audienceAmount": 8720,
+    "advantagePermil": 1393
+   },
+   {
+    "audienceAmount": 8760,
+    "advantagePermil": 1394
+   },
+   {
+    "audienceAmount": 8800,
+    "advantagePermil": 1395
+   },
+   {
+    "audienceAmount": 8840,
+    "advantagePermil": 1396
+   },
+   {
+    "audienceAmount": 8880,
+    "advantagePermil": 1397
+   },
+   {
+    "audienceAmount": 8920,
+    "advantagePermil": 1398
+   },
+   {
+    "audienceAmount": 8960,
+    "advantagePermil": 1399
+   },
+   {
+    "audienceAmount": 9000,
+    "advantagePermil": 1400
+   },
+   {
+    "audienceAmount": 9040,
+    "advantagePermil": 1401
+   },
+   {
+    "audienceAmount": 9080,
+    "advantagePermil": 1402
+   },
+   {
+    "audienceAmount": 9120,
+    "advantagePermil": 1403
+   },
+   {
+    "audienceAmount": 9160,
+    "advantagePermil": 1404
+   },
+   {
+    "audienceAmount": 9200,
+    "advantagePermil": 1405
+   },
+   {
+    "audienceAmount": 9240,
+    "advantagePermil": 1406
+   },
+   {
+    "audienceAmount": 9280,
+    "advantagePermil": 1407
+   },
+   {
+    "audienceAmount": 9320,
+    "advantagePermil": 1408
+   },
+   {
+    "audienceAmount": 9360,
+    "advantagePermil": 1409
+   },
+   {
+    "audienceAmount": 9400,
+    "advantagePermil": 1410
+   },
+   {
+    "audienceAmount": 9440,
+    "advantagePermil": 1411
+   },
+   {
+    "audienceAmount": 9480,
+    "advantagePermil": 1412
+   },
+   {
+    "audienceAmount": 9520,
+    "advantagePermil": 1413
+   },
+   {
+    "audienceAmount": 9560,
+    "advantagePermil": 1414
+   },
+   {
+    "audienceAmount": 9600,
+    "advantagePermil": 1415
+   },
+   {
+    "audienceAmount": 9640,
+    "advantagePermil": 1416
+   },
+   {
+    "audienceAmount": 9680,
+    "advantagePermil": 1417
+   },
+   {
+    "audienceAmount": 9720,
+    "advantagePermil": 1418
+   },
+   {
+    "audienceAmount": 9760,
+    "advantagePermil": 1419
+   },
+   {
+    "audienceAmount": 9800,
+    "advantagePermil": 1420
+   },
+   {
+    "audienceAmount": 9802,
+    "advantagePermil": 1421
+   },
+   {
+    "audienceAmount": 9805,
+    "advantagePermil": 1422
+   },
+   {
+    "audienceAmount": 9807,
+    "advantagePermil": 1423
+   },
+   {
+    "audienceAmount": 9810,
+    "advantagePermil": 1424
+   },
+   {
+    "audienceAmount": 9812,
+    "advantagePermil": 1425
+   },
+   {
+    "audienceAmount": 9815,
+    "advantagePermil": 1426
+   },
+   {
+    "audienceAmount": 9817,
+    "advantagePermil": 1427
+   },
+   {
+    "audienceAmount": 9820,
+    "advantagePermil": 1428
+   },
+   {
+    "audienceAmount": 9822,
+    "advantagePermil": 1429
+   },
+   {
+    "audienceAmount": 9825,
+    "advantagePermil": 1430
+   },
+   {
+    "audienceAmount": 9827,
+    "advantagePermil": 1431
+   },
+   {
+    "audienceAmount": 9830,
+    "advantagePermil": 1432
+   },
+   {
+    "audienceAmount": 9832,
+    "advantagePermil": 1433
+   },
+   {
+    "audienceAmount": 9835,
+    "advantagePermil": 1434
+   },
+   {
+    "audienceAmount": 9837,
+    "advantagePermil": 1435
+   },
+   {
+    "audienceAmount": 9840,
+    "advantagePermil": 1436
+   },
+   {
+    "audienceAmount": 9842,
+    "advantagePermil": 1437
+   },
+   {
+    "audienceAmount": 9845,
+    "advantagePermil": 1438
+   },
+   {
+    "audienceAmount": 9847,
+    "advantagePermil": 1439
+   },
+   {
+    "audienceAmount": 9850,
+    "advantagePermil": 1440
+   },
+   {
+    "audienceAmount": 9852,
+    "advantagePermil": 1441
+   },
+   {
+    "audienceAmount": 9855,
+    "advantagePermil": 1442
+   },
+   {
+    "audienceAmount": 9857,
+    "advantagePermil": 1443
+   },
+   {
+    "audienceAmount": 9860,
+    "advantagePermil": 1444
+   },
+   {
+    "audienceAmount": 9862,
+    "advantagePermil": 1445
+   },
+   {
+    "audienceAmount": 9865,
+    "advantagePermil": 1446
+   },
+   {
+    "audienceAmount": 9867,
+    "advantagePermil": 1447
+   },
+   {
+    "audienceAmount": 9870,
+    "advantagePermil": 1448
+   },
+   {
+    "audienceAmount": 9872,
+    "advantagePermil": 1449
+   },
+   {
+    "audienceAmount": 9875,
+    "advantagePermil": 1450
+   },
+   {
+    "audienceAmount": 9877,
+    "advantagePermil": 1451
+   },
+   {
+    "audienceAmount": 9880,
+    "advantagePermil": 1452
+   },
+   {
+    "audienceAmount": 9882,
+    "advantagePermil": 1453
+   },
+   {
+    "audienceAmount": 9885,
+    "advantagePermil": 1454
+   },
+   {
+    "audienceAmount": 9887,
+    "advantagePermil": 1455
+   },
+   {
+    "audienceAmount": 9890,
+    "advantagePermil": 1456
+   },
+   {
+    "audienceAmount": 9892,
+    "advantagePermil": 1457
+   },
+   {
+    "audienceAmount": 9895,
+    "advantagePermil": 1458
+   },
+   {
+    "audienceAmount": 9897,
+    "advantagePermil": 1459
+   },
+   {
+    "audienceAmount": 9900,
+    "advantagePermil": 1460
+   },
+   {
+    "audienceAmount": 9902,
+    "advantagePermil": 1461
+   },
+   {
+    "audienceAmount": 9905,
+    "advantagePermil": 1462
+   },
+   {
+    "audienceAmount": 9907,
+    "advantagePermil": 1463
+   },
+   {
+    "audienceAmount": 9910,
+    "advantagePermil": 1464
+   },
+   {
+    "audienceAmount": 9912,
+    "advantagePermil": 1465
+   },
+   {
+    "audienceAmount": 9915,
+    "advantagePermil": 1466
+   },
+   {
+    "audienceAmount": 9917,
+    "advantagePermil": 1467
+   },
+   {
+    "audienceAmount": 9920,
+    "advantagePermil": 1468
+   },
+   {
+    "audienceAmount": 9922,
+    "advantagePermil": 1469
+   },
+   {
+    "audienceAmount": 9925,
+    "advantagePermil": 1470
+   },
+   {
+    "audienceAmount": 9927,
+    "advantagePermil": 1471
+   },
+   {
+    "audienceAmount": 9930,
+    "advantagePermil": 1472
+   },
+   {
+    "audienceAmount": 9932,
+    "advantagePermil": 1473
+   },
+   {
+    "audienceAmount": 9935,
+    "advantagePermil": 1474
+   },
+   {
+    "audienceAmount": 9937,
+    "advantagePermil": 1475
+   },
+   {
+    "audienceAmount": 9940,
+    "advantagePermil": 1476
+   },
+   {
+    "audienceAmount": 9942,
+    "advantagePermil": 1477
+   },
+   {
+    "audienceAmount": 9945,
+    "advantagePermil": 1478
+   },
+   {
+    "audienceAmount": 9947,
+    "advantagePermil": 1479
+   },
+   {
+    "audienceAmount": 9950,
+    "advantagePermil": 1480
+   },
+   {
+    "audienceAmount": 9952,
+    "advantagePermil": 1481
+   },
+   {
+    "audienceAmount": 9955,
+    "advantagePermil": 1482
+   },
+   {
+    "audienceAmount": 9957,
+    "advantagePermil": 1483
+   },
+   {
+    "audienceAmount": 9960,
+    "advantagePermil": 1484
+   },
+   {
+    "audienceAmount": 9962,
+    "advantagePermil": 1485
+   },
+   {
+    "audienceAmount": 9965,
+    "advantagePermil": 1486
+   },
+   {
+    "audienceAmount": 9967,
+    "advantagePermil": 1487
+   },
+   {
+    "audienceAmount": 9970,
+    "advantagePermil": 1488
+   },
+   {
+    "audienceAmount": 9972,
+    "advantagePermil": 1489
+   },
+   {
+    "audienceAmount": 9975,
+    "advantagePermil": 1490
+   },
+   {
+    "audienceAmount": 9977,
+    "advantagePermil": 1491
+   },
+   {
+    "audienceAmount": 9980,
+    "advantagePermil": 1492
+   },
+   {
+    "audienceAmount": 9982,
+    "advantagePermil": 1493
+   },
+   {
+    "audienceAmount": 9985,
+    "advantagePermil": 1494
+   },
+   {
+    "audienceAmount": 9987,
+    "advantagePermil": 1495
+   },
+   {
+    "audienceAmount": 9990,
+    "advantagePermil": 1496
+   },
+   {
+    "audienceAmount": 9992,
+    "advantagePermil": 1497
+   },
+   {
+    "audienceAmount": 9995,
+    "advantagePermil": 1498
+   },
+   {
+    "audienceAmount": 9997,
+    "advantagePermil": 1499
+   },
+   {
+    "audienceAmount": 10000,
+    "advantagePermil": 1500
+   },
+   {
+    "audienceAmount": 10050,
+    "advantagePermil": 1501
+   },
+   {
+    "audienceAmount": 10100,
+    "advantagePermil": 1502
+   },
+   {
+    "audienceAmount": 10150,
+    "advantagePermil": 1503
+   },
+   {
+    "audienceAmount": 10200,
+    "advantagePermil": 1504
+   },
+   {
+    "audienceAmount": 10250,
+    "advantagePermil": 1505
+   },
+   {
+    "audienceAmount": 10300,
+    "advantagePermil": 1506
+   },
+   {
+    "audienceAmount": 10350,
+    "advantagePermil": 1507
+   },
+   {
+    "audienceAmount": 10400,
+    "advantagePermil": 1508
+   },
+   {
+    "audienceAmount": 10450,
+    "advantagePermil": 1509
+   },
+   {
+    "audienceAmount": 10500,
+    "advantagePermil": 1510
+   },
+   {
+    "audienceAmount": 10550,
+    "advantagePermil": 1511
+   },
+   {
+    "audienceAmount": 10600,
+    "advantagePermil": 1512
+   },
+   {
+    "audienceAmount": 10650,
+    "advantagePermil": 1513
+   },
+   {
+    "audienceAmount": 10700,
+    "advantagePermil": 1514
+   },
+   {
+    "audienceAmount": 10750,
+    "advantagePermil": 1515
+   },
+   {
+    "audienceAmount": 10800,
+    "advantagePermil": 1516
+   },
+   {
+    "audienceAmount": 10850,
+    "advantagePermil": 1517
+   },
+   {
+    "audienceAmount": 10900,
+    "advantagePermil": 1518
+   },
+   {
+    "audienceAmount": 10950,
+    "advantagePermil": 1519
+   },
+   {
+    "audienceAmount": 11000,
+    "advantagePermil": 1520
+   },
+   {
+    "audienceAmount": 11050,
+    "advantagePermil": 1521
+   },
+   {
+    "audienceAmount": 11100,
+    "advantagePermil": 1522
+   },
+   {
+    "audienceAmount": 11150,
+    "advantagePermil": 1523
+   },
+   {
+    "audienceAmount": 11200,
+    "advantagePermil": 1524
+   },
+   {
+    "audienceAmount": 11250,
+    "advantagePermil": 1525
+   },
+   {
+    "audienceAmount": 11300,
+    "advantagePermil": 1526
+   },
+   {
+    "audienceAmount": 11350,
+    "advantagePermil": 1527
+   },
+   {
+    "audienceAmount": 11400,
+    "advantagePermil": 1528
+   },
+   {
+    "audienceAmount": 11450,
+    "advantagePermil": 1529
+   },
+   {
+    "audienceAmount": 11500,
+    "advantagePermil": 1530
+   },
+   {
+    "audienceAmount": 11550,
+    "advantagePermil": 1531
+   },
+   {
+    "audienceAmount": 11600,
+    "advantagePermil": 1532
+   },
+   {
+    "audienceAmount": 11650,
+    "advantagePermil": 1533
+   },
+   {
+    "audienceAmount": 11700,
+    "advantagePermil": 1534
+   },
+   {
+    "audienceAmount": 11750,
+    "advantagePermil": 1535
+   },
+   {
+    "audienceAmount": 11800,
+    "advantagePermil": 1536
+   },
+   {
+    "audienceAmount": 11850,
+    "advantagePermil": 1537
+   },
+   {
+    "audienceAmount": 11900,
+    "advantagePermil": 1538
+   },
+   {
+    "audienceAmount": 11950,
+    "advantagePermil": 1539
+   },
+   {
+    "audienceAmount": 12000,
+    "advantagePermil": 1540
+   },
+   {
+    "audienceAmount": 12050,
+    "advantagePermil": 1541
+   },
+   {
+    "audienceAmount": 12100,
+    "advantagePermil": 1542
+   },
+   {
+    "audienceAmount": 12150,
+    "advantagePermil": 1543
+   },
+   {
+    "audienceAmount": 12200,
+    "advantagePermil": 1544
+   },
+   {
+    "audienceAmount": 12250,
+    "advantagePermil": 1545
+   },
+   {
+    "audienceAmount": 12300,
+    "advantagePermil": 1546
+   },
+   {
+    "audienceAmount": 12350,
+    "advantagePermil": 1547
+   },
+   {
+    "audienceAmount": 12400,
+    "advantagePermil": 1548
+   },
+   {
+    "audienceAmount": 12450,
+    "advantagePermil": 1549
+   },
+   {
+    "audienceAmount": 12500,
+    "advantagePermil": 1550
+   },
+   {
+    "audienceAmount": 12550,
+    "advantagePermil": 1551
+   },
+   {
+    "audienceAmount": 12600,
+    "advantagePermil": 1552
+   },
+   {
+    "audienceAmount": 12650,
+    "advantagePermil": 1553
+   },
+   {
+    "audienceAmount": 12700,
+    "advantagePermil": 1554
+   },
+   {
+    "audienceAmount": 12750,
+    "advantagePermil": 1555
+   },
+   {
+    "audienceAmount": 12800,
+    "advantagePermil": 1556
+   },
+   {
+    "audienceAmount": 12850,
+    "advantagePermil": 1557
+   },
+   {
+    "audienceAmount": 12900,
+    "advantagePermil": 1558
+   },
+   {
+    "audienceAmount": 12950,
+    "advantagePermil": 1559
+   },
+   {
+    "audienceAmount": 13000,
+    "advantagePermil": 1560
+   },
+   {
+    "audienceAmount": 13050,
+    "advantagePermil": 1561
+   },
+   {
+    "audienceAmount": 13100,
+    "advantagePermil": 1562
+   },
+   {
+    "audienceAmount": 13150,
+    "advantagePermil": 1563
+   },
+   {
+    "audienceAmount": 13200,
+    "advantagePermil": 1564
+   },
+   {
+    "audienceAmount": 13250,
+    "advantagePermil": 1565
+   },
+   {
+    "audienceAmount": 13300,
+    "advantagePermil": 1566
+   },
+   {
+    "audienceAmount": 13350,
+    "advantagePermil": 1567
+   },
+   {
+    "audienceAmount": 13400,
+    "advantagePermil": 1568
+   },
+   {
+    "audienceAmount": 13450,
+    "advantagePermil": 1569
+   },
+   {
+    "audienceAmount": 13500,
+    "advantagePermil": 1570
+   },
+   {
+    "audienceAmount": 13550,
+    "advantagePermil": 1571
+   },
+   {
+    "audienceAmount": 13600,
+    "advantagePermil": 1572
+   },
+   {
+    "audienceAmount": 13650,
+    "advantagePermil": 1573
+   },
+   {
+    "audienceAmount": 13700,
+    "advantagePermil": 1574
+   },
+   {
+    "audienceAmount": 13750,
+    "advantagePermil": 1575
+   },
+   {
+    "audienceAmount": 13800,
+    "advantagePermil": 1576
+   },
+   {
+    "audienceAmount": 13850,
+    "advantagePermil": 1577
+   },
+   {
+    "audienceAmount": 13900,
+    "advantagePermil": 1578
+   },
+   {
+    "audienceAmount": 13950,
+    "advantagePermil": 1579
+   },
+   {
+    "audienceAmount": 14000,
+    "advantagePermil": 1580
+   },
+   {
+    "audienceAmount": 14050,
+    "advantagePermil": 1581
+   },
+   {
+    "audienceAmount": 14100,
+    "advantagePermil": 1582
+   },
+   {
+    "audienceAmount": 14150,
+    "advantagePermil": 1583
+   },
+   {
+    "audienceAmount": 14200,
+    "advantagePermil": 1584
+   },
+   {
+    "audienceAmount": 14250,
+    "advantagePermil": 1585
+   },
+   {
+    "audienceAmount": 14300,
+    "advantagePermil": 1586
+   },
+   {
+    "audienceAmount": 14350,
+    "advantagePermil": 1587
+   },
+   {
+    "audienceAmount": 14400,
+    "advantagePermil": 1588
+   },
+   {
+    "audienceAmount": 14450,
+    "advantagePermil": 1589
+   },
+   {
+    "audienceAmount": 14500,
+    "advantagePermil": 1590
+   },
+   {
+    "audienceAmount": 14550,
+    "advantagePermil": 1591
+   },
+   {
+    "audienceAmount": 14600,
+    "advantagePermil": 1592
+   },
+   {
+    "audienceAmount": 14650,
+    "advantagePermil": 1593
+   },
+   {
+    "audienceAmount": 14700,
+    "advantagePermil": 1594
+   },
+   {
+    "audienceAmount": 14750,
+    "advantagePermil": 1595
+   },
+   {
+    "audienceAmount": 14800,
+    "advantagePermil": 1596
+   },
+   {
+    "audienceAmount": 14850,
+    "advantagePermil": 1597
+   },
+   {
+    "audienceAmount": 14900,
+    "advantagePermil": 1598
+   },
+   {
+    "audienceAmount": 14950,
+    "advantagePermil": 1599
+   },
+   {
+    "audienceAmount": 15000,
+    "advantagePermil": 1600
+   },
+   {
+    "audienceAmount": 15050,
+    "advantagePermil": 1601
+   },
+   {
+    "audienceAmount": 15100,
+    "advantagePermil": 1602
+   },
+   {
+    "audienceAmount": 15150,
+    "advantagePermil": 1603
+   },
+   {
+    "audienceAmount": 15200,
+    "advantagePermil": 1604
+   },
+   {
+    "audienceAmount": 15250,
+    "advantagePermil": 1605
+   },
+   {
+    "audienceAmount": 15300,
+    "advantagePermil": 1606
+   },
+   {
+    "audienceAmount": 15350,
+    "advantagePermil": 1607
+   },
+   {
+    "audienceAmount": 15400,
+    "advantagePermil": 1608
+   },
+   {
+    "audienceAmount": 15450,
+    "advantagePermil": 1609
+   },
+   {
+    "audienceAmount": 15500,
+    "advantagePermil": 1610
+   },
+   {
+    "audienceAmount": 15550,
+    "advantagePermil": 1611
+   },
+   {
+    "audienceAmount": 15600,
+    "advantagePermil": 1612
+   },
+   {
+    "audienceAmount": 15650,
+    "advantagePermil": 1613
+   },
+   {
+    "audienceAmount": 15700,
+    "advantagePermil": 1614
+   },
+   {
+    "audienceAmount": 15750,
+    "advantagePermil": 1615
+   },
+   {
+    "audienceAmount": 15800,
+    "advantagePermil": 1616
+   },
+   {
+    "audienceAmount": 15850,
+    "advantagePermil": 1617
+   },
+   {
+    "audienceAmount": 15900,
+    "advantagePermil": 1618
+   },
+   {
+    "audienceAmount": 15950,
+    "advantagePermil": 1619
+   },
+   {
+    "audienceAmount": 16000,
+    "advantagePermil": 1620
+   },
+   {
+    "audienceAmount": 16050,
+    "advantagePermil": 1621
+   },
+   {
+    "audienceAmount": 16100,
+    "advantagePermil": 1622
+   },
+   {
+    "audienceAmount": 16150,
+    "advantagePermil": 1623
+   },
+   {
+    "audienceAmount": 16200,
+    "advantagePermil": 1624
+   },
+   {
+    "audienceAmount": 16250,
+    "advantagePermil": 1625
+   },
+   {
+    "audienceAmount": 16300,
+    "advantagePermil": 1626
+   },
+   {
+    "audienceAmount": 16350,
+    "advantagePermil": 1627
+   },
+   {
+    "audienceAmount": 16400,
+    "advantagePermil": 1628
+   },
+   {
+    "audienceAmount": 16450,
+    "advantagePermil": 1629
+   },
+   {
+    "audienceAmount": 16500,
+    "advantagePermil": 1630
+   },
+   {
+    "audienceAmount": 16550,
+    "advantagePermil": 1631
+   },
+   {
+    "audienceAmount": 16600,
+    "advantagePermil": 1632
+   },
+   {
+    "audienceAmount": 16650,
+    "advantagePermil": 1633
+   },
+   {
+    "audienceAmount": 16700,
+    "advantagePermil": 1634
+   },
+   {
+    "audienceAmount": 16750,
+    "advantagePermil": 1635
+   },
+   {
+    "audienceAmount": 16800,
+    "advantagePermil": 1636
+   },
+   {
+    "audienceAmount": 16850,
+    "advantagePermil": 1637
+   },
+   {
+    "audienceAmount": 16900,
+    "advantagePermil": 1638
+   },
+   {
+    "audienceAmount": 16950,
+    "advantagePermil": 1639
+   },
+   {
+    "audienceAmount": 17000,
+    "advantagePermil": 1640
+   },
+   {
+    "audienceAmount": 17050,
+    "advantagePermil": 1641
+   },
+   {
+    "audienceAmount": 17100,
+    "advantagePermil": 1642
+   },
+   {
+    "audienceAmount": 17150,
+    "advantagePermil": 1643
+   },
+   {
+    "audienceAmount": 17200,
+    "advantagePermil": 1644
+   },
+   {
+    "audienceAmount": 17250,
+    "advantagePermil": 1645
+   },
+   {
+    "audienceAmount": 17300,
+    "advantagePermil": 1646
+   },
+   {
+    "audienceAmount": 17350,
+    "advantagePermil": 1647
+   },
+   {
+    "audienceAmount": 17400,
+    "advantagePermil": 1648
+   },
+   {
+    "audienceAmount": 17450,
+    "advantagePermil": 1649
+   },
+   {
+    "audienceAmount": 17500,
+    "advantagePermil": 1650
+   },
+   {
+    "audienceAmount": 17550,
+    "advantagePermil": 1651
+   },
+   {
+    "audienceAmount": 17600,
+    "advantagePermil": 1652
+   },
+   {
+    "audienceAmount": 17650,
+    "advantagePermil": 1653
+   },
+   {
+    "audienceAmount": 17700,
+    "advantagePermil": 1654
+   },
+   {
+    "audienceAmount": 17750,
+    "advantagePermil": 1655
+   },
+   {
+    "audienceAmount": 17800,
+    "advantagePermil": 1656
+   },
+   {
+    "audienceAmount": 17850,
+    "advantagePermil": 1657
+   },
+   {
+    "audienceAmount": 17900,
+    "advantagePermil": 1658
+   },
+   {
+    "audienceAmount": 17950,
+    "advantagePermil": 1659
+   },
+   {
+    "audienceAmount": 18000,
+    "advantagePermil": 1660
+   },
+   {
+    "audienceAmount": 18050,
+    "advantagePermil": 1661
+   },
+   {
+    "audienceAmount": 18100,
+    "advantagePermil": 1662
+   },
+   {
+    "audienceAmount": 18150,
+    "advantagePermil": 1663
+   },
+   {
+    "audienceAmount": 18200,
+    "advantagePermil": 1664
+   },
+   {
+    "audienceAmount": 18250,
+    "advantagePermil": 1665
+   },
+   {
+    "audienceAmount": 18300,
+    "advantagePermil": 1666
+   },
+   {
+    "audienceAmount": 18350,
+    "advantagePermil": 1667
+   },
+   {
+    "audienceAmount": 18400,
+    "advantagePermil": 1668
+   },
+   {
+    "audienceAmount": 18450,
+    "advantagePermil": 1669
+   },
+   {
+    "audienceAmount": 18500,
+    "advantagePermil": 1670
+   },
+   {
+    "audienceAmount": 18550,
+    "advantagePermil": 1671
+   },
+   {
+    "audienceAmount": 18600,
+    "advantagePermil": 1672
+   },
+   {
+    "audienceAmount": 18650,
+    "advantagePermil": 1673
+   },
+   {
+    "audienceAmount": 18700,
+    "advantagePermil": 1674
+   },
+   {
+    "audienceAmount": 18750,
+    "advantagePermil": 1675
+   },
+   {
+    "audienceAmount": 18800,
+    "advantagePermil": 1676
+   },
+   {
+    "audienceAmount": 18850,
+    "advantagePermil": 1677
+   },
+   {
+    "audienceAmount": 18900,
+    "advantagePermil": 1678
+   },
+   {
+    "audienceAmount": 18950,
+    "advantagePermil": 1679
+   },
+   {
+    "audienceAmount": 19000,
+    "advantagePermil": 1680
+   },
+   {
+    "audienceAmount": 19050,
+    "advantagePermil": 1681
+   },
+   {
+    "audienceAmount": 19100,
+    "advantagePermil": 1682
+   },
+   {
+    "audienceAmount": 19150,
+    "advantagePermil": 1683
+   },
+   {
+    "audienceAmount": 19200,
+    "advantagePermil": 1684
+   },
+   {
+    "audienceAmount": 19250,
+    "advantagePermil": 1685
+   },
+   {
+    "audienceAmount": 19300,
+    "advantagePermil": 1686
+   },
+   {
+    "audienceAmount": 19350,
+    "advantagePermil": 1687
+   },
+   {
+    "audienceAmount": 19400,
+    "advantagePermil": 1688
+   },
+   {
+    "audienceAmount": 19450,
+    "advantagePermil": 1689
+   },
+   {
+    "audienceAmount": 19500,
+    "advantagePermil": 1690
+   },
+   {
+    "audienceAmount": 19550,
+    "advantagePermil": 1691
+   },
+   {
+    "audienceAmount": 19600,
+    "advantagePermil": 1692
+   },
+   {
+    "audienceAmount": 19650,
+    "advantagePermil": 1693
+   },
+   {
+    "audienceAmount": 19700,
+    "advantagePermil": 1694
+   },
+   {
+    "audienceAmount": 19750,
+    "advantagePermil": 1695
+   },
+   {
+    "audienceAmount": 19800,
+    "advantagePermil": 1696
+   },
+   {
+    "audienceAmount": 19850,
+    "advantagePermil": 1697
+   },
+   {
+    "audienceAmount": 19900,
+    "advantagePermil": 1698
+   },
+   {
+    "audienceAmount": 19950,
+    "advantagePermil": 1699
+   },
+   {
+    "audienceAmount": 20000,
+    "advantagePermil": 1700
+   },
+   {
+    "audienceAmount": 20100,
+    "advantagePermil": 1701
+   },
+   {
+    "audienceAmount": 20200,
+    "advantagePermil": 1702
+   },
+   {
+    "audienceAmount": 20300,
+    "advantagePermil": 1703
+   },
+   {
+    "audienceAmount": 20400,
+    "advantagePermil": 1704
+   },
+   {
+    "audienceAmount": 20500,
+    "advantagePermil": 1705
+   },
+   {
+    "audienceAmount": 20600,
+    "advantagePermil": 1706
+   },
+   {
+    "audienceAmount": 20700,
+    "advantagePermil": 1707
+   },
+   {
+    "audienceAmount": 20800,
+    "advantagePermil": 1708
+   },
+   {
+    "audienceAmount": 20900,
+    "advantagePermil": 1709
+   },
+   {
+    "audienceAmount": 21000,
+    "advantagePermil": 1710
+   },
+   {
+    "audienceAmount": 21100,
+    "advantagePermil": 1711
+   },
+   {
+    "audienceAmount": 21200,
+    "advantagePermil": 1712
+   },
+   {
+    "audienceAmount": 21300,
+    "advantagePermil": 1713
+   },
+   {
+    "audienceAmount": 21400,
+    "advantagePermil": 1714
+   },
+   {
+    "audienceAmount": 21500,
+    "advantagePermil": 1715
+   },
+   {
+    "audienceAmount": 21600,
+    "advantagePermil": 1716
+   },
+   {
+    "audienceAmount": 21700,
+    "advantagePermil": 1717
+   },
+   {
+    "audienceAmount": 21800,
+    "advantagePermil": 1718
+   },
+   {
+    "audienceAmount": 21900,
+    "advantagePermil": 1719
+   },
+   {
+    "audienceAmount": 22000,
+    "advantagePermil": 1720
+   },
+   {
+    "audienceAmount": 22100,
+    "advantagePermil": 1721
+   },
+   {
+    "audienceAmount": 22200,
+    "advantagePermil": 1722
+   },
+   {
+    "audienceAmount": 22300,
+    "advantagePermil": 1723
+   },
+   {
+    "audienceAmount": 22400,
+    "advantagePermil": 1724
+   },
+   {
+    "audienceAmount": 22500,
+    "advantagePermil": 1725
+   },
+   {
+    "audienceAmount": 22600,
+    "advantagePermil": 1726
+   },
+   {
+    "audienceAmount": 22700,
+    "advantagePermil": 1727
+   },
+   {
+    "audienceAmount": 22800,
+    "advantagePermil": 1728
+   },
+   {
+    "audienceAmount": 22900,
+    "advantagePermil": 1729
+   },
+   {
+    "audienceAmount": 23000,
+    "advantagePermil": 1730
+   },
+   {
+    "audienceAmount": 23100,
+    "advantagePermil": 1731
+   },
+   {
+    "audienceAmount": 23200,
+    "advantagePermil": 1732
+   },
+   {
+    "audienceAmount": 23300,
+    "advantagePermil": 1733
+   },
+   {
+    "audienceAmount": 23400,
+    "advantagePermil": 1734
+   },
+   {
+    "audienceAmount": 23500,
+    "advantagePermil": 1735
+   },
+   {
+    "audienceAmount": 23600,
+    "advantagePermil": 1736
+   },
+   {
+    "audienceAmount": 23700,
+    "advantagePermil": 1737
+   },
+   {
+    "audienceAmount": 23800,
+    "advantagePermil": 1738
+   },
+   {
+    "audienceAmount": 23900,
+    "advantagePermil": 1739
+   },
+   {
+    "audienceAmount": 24000,
+    "advantagePermil": 1740
+   },
+   {
+    "audienceAmount": 24100,
+    "advantagePermil": 1741
+   },
+   {
+    "audienceAmount": 24200,
+    "advantagePermil": 1742
+   },
+   {
+    "audienceAmount": 24300,
+    "advantagePermil": 1743
+   },
+   {
+    "audienceAmount": 24400,
+    "advantagePermil": 1744
+   },
+   {
+    "audienceAmount": 24500,
+    "advantagePermil": 1745
+   },
+   {
+    "audienceAmount": 24600,
+    "advantagePermil": 1746
+   },
+   {
+    "audienceAmount": 24700,
+    "advantagePermil": 1747
+   },
+   {
+    "audienceAmount": 24800,
+    "advantagePermil": 1748
+   },
+   {
+    "audienceAmount": 24900,
+    "advantagePermil": 1749
+   },
+   {
+    "audienceAmount": 25000,
+    "advantagePermil": 1750
+   },
+   {
+    "audienceAmount": 25100,
+    "advantagePermil": 1751
+   },
+   {
+    "audienceAmount": 25200,
+    "advantagePermil": 1752
+   },
+   {
+    "audienceAmount": 25300,
+    "advantagePermil": 1753
+   },
+   {
+    "audienceAmount": 25400,
+    "advantagePermil": 1754
+   },
+   {
+    "audienceAmount": 25500,
+    "advantagePermil": 1755
+   },
+   {
+    "audienceAmount": 25600,
+    "advantagePermil": 1756
+   },
+   {
+    "audienceAmount": 25700,
+    "advantagePermil": 1757
+   },
+   {
+    "audienceAmount": 25800,
+    "advantagePermil": 1758
+   },
+   {
+    "audienceAmount": 25900,
+    "advantagePermil": 1759
+   },
+   {
+    "audienceAmount": 26000,
+    "advantagePermil": 1760
+   },
+   {
+    "audienceAmount": 26100,
+    "advantagePermil": 1761
+   },
+   {
+    "audienceAmount": 26200,
+    "advantagePermil": 1762
+   },
+   {
+    "audienceAmount": 26300,
+    "advantagePermil": 1763
+   },
+   {
+    "audienceAmount": 26400,
+    "advantagePermil": 1764
+   },
+   {
+    "audienceAmount": 26500,
+    "advantagePermil": 1765
+   },
+   {
+    "audienceAmount": 26600,
+    "advantagePermil": 1766
+   },
+   {
+    "audienceAmount": 26700,
+    "advantagePermil": 1767
+   },
+   {
+    "audienceAmount": 26800,
+    "advantagePermil": 1768
+   },
+   {
+    "audienceAmount": 26900,
+    "advantagePermil": 1769
+   },
+   {
+    "audienceAmount": 27000,
+    "advantagePermil": 1770
+   },
+   {
+    "audienceAmount": 27100,
+    "advantagePermil": 1771
+   },
+   {
+    "audienceAmount": 27200,
+    "advantagePermil": 1772
+   },
+   {
+    "audienceAmount": 27300,
+    "advantagePermil": 1773
+   },
+   {
+    "audienceAmount": 27400,
+    "advantagePermil": 1774
+   },
+   {
+    "audienceAmount": 27500,
+    "advantagePermil": 1775
+   },
+   {
+    "audienceAmount": 27600,
+    "advantagePermil": 1776
+   },
+   {
+    "audienceAmount": 27700,
+    "advantagePermil": 1777
+   },
+   {
+    "audienceAmount": 27800,
+    "advantagePermil": 1778
+   },
+   {
+    "audienceAmount": 27900,
+    "advantagePermil": 1779
+   },
+   {
+    "audienceAmount": 28000,
+    "advantagePermil": 1780
+   },
+   {
+    "audienceAmount": 28100,
+    "advantagePermil": 1781
+   },
+   {
+    "audienceAmount": 28200,
+    "advantagePermil": 1782
+   },
+   {
+    "audienceAmount": 28300,
+    "advantagePermil": 1783
+   },
+   {
+    "audienceAmount": 28400,
+    "advantagePermil": 1784
+   },
+   {
+    "audienceAmount": 28500,
+    "advantagePermil": 1785
+   },
+   {
+    "audienceAmount": 28600,
+    "advantagePermil": 1786
+   },
+   {
+    "audienceAmount": 28700,
+    "advantagePermil": 1787
+   },
+   {
+    "audienceAmount": 28800,
+    "advantagePermil": 1788
+   },
+   {
+    "audienceAmount": 28900,
+    "advantagePermil": 1789
+   },
+   {
+    "audienceAmount": 29000,
+    "advantagePermil": 1790
+   },
+   {
+    "audienceAmount": 29100,
+    "advantagePermil": 1791
+   },
+   {
+    "audienceAmount": 29200,
+    "advantagePermil": 1792
+   },
+   {
+    "audienceAmount": 29300,
+    "advantagePermil": 1793
+   },
+   {
+    "audienceAmount": 29400,
+    "advantagePermil": 1794
+   },
+   {
+    "audienceAmount": 29500,
+    "advantagePermil": 1795
+   },
+   {
+    "audienceAmount": 29600,
+    "advantagePermil": 1796
+   },
+   {
+    "audienceAmount": 29700,
+    "advantagePermil": 1797
+   },
+   {
+    "audienceAmount": 29800,
+    "advantagePermil": 1798
+   },
+   {
+    "audienceAmount": 29900,
+    "advantagePermil": 1799
+   },
+   {
+    "audienceAmount": 30000,
+    "advantagePermil": 1800
+   },
+   {
+    "audienceAmount": 30100,
+    "advantagePermil": 1801
+   },
+   {
+    "audienceAmount": 30200,
+    "advantagePermil": 1802
+   },
+   {
+    "audienceAmount": 30300,
+    "advantagePermil": 1803
+   },
+   {
+    "audienceAmount": 30400,
+    "advantagePermil": 1804
+   },
+   {
+    "audienceAmount": 30500,
+    "advantagePermil": 1805
+   },
+   {
+    "audienceAmount": 30600,
+    "advantagePermil": 1806
+   },
+   {
+    "audienceAmount": 30700,
+    "advantagePermil": 1807
+   },
+   {
+    "audienceAmount": 30800,
+    "advantagePermil": 1808
+   },
+   {
+    "audienceAmount": 30900,
+    "advantagePermil": 1809
+   },
+   {
+    "audienceAmount": 31000,
+    "advantagePermil": 1810
+   },
+   {
+    "audienceAmount": 31100,
+    "advantagePermil": 1811
+   },
+   {
+    "audienceAmount": 31200,
+    "advantagePermil": 1812
+   },
+   {
+    "audienceAmount": 31300,
+    "advantagePermil": 1813
+   },
+   {
+    "audienceAmount": 31400,
+    "advantagePermil": 1814
+   },
+   {
+    "audienceAmount": 31500,
+    "advantagePermil": 1815
+   },
+   {
+    "audienceAmount": 31600,
+    "advantagePermil": 1816
+   },
+   {
+    "audienceAmount": 31700,
+    "advantagePermil": 1817
+   },
+   {
+    "audienceAmount": 31800,
+    "advantagePermil": 1818
+   },
+   {
+    "audienceAmount": 31900,
+    "advantagePermil": 1819
+   },
+   {
+    "audienceAmount": 32000,
+    "advantagePermil": 1820
+   },
+   {
+    "audienceAmount": 32100,
+    "advantagePermil": 1821
+   },
+   {
+    "audienceAmount": 32200,
+    "advantagePermil": 1822
+   },
+   {
+    "audienceAmount": 32300,
+    "advantagePermil": 1823
+   },
+   {
+    "audienceAmount": 32400,
+    "advantagePermil": 1824
+   },
+   {
+    "audienceAmount": 32500,
+    "advantagePermil": 1825
+   },
+   {
+    "audienceAmount": 32600,
+    "advantagePermil": 1826
+   },
+   {
+    "audienceAmount": 32700,
+    "advantagePermil": 1827
+   },
+   {
+    "audienceAmount": 32800,
+    "advantagePermil": 1828
+   },
+   {
+    "audienceAmount": 32900,
+    "advantagePermil": 1829
+   },
+   {
+    "audienceAmount": 33000,
+    "advantagePermil": 1830
+   },
+   {
+    "audienceAmount": 33100,
+    "advantagePermil": 1831
+   },
+   {
+    "audienceAmount": 33200,
+    "advantagePermil": 1832
+   },
+   {
+    "audienceAmount": 33300,
+    "advantagePermil": 1833
+   },
+   {
+    "audienceAmount": 33400,
+    "advantagePermil": 1834
+   },
+   {
+    "audienceAmount": 33500,
+    "advantagePermil": 1835
+   },
+   {
+    "audienceAmount": 33600,
+    "advantagePermil": 1836
+   },
+   {
+    "audienceAmount": 33700,
+    "advantagePermil": 1837
+   },
+   {
+    "audienceAmount": 33800,
+    "advantagePermil": 1838
+   },
+   {
+    "audienceAmount": 33900,
+    "advantagePermil": 1839
+   },
+   {
+    "audienceAmount": 34000,
+    "advantagePermil": 1840
+   },
+   {
+    "audienceAmount": 34100,
+    "advantagePermil": 1841
+   },
+   {
+    "audienceAmount": 34200,
+    "advantagePermil": 1842
+   },
+   {
+    "audienceAmount": 34300,
+    "advantagePermil": 1843
+   },
+   {
+    "audienceAmount": 34400,
+    "advantagePermil": 1844
+   },
+   {
+    "audienceAmount": 34500,
+    "advantagePermil": 1845
+   },
+   {
+    "audienceAmount": 34600,
+    "advantagePermil": 1846
+   },
+   {
+    "audienceAmount": 34700,
+    "advantagePermil": 1847
+   },
+   {
+    "audienceAmount": 34800,
+    "advantagePermil": 1848
+   },
+   {
+    "audienceAmount": 34900,
+    "advantagePermil": 1849
+   },
+   {
+    "audienceAmount": 35000,
+    "advantagePermil": 1850
+   },
+   {
+    "audienceAmount": 35100,
+    "advantagePermil": 1851
+   },
+   {
+    "audienceAmount": 35200,
+    "advantagePermil": 1852
+   },
+   {
+    "audienceAmount": 35300,
+    "advantagePermil": 1853
+   },
+   {
+    "audienceAmount": 35400,
+    "advantagePermil": 1854
+   },
+   {
+    "audienceAmount": 35500,
+    "advantagePermil": 1855
+   },
+   {
+    "audienceAmount": 35600,
+    "advantagePermil": 1856
+   },
+   {
+    "audienceAmount": 35700,
+    "advantagePermil": 1857
+   },
+   {
+    "audienceAmount": 35800,
+    "advantagePermil": 1858
+   },
+   {
+    "audienceAmount": 35900,
+    "advantagePermil": 1859
+   },
+   {
+    "audienceAmount": 36000,
+    "advantagePermil": 1860
+   },
+   {
+    "audienceAmount": 36100,
+    "advantagePermil": 1861
+   },
+   {
+    "audienceAmount": 36200,
+    "advantagePermil": 1862
+   },
+   {
+    "audienceAmount": 36300,
+    "advantagePermil": 1863
+   },
+   {
+    "audienceAmount": 36400,
+    "advantagePermil": 1864
+   },
+   {
+    "audienceAmount": 36500,
+    "advantagePermil": 1865
+   },
+   {
+    "audienceAmount": 36600,
+    "advantagePermil": 1866
+   },
+   {
+    "audienceAmount": 36700,
+    "advantagePermil": 1867
+   },
+   {
+    "audienceAmount": 36800,
+    "advantagePermil": 1868
+   },
+   {
+    "audienceAmount": 36900,
+    "advantagePermil": 1869
+   },
+   {
+    "audienceAmount": 37000,
+    "advantagePermil": 1870
+   },
+   {
+    "audienceAmount": 37100,
+    "advantagePermil": 1871
+   },
+   {
+    "audienceAmount": 37200,
+    "advantagePermil": 1872
+   },
+   {
+    "audienceAmount": 37300,
+    "advantagePermil": 1873
+   },
+   {
+    "audienceAmount": 37400,
+    "advantagePermil": 1874
+   },
+   {
+    "audienceAmount": 37500,
+    "advantagePermil": 1875
+   },
+   {
+    "audienceAmount": 37600,
+    "advantagePermil": 1876
+   },
+   {
+    "audienceAmount": 37700,
+    "advantagePermil": 1877
+   },
+   {
+    "audienceAmount": 37800,
+    "advantagePermil": 1878
+   },
+   {
+    "audienceAmount": 37900,
+    "advantagePermil": 1879
+   },
+   {
+    "audienceAmount": 38000,
+    "advantagePermil": 1880
+   },
+   {
+    "audienceAmount": 38100,
+    "advantagePermil": 1881
+   },
+   {
+    "audienceAmount": 38200,
+    "advantagePermil": 1882
+   },
+   {
+    "audienceAmount": 38300,
+    "advantagePermil": 1883
+   },
+   {
+    "audienceAmount": 38400,
+    "advantagePermil": 1884
+   },
+   {
+    "audienceAmount": 38500,
+    "advantagePermil": 1885
+   },
+   {
+    "audienceAmount": 38600,
+    "advantagePermil": 1886
+   },
+   {
+    "audienceAmount": 38700,
+    "advantagePermil": 1887
+   },
+   {
+    "audienceAmount": 38800,
+    "advantagePermil": 1888
+   },
+   {
+    "audienceAmount": 38900,
+    "advantagePermil": 1889
+   },
+   {
+    "audienceAmount": 39000,
+    "advantagePermil": 1890
+   },
+   {
+    "audienceAmount": 39100,
+    "advantagePermil": 1891
+   },
+   {
+    "audienceAmount": 39200,
+    "advantagePermil": 1892
+   },
+   {
+    "audienceAmount": 39300,
+    "advantagePermil": 1893
+   },
+   {
+    "audienceAmount": 39400,
+    "advantagePermil": 1894
+   },
+   {
+    "audienceAmount": 39500,
+    "advantagePermil": 1895
+   },
+   {
+    "audienceAmount": 39600,
+    "advantagePermil": 1896
+   },
+   {
+    "audienceAmount": 39700,
+    "advantagePermil": 1897
+   },
+   {
+    "audienceAmount": 39800,
+    "advantagePermil": 1898
+   },
+   {
+    "audienceAmount": 39900,
+    "advantagePermil": 1899
+   },
+   {
+    "audienceAmount": 40000,
+    "advantagePermil": 1900
+   },
+   {
+    "audienceAmount": 40100,
+    "advantagePermil": 1901
+   },
+   {
+    "audienceAmount": 40200,
+    "advantagePermil": 1902
+   },
+   {
+    "audienceAmount": 40300,
+    "advantagePermil": 1903
+   },
+   {
+    "audienceAmount": 40400,
+    "advantagePermil": 1904
+   },
+   {
+    "audienceAmount": 40500,
+    "advantagePermil": 1905
+   },
+   {
+    "audienceAmount": 40600,
+    "advantagePermil": 1906
+   },
+   {
+    "audienceAmount": 40700,
+    "advantagePermil": 1907
+   },
+   {
+    "audienceAmount": 40800,
+    "advantagePermil": 1908
+   },
+   {
+    "audienceAmount": 40900,
+    "advantagePermil": 1909
+   },
+   {
+    "audienceAmount": 41000,
+    "advantagePermil": 1910
+   },
+   {
+    "audienceAmount": 41100,
+    "advantagePermil": 1911
+   },
+   {
+    "audienceAmount": 41200,
+    "advantagePermil": 1912
+   },
+   {
+    "audienceAmount": 41300,
+    "advantagePermil": 1913
+   },
+   {
+    "audienceAmount": 41400,
+    "advantagePermil": 1914
+   },
+   {
+    "audienceAmount": 41500,
+    "advantagePermil": 1915
+   },
+   {
+    "audienceAmount": 41600,
+    "advantagePermil": 1916
+   },
+   {
+    "audienceAmount": 41700,
+    "advantagePermil": 1917
+   },
+   {
+    "audienceAmount": 41800,
+    "advantagePermil": 1918
+   },
+   {
+    "audienceAmount": 41900,
+    "advantagePermil": 1919
+   },
+   {
+    "audienceAmount": 42000,
+    "advantagePermil": 1920
+   },
+   {
+    "audienceAmount": 42100,
+    "advantagePermil": 1921
+   },
+   {
+    "audienceAmount": 42200,
+    "advantagePermil": 1922
+   },
+   {
+    "audienceAmount": 42300,
+    "advantagePermil": 1923
+   },
+   {
+    "audienceAmount": 42400,
+    "advantagePermil": 1924
+   },
+   {
+    "audienceAmount": 42500,
+    "advantagePermil": 1925
+   },
+   {
+    "audienceAmount": 42600,
+    "advantagePermil": 1926
+   },
+   {
+    "audienceAmount": 42700,
+    "advantagePermil": 1927
+   },
+   {
+    "audienceAmount": 42800,
+    "advantagePermil": 1928
+   },
+   {
+    "audienceAmount": 42900,
+    "advantagePermil": 1929
+   },
+   {
+    "audienceAmount": 43000,
+    "advantagePermil": 1930
+   },
+   {
+    "audienceAmount": 43100,
+    "advantagePermil": 1931
+   },
+   {
+    "audienceAmount": 43200,
+    "advantagePermil": 1932
+   },
+   {
+    "audienceAmount": 43300,
+    "advantagePermil": 1933
+   },
+   {
+    "audienceAmount": 43400,
+    "advantagePermil": 1934
+   },
+   {
+    "audienceAmount": 43500,
+    "advantagePermil": 1935
+   },
+   {
+    "audienceAmount": 43600,
+    "advantagePermil": 1936
+   },
+   {
+    "audienceAmount": 43700,
+    "advantagePermil": 1937
+   },
+   {
+    "audienceAmount": 43800,
+    "advantagePermil": 1938
+   },
+   {
+    "audienceAmount": 43900,
+    "advantagePermil": 1939
+   },
+   {
+    "audienceAmount": 44000,
+    "advantagePermil": 1940
+   },
+   {
+    "audienceAmount": 44100,
+    "advantagePermil": 1941
+   },
+   {
+    "audienceAmount": 44200,
+    "advantagePermil": 1942
+   },
+   {
+    "audienceAmount": 44300,
+    "advantagePermil": 1943
+   },
+   {
+    "audienceAmount": 44400,
+    "advantagePermil": 1944
+   },
+   {
+    "audienceAmount": 44500,
+    "advantagePermil": 1945
+   },
+   {
+    "audienceAmount": 44600,
+    "advantagePermil": 1946
+   },
+   {
+    "audienceAmount": 44700,
+    "advantagePermil": 1947
+   },
+   {
+    "audienceAmount": 44800,
+    "advantagePermil": 1948
+   },
+   {
+    "audienceAmount": 44900,
+    "advantagePermil": 1949
+   },
+   {
+    "audienceAmount": 45000,
+    "advantagePermil": 1950
+   },
+   {
+    "audienceAmount": 45100,
+    "advantagePermil": 1951
+   },
+   {
+    "audienceAmount": 45200,
+    "advantagePermil": 1952
+   },
+   {
+    "audienceAmount": 45300,
+    "advantagePermil": 1953
+   },
+   {
+    "audienceAmount": 45400,
+    "advantagePermil": 1954
+   },
+   {
+    "audienceAmount": 45500,
+    "advantagePermil": 1955
+   },
+   {
+    "audienceAmount": 45600,
+    "advantagePermil": 1956
+   },
+   {
+    "audienceAmount": 45700,
+    "advantagePermil": 1957
+   },
+   {
+    "audienceAmount": 45800,
+    "advantagePermil": 1958
+   },
+   {
+    "audienceAmount": 45900,
+    "advantagePermil": 1959
+   },
+   {
+    "audienceAmount": 46000,
+    "advantagePermil": 1960
+   },
+   {
+    "audienceAmount": 46100,
+    "advantagePermil": 1961
+   },
+   {
+    "audienceAmount": 46200,
+    "advantagePermil": 1962
+   },
+   {
+    "audienceAmount": 46300,
+    "advantagePermil": 1963
+   },
+   {
+    "audienceAmount": 46400,
+    "advantagePermil": 1964
+   },
+   {
+    "audienceAmount": 46500,
+    "advantagePermil": 1965
+   },
+   {
+    "audienceAmount": 46600,
+    "advantagePermil": 1966
+   },
+   {
+    "audienceAmount": 46700,
+    "advantagePermil": 1967
+   },
+   {
+    "audienceAmount": 46800,
+    "advantagePermil": 1968
+   },
+   {
+    "audienceAmount": 46900,
+    "advantagePermil": 1969
+   },
+   {
+    "audienceAmount": 47000,
+    "advantagePermil": 1970
+   },
+   {
+    "audienceAmount": 47100,
+    "advantagePermil": 1971
+   },
+   {
+    "audienceAmount": 47200,
+    "advantagePermil": 1972
+   },
+   {
+    "audienceAmount": 47300,
+    "advantagePermil": 1973
+   },
+   {
+    "audienceAmount": 47400,
+    "advantagePermil": 1974
+   },
+   {
+    "audienceAmount": 47500,
+    "advantagePermil": 1975
+   },
+   {
+    "audienceAmount": 47600,
+    "advantagePermil": 1976
+   },
+   {
+    "audienceAmount": 47700,
+    "advantagePermil": 1977
+   },
+   {
+    "audienceAmount": 47800,
+    "advantagePermil": 1978
+   },
+   {
+    "audienceAmount": 47900,
+    "advantagePermil": 1979
+   },
+   {
+    "audienceAmount": 48000,
+    "advantagePermil": 1980
+   },
+   {
+    "audienceAmount": 48100,
+    "advantagePermil": 1981
+   },
+   {
+    "audienceAmount": 48200,
+    "advantagePermil": 1982
+   },
+   {
+    "audienceAmount": 48300,
+    "advantagePermil": 1983
+   },
+   {
+    "audienceAmount": 48400,
+    "advantagePermil": 1984
+   },
+   {
+    "audienceAmount": 48500,
+    "advantagePermil": 1985
+   },
+   {
+    "audienceAmount": 48600,
+    "advantagePermil": 1986
+   },
+   {
+    "audienceAmount": 48700,
+    "advantagePermil": 1987
+   },
+   {
+    "audienceAmount": 48800,
+    "advantagePermil": 1988
+   },
+   {
+    "audienceAmount": 48900,
+    "advantagePermil": 1989
+   },
+   {
+    "audienceAmount": 49000,
+    "advantagePermil": 1990
+   },
+   {
+    "audienceAmount": 49100,
+    "advantagePermil": 1991
+   },
+   {
+    "audienceAmount": 49200,
+    "advantagePermil": 1992
+   },
+   {
+    "audienceAmount": 49300,
+    "advantagePermil": 1993
+   },
+   {
+    "audienceAmount": 49400,
+    "advantagePermil": 1994
+   },
+   {
+    "audienceAmount": 49500,
+    "advantagePermil": 1995
+   },
+   {
+    "audienceAmount": 49600,
+    "advantagePermil": 1996
+   },
+   {
+    "audienceAmount": 49700,
+    "advantagePermil": 1997
+   },
+   {
+    "audienceAmount": 49800,
+    "advantagePermil": 1998
+   },
+   {
+    "audienceAmount": 49900,
+    "advantagePermil": 1999
+   },
+   {
+    "audienceAmount": 50000,
+    "advantagePermil": 2000
+   }
+  ],
+  "verified": {
+   "audienceAmount": 16000,
+   "advantagePermil": 1620,
+   "percent": 62.0,
+   "measured": "62.0%",
+   "exactMatch": true
+  },
+  "range": {
+   "minAudience": 10,
+   "maxAudience": 50000,
+   "minPermil": 1001,
+   "maxPermil": 2000,
+   "note": "上限は50,000人→+100.0%"
+  }
+ },
+ "combo_table": {
+  "table": "ComboAdvantage.json",
+  "id": "combo_advantage_1",
+  "rows": [
+   {
+    "comboCount": 10,
+    "advantagePermil": 1050
+   },
+   {
+    "comboCount": 20,
+    "advantagePermil": 1100
+   },
+   {
+    "comboCount": 30,
+    "advantagePermil": 1150
+   },
+   {
+    "comboCount": 40,
+    "advantagePermil": 1200
+   },
+   {
+    "comboCount": 50,
+    "advantagePermil": 1250
+   },
+   {
+    "comboCount": 70,
+    "advantagePermil": 1300
+   },
+   {
+    "comboCount": 100,
+    "advantagePermil": 1500
+   }
+  ],
+  "interpretation": "comboCountはしきい値(コンボ数が行の値以上のとき advantagePermil 適用と解釈)。全7行。",
+  "verified": {
+   "combo": 155,
+   "appliedRow": {
+    "comboCount": 100,
+    "advantagePermil": 1500
+   },
+   "percent": 50.0,
+   "note": "コンボ155は最上位しきい値100の行(+50.0%)が適用"
+  }
+ },
+ "staff_cumulative": {
+  "table": "StaffLevel.json (levels 1-70, advantage は累積値)",
+  "limitBreak": "StaffLevelLimitBreakRank.json: parameterType別 rank0-9 で levelLimit 60→69 (rank消費で上限開放, 最大Lv70)",
+  "parameterTypes": {
+   "1": {
+    "parameterName": "dance",
+    "levels": [
+     0,
+     115,
+     173,
+     232,
+     297,
+     370,
+     452,
+     541,
+     644,
+     760,
+     891,
+     1031,
+     1174,
+     1318,
+     1464,
+     1611,
+     1760,
+     1911,
+     2065,
+     2222,
+     2383,
+     2548,
+     2718,
+     2894,
+     3076,
+     3265,
+     3462,
+     3669,
+     3886,
+     4116,
+     4359,
+     4618,
+     4896,
+     5196,
+     5520,
+     5868,
+     6241,
+     6638,
+     7059,
+     7506,
+     7979,
+     8477,
+     9001,
+     9552,
+     10131,
+     10740,
+     11380,
+     12052,
+     12758,
+     13502,
+     14284,
+     15103,
+     15960,
+     16855,
+     17788,
+     18759,
+     19767,
+     20813,
+     21897,
+     23019,
+     24179,
+     25376,
+     26611,
+     27884,
+     29195,
+     30544,
+     31930,
+     33354,
+     34816,
+     36316
+    ],
+    "matchedWithMeasured": {
+     "measuredBonus": 27884,
+     "level": 64,
+     "valueAtLevel": 27884,
+     "exactMatch": true
+    }
+   },
+   "2": {
+    "parameterName": "vocal",
+    "levels": [
+     0,
+     115,
+     173,
+     232,
+     297,
+     370,
+     452,
+     541,
+     644,
+     760,
+     891,
+     1031,
+     1174,
+     1318,
+     1464,
+     1611,
+     1760,
+     1911,
+     2065,
+     2222,
+     2383,
+     2548,
+     2718,
+     2894,
+     3076,
+     3265,
+     3462,
+     3669,
+     3886,
+     4116,
+     4359,
+     4618,
+     4896,
+     5196,
+     5520,
+     5868,
+     6241,
+     6638,
+     7059,
+     7506,
+     7979,
+     8477,
+     9001,
+     9552,
+     10131,
+     10740,
+     11380,
+     12052,
+     12758,
+     13502,
+     14284,
+     15103,
+     15960,
+     16855,
+     17788,
+     18759,
+     19767,
+     20813,
+     21897,
+     23019,
+     24179,
+     25376,
+     26611,
+     27884,
+     29195,
+     30544,
+     31930,
+     33354,
+     34816,
+     36316
+    ],
+    "matchedWithMeasured": {
+     "measuredBonus": 29195,
+     "level": 65,
+     "valueAtLevel": 29195,
+     "exactMatch": true
+    }
+   },
+   "3": {
+    "parameterName": "visual",
+    "levels": [
+     0,
+     115,
+     173,
+     232,
+     297,
+     370,
+     452,
+     541,
+     644,
+     760,
+     891,
+     1031,
+     1174,
+     1318,
+     1464,
+     1611,
+     1760,
+     1911,
+     2065,
+     2222,
+     2383,
+     2548,
+     2718,
+     2894,
+     3076,
+     3265,
+     3462,
+     3669,
+     3886,
+     4116,
+     4359,
+     4618,
+     4896,
+     5196,
+     5520,
+     5868,
+     6241,
+     6638,
+     7059,
+     7506,
+     7979,
+     8477,
+     9001,
+     9552,
+     10131,
+     10740,
+     11380,
+     12052,
+     12758,
+     13502,
+     14284,
+     15103,
+     15960,
+     16855,
+     17788,
+     18759,
+     19767,
+     20813,
+     21897,
+     23019,
+     24179,
+     25376,
+     26611,
+     27884,
+     29195,
+     30544,
+     31930,
+     33354,
+     34816,
+     36316
+    ],
+    "matchedWithMeasured": {
+     "measuredBonus": 27884,
+     "level": 64,
+     "valueAtLevel": 27884,
+     "exactMatch": true
+    }
+   },
+   "4": {
+    "parameterName": "stamina",
+    "levels": [
+     0,
+     18,
+     27,
+     36,
+     46,
+     58,
+     71,
+     85,
+     101,
+     119,
+     140,
+     162,
+     185,
+     208,
+     231,
+     254,
+     278,
+     302,
+     327,
+     352,
+     378,
+     404,
+     431,
+     459,
+     488,
+     518,
+     549,
+     582,
+     617,
+     654,
+     693,
+     734,
+     778,
+     826,
+     878,
+     933,
+     992,
+     1055,
+     1122,
+     1193,
+     1268,
+     1347,
+     1430,
+     1518,
+     1610,
+     1707,
+     1809,
+     1916,
+     2028,
+     2146,
+     2270,
+     2401,
+     2538,
+     2681,
+     2830,
+     2985,
+     3146,
+     3313,
+     3486,
+     3665,
+     3850,
+     4041,
+     4238,
+     4441,
+     4650,
+     4865,
+     5086,
+     5313,
+     5546,
+     5785
+    ],
+    "matchedWithMeasured": {
+     "measuredBonus": 5086,
+     "level": 67,
+     "valueAtLevel": 5086,
+     "exactMatch": true
+    }
+   },
+   "5": {
+    "parameterName": "mental",
+    "levels": [
+     0,
+     26,
+     39,
+     52,
+     67,
+     83,
+     101,
+     121,
+     144,
+     170,
+     199,
+     231,
+     263,
+     295,
+     328,
+     361,
+     394,
+     428,
+     463,
+     498,
+     534,
+     571,
+     609,
+     648,
+     689,
+     731,
+     775,
+     821,
+     870,
+     922,
+     977,
+     1035,
+     1097,
+     1164,
+     1237,
+     1315,
+     1399,
+     1488,
+     1583,
+     1683,
+     1789,
+     1901,
+     2019,
+     2143,
+     2273,
+     2410,
+     2554,
+     2705,
+     2863,
+     3030,
+     3205,
+     3389,
+     3581,
+     3782,
+     3991,
+     4209,
+     4435,
+     4670,
+     4913,
+     5165,
+     5425,
+     5694,
+     5971,
+     6257,
+     6551,
+     6854,
+     7165,
+     7485,
+     7813,
+     8150
+    ],
+    "matchedWithMeasured": {
+     "measuredBonus": 5165,
+     "level": 60,
+     "valueAtLevel": 5165,
+     "exactMatch": true
+    }
+   },
+   "6": {
+    "parameterName": "technique(critical)",
+    "levels": [
+     0,
+     26,
+     39,
+     52,
+     67,
+     83,
+     101,
+     121,
+     144,
+     170,
+     199,
+     231,
+     263,
+     295,
+     328,
+     361,
+     394,
+     428,
+     463,
+     498,
+     534,
+     571,
+     609,
+     648,
+     689,
+     731,
+     775,
+     821,
+     870,
+     922,
+     977,
+     1035,
+     1097,
+     1164,
+     1237,
+     1315,
+     1399,
+     1488,
+     1583,
+     1683,
+     1789,
+     1901,
+     2019,
+     2143,
+     2273,
+     2410,
+     2554,
+     2705,
+     2863,
+     3030,
+     3205,
+     3389,
+     3581,
+     3782,
+     3991,
+     4209,
+     4435,
+     4670,
+     4913,
+     5165,
+     5425,
+     5694,
+     5971,
+     6257,
+     6551,
+     6854,
+     7165,
+     7485,
+     7813,
+     8150
+    ],
+    "matchedWithMeasured": {
+     "measuredBonus": 2705,
+     "level": 48,
+     "valueAtLevel": 2705,
+     "exactMatch": true
+    }
+   }
+  },
+  "measuredMatch": "全6種、実測レベルで完全一致: vocal+29,195=Lv65 / dance+27,884=Lv64 / visual+27,884=Lv64 / stamina+5,086=Lv67 / mental+5,165=Lv60 / critical(technique)+2,705=Lv48"
+ },
+ "skills": [
+  {
+   "displayLane": 3,
+   "cardId": "card-chs-05-fest-03",
+   "cardName": "紡ぎ合う憧れの時間",
+   "cardRoleType": 1,
+   "cardRoleName": "scorer",
+   "skillId": "sk-chs-05-fest-03-1",
+   "skillName": "『成宮すず』なのですわ！",
+   "categoryType": 1,
+   "categoryName": "SP(special)",
+   "usedLevel": 6,
+   "usedLevelData": {
+    "level": 6,
+    "description": "1570%のスコア獲得、ボーカル上昇状態の段階数が多い程効果上昇\n自身の獲得スコアの12%のスコア獲得\nスタミナ1201消費 ",
+    "stamina": 1201,
+    "probabilityPermil": 1000,
+    "coolTime": 0,
+    "limitCount": 0,
+    "skillLevelTriggerId": "",
+    "skillLevelTrigger": null,
+    "skillDetails": [
+     {
+      "efficacyId": "ef-score_get_by_status_effect_type_grade-vocal_up-15700-chart_dependence",
+      "efficacyType": 36,
+      "efficacyName": "スコア獲得-ボーカル上昇状態の段階数が多い程効果上昇",
+      "efficacyDescription": "1570%のスコア獲得、ボーカル上昇状態の段階数が多い程効果上昇",
+      "skillTargetId": "",
+      "grade": 0,
+      "maxGrade": 0
+     },
+     {
+      "efficacyId": "ef-score_get_by_score_ratio-120-target-self",
+      "efficacyType": 70,
+      "efficacyName": "自身の獲得スコアの割合スコア獲得",
+      "efficacyDescription": "自身の獲得スコアの12%のスコア獲得",
+      "skillTargetId": "target-self",
+      "grade": 0,
+      "maxGrade": 0,
+      "skillTarget": {
+       "id": "target-self",
+       "type": 1,
+       "isOpponent": false
+      }
+     }
+    ]
+   },
+   "levels": [
+    {
+     "level": 1,
+     "description": "950%のスコア獲得、ボーカル上昇状態の段階数が多い程効果上昇\n自身の獲得スコアの7%のスコア獲得\nスタミナ718消費 ",
+     "stamina": 718,
+     "coolTime": 0,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get_by_status_effect_type_grade-vocal_up-9500-chart_dependence",
+      "ef-score_get_by_score_ratio-70-target-self"
+     ]
+    },
+    {
+     "level": 2,
+     "description": "1070%のスコア獲得、ボーカル上昇状態の段階数が多い程効果上昇\n自身の獲得スコアの8%のスコア獲得\nスタミナ813消費 ",
+     "stamina": 813,
+     "coolTime": 0,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get_by_status_effect_type_grade-vocal_up-10700-chart_dependence",
+      "ef-score_get_by_score_ratio-80-target-self"
+     ]
+    },
+    {
+     "level": 3,
+     "description": "1190%のスコア獲得、ボーカル上昇状態の段階数が多い程効果上昇\n自身の獲得スコアの9%のスコア獲得\nスタミナ907消費 ",
+     "stamina": 907,
+     "coolTime": 0,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get_by_status_effect_type_grade-vocal_up-11900-chart_dependence",
+      "ef-score_get_by_score_ratio-90-target-self"
+     ]
+    },
+    {
+     "level": 4,
+     "description": "1310%のスコア獲得、ボーカル上昇状態の段階数が多い程効果上昇\n自身の獲得スコアの10%のスコア獲得\nスタミナ1001消費 ",
+     "stamina": 1001,
+     "coolTime": 0,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get_by_status_effect_type_grade-vocal_up-13100-chart_dependence",
+      "ef-score_get_by_score_ratio-100-target-self"
+     ]
+    },
+    {
+     "level": 5,
+     "description": "1440%のスコア獲得、ボーカル上昇状態の段階数が多い程効果上昇\n自身の獲得スコアの11%のスコア獲得\nスタミナ1101消費 ",
+     "stamina": 1101,
+     "coolTime": 0,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get_by_status_effect_type_grade-vocal_up-14400-chart_dependence",
+      "ef-score_get_by_score_ratio-110-target-self"
+     ]
+    },
+    {
+     "level": 6,
+     "description": "1570%のスコア獲得、ボーカル上昇状態の段階数が多い程効果上昇\n自身の獲得スコアの12%のスコア獲得\nスタミナ1201消費 ",
+     "stamina": 1201,
+     "coolTime": 0,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get_by_status_effect_type_grade-vocal_up-15700-chart_dependence",
+      "ef-score_get_by_score_ratio-120-target-self"
+     ]
+    }
+   ]
+  },
+  {
+   "displayLane": 3,
+   "cardId": "card-chs-05-fest-03",
+   "cardName": "紡ぎ合う憧れの時間",
+   "cardRoleType": 1,
+   "cardRoleName": "scorer",
+   "skillId": "sk-chs-05-fest-03-2",
+   "skillName": "星見プロ全国ツアーin愛知",
+   "categoryType": 2,
+   "categoryName": "A(active)",
+   "usedLevel": 6,
+   "usedLevelData": {
+    "level": 6,
+    "description": "400%のスコア獲得、ボーカル上昇状態の段階数が多い程効果上昇\n自身にボーカル上昇超化効果[36ビート]\n[ライブバトルのみ]同じレーンの相手のCTを10増加\nスタミナ404消費 CT:30",
+    "stamina": 404,
+    "probabilityPermil": 1000,
+    "coolTime": 30,
+    "limitCount": 0,
+    "skillLevelTriggerId": "",
+    "skillLevelTrigger": null,
+    "skillDetails": [
+     {
+      "efficacyId": "ef-score_get_by_status_effect_type_grade-vocal_up-4000-chart_dependence",
+      "efficacyType": 36,
+      "efficacyName": "スコア獲得-ボーカル上昇状態の段階数が多い程効果上昇",
+      "efficacyDescription": "400%のスコア獲得、ボーカル上昇状態の段階数が多い程効果上昇",
+      "skillTargetId": "",
+      "grade": 0,
+      "maxGrade": 0
+     },
+     {
+      "efficacyId": "ef-add_effect_value_vocal_up-10-target-self-36",
+      "efficacyType": 95,
+      "efficacyName": "自身にボーカル上昇超化効果",
+      "efficacyDescription": "自身にボーカル上昇超化効果[36ビート]",
+      "skillTargetId": "target-self",
+      "grade": 10,
+      "maxGrade": 10,
+      "skillTarget": {
+       "id": "target-self",
+       "type": 1,
+       "isOpponent": false
+      }
+     },
+     {
+      "efficacyId": "ef-cool_time_increase-10-target-opponent_same_position",
+      "efficacyType": 50,
+      "efficacyName": "同じレーンの相手のCT増加",
+      "efficacyDescription": "[ライブバトルのみ]同じレーンの相手のCTを10増加",
+      "skillTargetId": "target-opponent_same_position",
+      "grade": 0,
+      "maxGrade": 0,
+      "skillTarget": {
+       "id": "target-opponent_same_position",
+       "type": 25,
+       "isOpponent": true
+      }
+     }
+    ]
+   },
+   "levels": [
+    {
+     "level": 1,
+     "description": "290%のスコア獲得、ボーカル上昇状態の段階数が多い程効果上昇\n自身にボーカル上昇超化効果[17ビート]\n[ライブバトルのみ]同じレーンの相手のCTを7増加\nスタミナ285消費 CT:30",
+     "stamina": 285,
+     "coolTime": 30,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get_by_status_effect_type_grade-vocal_up-2900-chart_dependence",
+      "ef-add_effect_value_vocal_up-10-target-self-17",
+      "ef-cool_time_increase-7-target-opponent_same_position"
+     ]
+    },
+    {
+     "level": 2,
+     "description": "310%のスコア獲得、ボーカル上昇状態の段階数が多い程効果上昇\n自身にボーカル上昇超化効果[20ビート]\n[ライブバトルのみ]同じレーンの相手のCTを8増加\nスタミナ312消費 CT:30",
+     "stamina": 312,
+     "coolTime": 30,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get_by_status_effect_type_grade-vocal_up-3100-chart_dependence",
+      "ef-add_effect_value_vocal_up-10-target-self-20",
+      "ef-cool_time_increase-8-target-opponent_same_position"
+     ]
+    },
+    {
+     "level": 3,
+     "description": "330%のスコア獲得、ボーカル上昇状態の段階数が多い程効果上昇\n自身にボーカル上昇超化効果[24ビート]\n[ライブバトルのみ]同じレーンの相手のCTを8増加\nスタミナ327消費 CT:30",
+     "stamina": 327,
+     "coolTime": 30,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get_by_status_effect_type_grade-vocal_up-3300-chart_dependence",
+      "ef-add_effect_value_vocal_up-10-target-self-24",
+      "ef-cool_time_increase-8-target-opponent_same_position"
+     ]
+    },
+    {
+     "level": 4,
+     "description": "350%のスコア獲得、ボーカル上昇状態の段階数が多い程効果上昇\n自身にボーカル上昇超化効果[28ビート]\n[ライブバトルのみ]同じレーンの相手のCTを9増加\nスタミナ354消費 CT:30",
+     "stamina": 354,
+     "coolTime": 30,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get_by_status_effect_type_grade-vocal_up-3500-chart_dependence",
+      "ef-add_effect_value_vocal_up-10-target-self-28",
+      "ef-cool_time_increase-9-target-opponent_same_position"
+     ]
+    },
+    {
+     "level": 5,
+     "description": "370%のスコア獲得、ボーカル上昇状態の段階数が多い程効果上昇\n自身にボーカル上昇超化効果[32ビート]\n[ライブバトルのみ]同じレーンの相手のCTを9増加\nスタミナ370消費 CT:30",
+     "stamina": 370,
+     "coolTime": 30,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get_by_status_effect_type_grade-vocal_up-3700-chart_dependence",
+      "ef-add_effect_value_vocal_up-10-target-self-32",
+      "ef-cool_time_increase-9-target-opponent_same_position"
+     ]
+    },
+    {
+     "level": 6,
+     "description": "400%のスコア獲得、ボーカル上昇状態の段階数が多い程効果上昇\n自身にボーカル上昇超化効果[36ビート]\n[ライブバトルのみ]同じレーンの相手のCTを10増加\nスタミナ404消費 CT:30",
+     "stamina": 404,
+     "coolTime": 30,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get_by_status_effect_type_grade-vocal_up-4000-chart_dependence",
+      "ef-add_effect_value_vocal_up-10-target-self-36",
+      "ef-cool_time_increase-10-target-opponent_same_position"
+     ]
+    }
+   ]
+  },
+  {
+   "displayLane": 3,
+   "cardId": "card-chs-05-fest-03",
+   "cardName": "紡ぎ合う憧れの時間",
+   "cardRoleType": 1,
+   "cardRoleName": "scorer",
+   "skillId": "sk-chs-05-fest-03-3",
+   "skillName": "逆襲のドッキリ企画",
+   "categoryType": 3,
+   "categoryName": "P(passive)",
+   "usedLevel": 6,
+   "usedLevelData": {
+    "level": 6,
+    "description": "自身がボーカルレーンの時 自身に7段階ボーカル上昇効果[43ビート]とスタミナを2560回復\nスタミナ866消費 CT:50",
+    "stamina": 866,
+    "probabilityPermil": 1000,
+    "coolTime": 50,
+    "limitCount": 0,
+    "skillLevelTriggerId": "tg-position_attribute_vocal",
+    "skillLevelTrigger": {
+     "id": "tg-position_attribute_vocal",
+     "type": 21,
+     "characterIds": []
+    },
+    "skillDetails": [
+     {
+      "efficacyId": "ef-vocal_up-7-target-self-43",
+      "efficacyType": 14,
+      "efficacyName": "自身にボーカル上昇効果",
+      "efficacyDescription": "自身に7段階ボーカル上昇効果[43ビート]",
+      "skillTargetId": "target-self",
+      "grade": 7,
+      "maxGrade": 20,
+      "skillTarget": {
+       "id": "target-self",
+       "type": 1,
+       "isOpponent": false
+      }
+     },
+     {
+      "efficacyId": "ef-fix_stamina_recovery-2560-target-self",
+      "efficacyType": 23,
+      "efficacyName": "自身のスタミナを回復",
+      "efficacyDescription": "自身のスタミナを2560回復",
+      "skillTargetId": "target-self",
+      "grade": 0,
+      "maxGrade": 0,
+      "skillTarget": {
+       "id": "target-self",
+       "type": 1,
+       "isOpponent": false
+      }
+     }
+    ]
+   },
+   "levels": [
+    {
+     "level": 1,
+     "description": "自身がボーカルレーンの時 自身に6段階ボーカル上昇効果[20ビート]とスタミナを600回復\nスタミナ429消費 CT:50",
+     "stamina": 429,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-vocal_up-6-target-self-20",
+      "ef-fix_stamina_recovery-600-target-self"
+     ]
+    },
+    {
+     "level": 2,
+     "description": "自身がボーカルレーンの時 自身に6段階ボーカル上昇効果[25ビート]とスタミナを700回復\nスタミナ503消費 CT:50",
+     "stamina": 503,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-vocal_up-6-target-self-25",
+      "ef-fix_stamina_recovery-700-target-self"
+     ]
+    },
+    {
+     "level": 3,
+     "description": "自身がボーカルレーンの時 自身に6段階ボーカル上昇効果[31ビート]とスタミナを900回復\nスタミナ591消費 CT:50",
+     "stamina": 591,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-vocal_up-6-target-self-31",
+      "ef-fix_stamina_recovery-900-target-self"
+     ]
+    },
+    {
+     "level": 4,
+     "description": "自身がボーカルレーンの時 自身に7段階ボーカル上昇効果[31ビート]とスタミナを1400回復\nスタミナ669消費 CT:50",
+     "stamina": 669,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-vocal_up-7-target-self-31",
+      "ef-fix_stamina_recovery-1400-target-self"
+     ]
+    },
+    {
+     "level": 5,
+     "description": "自身がボーカルレーンの時 自身に7段階ボーカル上昇効果[37ビート]とスタミナを1900回復\nスタミナ767消費 CT:50",
+     "stamina": 767,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-vocal_up-7-target-self-37",
+      "ef-fix_stamina_recovery-1900-target-self"
+     ]
+    },
+    {
+     "level": 6,
+     "description": "自身がボーカルレーンの時 自身に7段階ボーカル上昇効果[43ビート]とスタミナを2560回復\nスタミナ866消費 CT:50",
+     "stamina": 866,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-vocal_up-7-target-self-43",
+      "ef-fix_stamina_recovery-2560-target-self"
+     ]
+    }
+   ]
+  },
+  {
+   "displayLane": 4,
+   "cardId": "card-ktn-05-wedd-00",
+   "cardName": "Perfect Bride",
+   "cardRoleType": 3,
+   "cardRoleName": "supporter",
+   "skillId": "sk-ktn-05-wedd-00-1",
+   "skillName": "花嫁の心得",
+   "categoryType": 2,
+   "categoryName": "A(active)",
+   "usedLevel": 6,
+   "usedLevelData": {
+    "level": 6,
+    "description": "530%のスコア獲得\n全員にコンボ継続効果[75ビート]\n全員に8段階消費スタミナ低下効果[75ビート]\nスタミナ187消費 CT:50",
+    "stamina": 187,
+    "probabilityPermil": 1000,
+    "coolTime": 50,
+    "limitCount": 0,
+    "skillLevelTriggerId": "",
+    "skillLevelTrigger": null,
+    "skillDetails": [
+     {
+      "efficacyId": "ef-score_get-5300-chart_dependence",
+      "efficacyType": 1,
+      "efficacyName": "スコア獲得",
+      "efficacyDescription": "530%のスコア獲得",
+      "skillTargetId": "",
+      "grade": 0,
+      "maxGrade": 0
+     },
+     {
+      "efficacyId": "ef-combo_continuation-target-all-75",
+      "efficacyType": 12,
+      "efficacyName": "全員にコンボ継続効果",
+      "efficacyDescription": "全員にコンボ継続効果[75ビート]",
+      "skillTargetId": "target-all",
+      "grade": 0,
+      "maxGrade": 0,
+      "skillTarget": {
+       "id": "target-all",
+       "type": 2,
+       "isOpponent": false
+      }
+     },
+     {
+      "efficacyId": "ef-stamina_consumption_reduction-8-target-all-75",
+      "efficacyType": 11,
+      "efficacyName": "全員に消費スタミナ低下効果",
+      "efficacyDescription": "全員に8段階消費スタミナ低下効果[75ビート]",
+      "skillTargetId": "target-all",
+      "grade": 8,
+      "maxGrade": 20,
+      "skillTarget": {
+       "id": "target-all",
+       "type": 2,
+       "isOpponent": false
+      }
+     }
+    ]
+   },
+   "levels": [
+    {
+     "level": 1,
+     "description": "410%のスコア獲得\n全員にコンボ継続効果[40ビート]\n全員に6段階消費スタミナ低下効果[45ビート]\nスタミナ134消費 CT:50",
+     "stamina": 134,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4100-chart_dependence",
+      "ef-combo_continuation-target-all-40",
+      "ef-stamina_consumption_reduction-6-target-all-45"
+     ]
+    },
+    {
+     "level": 2,
+     "description": "430%のスコア獲得\n全員にコンボ継続効果[45ビート]\n全員に6段階消費スタミナ低下効果[55ビート]\nスタミナ143消費 CT:50",
+     "stamina": 143,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4300-chart_dependence",
+      "ef-combo_continuation-target-all-45",
+      "ef-stamina_consumption_reduction-6-target-all-55"
+     ]
+    },
+    {
+     "level": 3,
+     "description": "450%のスコア獲得\n全員にコンボ継続効果[50ビート]\n全員に7段階消費スタミナ低下効果[55ビート]\nスタミナ152消費 CT:50",
+     "stamina": 152,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4500-chart_dependence",
+      "ef-combo_continuation-target-all-50",
+      "ef-stamina_consumption_reduction-7-target-all-55"
+     ]
+    },
+    {
+     "level": 4,
+     "description": "480%のスコア獲得\n全員にコンボ継続効果[60ビート]\n全員に7段階消費スタミナ低下効果[65ビート]\nスタミナ165消費 CT:50",
+     "stamina": 165,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4800-chart_dependence",
+      "ef-combo_continuation-target-all-60",
+      "ef-stamina_consumption_reduction-7-target-all-65"
+     ]
+    },
+    {
+     "level": 5,
+     "description": "500%のスコア獲得\n全員にコンボ継続効果[65ビート]\n全員に8段階消費スタミナ低下効果[65ビート]\nスタミナ173消費 CT:50",
+     "stamina": 173,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-5000-chart_dependence",
+      "ef-combo_continuation-target-all-65",
+      "ef-stamina_consumption_reduction-8-target-all-65"
+     ]
+    },
+    {
+     "level": 6,
+     "description": "530%のスコア獲得\n全員にコンボ継続効果[75ビート]\n全員に8段階消費スタミナ低下効果[75ビート]\nスタミナ187消費 CT:50",
+     "stamina": 187,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-5300-chart_dependence",
+      "ef-combo_continuation-target-all-75",
+      "ef-stamina_consumption_reduction-8-target-all-75"
+     ]
+    }
+   ]
+  },
+  {
+   "displayLane": 4,
+   "cardId": "card-ktn-05-wedd-00",
+   "cardName": "Perfect Bride",
+   "cardRoleType": 3,
+   "cardRoleName": "supporter",
+   "skillId": "sk-ktn-05-wedd-00-2",
+   "skillName": "ドリームウエディング",
+   "categoryType": 2,
+   "categoryName": "A(active)",
+   "usedLevel": 6,
+   "usedLevelData": {
+    "level": 6,
+    "description": "550%のスコア獲得\n隣接するアイドルのCTを15減少\n自身がビジュアルレーンの時 スコアラータイプ2人に5段階クリティカル係数上昇効果[60ビート]\nスタミナ190消費 CT:50",
+    "stamina": 190,
+    "probabilityPermil": 1000,
+    "coolTime": 50,
+    "limitCount": 0,
+    "skillLevelTriggerId": "",
+    "skillLevelTrigger": null,
+    "skillDetails": [
+     {
+      "efficacyId": "ef-score_get-5500-chart_dependence",
+      "efficacyType": 1,
+      "efficacyName": "スコア獲得",
+      "efficacyDescription": "550%のスコア獲得",
+      "skillTargetId": "",
+      "grade": 0,
+      "maxGrade": 0
+     },
+     {
+      "efficacyId": "ef-cool_time_reduction-15-target-neighbor",
+      "efficacyType": 27,
+      "efficacyName": "隣接するアイドルのCTを減少",
+      "efficacyDescription": "隣接するアイドルのCTを15減少",
+      "skillTargetId": "target-neighbor",
+      "grade": 0,
+      "maxGrade": 0,
+      "skillTarget": {
+       "id": "target-neighbor",
+       "type": 15,
+       "isOpponent": false
+      }
+     },
+     {
+      "efficacyId": "ef-critical_bonus_permil_up-5-target-character_type-1-2-60",
+      "efficacyType": 20,
+      "efficacyName": "スコアラータイプ2人にクリティカル係数上昇効果",
+      "efficacyDescription": "スコアラータイプ2人に5段階クリティカル係数上昇効果[60ビート]",
+      "skillTargetId": "target-character_type-1-2",
+      "grade": 5,
+      "maxGrade": 20,
+      "skillTarget": {
+       "id": "target-character_type-1-2",
+       "type": 14,
+       "isOpponent": false
+      },
+      "skillTriggerId": "tg-position_attribute_visual",
+      "skillTrigger": {
+       "id": "tg-position_attribute_visual",
+       "type": 23,
+       "characterIds": []
+      }
+     }
+    ]
+   },
+   "levels": [
+    {
+     "level": 1,
+     "description": "410%のスコア獲得\n隣接するアイドルのCTを10減少\n自身がビジュアルレーンの時 スコアラータイプ2人に3段階クリティカル係数上昇効果[40ビート]\nスタミナ134消費 CT:50",
+     "stamina": 134,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4100-chart_dependence",
+      "ef-cool_time_reduction-10-target-neighbor",
+      "ef-critical_bonus_permil_up-3-target-character_type-1-2-40"
+     ]
+    },
+    {
+     "level": 2,
+     "description": "430%のスコア獲得\n隣接するアイドルのCTを10減少\n自身がビジュアルレーンの時 スコアラータイプ2人に3段階クリティカル係数上昇効果[45ビート]\nスタミナ141消費 CT:50",
+     "stamina": 141,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4300-chart_dependence",
+      "ef-cool_time_reduction-10-target-neighbor",
+      "ef-critical_bonus_permil_up-3-target-character_type-1-2-45"
+     ]
+    },
+    {
+     "level": 3,
+     "description": "460%のスコア獲得\n隣接するアイドルのCTを10減少\n自身がビジュアルレーンの時 スコアラータイプ2人に4段階クリティカル係数上昇効果[50ビート]\nスタミナ153消費 CT:50",
+     "stamina": 153,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4600-chart_dependence",
+      "ef-cool_time_reduction-10-target-neighbor",
+      "ef-critical_bonus_permil_up-4-target-character_type-1-2-50"
+     ]
+    },
+    {
+     "level": 4,
+     "description": "490%のスコア獲得\n隣接するアイドルのCTを15減少\n自身がビジュアルレーンの時 スコアラータイプ2人に4段階クリティカル係数上昇効果[55ビート]\nスタミナ169消費 CT:50",
+     "stamina": 169,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4900-chart_dependence",
+      "ef-cool_time_reduction-15-target-neighbor",
+      "ef-critical_bonus_permil_up-4-target-character_type-1-2-55"
+     ]
+    },
+    {
+     "level": 5,
+     "description": "520%のスコア獲得\n隣接するアイドルのCTを15減少\n自身がビジュアルレーンの時 スコアラータイプ2人に5段階クリティカル係数上昇効果[55ビート]\nスタミナ180消費 CT:50",
+     "stamina": 180,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-5200-chart_dependence",
+      "ef-cool_time_reduction-15-target-neighbor",
+      "ef-critical_bonus_permil_up-5-target-character_type-1-2-55"
+     ]
+    },
+    {
+     "level": 6,
+     "description": "550%のスコア獲得\n隣接するアイドルのCTを15減少\n自身がビジュアルレーンの時 スコアラータイプ2人に5段階クリティカル係数上昇効果[60ビート]\nスタミナ190消費 CT:50",
+     "stamina": 190,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-5500-chart_dependence",
+      "ef-cool_time_reduction-15-target-neighbor",
+      "ef-critical_bonus_permil_up-5-target-character_type-1-2-60"
+     ]
+    }
+   ]
+  },
+  {
+   "displayLane": 4,
+   "cardId": "card-ktn-05-wedd-00",
+   "cardName": "Perfect Bride",
+   "cardRoleType": 3,
+   "cardRoleName": "supporter",
+   "skillId": "sk-ktn-05-wedd-00-3",
+   "skillName": "結婚への願望",
+   "categoryType": 3,
+   "categoryName": "P(passive)",
+   "usedLevel": 5,
+   "usedLevelData": {
+    "level": 5,
+    "description": "隣接するアイドルのスタミナを3600回復\n[ライブバトルのみ]同じレーンの相手のスタミナを2200消費\nスタミナ273消費 CT:40",
+    "stamina": 273,
+    "probabilityPermil": 1000,
+    "coolTime": 40,
+    "limitCount": 0,
+    "skillLevelTriggerId": "",
+    "skillLevelTrigger": null,
+    "skillDetails": [
+     {
+      "efficacyId": "ef-fix_stamina_recovery-3600-target-neighbor",
+      "efficacyType": 23,
+      "efficacyName": "隣接するアイドルのスタミナを回復",
+      "efficacyDescription": "隣接するアイドルのスタミナを3600回復",
+      "skillTargetId": "target-neighbor",
+      "grade": 0,
+      "maxGrade": 0,
+      "skillTarget": {
+       "id": "target-neighbor",
+       "type": 15,
+       "isOpponent": false
+      }
+     },
+     {
+      "efficacyId": "ef-stamina_consumption-2200-target-opponent_same_position",
+      "efficacyType": 49,
+      "efficacyName": "同じレーンの相手のスタミナを消費",
+      "efficacyDescription": "[ライブバトルのみ]同じレーンの相手のスタミナを2200消費",
+      "skillTargetId": "target-opponent_same_position",
+      "grade": 0,
+      "maxGrade": 0,
+      "skillTarget": {
+       "id": "target-opponent_same_position",
+       "type": 25,
+       "isOpponent": true
+      }
+     }
+    ]
+   },
+   "levels": [
+    {
+     "level": 1,
+     "description": "隣接するアイドルのスタミナを900回復\n[ライブバトルのみ]同じレーンの相手のスタミナを1200消費\nスタミナ154消費 CT:40",
+     "stamina": 154,
+     "coolTime": 40,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-fix_stamina_recovery-900-target-neighbor",
+      "ef-stamina_consumption-1200-target-opponent_same_position"
+     ]
+    },
+    {
+     "level": 2,
+     "description": "隣接するアイドルのスタミナを1200回復\n[ライブバトルのみ]同じレーンの相手のスタミナを1400消費\nスタミナ179消費 CT:40",
+     "stamina": 179,
+     "coolTime": 40,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-fix_stamina_recovery-1200-target-neighbor",
+      "ef-stamina_consumption-1400-target-opponent_same_position"
+     ]
+    },
+    {
+     "level": 3,
+     "description": "隣接するアイドルのスタミナを2100回復\n[ライブバトルのみ]同じレーンの相手のスタミナを1600消費\nスタミナ204消費 CT:40",
+     "stamina": 204,
+     "coolTime": 40,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-fix_stamina_recovery-2100-target-neighbor",
+      "ef-stamina_consumption-1600-target-opponent_same_position"
+     ]
+    },
+    {
+     "level": 4,
+     "description": "隣接するアイドルのスタミナを3200回復\n[ライブバトルのみ]同じレーンの相手のスタミナを1900消費\nスタミナ243消費 CT:40",
+     "stamina": 243,
+     "coolTime": 40,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-fix_stamina_recovery-3200-target-neighbor",
+      "ef-stamina_consumption-1900-target-opponent_same_position"
+     ]
+    },
+    {
+     "level": 5,
+     "description": "隣接するアイドルのスタミナを3600回復\n[ライブバトルのみ]同じレーンの相手のスタミナを2200消費\nスタミナ273消費 CT:40",
+     "stamina": 273,
+     "coolTime": 40,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-fix_stamina_recovery-3600-target-neighbor",
+      "ef-stamina_consumption-2200-target-opponent_same_position"
+     ]
+    },
+    {
+     "level": 6,
+     "description": "隣接するアイドルのスタミナを3800回復\n[ライブバトルのみ]同じレーンの相手のスタミナを2500消費\nスタミナ312消費 CT:40",
+     "stamina": 312,
+     "coolTime": 40,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-fix_stamina_recovery-3800-target-neighbor",
+      "ef-stamina_consumption-2500-target-opponent_same_position"
+     ]
+    }
+   ]
+  },
+  {
+   "displayLane": 2,
+   "cardId": "card-ski-05-onep-00",
+   "cardName": "から紅に染まる頬",
+   "cardRoleType": 2,
+   "cardRoleName": "buffer",
+   "skillId": "sk-ski-05-onep-00-1",
+   "skillName": "やすらぎの贈り物",
+   "categoryType": 2,
+   "categoryName": "A(active)",
+   "usedLevel": 6,
+   "usedLevelData": {
+    "level": 6,
+    "description": "480%のスコア獲得\nスコアラータイプ1人に5段階テンションUP上限解放効果[46ビート]と強化効果を3段階増強\nスタミナ187消費 CT:50",
+    "stamina": 187,
+    "probabilityPermil": 1000,
+    "coolTime": 50,
+    "limitCount": 0,
+    "skillLevelTriggerId": "",
+    "skillLevelTrigger": null,
+    "skillDetails": [
+     {
+      "efficacyId": "ef-score_get-4800-chart_dependence",
+      "efficacyType": 1,
+      "efficacyName": "スコア獲得",
+      "efficacyDescription": "480%のスコア獲得",
+      "skillTargetId": "",
+      "grade": 0,
+      "maxGrade": 0
+     },
+     {
+      "efficacyId": "ef-limit_break_tension_up-5-target-character_type-1-1-46",
+      "efficacyType": 85,
+      "efficacyName": "スコアラータイプ1人にテンションUPの上昇上限解放",
+      "efficacyDescription": "スコアラータイプ1人に5段階テンションUP上限解放効果[46ビート]",
+      "skillTargetId": "target-character_type-1-1",
+      "grade": 5,
+      "maxGrade": 5,
+      "skillTarget": {
+       "id": "target-character_type-1-1",
+       "type": 14,
+       "isOpponent": false
+      }
+     },
+     {
+      "efficacyId": "ef-strength_effect_value_increase-3-target-character_type-1-1",
+      "efficacyType": 26,
+      "efficacyName": "スコアラータイプ1人の強化効果を増強",
+      "efficacyDescription": "スコアラータイプ1人の強化効果を3段階増強",
+      "skillTargetId": "target-character_type-1-1",
+      "grade": 0,
+      "maxGrade": 0,
+      "skillTarget": {
+       "id": "target-character_type-1-1",
+       "type": 14,
+       "isOpponent": false
+      }
+     }
+    ]
+   },
+   "levels": [
+    {
+     "level": 1,
+     "description": "400%のスコア獲得\nスコアラータイプ1人に5段階テンションUP上限解放効果[31ビート]と強化効果を1段階増強 \nスタミナ133消費 CT:50",
+     "stamina": 133,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4000-chart_dependence",
+      "ef-limit_break_tension_up-5-target-character_type-1-1-31",
+      "ef-strength_effect_value_increase-1-target-character_type-1-1"
+     ]
+    },
+    {
+     "level": 2,
+     "description": "410%のスコア獲得\nスコアラータイプ1人に5段階テンションUP上限解放効果[34ビート]と強化効果を1段階増強\nスタミナ136消費 CT:50",
+     "stamina": 136,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4100-chart_dependence",
+      "ef-limit_break_tension_up-5-target-character_type-1-1-34",
+      "ef-strength_effect_value_increase-1-target-character_type-1-1"
+     ]
+    },
+    {
+     "level": 3,
+     "description": "420%のスコア獲得\nスコアラータイプ1人に5段階テンションUP上限解放効果[37ビート]と強化効果を2段階増強\nスタミナ154消費 CT:50",
+     "stamina": 154,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4200-chart_dependence",
+      "ef-limit_break_tension_up-5-target-character_type-1-1-37",
+      "ef-strength_effect_value_increase-2-target-character_type-1-1"
+     ]
+    },
+    {
+     "level": 4,
+     "description": "440%のスコア獲得\nスコアラータイプ1人に5段階テンションUP上限解放効果[40ビート]と強化効果を2段階増強\nスタミナ160消費 CT:50",
+     "stamina": 160,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4400-chart_dependence",
+      "ef-limit_break_tension_up-5-target-character_type-1-1-40",
+      "ef-strength_effect_value_increase-2-target-character_type-1-1"
+     ]
+    },
+    {
+     "level": 5,
+     "description": "460%のスコア獲得\nスコアラータイプ1人に5段階テンションUP上限解放効果[43ビート]と強化効果を3段階増強\nスタミナ181消費 CT:50",
+     "stamina": 181,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4600-chart_dependence",
+      "ef-limit_break_tension_up-5-target-character_type-1-1-43",
+      "ef-strength_effect_value_increase-3-target-character_type-1-1"
+     ]
+    },
+    {
+     "level": 6,
+     "description": "480%のスコア獲得\nスコアラータイプ1人に5段階テンションUP上限解放効果[46ビート]と強化効果を3段階増強\nスタミナ187消費 CT:50",
+     "stamina": 187,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4800-chart_dependence",
+      "ef-limit_break_tension_up-5-target-character_type-1-1-46",
+      "ef-strength_effect_value_increase-3-target-character_type-1-1"
+     ]
+    }
+   ]
+  },
+  {
+   "displayLane": 2,
+   "cardId": "card-ski-05-onep-00",
+   "cardName": "から紅に染まる頬",
+   "cardRoleType": 2,
+   "cardRoleName": "buffer",
+   "skillId": "sk-ski-05-onep-00-2",
+   "skillName": "私が恋をするのなら",
+   "categoryType": 2,
+   "categoryName": "A(active)",
+   "usedLevel": 6,
+   "usedLevelData": {
+    "level": 6,
+    "description": "510%のスコア獲得\n自身がボーカルレーンの時 ボーカルが高い1人の強化効果を10延長と9段階クリティカル率上昇効果[46ビート]\nスタミナ202消費 CT:50",
+    "stamina": 202,
+    "probabilityPermil": 1000,
+    "coolTime": 50,
+    "limitCount": 0,
+    "skillLevelTriggerId": "",
+    "skillLevelTrigger": null,
+    "skillDetails": [
+     {
+      "efficacyId": "ef-score_get-5100-chart_dependence",
+      "efficacyType": 1,
+      "efficacyName": "スコア獲得",
+      "efficacyDescription": "510%のスコア獲得",
+      "skillTargetId": "",
+      "grade": 0,
+      "maxGrade": 0
+     },
+     {
+      "efficacyId": "ef-strength_effect_count_increase-10-target-vocal_higher-1",
+      "efficacyType": 25,
+      "efficacyName": "ボーカルが高い1人の強化効果を延長",
+      "efficacyDescription": "ボーカルが高い1人の強化効果を10延長",
+      "skillTargetId": "target-vocal_higher-1",
+      "grade": 0,
+      "maxGrade": 0,
+      "skillTarget": {
+       "id": "target-vocal_higher-1",
+       "type": 6,
+       "isOpponent": false
+      },
+      "skillTriggerId": "tg-position_attribute_vocal",
+      "skillTrigger": {
+       "id": "tg-position_attribute_vocal",
+       "type": 21,
+       "characterIds": []
+      }
+     },
+     {
+      "efficacyId": "ef-critical_rate_up-9-target-vocal_higher-1-46",
+      "efficacyType": 19,
+      "efficacyName": "ボーカルが高い1人にクリティカル率上昇効果",
+      "efficacyDescription": "ボーカルが高い1人に9段階クリティカル率上昇効果[46ビート]",
+      "skillTargetId": "target-vocal_higher-1",
+      "grade": 9,
+      "maxGrade": 20,
+      "skillTarget": {
+       "id": "target-vocal_higher-1",
+       "type": 6,
+       "isOpponent": false
+      },
+      "skillTriggerId": "tg-position_attribute_vocal",
+      "skillTrigger": {
+       "id": "tg-position_attribute_vocal",
+       "type": 21,
+       "characterIds": []
+      }
+     }
+    ]
+   },
+   "levels": [
+    {
+     "level": 1,
+     "description": "400%のスコア獲得\n自身がボーカルレーンの時 ボーカルが高い1人の強化効果を5延長と7段階クリティカル率上昇効果[28ビート]\nスタミナ141消費 CT:50",
+     "stamina": 141,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4000-chart_dependence",
+      "ef-strength_effect_count_increase-5-target-vocal_higher-1",
+      "ef-critical_rate_up-7-target-vocal_higher-1-28"
+     ]
+    },
+    {
+     "level": 2,
+     "description": "420%のスコア獲得\n自身がボーカルレーンの時 ボーカルが高い1人の強化効果を6延長と7段階クリティカル率上昇効果[34ビート]\nスタミナ152消費 CT:50",
+     "stamina": 152,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4200-chart_dependence",
+      "ef-strength_effect_count_increase-6-target-vocal_higher-1",
+      "ef-critical_rate_up-7-target-vocal_higher-1-34"
+     ]
+    },
+    {
+     "level": 3,
+     "description": "440%のスコア獲得\n自身がボーカルレーンの時 ボーカルが高い1人の強化効果を7延長と8段階クリティカル率上昇効果[34ビート] \nスタミナ163消費 CT:50",
+     "stamina": 163,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4400-chart_dependence",
+      "ef-strength_effect_count_increase-7-target-vocal_higher-1",
+      "ef-critical_rate_up-8-target-vocal_higher-1-34"
+     ]
+    },
+    {
+     "level": 4,
+     "description": "460%のスコア獲得\n自身がボーカルレーンの時 ボーカルが高い1人の強化効果を8延長と8段階クリティカル率上昇効果[40ビート]\nスタミナ175消費 CT:50",
+     "stamina": 175,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4600-chart_dependence",
+      "ef-strength_effect_count_increase-8-target-vocal_higher-1",
+      "ef-critical_rate_up-8-target-vocal_higher-1-40"
+     ]
+    },
+    {
+     "level": 5,
+     "description": "480%のスコア獲得\n自身がボーカルレーンの時 ボーカルが高い1人の強化効果を9延長と9段階クリティカル率上昇効果[40ビート]\nスタミナ186消費 CT:50",
+     "stamina": 186,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4800-chart_dependence",
+      "ef-strength_effect_count_increase-9-target-vocal_higher-1",
+      "ef-critical_rate_up-9-target-vocal_higher-1-40"
+     ]
+    },
+    {
+     "level": 6,
+     "description": "510%のスコア獲得\n自身がボーカルレーンの時 ボーカルが高い1人の強化効果を10延長と9段階クリティカル率上昇効果[46ビート]\nスタミナ202消費 CT:50",
+     "stamina": 202,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-5100-chart_dependence",
+      "ef-strength_effect_count_increase-10-target-vocal_higher-1",
+      "ef-critical_rate_up-9-target-vocal_higher-1-46"
+     ]
+    }
+   ]
+  },
+  {
+   "displayLane": 2,
+   "cardId": "card-ski-05-onep-00",
+   "cardName": "から紅に染まる頬",
+   "cardRoleType": 2,
+   "cardRoleName": "buffer",
+   "skillId": "sk-ski-05-onep-00-3",
+   "skillName": "気持ちを和歌に乗せて",
+   "categoryType": 3,
+   "categoryName": "P(passive)",
+   "usedLevel": 5,
+   "usedLevelData": {
+    "level": 5,
+    "description": "スコアラータイプ1人に3段階テンションUP効果[40ビート]と3段階ボーカルブースト効果[40ビート]\nスタミナ262消費 CT:50",
+    "stamina": 262,
+    "probabilityPermil": 1000,
+    "coolTime": 50,
+    "limitCount": 0,
+    "skillLevelTriggerId": "",
+    "skillLevelTrigger": null,
+    "skillDetails": [
+     {
+      "efficacyId": "ef-tension_up-3-target-character_type-1-1-40",
+      "efficacyType": 38,
+      "efficacyName": "スコアラータイプ1人にテンションUP効果",
+      "efficacyDescription": "スコアラータイプ1人に3段階テンションUP効果[40ビート]",
+      "skillTargetId": "target-character_type-1-1",
+      "grade": 3,
+      "maxGrade": 10,
+      "skillTarget": {
+       "id": "target-character_type-1-1",
+       "type": 14,
+       "isOpponent": false
+      }
+     },
+     {
+      "efficacyId": "ef-vocal_boost-3-target-character_type-1-1-40",
+      "efficacyType": 56,
+      "efficacyName": "スコアラータイプ1人にボーカルブースト効果",
+      "efficacyDescription": "スコアラータイプ1人に3段階ボーカルブースト効果[40ビート]",
+      "skillTargetId": "target-character_type-1-1",
+      "grade": 3,
+      "maxGrade": 20,
+      "skillTarget": {
+       "id": "target-character_type-1-1",
+       "type": 14,
+       "isOpponent": false
+      }
+     }
+    ]
+   },
+   "levels": [
+    {
+     "level": 1,
+     "description": "スコアラータイプ1人に2段階テンションUP効果[32ビート]と2段階ボーカルブースト効果[32ビート]\nスタミナ140消費 CT:50",
+     "stamina": 140,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-tension_up-2-target-character_type-1-1-32",
+      "ef-vocal_boost-2-target-character_type-1-1-32"
+     ]
+    },
+    {
+     "level": 2,
+     "description": "スコアラータイプ1人に2段階テンションUP効果[34ビート]と2段階ボーカルブースト効果[34ビート]\nスタミナ149消費 CT:50",
+     "stamina": 149,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-tension_up-2-target-character_type-1-1-34",
+      "ef-vocal_boost-2-target-character_type-1-1-34"
+     ]
+    },
+    {
+     "level": 3,
+     "description": "スコアラータイプ1人に2段階テンションUP効果[37ビート]と2段階ボーカルブースト効果[37ビート]\nスタミナ162消費 CT:50",
+     "stamina": 162,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-tension_up-2-target-character_type-1-1-37",
+      "ef-vocal_boost-2-target-character_type-1-1-37"
+     ]
+    },
+    {
+     "level": 4,
+     "description": "スコアラータイプ1人に3段階テンションUP効果[37ビート]と3段階ボーカルブースト効果[37ビート]\nスタミナ242消費 CT:50",
+     "stamina": 242,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-tension_up-3-target-character_type-1-1-37",
+      "ef-vocal_boost-3-target-character_type-1-1-37"
+     ]
+    },
+    {
+     "level": 5,
+     "description": "スコアラータイプ1人に3段階テンションUP効果[40ビート]と3段階ボーカルブースト効果[40ビート]\nスタミナ262消費 CT:50",
+     "stamina": 262,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-tension_up-3-target-character_type-1-1-40",
+      "ef-vocal_boost-3-target-character_type-1-1-40"
+     ]
+    },
+    {
+     "level": 6,
+     "description": "スコアラータイプ1人に3段階テンションUP効果[43ビート]と3段階ボーカルブースト効果[43ビート]\nスタミナ281消費 CT:50",
+     "stamina": 281,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-tension_up-3-target-character_type-1-1-43",
+      "ef-vocal_boost-3-target-character_type-1-1-43"
+     ]
+    }
+   ]
+  },
+  {
+   "displayLane": 5,
+   "cardId": "card-ski-05-waso-00",
+   "cardName": "胸に秘めていた情熱",
+   "cardRoleType": 2,
+   "cardRoleName": "buffer",
+   "skillId": "sk-ski-05-waso-00-1",
+   "skillName": "殻をやぶる",
+   "categoryType": 2,
+   "categoryName": "A(active)",
+   "usedLevel": 6,
+   "usedLevelData": {
+    "level": 6,
+    "description": "570%のスコア獲得\nボーカルタイプ2人に6段階クリティカル率上昇効果[60ビート]\nスタミナ186消費 CT:50",
+    "stamina": 186,
+    "probabilityPermil": 1000,
+    "coolTime": 50,
+    "limitCount": 0,
+    "skillLevelTriggerId": "",
+    "skillLevelTrigger": null,
+    "skillDetails": [
+     {
+      "efficacyId": "ef-score_get-5700-chart_dependence",
+      "efficacyType": 1,
+      "efficacyName": "スコア獲得",
+      "efficacyDescription": "570%のスコア獲得",
+      "skillTargetId": "",
+      "grade": 0,
+      "maxGrade": 0
+     },
+     {
+      "efficacyId": "ef-critical_rate_up-6-target-vocal-2-60",
+      "efficacyType": 19,
+      "efficacyName": "ボーカルタイプ2人にクリティカル率上昇効果",
+      "efficacyDescription": "ボーカルタイプ2人に6段階クリティカル率上昇効果[60ビート]",
+      "skillTargetId": "target-vocal-2",
+      "grade": 6,
+      "maxGrade": 20,
+      "skillTarget": {
+       "id": "target-vocal-2",
+       "type": 16,
+       "isOpponent": false
+      }
+     }
+    ]
+   },
+   "levels": [
+    {
+     "level": 1,
+     "description": "430%のスコア獲得\nボーカルタイプ2人に4段階クリティカル率上昇効果[42ビート]\nスタミナ133消費 CT:50",
+     "stamina": 133,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4300-chart_dependence",
+      "ef-critical_rate_up-4-target-vocal-2-42"
+     ]
+    },
+    {
+     "level": 2,
+     "description": "450%のスコア獲得\nボーカルタイプ2人に4段階クリティカル率上昇効果[48ビート]\nスタミナ140消費 CT:50",
+     "stamina": 140,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4500-chart_dependence",
+      "ef-critical_rate_up-4-target-vocal-2-48"
+     ]
+    },
+    {
+     "level": 3,
+     "description": "480%のスコア獲得\nボーカルタイプ2人に5段階クリティカル率上昇効果[48ビート]\nスタミナ152消費 CT:50",
+     "stamina": 152,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4800-chart_dependence",
+      "ef-critical_rate_up-5-target-vocal-2-48"
+     ]
+    },
+    {
+     "level": 4,
+     "description": "510%のスコア獲得\nボーカルタイプ2人に5段階クリティカル率上昇効果[56ビート]\nスタミナ164消費 CT:50",
+     "stamina": 164,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-5100-chart_dependence",
+      "ef-critical_rate_up-5-target-vocal-2-56"
+     ]
+    },
+    {
+     "level": 5,
+     "description": "540%のスコア獲得\nボーカルタイプ2人に6段階クリティカル率上昇効果[56ビート]\nスタミナ176消費 CT:50",
+     "stamina": 176,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-5400-chart_dependence",
+      "ef-critical_rate_up-6-target-vocal-2-56"
+     ]
+    },
+    {
+     "level": 6,
+     "description": "570%のスコア獲得\nボーカルタイプ2人に6段階クリティカル率上昇効果[60ビート]\nスタミナ186消費 CT:50",
+     "stamina": 186,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-5700-chart_dependence",
+      "ef-critical_rate_up-6-target-vocal-2-60"
+     ]
+    }
+   ]
+  },
+  {
+   "displayLane": 5,
+   "cardId": "card-ski-05-waso-00",
+   "cardName": "胸に秘めていた情熱",
+   "cardRoleType": 2,
+   "cardRoleName": "buffer",
+   "skillId": "sk-ski-05-waso-00-2",
+   "skillName": "アイドルの掟への反抗",
+   "categoryType": 2,
+   "categoryName": "A(active)",
+   "usedLevel": 6,
+   "usedLevelData": {
+    "level": 6,
+    "description": "510%のスコア獲得\n隣接するアイドルに6段階ボーカル上昇効果[38ビート]\n誰かが集目状態の時 センターに4段階ボーカル上昇効果[38ビート]\nスタミナ173消費 CT:50",
+    "stamina": 173,
+    "probabilityPermil": 1000,
+    "coolTime": 50,
+    "limitCount": 0,
+    "skillLevelTriggerId": "",
+    "skillLevelTrigger": null,
+    "skillDetails": [
+     {
+      "efficacyId": "ef-score_get-5100-chart_dependence",
+      "efficacyType": 1,
+      "efficacyName": "スコア獲得",
+      "efficacyDescription": "510%のスコア獲得",
+      "skillTargetId": "",
+      "grade": 0,
+      "maxGrade": 0
+     },
+     {
+      "efficacyId": "ef-vocal_up-6-target-neighbor-38",
+      "efficacyType": 14,
+      "efficacyName": "隣接するアイドルにボーカル上昇効果",
+      "efficacyDescription": "隣接するアイドルに6段階ボーカル上昇効果[38ビート]",
+      "skillTargetId": "target-neighbor",
+      "grade": 6,
+      "maxGrade": 20,
+      "skillTarget": {
+       "id": "target-neighbor",
+       "type": 15,
+       "isOpponent": false
+      }
+     },
+     {
+      "efficacyId": "ef-vocal_up-4-target-center-38",
+      "efficacyType": 14,
+      "efficacyName": "センターにボーカル上昇効果",
+      "efficacyDescription": "センターに4段階ボーカル上昇効果[38ビート]",
+      "skillTargetId": "target-center",
+      "grade": 4,
+      "maxGrade": 20,
+      "skillTarget": {
+       "id": "target-center",
+       "type": 3,
+       "isOpponent": false
+      },
+      "skillTriggerId": "tg-someone_status-audience_amount_increase",
+      "skillTrigger": {
+       "id": "tg-someone_status-audience_amount_increase",
+       "type": 11,
+       "characterIds": []
+      }
+     }
+    ]
+   },
+   "levels": [
+    {
+     "level": 1,
+     "description": "400%のスコア獲得\n隣接するアイドルに4段階ボーカル上昇効果[28ビート]\n誰かが集目状態の時 センターに2段階ボーカル上昇効果[28ビート]\nスタミナ127消費 CT:50",
+     "stamina": 127,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4000-chart_dependence",
+      "ef-vocal_up-4-target-neighbor-28",
+      "ef-vocal_up-2-target-center-28"
+     ]
+    },
+    {
+     "level": 2,
+     "description": "420%のスコア獲得\n隣接するアイドルに4段階ボーカル上昇効果[31ビート]\n誰かが集目状態の時 センターに2段階ボーカル上昇効果[31ビート]\nスタミナ134消費 CT:50",
+     "stamina": 134,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4200-chart_dependence",
+      "ef-vocal_up-4-target-neighbor-31",
+      "ef-vocal_up-2-target-center-31"
+     ]
+    },
+    {
+     "level": 3,
+     "description": "440%のスコア獲得\n隣接するアイドルに5段階ボーカル上昇効果[31ビート]\n誰かが集目状態の時 センターに3段階ボーカル上昇効果[31ビート]\nスタミナ144消費 CT:50",
+     "stamina": 144,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4400-chart_dependence",
+      "ef-vocal_up-5-target-neighbor-31",
+      "ef-vocal_up-3-target-center-31"
+     ]
+    },
+    {
+     "level": 4,
+     "description": "470%のスコア獲得\n隣接するアイドルに5段階ボーカル上昇効果[34ビート]\n誰かが集目状態の時 センターに3段階ボーカル上昇効果[34ビート]\nスタミナ154消費 CT:50",
+     "stamina": 154,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4700-chart_dependence",
+      "ef-vocal_up-5-target-neighbor-34",
+      "ef-vocal_up-3-target-center-34"
+     ]
+    },
+    {
+     "level": 5,
+     "description": "490%のスコア獲得\n隣接するアイドルに6段階ボーカル上昇効果[34ビート]\n誰かが集目状態の時 センターに4段階ボーカル上昇効果[34ビート]\nスタミナ164消費 CT:50",
+     "stamina": 164,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4900-chart_dependence",
+      "ef-vocal_up-6-target-neighbor-34",
+      "ef-vocal_up-4-target-center-34"
+     ]
+    },
+    {
+     "level": 6,
+     "description": "510%のスコア獲得\n隣接するアイドルに6段階ボーカル上昇効果[38ビート]\n誰かが集目状態の時 センターに4段階ボーカル上昇効果[38ビート]\nスタミナ173消費 CT:50",
+     "stamina": 173,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-5100-chart_dependence",
+      "ef-vocal_up-6-target-neighbor-38",
+      "ef-vocal_up-4-target-center-38"
+     ]
+    }
+   ]
+  },
+  {
+   "displayLane": 5,
+   "cardId": "card-ski-05-waso-00",
+   "cardName": "胸に秘めていた情熱",
+   "cardRoleType": 2,
+   "cardRoleName": "buffer",
+   "skillId": "sk-ski-05-waso-00-3",
+   "skillName": "さらけ出す",
+   "categoryType": 3,
+   "categoryName": "P(passive)",
+   "usedLevel": 5,
+   "usedLevelData": {
+    "level": 5,
+    "description": "センターに9段階の集目効果[38ビート]\nセンターの強化効果を11延長\nスタミナ280消費 CT:60",
+    "stamina": 280,
+    "probabilityPermil": 1000,
+    "coolTime": 60,
+    "limitCount": 0,
+    "skillLevelTriggerId": "",
+    "skillLevelTrigger": null,
+    "skillDetails": [
+     {
+      "efficacyId": "ef-audience_amount_increase-9-target-center-38",
+      "efficacyType": 21,
+      "efficacyName": "センターに集目効果",
+      "efficacyDescription": "センターに9段階の集目効果[38ビート]",
+      "skillTargetId": "target-center",
+      "grade": 9,
+      "maxGrade": 10,
+      "skillTarget": {
+       "id": "target-center",
+       "type": 3,
+       "isOpponent": false
+      }
+     },
+     {
+      "efficacyId": "ef-strength_effect_count_increase-11-target-center",
+      "efficacyType": 25,
+      "efficacyName": "センターの強化効果を延長",
+      "efficacyDescription": "センターの強化効果を11延長",
+      "skillTargetId": "target-center",
+      "grade": 0,
+      "maxGrade": 0,
+      "skillTarget": {
+       "id": "target-center",
+       "type": 3,
+       "isOpponent": false
+      }
+     }
+    ]
+   },
+   "levels": [
+    {
+     "level": 1,
+     "description": "センターに7段階の集目効果[24ビート]\nセンターの強化効果を6延長\nスタミナ154消費 CT:60",
+     "stamina": 154,
+     "coolTime": 60,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-audience_amount_increase-7-target-center-24",
+      "ef-strength_effect_count_increase-6-target-center"
+     ]
+    },
+    {
+     "level": 2,
+     "description": "センターに7段階の集目効果[31ビート]\nセンターの強化効果を7延長\nスタミナ183消費 CT:60",
+     "stamina": 183,
+     "coolTime": 60,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-audience_amount_increase-7-target-center-31",
+      "ef-strength_effect_count_increase-7-target-center"
+     ]
+    },
+    {
+     "level": 3,
+     "description": "センターに8段階の集目効果[31ビート]\nセンターの強化効果を8延長\nスタミナ206消費 CT:60",
+     "stamina": 206,
+     "coolTime": 60,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-audience_amount_increase-8-target-center-31",
+      "ef-strength_effect_count_increase-8-target-center"
+     ]
+    },
+    {
+     "level": 4,
+     "description": "センターに8段階の集目効果[38ビート]\nセンターの強化効果を10延長\nスタミナ257消費 CT:60",
+     "stamina": 257,
+     "coolTime": 60,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-audience_amount_increase-8-target-center-38",
+      "ef-strength_effect_count_increase-10-target-center"
+     ]
+    },
+    {
+     "level": 5,
+     "description": "センターに9段階の集目効果[38ビート]\nセンターの強化効果を11延長\nスタミナ280消費 CT:60",
+     "stamina": 280,
+     "coolTime": 60,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-audience_amount_increase-9-target-center-38",
+      "ef-strength_effect_count_increase-11-target-center"
+     ]
+    },
+    {
+     "level": 6,
+     "description": "センターに9段階の集目効果[45ビート]\nセンターの強化効果を12延長\nスタミナ312消費 CT:60",
+     "stamina": 312,
+     "coolTime": 60,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-audience_amount_increase-9-target-center-45",
+      "ef-strength_effect_count_increase-12-target-center"
+     ]
+    }
+   ]
+  },
+  {
+   "displayLane": 1,
+   "cardId": "card-yu-05-birt-02",
+   "cardName": "wonderful day for 優",
+   "cardRoleType": 3,
+   "cardRoleName": "supporter",
+   "skillId": "sk-yu-05-birt-02-1",
+   "skillName": "ハスハスしてる優ちゃん",
+   "categoryType": 2,
+   "categoryName": "A(active)",
+   "usedLevel": 6,
+   "usedLevelData": {
+    "level": 6,
+    "description": "450%のスコア獲得 \nスコアラータイプ2人に8段階クリティカル係数上昇効果[47ビート]と10段階クリティカル係数上昇上限解放効果[47ビート] \nスタミナ157消費 CT:30",
+    "stamina": 157,
+    "probabilityPermil": 1000,
+    "coolTime": 30,
+    "limitCount": 0,
+    "skillLevelTriggerId": "",
+    "skillLevelTrigger": null,
+    "skillDetails": [
+     {
+      "efficacyId": "ef-score_get-4500-chart_dependence",
+      "efficacyType": 1,
+      "efficacyName": "スコア獲得",
+      "efficacyDescription": "450%のスコア獲得",
+      "skillTargetId": "",
+      "grade": 0,
+      "maxGrade": 0
+     },
+     {
+      "efficacyId": "ef-critical_bonus_permil_up-8-target-character_type-1-2-47",
+      "efficacyType": 20,
+      "efficacyName": "スコアラータイプ2人にクリティカル係数上昇効果",
+      "efficacyDescription": "スコアラータイプ2人に8段階クリティカル係数上昇効果[47ビート]",
+      "skillTargetId": "target-character_type-1-2",
+      "grade": 8,
+      "maxGrade": 20,
+      "skillTarget": {
+       "id": "target-character_type-1-2",
+       "type": 14,
+       "isOpponent": false
+      }
+     },
+     {
+      "efficacyId": "ef-limit_break_critical_bonus_permil_up-10-target-character_type-1-2-47",
+      "efficacyType": 81,
+      "efficacyName": "スコアラータイプ2人にクリティカル係数上昇上限解放",
+      "efficacyDescription": "スコアラータイプ2人に10段階クリティカル係数上昇上限解放効果[47ビート]",
+      "skillTargetId": "target-character_type-1-2",
+      "grade": 10,
+      "maxGrade": 10,
+      "skillTarget": {
+       "id": "target-character_type-1-2",
+       "type": 14,
+       "isOpponent": false
+      }
+     }
+    ]
+   },
+   "levels": [
+    {
+     "level": 1,
+     "description": "340%のスコア獲得 \nスコアラータイプ2人に7段階クリティカル係数上昇効果[28ビート]と10段階クリティカル係数上昇上限解放効果[28ビート] \nスタミナ112消費 CT:30",
+     "stamina": 112,
+     "coolTime": 30,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-3400-chart_dependence",
+      "ef-critical_bonus_permil_up-7-target-character_type-1-2-28",
+      "ef-limit_break_critical_bonus_permil_up-10-target-character_type-1-2-28"
+     ]
+    },
+    {
+     "level": 2,
+     "description": "360%のスコア獲得 \nスコアラータイプ2人に7段階クリティカル係数上昇効果[32ビート]と10段階クリティカル係数上昇上限解放効果[32ビート] \nスタミナ120消費 CT:30",
+     "stamina": 120,
+     "coolTime": 30,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-3600-chart_dependence",
+      "ef-critical_bonus_permil_up-7-target-character_type-1-2-32",
+      "ef-limit_break_critical_bonus_permil_up-10-target-character_type-1-2-32"
+     ]
+    },
+    {
+     "level": 3,
+     "description": "380%のスコア獲得 \nスコアラータイプ2人に7段階クリティカル係数上昇効果[37ビート]と10段階クリティカル係数上昇上限解放効果[37ビート] \nスタミナ129消費 CT:30",
+     "stamina": 129,
+     "coolTime": 30,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-3800-chart_dependence",
+      "ef-critical_bonus_permil_up-7-target-character_type-1-2-37",
+      "ef-limit_break_critical_bonus_permil_up-10-target-character_type-1-2-37"
+     ]
+    },
+    {
+     "level": 4,
+     "description": "400%のスコア獲得 \nスコアラータイプ2人に8段階クリティカル係数上昇効果[37ビート]と10段階クリティカル係数上昇上限解放効果[37ビート] \nスタミナ136消費 CT:30",
+     "stamina": 136,
+     "coolTime": 30,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4000-chart_dependence",
+      "ef-critical_bonus_permil_up-8-target-character_type-1-2-37",
+      "ef-limit_break_critical_bonus_permil_up-10-target-character_type-1-2-37"
+     ]
+    },
+    {
+     "level": 5,
+     "description": "420%のスコア獲得 \nスコアラータイプ2人に8段階クリティカル係数上昇効果[42ビート]と10段階クリティカル係数上昇上限解放効果[42ビート] \nスタミナ145消費 CT:30",
+     "stamina": 145,
+     "coolTime": 30,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4200-chart_dependence",
+      "ef-critical_bonus_permil_up-8-target-character_type-1-2-42",
+      "ef-limit_break_critical_bonus_permil_up-10-target-character_type-1-2-42"
+     ]
+    },
+    {
+     "level": 6,
+     "description": "450%のスコア獲得 \nスコアラータイプ2人に8段階クリティカル係数上昇効果[47ビート]と10段階クリティカル係数上昇上限解放効果[47ビート] \nスタミナ157消費 CT:30",
+     "stamina": 157,
+     "coolTime": 30,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-score_get-4500-chart_dependence",
+      "ef-critical_bonus_permil_up-8-target-character_type-1-2-47",
+      "ef-limit_break_critical_bonus_permil_up-10-target-character_type-1-2-47"
+     ]
+    }
+   ]
+  },
+  {
+   "displayLane": 1,
+   "cardId": "card-yu-05-birt-02",
+   "cardName": "wonderful day for 優",
+   "cardRoleType": 3,
+   "cardRoleName": "supporter",
+   "skillId": "sk-yu-05-birt-02-2",
+   "skillName": "かんしょ～かい",
+   "categoryType": 3,
+   "categoryName": "P(passive)",
+   "usedLevel": 6,
+   "usedLevelData": {
+    "level": 6,
+    "description": "スコアラータイプ1人に6段階コンボスコア上昇効果[44ビート]と10段階コンボスコア上昇上限解放効果[44ビート] \nスタミナ279消費 CT:50",
+    "stamina": 279,
+    "probabilityPermil": 1000,
+    "coolTime": 50,
+    "limitCount": 0,
+    "skillLevelTriggerId": "",
+    "skillLevelTrigger": null,
+    "skillDetails": [
+     {
+      "efficacyId": "ef-combo_score_up-6-target-character_type-1-1-44",
+      "efficacyType": 41,
+      "efficacyName": "スコアラータイプ1人にコンボスコア上昇効果",
+      "efficacyDescription": "スコアラータイプ1人に6段階コンボスコア上昇効果[44ビート]",
+      "skillTargetId": "target-character_type-1-1",
+      "grade": 6,
+      "maxGrade": 20,
+      "skillTarget": {
+       "id": "target-character_type-1-1",
+       "type": 14,
+       "isOpponent": false
+      }
+     },
+     {
+      "efficacyId": "ef-limit_break_combo_score_up-10-target-character_type-1-1-44",
+      "efficacyType": 86,
+      "efficacyName": "スコアラータイプ1人にコンボスコア上昇上限解放",
+      "efficacyDescription": "スコアラータイプ1人に10段階コンボスコア上昇上限解放効果[44ビート]",
+      "skillTargetId": "target-character_type-1-1",
+      "grade": 10,
+      "maxGrade": 10,
+      "skillTarget": {
+       "id": "target-character_type-1-1",
+       "type": 14,
+       "isOpponent": false
+      }
+     }
+    ]
+   },
+   "levels": [
+    {
+     "level": 1,
+     "description": "スコアラータイプ1人に5段階コンボスコア上昇効果[25ビート]と10段階コンボスコア上昇上限解放効果[25ビート] \nスタミナ143消費 CT:50",
+     "stamina": 143,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-combo_score_up-5-target-character_type-1-1-25",
+      "ef-limit_break_combo_score_up-10-target-character_type-1-1-25"
+     ]
+    },
+    {
+     "level": 2,
+     "description": "スコアラータイプ1人に5段階コンボスコア上昇効果[29ビート]と10段階コンボスコア上昇上限解放効果[29ビート] \nスタミナ166消費 CT:50",
+     "stamina": 166,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-combo_score_up-5-target-character_type-1-1-29",
+      "ef-limit_break_combo_score_up-10-target-character_type-1-1-29"
+     ]
+    },
+    {
+     "level": 3,
+     "description": "スコアラータイプ1人に5段階コンボスコア上昇効果[34ビート]と10段階コンボスコア上昇上限解放効果[34ビート] \nスタミナ195消費 CT:50",
+     "stamina": 195,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-combo_score_up-5-target-character_type-1-1-34",
+      "ef-limit_break_combo_score_up-10-target-character_type-1-1-34"
+     ]
+    },
+    {
+     "level": 4,
+     "description": "スコアラータイプ1人に6段階コンボスコア上昇効果[34ビート]と10段階コンボスコア上昇上限解放効果[34ビート] \nスタミナ215消費 CT:50",
+     "stamina": 215,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-combo_score_up-6-target-character_type-1-1-34",
+      "ef-limit_break_combo_score_up-10-target-character_type-1-1-34"
+     ]
+    },
+    {
+     "level": 5,
+     "description": "スコアラータイプ1人に6段階コンボスコア上昇効果[39ビート]と10段階コンボスコア上昇上限解放効果[39ビート] \nスタミナ247消費 CT:50",
+     "stamina": 247,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-combo_score_up-6-target-character_type-1-1-39",
+      "ef-limit_break_combo_score_up-10-target-character_type-1-1-39"
+     ]
+    },
+    {
+     "level": 6,
+     "description": "スコアラータイプ1人に6段階コンボスコア上昇効果[44ビート]と10段階コンボスコア上昇上限解放効果[44ビート] \nスタミナ279消費 CT:50",
+     "stamina": 279,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-combo_score_up-6-target-character_type-1-1-44",
+      "ef-limit_break_combo_score_up-10-target-character_type-1-1-44"
+     ]
+    }
+   ]
+  },
+  {
+   "displayLane": 1,
+   "cardId": "card-yu-05-birt-02",
+   "cardName": "wonderful day for 優",
+   "cardRoleType": 3,
+   "cardRoleName": "supporter",
+   "skillId": "sk-yu-05-birt-02-3",
+   "skillName": "これぞ深夜の背徳感",
+   "categoryType": 3,
+   "categoryName": "P(passive)",
+   "usedLevel": 5,
+   "usedLevelData": {
+    "level": 5,
+    "description": "自身がビジュアルレーンの時 \nスコアラータイプ1人に5段階Aスキルスコア上昇効果[34ビート]と10段階Aスキルスコア上昇上限解放効果[34ビート] \nスタミナ289消費 CT:50",
+    "stamina": 289,
+    "probabilityPermil": 1000,
+    "coolTime": 50,
+    "limitCount": 0,
+    "skillLevelTriggerId": "tg-position_attribute_visual",
+    "skillLevelTrigger": {
+     "id": "tg-position_attribute_visual",
+     "type": 23,
+     "characterIds": []
+    },
+    "skillDetails": [
+     {
+      "efficacyId": "ef-active_skill_score_up-5-target-character_type-1-1-34",
+      "efficacyType": 18,
+      "efficacyName": "スコアラータイプ1人にAスキルスコア上昇効果",
+      "efficacyDescription": "スコアラータイプ1人に5段階Aスキルスコア上昇効果[34ビート]",
+      "skillTargetId": "target-character_type-1-1",
+      "grade": 5,
+      "maxGrade": 20,
+      "skillTarget": {
+       "id": "target-character_type-1-1",
+       "type": 14,
+       "isOpponent": false
+      }
+     },
+     {
+      "efficacyId": "ef-limit_break_active_skill_score_up-10-target-character_type-1-1-34",
+      "efficacyType": 80,
+      "efficacyName": "スコアラータイプ1人にAスキルスコア上昇上限解放",
+      "efficacyDescription": "スコアラータイプ1人に10段階Aスキルスコア上昇上限解放効果[34ビート]",
+      "skillTargetId": "target-character_type-1-1",
+      "grade": 10,
+      "maxGrade": 10,
+      "skillTarget": {
+       "id": "target-character_type-1-1",
+       "type": 14,
+       "isOpponent": false
+      }
+     }
+    ]
+   },
+   "levels": [
+    {
+     "level": 1,
+     "description": "自身がビジュアルレーンの時 \nスコアラータイプ1人に4段階Aスキルスコア上昇効果[21ビート]と10段階Aスキルスコア上昇上限解放効果[21ビート] \nスタミナ163消費 CT:50",
+     "stamina": 163,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-active_skill_score_up-4-target-character_type-1-1-21",
+      "ef-limit_break_active_skill_score_up-10-target-character_type-1-1-21"
+     ]
+    },
+    {
+     "level": 2,
+     "description": "自身がビジュアルレーンの時 \nスコアラータイプ1人に4段階Aスキルスコア上昇効果[25ビート]と10段階Aスキルスコア上昇上限解放効果[25ビート] \nスタミナ194消費 CT:50",
+     "stamina": 194,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-active_skill_score_up-4-target-character_type-1-1-25",
+      "ef-limit_break_active_skill_score_up-10-target-character_type-1-1-25"
+     ]
+    },
+    {
+     "level": 3,
+     "description": "自身がビジュアルレーンの時\nスコアラータイプ1人に4段階Aスキルスコア上昇効果[29ビート]と10段階Aスキルスコア上昇上限解放効果[29ビート] \nスタミナ225消費 CT:50",
+     "stamina": 225,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-active_skill_score_up-4-target-character_type-1-1-29",
+      "ef-limit_break_active_skill_score_up-10-target-character_type-1-1-29"
+     ]
+    },
+    {
+     "level": 4,
+     "description": "自身がビジュアルレーンの時 \nスコアラータイプ1人に5段階Aスキルスコア上昇効果[29ビート]と10段階Aスキルスコア上昇上限解放効果[29ビート] \nスタミナ247消費 CT:50",
+     "stamina": 247,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-active_skill_score_up-5-target-character_type-1-1-29",
+      "ef-limit_break_active_skill_score_up-10-target-character_type-1-1-29"
+     ]
+    },
+    {
+     "level": 5,
+     "description": "自身がビジュアルレーンの時 \nスコアラータイプ1人に5段階Aスキルスコア上昇効果[34ビート]と10段階Aスキルスコア上昇上限解放効果[34ビート] \nスタミナ289消費 CT:50",
+     "stamina": 289,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-active_skill_score_up-5-target-character_type-1-1-34",
+      "ef-limit_break_active_skill_score_up-10-target-character_type-1-1-34"
+     ]
+    },
+    {
+     "level": 6,
+     "description": "自身がビジュアルレーンの時 \nスコアラータイプ1人に5段階Aスキルスコア上昇効果[39ビート]と10段階Aスキルスコア上昇上限解放効果[39ビート] \nスタミナ332消費 CT:50",
+     "stamina": 332,
+     "coolTime": 50,
+     "probabilityPermil": 1000,
+     "efficacyIds": [
+      "ef-active_skill_score_up-5-target-character_type-1-1-39",
+      "ef-limit_break_active_skill_score_up-10-target-character_type-1-1-39"
+     ]
+    }
+   ]
+  }
+ ],
+ "skillNotes": {
+  "scoreGetByStatusEffectTypeGrade": {
+   "efficacyType": 36,
+   "explanation": "「◯◯上昇状態の段階数が多い程効果上昇」型スコア獲得。基準値は efficacyId に埋め込み(例: -15700 = 1570%)。",
+   "gradeCoefficientInMaster": null,
+   "unknown": "段階数1あたりの効果上昇係数・上限はマスタに存在しない(ゲーム内部定数)。efficacy行のgrade/maxGradeも0。"
+  },
+  "scoreGetByScoreRatio": {
+   "efficacyType": 70,
+   "explanation": "対象の獲得スコアへの割合スコア獲得。efficacyId 埋め込み値=割合×10(例: -120 = 12%)。",
+   "upperLimitInMaster": null,
+   "unknown": "上限値はマスタに存在しない"
+  },
+  "pSkillClassification": {
+   "逆襲のドッキリ企画": "バフ+回復型(スコア獲得なし)。スキルレベルtriggerId=tg-position_attribute_vocal(ボーカルレーン時のみ発動)",
+   "かんしょ〜かい": "バフのみ型(コンボスコア上昇)。無条件",
+   "これぞ深夜の背徳感": "バフのみ型(Aスキルスコア上昇)。スキルレベルtriggerId=tg-position_attribute_visual(ビジュアルレーン時のみ発動)",
+   "気持ちを和歌に乗せて": "バフのみ型(テンションUP+ボーカルブースト)。無条件",
+   "結婚への願望": "回復型(隣接スタミナ回復+[ライブバトルのみ]相手消費)。無条件",
+   "さらけ出す": "バフ型(センター集目+強化効果延長)。無条件"
+  },
+  "ctStaminaMatch": "15スキル全てでマスタのcoolTime/staminaが実測値(verification_data.md)と一致"
+ },
+ "photo": {
+  "table": "PhotoAbility.json / PhotoAbilitySet.json",
+  "structure": {
+   "photoAbilityLevels": "フォトLv→value。skillId持ち(スキル系)の場合 value=参照スキルのLv(Skill.jsonのlevels)。固定値系の場合 value=ボーナス値",
+   "photoAbilityGrades": "フォトgrade(限界突破)→補正。例: [{grade:1,bonusPermil:1000,type:1},{grade:2,bonusPermil:1040,...}] = grade毎に効果値へ bonusPermil/1000 を乗算(+4.0%/grade の例)。type の意味は未確認",
+   "skillId": "スキル系フォトアビリティは Skill.json の skillId を参照(消費スタミナ/CT/効果は Skill.json 側)",
+   "abilityType": "アビリティ種別(1-33確認分: 1=ダンス固定値,3=ボーカル固定値,5=ビジュアル固定値,9=メンタル固定値,11=クリティカル固定値,17/18=ビート固定/割合,19/20=Aスコア固定/割合,21/22=SPスコア固定/割合,23=クリティカルスコア割合,13=スキル系 等)"
+  },
+  "matchedPhotoSkill": {
+   "photoAbilityId": "pab-passive-skill_sk-phot-exchange-pvp-5-01",
+   "skillId": "sk-phot-exchange-pvp-5-01",
+   "skillName": "スコア獲得スキル",
+   "level1Description": "40%のスコア獲得\nスタミナ180消費 CT:70",
+   "efficacyId": "ef-score_get-400-chart_dependence",
+   "evidence": "Skill.json で stamina=180 & coolTime=70 の唯一の一致。実測 Lane5 の「スコア獲得スキル」6発火と整合"
+  }
+ },
+ "accessory": {
+  "table": "Accessory.json (624行)",
+  "structure": {
+   "param1Type": "上昇パラメータ(1=dance,2=vocal,3=visual,4=stamina,5=mental,6=technique; classification列と全行一致)",
+   "param1Value": "固定値加算",
+   "param1Permil": "割合加算(‰)",
+   "param2Type/Value/Permil": "第2効果",
+   "limitBreakPhase": "限界突破段階"
+  },
+  "standardAccessoriesAvailable": true,
+  "pinkItems": [
+   "Pink Mic(+24,500/30%)",
+   "Pink Potion(+35,500/35%)",
+   "Pink Crystal(+35,500/35%)",
+   "ピンクのマイクリボン",
+   "Green Heart(+2,750)",
+   "緑のハートのペンダント",
+   "ボーカル(+35,500/35%)",
+   "クリティカル(+3,550)"
+  ],
+  "pinkItemsFound": false,
+  "pinkItemsNote": "Accessory.json/Item.json のいずれにも名称不命中(固定値+割合の複合パラメータを持つアクセサリは表中0件)。別システム(EXアクセサリ等)の可能性 → Unknown"
+ },
+ "skillTriggerTable": [
+  {
+   "id": "tg-after_active_skill_by_opponent_someone",
+   "type": 43,
+   "characterIds": []
+  },
+  {
+   "id": "tg-beat",
+   "type": 1,
+   "characterIds": []
+  },
+  {
+   "id": "tg-before_active_skill_by_someone",
+   "type": 5,
+   "characterIds": []
+  },
+  {
+   "id": "tg-before_critical",
+   "type": 7,
+   "characterIds": []
+  },
+  {
+   "id": "tg-before_critical_by_someone",
+   "type": 8,
+   "characterIds": []
+  },
+  {
+   "id": "tg-before_special_skill",
+   "type": 37,
+   "characterIds": []
+  },
+  {
+   "id": "tg-before_special_skill_by_someone",
+   "type": 6,
+   "characterIds": []
+  },
+  {
+   "id": "tg-center",
+   "type": 16,
+   "characterIds": []
+  },
+  {
+   "id": "tg-combo-100",
+   "type": 3,
+   "characterIds": []
+  },
+  {
+   "id": "tg-combo-50",
+   "type": 3,
+   "characterIds": []
+  },
+  {
+   "id": "tg-combo-80",
+   "type": 3,
+   "characterIds": []
+  },
+  {
+   "id": "tg-combo-90",
+   "type": 3,
+   "characterIds": []
+  },
+  {
+   "id": "tg-combo_less_equal-100",
+   "type": 33,
+   "characterIds": []
+  },
+  {
+   "id": "tg-combo_less_equal-50",
+   "type": 33,
+   "characterIds": []
+  },
+  {
+   "id": "tg-combo_less_equal-80",
+   "type": 33,
+   "characterIds": []
+  },
+  {
+   "id": "tg-critical",
+   "type": 9,
+   "characterIds": []
+  },
+  {
+   "id": "tg-fan_engage_higher-10",
+   "type": 15,
+   "characterIds": []
+  },
+  {
+   "id": "tg-fan_engage_higher-15",
+   "type": 15,
+   "characterIds": []
+  },
+  {
+   "id": "tg-fan_engage_higher-20",
+   "type": 15,
+   "characterIds": []
+  },
+  {
+   "id": "tg-fan_engage_higher-25",
+   "type": 15,
+   "characterIds": []
+  },
+  {
+   "id": "tg-fan_engage_higher-30",
+   "type": 15,
+   "characterIds": []
+  },
+  {
+   "id": "tg-live_start",
+   "type": 2,
+   "characterIds": []
+  },
+  {
+   "id": "tg-mood_type-black_club",
+   "type": 17,
+   "characterIds": []
+  },
+  {
+   "id": "tg-mood_type-black_diamond",
+   "type": 17,
+   "characterIds": []
+  },
+  {
+   "id": "tg-mood_type-black_heart",
+   "type": 17,
+   "characterIds": []
+  },
+  {
+   "id": "tg-mood_type-black_spade",
+   "type": 17,
+   "characterIds": []
+  },
+  {
+   "id": "tg-mood_type-white_club",
+   "type": 17,
+   "characterIds": []
+  },
+  {
+   "id": "tg-mood_type-white_diamond",
+   "type": 17,
+   "characterIds": []
+  },
+  {
+   "id": "tg-mood_type-white_heart",
+   "type": 17,
+   "characterIds": []
+  },
+  {
+   "id": "tg-mood_type-white_spade",
+   "type": 17,
+   "characterIds": []
+  },
+  {
+   "id": "tg-more_than_character_count-ai-1",
+   "type": 4,
+   "characterIds": [
+    "char-ai"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-aoi-1",
+   "type": 4,
+   "characterIds": [
+    "char-aoi"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-chs-1",
+   "type": 4,
+   "characterIds": [
+    "char-chs"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-hrk-1",
+   "type": 4,
+   "characterIds": [
+    "char-hrk"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-kkr-1",
+   "type": 4,
+   "characterIds": [
+    "char-kkr"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-ktn-1",
+   "type": 4,
+   "characterIds": [
+    "char-ktn"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-leader-1",
+   "type": 4,
+   "characterIds": [
+    "char-ktn",
+    "char-skr",
+    "char-rui",
+    "char-rio",
+    "char-kor"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-leader-2",
+   "type": 4,
+   "characterIds": [
+    "char-ktn",
+    "char-skr",
+    "char-rui",
+    "char-rio",
+    "char-kor"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-leader-3",
+   "type": 4,
+   "characterIds": [
+    "char-ktn",
+    "char-skr",
+    "char-rui",
+    "char-rio",
+    "char-kor"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-leader-4",
+   "type": 4,
+   "characterIds": [
+    "char-ktn",
+    "char-skr",
+    "char-rui",
+    "char-rio",
+    "char-kor"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-leader-5",
+   "type": 4,
+   "characterIds": [
+    "char-ktn",
+    "char-skr",
+    "char-rui",
+    "char-rio",
+    "char-kor"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-liz-1",
+   "type": 4,
+   "characterIds": [
+    "char-rio",
+    "char-aoi",
+    "char-ai",
+    "char-kkr"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-liz-2",
+   "type": 4,
+   "characterIds": [
+    "char-rio",
+    "char-aoi",
+    "char-ai",
+    "char-kkr"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-liz-3",
+   "type": 4,
+   "characterIds": [
+    "char-rio",
+    "char-aoi",
+    "char-ai",
+    "char-kkr"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-liz-4",
+   "type": 4,
+   "characterIds": [
+    "char-rio",
+    "char-aoi",
+    "char-ai",
+    "char-kkr"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-liz-5",
+   "type": 4,
+   "characterIds": [
+    "char-rio",
+    "char-aoi",
+    "char-ai",
+    "char-kkr"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-mei-1",
+   "type": 4,
+   "characterIds": [
+    "char-mei"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-moon-1",
+   "type": 4,
+   "characterIds": [
+    "char-ktn",
+    "char-ngs",
+    "char-mei",
+    "char-suz",
+    "char-ski"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-moon-2",
+   "type": 4,
+   "characterIds": [
+    "char-ktn",
+    "char-ngs",
+    "char-mei",
+    "char-suz",
+    "char-ski"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-moon-3",
+   "type": 4,
+   "characterIds": [
+    "char-ktn",
+    "char-ngs",
+    "char-mei",
+    "char-suz",
+    "char-ski"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-moon-4",
+   "type": 4,
+   "characterIds": [
+    "char-ktn",
+    "char-ngs",
+    "char-mei",
+    "char-suz",
+    "char-ski"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-moon-5",
+   "type": 4,
+   "characterIds": [
+    "char-ktn",
+    "char-ngs",
+    "char-mei",
+    "char-suz",
+    "char-ski"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-ngs-1",
+   "type": 4,
+   "characterIds": [
+    "char-ngs"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-pajm-1",
+   "type": 4,
+   "characterIds": [
+    "char-smr",
+    "char-szk",
+    "char-chs",
+    "char-kkr",
+    "char-suz"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-pajm-2",
+   "type": 4,
+   "characterIds": [
+    "char-smr",
+    "char-szk",
+    "char-chs",
+    "char-kkr",
+    "char-suz"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-pajm-3",
+   "type": 4,
+   "characterIds": [
+    "char-smr",
+    "char-szk",
+    "char-chs",
+    "char-kkr",
+    "char-suz"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-pajm-4",
+   "type": 4,
+   "characterIds": [
+    "char-smr",
+    "char-szk",
+    "char-chs",
+    "char-kkr",
+    "char-suz"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-pajm-5",
+   "type": 4,
+   "characterIds": [
+    "char-smr",
+    "char-szk",
+    "char-chs",
+    "char-kkr",
+    "char-suz"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-rei-1",
+   "type": 4,
+   "characterIds": [
+    "char-rei"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-rio-1",
+   "type": 4,
+   "characterIds": [
+    "char-rio"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-rui-1",
+   "type": 4,
+   "characterIds": [
+    "char-rui"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-ski-1",
+   "type": 4,
+   "characterIds": [
+    "char-ski"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-skr-1",
+   "type": 4,
+   "characterIds": [
+    "char-skr"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-smr-1",
+   "type": 4,
+   "characterIds": [
+    "char-smr"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-sun-1",
+   "type": 4,
+   "characterIds": [
+    "char-skr",
+    "char-szk",
+    "char-chs",
+    "char-rei",
+    "char-hrk"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-sun-2",
+   "type": 4,
+   "characterIds": [
+    "char-skr",
+    "char-szk",
+    "char-chs",
+    "char-rei",
+    "char-hrk"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-sun-3",
+   "type": 4,
+   "characterIds": [
+    "char-skr",
+    "char-szk",
+    "char-chs",
+    "char-rei",
+    "char-hrk"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-sun-4",
+   "type": 4,
+   "characterIds": [
+    "char-skr",
+    "char-szk",
+    "char-chs",
+    "char-rei",
+    "char-hrk"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-sun-5",
+   "type": 4,
+   "characterIds": [
+    "char-skr",
+    "char-szk",
+    "char-chs",
+    "char-rei",
+    "char-hrk"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-suz-1",
+   "type": 4,
+   "characterIds": [
+    "char-suz"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-szk-1",
+   "type": 4,
+   "characterIds": [
+    "char-szk"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-thrx-1",
+   "type": 4,
+   "characterIds": [
+    "char-kor",
+    "char-mhk",
+    "char-kan"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-thrx-2",
+   "type": 4,
+   "characterIds": [
+    "char-kor",
+    "char-mhk",
+    "char-kan"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-thrx-3",
+   "type": 4,
+   "characterIds": [
+    "char-kor",
+    "char-mhk",
+    "char-kan"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-thrx-4",
+   "type": 4,
+   "characterIds": [
+    "char-kor",
+    "char-mhk",
+    "char-kan"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-thrx-5",
+   "type": 4,
+   "characterIds": [
+    "char-kor",
+    "char-mhk",
+    "char-kan"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-tri-1",
+   "type": 4,
+   "characterIds": [
+    "char-rui",
+    "char-yu",
+    "char-smr"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-tri-2",
+   "type": 4,
+   "characterIds": [
+    "char-rui",
+    "char-yu",
+    "char-smr"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-tri-3",
+   "type": 4,
+   "characterIds": [
+    "char-rui",
+    "char-yu",
+    "char-smr"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-tri-4",
+   "type": 4,
+   "characterIds": [
+    "char-rui",
+    "char-yu",
+    "char-smr"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-tri-5",
+   "type": 4,
+   "characterIds": [
+    "char-rui",
+    "char-yu",
+    "char-smr"
+   ]
+  },
+  {
+   "id": "tg-more_than_character_count-yu-1",
+   "type": 4,
+   "characterIds": [
+    "char-yu"
+   ]
+  },
+  {
+   "id": "tg-most_left",
+   "type": 28,
+   "characterIds": []
+  },
+  {
+   "id": "tg-most_right",
+   "type": 29,
+   "characterIds": []
+  },
+  {
+   "id": "tg-music-music-clb-004",
+   "type": 18,
+   "characterIds": []
+  },
+  {
+   "id": "tg-position_attribute_dance",
+   "type": 22,
+   "characterIds": []
+  },
+  {
+   "id": "tg-position_attribute_visual",
+   "type": 23,
+   "characterIds": []
+  },
+  {
+   "id": "tg-position_attribute_vocal",
+   "type": 21,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_recovered",
+   "type": 26,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_stamina_lower-30",
+   "type": 14,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_stamina_lower-50",
+   "type": 14,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_stamina_lower-70",
+   "type": 14,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status-audience_amount_increase",
+   "type": 11,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status-audience_amount_reduction",
+   "type": 11,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status-beat_score_up",
+   "type": 11,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status-combo_continuation",
+   "type": 11,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status-critical_bonus_permil_up",
+   "type": 11,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status-critical_rate_up",
+   "type": 11,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status-dance_boost",
+   "type": 11,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status-dance_down",
+   "type": 11,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status-dance_up",
+   "type": 11,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status-score_up",
+   "type": 11,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status-skill_impossible",
+   "type": 11,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status-skill_score_up",
+   "type": 11,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status-skill_success_rate_up",
+   "type": 11,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status-stamina_consumption_increase",
+   "type": 11,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status-stamina_consumption_reduction",
+   "type": 11,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status-tension_up",
+   "type": 11,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status-visual_boost",
+   "type": 11,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status-visual_down",
+   "type": 11,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status-visual_up",
+   "type": 11,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status-vocal_boost",
+   "type": 11,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status-vocal_down",
+   "type": 11,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status-vocal_up",
+   "type": 11,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status_effect_grade_higher_audience_amount_increase -10",
+   "type": 41,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status_effect_grade_higher_visual_up-10",
+   "type": 41,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status_effect_grade_higher_vocal_up-20",
+   "type": 41,
+   "characterIds": []
+  },
+  {
+   "id": "tg-someone_status_group-weekness",
+   "type": 20,
+   "characterIds": []
+  },
+  {
+   "id": "tg-stamina_higher-100",
+   "type": 13,
+   "characterIds": []
+  },
+  {
+   "id": "tg-stamina_higher-60",
+   "type": 13,
+   "characterIds": []
+  },
+  {
+   "id": "tg-stamina_higher-80",
+   "type": 13,
+   "characterIds": []
+  },
+  {
+   "id": "tg-stamina_lower-30",
+   "type": 12,
+   "characterIds": []
+  },
+  {
+   "id": "tg-stamina_lower-50",
+   "type": 12,
+   "characterIds": []
+  },
+  {
+   "id": "tg-stamina_lower-70",
+   "type": 12,
+   "characterIds": []
+  },
+  {
+   "id": "tg-status-audience_amount_increase",
+   "type": 10,
+   "characterIds": []
+  },
+  {
+   "id": "tg-status-audience_amount_reduction",
+   "type": 10,
+   "characterIds": []
+  },
+  {
+   "id": "tg-status-beat_score_up",
+   "type": 10,
+   "characterIds": []
+  },
+  {
+   "id": "tg-status-combo_continuation",
+   "type": 10,
+   "characterIds": []
+  },
+  {
+   "id": "tg-status-critical_bonus_permil_up",
+   "type": 10,
+   "characterIds": []
+  },
+  {
+   "id": "tg-status-critical_rate_up",
+   "type": 10,
+   "characterIds": []
+  },
+  {
+   "id": "tg-status-dance_down",
+   "type": 10,
+   "characterIds": []
+  },
+  {
+   "id": "tg-status-dance_up",
+   "type": 10,
+   "characterIds": []
+  },
+  {
+   "id": "tg-status-score_up",
+   "type": 10,
+   "characterIds": []
+  },
+  {
+   "id": "tg-status-skill_impossible",
+   "type": 10,
+   "characterIds": []
+  },
+  {
+   "id": "tg-status-skill_score_up",
+   "type": 10,
+   "characterIds": []
+  },
+  {
+   "id": "tg-status-stamina_consumption_increase",
+   "type": 10,
+   "characterIds": []
+  },
+  {
+   "id": "tg-status-stamina_consumption_reduction",
+   "type": 10,
+   "characterIds": []
+  },
+  {
+   "id": "tg-status-tension_up",
+   "type": 10,
+   "characterIds": []
+  },
+  {
+   "id": "tg-status-visual_down",
+   "type": 10,
+   "characterIds": []
+  },
+  {
+   "id": "tg-status-visual_up",
+   "type": 10,
+   "characterIds": []
+  },
+  {
+   "id": "tg-status-vocal_down",
+   "type": 10,
+   "characterIds": []
+  },
+  {
+   "id": "tg-status-vocal_up",
+   "type": 10,
+   "characterIds": []
+  },
+  {
+   "id": "tg-status_group-weekness",
+   "type": 19,
+   "characterIds": []
+  }
+ ],
+ "statusEffectNames": {
+  "1": "ダンス上昇",
+  "2": "ボーカル上昇",
+  "3": "ビジュアル上昇",
+  "4": "スコア上昇",
+  "5": "ビートスコア上昇",
+  "6": "Aスキルスコア上昇",
+  "7": "クリティカル率上昇",
+  "8": "クリティカル係数上昇",
+  "9": "消費スタミナ低下",
+  "10": "コンボ継続",
+  "11": "集目",
+  "12": "SPスキルスコア上昇",
+  "13": "スキル成功率上昇",
+  "14": "テンションUP",
+  "15": "低下効果防止",
+  "16": "コンボスコア上昇",
+  "17": "Pスキルスコア上昇",
+  "18": "ボーカルブースト",
+  "19": "ダンスブースト",
+  "20": "ビジュアルブースト",
+  "21": "SPスキルスコア追加",
+  "22": "Aスキルスコア追加",
+  "23": "Pスキルスコア追加",
+  "24": "スタミナ継続回復",
+  "25": "Aスキルチャンス譲渡",
+  "26": "カバー",
+  "27": "ダンス上昇上限開放",
+  "28": "ボーカル上昇上限開放",
+  "29": "ビジュアル上昇上限開放",
+  "30": "ビートスコア上昇上限開放",
+  "31": "Aスキルスコア上昇上限開放",
+  "32": "クリティカル係数上昇上限開放",
+  "33": "集目上限開放",
+  "34": "SPスキルスコア上昇上限開放",
+  "35": "スキル成功率上昇上限開放",
+  "36": "テンションUP上限開放",
+  "37": "コンボスコア上昇上限開放",
+  "38": "Pスキルスコア上昇上限開放",
+  "39": "ボーカルブースト上限開放",
+  "40": "ダンスブースト上限開放",
+  "41": "ビジュアルブースト上限開放",
+  "42": "ステルス上限開放",
+  "43": "スコア上昇上限開放",
+  "44": "スコア上昇超化",
+  "45": "ダンス上昇超化",
+  "46": "ボーカル上昇超化",
+  "47": "ビジュアル上昇超化",
+  "48": "ビートスコア上昇超化",
+  "49": "Aスキルスコア上昇超化",
+  "50": "クリティカル係数上昇超化",
+  "51": "集目超化",
+  "52": "SPスキルスコア上昇超化",
+  "53": "スキル成功率上昇超化",
+  "54": "Pスキルスコア上昇超化",
+  "55": "ステルス超化",
+  "56": "低下効果反射",
+  "57": "ビートブースト",
+  "58": "テンションアップ超化",
+  "59": "強化効果が多い程の強化効果数上限開放",
+  "1001": "ダンス低下",
+  "1002": "ボーカル低下",
+  "1003": "ビジュアル低下",
+  "1004": "不調",
+  "1005": "スタミナ消費増加",
+  "1006": "ステルス",
+  "1007": "スタミナ継続消費",
+  "1008": "強化効果段階数制限",
+  "1009": "Pスキル封印",
+  "1010": "ダンス低下の強化",
+  "1011": "ボーカル低下の強化",
+  "1012": "ビジュアル低下の強化"
+ }
+}

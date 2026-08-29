@@ -1,0 +1,797 @@
+{
+  "_meta": {
+    "generated": "2026-08-29",
+    "role": "装備・ステータス画像再分析担当",
+    "method": "Windows OCR (ja) による画像の機械読取 + カードマスタ (ipr-master-diff: Card.json / CardParameter.json card-param-01 / CardRarity.json) を用いたデッキ値式の全20項目(5レーン×Vo/Da/Vi/Sta)の1の位検算。元 verification_data.json は未変更。",
+    "formula": "deck = floor( V_base × (1000 + エール% + 交流% + アクセ% + フォト%)×10 / 1000 ) + スタッフ固定 + アクセ固定 + フォト固定 (+エールSta固定1260) ; V_base = floor( floor( cardParam[level] × ratioPermil/1000 ) × rarityBonus/1000 )",
+    "master_values": {
+      "source": "https://github.com/MalitsPlus/ipr-master-diff (2026-08-29取得)",
+      "card-param-01": { "Lv215": { "value": 167620, "staminaValue": 4624 }, "Lv230": { "value": 192850, "staminaValue": 5320 } },
+      "rarity_bonus_permil": { "5": 1200, "6": 1250, "10": 1450 }
+    },
+    "v_base_computed": {
+      "lane1": { "vocal": 68723, "dance": 62437, "visual": 78361, "stamina": 5780 },
+      "lane2": { "vocal": 81463, "dance": 63560, "visual": 56118, "stamina": 5548 },
+      "lane3": { "vocal": 121359, "dance": 88642, "visual": 78017, "stamina": 6942 },
+      "lane4": { "vocal": 80205, "dance": 69753, "visual": 100379, "stamina": 6033 },
+      "lane5": { "vocal": 83390, "dance": 67466, "visual": 58666, "stamina": 5780 }
+    },
+    "kouryu_pct_table": {
+      "22": { "vocal": 10, "dance": 10, "visual": 10, "stamina": 12 },
+      "25": { "vocal": 10, "dance": 10, "visual": 10, "stamina": 15 },
+      "28": { "vocal": 12, "dance": 12, "visual": 12, "stamina": 15 },
+      "51": { "vocal": 22, "dance": 24, "visual": 22, "stamina": 33 }
+    },
+    "headline_finding": "verification_data.json の Lane4 と Lane5 のフォト4枚の割り当てが丸ごと入れ替わっていた。画像上、Lane4(長瀬琴乃)画面には『それぞれの決意/パークアリーナ埼玉/平気平気！/もっと強くなれるね』が、Lane5(白石沙季)画面には『ふつつかものですが(ご注文はうさぎですか?10th)/HAPPY BIRTHDAY/早坂芽衣9/13(=パークアリーナ埼玉・別枚)/お姉ちゃん』が編成されている。入れ替え後、全20項目が1の位まで完全一致。",
+    "unreadable": [
+      "Lane1 photo4 の写真名（一覧・詳細画面とも装飾フォントでOCR不能。品質165とオプション数値は確認済み）",
+      "Lane3 photo1/3/4 の写真名と品質（同上。オプション数値は検算により確認済み）",
+      "Lane3 アクセサリ2個の名称（装飾フォント。+20 強化表記と効果値 Vo+35500/+35.0%, Cri+3550 は確認済み）",
+      "Lane1 photo1/2 のオプションスキル名の先頭1字（アイコンの誤読。『スコアUPスキル』部分は確定）"
+    ]
+  },
+  "stage": {
+    "title": "撮影フィルム",
+    "song": "The Sun, Moon and Stars",
+    "difficulty_level": 286,
+    "mode": "デイリーライブ",
+    "audience": 80000,
+    "score_bonus_pct": 62.0,
+    "skill_success_rate_pct": 100,
+    "target_score": 685000000,
+    "verification": {
+      "source_image": "ステージ固有の補正.PNG",
+      "note": "ステージ固有のスコア倍率（ビート/A/SP特徴）の表示はこの画面には存在しない。表示内容: 来場ファン数80,000人 / 目標スコア685,000,000 / スコアボーナス最大+62.0% / レーン別のファン数・コアファン率・来場ファン数・スコアボーナス+62.0%×5 / スキル成功率100%×5。",
+      "per_lane_display": {
+        "fan_count": [381438, 391275, 379577, 386487, 384337],
+        "core_fan_pct": [17.8, 15.6, 16.5, 16.0, 18.9],
+        "attending_fans": [16285, 15546, 15540, 15559, 17070],
+        "score_bonus_pct": [62.0, 62.0, 62.0, 62.0, 62.0],
+        "skill_success_pct": [100, 100, 100, 100, 100]
+      }
+    }
+  },
+  "staff_bonus": {
+    "vocal": 29195,
+    "dance": 27884,
+    "visual": 27884,
+    "stamina": 5086,
+    "mental": 5165,
+    "critical": 2705,
+    "verification": {
+      "source_image": "staff.PNG",
+      "detail": "ボーカル+29195(Lv64系/トレーナー系), ダンス+27884(Lv64), ビジュアル+27884(スタイリストLv64), スタミナ+5086(フィジカルコーチ Lv67), メンタル+5165(セラピスト Lv60), クリティカル+2705(演出家 Lv48)。全6値が verification_data と一致。強化回数通算362。"
+    }
+  },
+  "yale_bonus": {
+    "dance_pct": 39.0,
+    "vocal_pct": 45.0,
+    "visual_pct": 58.0,
+    "stamina": 1260,
+    "mental": 600,
+    "critical": 600,
+    "beat_score_pct": 36.0,
+    "a_skill_score_pct": 27.5,
+    "sp_skill_score_pct": 40.0,
+    "critical_score_pct": 25.5,
+    "verification": {
+      "source_image": "yale.JPG",
+      "detail": "発動ライブエール: ダンスアップ+39.0% / ボーカルアップ+45.0% / ビジュアルアップ+58.0% / スタミナアップ+1260 / メンタルアップ+600 / クリティカルアップ+600 / ビートスコアアップ+36.0% / Aスコアアップ+27.5% / SPスコアアップ+40.0% / クリティカルスコアアップ+25.5%。全項目 verification_data と一致。"
+    }
+  },
+  "lane_colors": {
+    "source_image": "レーン.PNG",
+    "lanes": ["vocal", "vocal", "vocal", "dance", "vocal"],
+    "note": "レーン色表示は L1=ボーカル L2=ボーカル L3=ボーカル L4=ダンス L5=ボーカル。verification_data の lane_type と一致。"
+  },
+  "kouryu_overall": {
+    "source_image": "交流レベル追分.PNG (交流レベル追加分.PNG)",
+    "total_kouryu_lv": 50,
+    "total_kouryu_pt": 61210,
+    "note": "交流Lv追分の一覧(スクロール list)の先頭数行のみ判読: 交流Lv31→メンタル+50(?), Lv30→クリティカル+100(?), Lv29→スタミナ+30(?), Lv28→ビジュアル+20(?)。%表記は誤読の可能性があり低信頼。この flat 追分はゲーム内『基礎ステータス』側に含まれるもので、補正後総合ステータスの検算式には影響しない（全20項目が V_base(マスタ値)ベースで完全一致することで裏付け）。メモリーズ・コラボ欄は平均値適用の注記あり。"
+  },
+  "characters": [
+    {
+      "lane": 1,
+      "idol_name": "鈴村優",
+      "card_name": "wonderful day for 優",
+      "card_id": "card-yu-05-birt-02",
+      "role": "Supporter",
+      "attribute": "Dance",
+      "level": 215,
+      "rarity": 6,
+      "rarity_bonus_permil": 1250,
+      "lane_type": "多 / ボーカル",
+      "yale_equipped": "Y 自主トレ Lv4",
+      "accessories": [
+        {
+          "name": "Pink Mic Accessory",
+          "stats": "ボーカル +24500, ボーカル +30.0%",
+          "structured": [{ "stat": "vocal", "type": "fixed", "value": 24500 }, { "stat": "vocal", "type": "pct", "value": 30.0 }]
+        },
+        {
+          "name": "Green Heart Accessory",
+          "stats": "スタミナ +2750",
+          "structured": [{ "stat": "stamina", "type": "fixed", "value": 2750 }]
+        }
+      ],
+      "photos": [
+        {
+          "name": "神崎莉央 (Quality 165)",
+          "actual_title": "私たちらしく",
+          "character_label": "神崎莉央",
+          "quality": 165,
+          "date": "2024/07/25",
+          "kind": "メモリアルフォト",
+          "stats": "ボーカル +59.4%, ダンス +57.2%, ビジュアル +57.0%, Aスコア +13.0%",
+          "structured": [
+            { "stat": "vocal", "type": "pct", "value": 59.4 },
+            { "stat": "dance", "type": "pct", "value": 57.2 },
+            { "stat": "visual", "type": "pct", "value": 57.0 },
+            { "stat": "a_score", "type": "pct", "value": 13.0 }
+          ],
+          "option_skill": "スコアUPスキル Lv6（先頭1字はアイコン誤読で判読不可）",
+          "skill": "<サポータータイプのみ> スコアラータイプ1人に3段階スコア上昇効果 [37ビート] スタミナ764消費 CT:50 (スコアUPスキル Lv6)",
+          "skill_verified": true,
+          "source_image": "photo_skill_lane1_1.PNG / lane1_photos_and_accessories1.PNG"
+        },
+        {
+          "name": "早坂芽衣 8/9 (Quality 165)",
+          "actual_title": "屋外プール",
+          "character_label": "早坂芽衣 8/9",
+          "quality": 165,
+          "date": "2021/08/09",
+          "kind": "メモリアルフォト",
+          "stats": "ボーカル +68.0%, ダンス +44347, スタミナ +42.4%, メンタル +3106",
+          "structured": [
+            { "stat": "vocal", "type": "pct", "value": 68.0 },
+            { "stat": "dance", "type": "fixed", "value": 44347 },
+            { "stat": "stamina", "type": "pct", "value": 42.4 },
+            { "stat": "mental", "type": "fixed", "value": 3106 }
+          ],
+          "option_skill": "スコアUPスキル Lv5（先頭1字はアイコン誤読で判読不可）",
+          "skill": "<サポータータイプのみ> ボーカルタイプ2人に8段階スコア上昇効果 [31ビート] スタミナ1563消費 CT:50 (スコアUPスキル Lv5)",
+          "skill_verified": true,
+          "source_image": "photo_skill_lane1_2.PNG / lane1_photos_and_accessories1.PNG"
+        },
+        {
+          "name": "兵藤雫 (Quality 140)",
+          "actual_title": "おはよう",
+          "character_label": "兵藤雫",
+          "quality": 140,
+          "date": "2025/07/10",
+          "kind": "メモリアルフォト",
+          "stats": "ボーカル +41.0%, ダンス +41.0%, ビジュアル +41.0%, Aスコア +10.2%",
+          "structured": [
+            { "stat": "vocal", "type": "pct", "value": 41.0 },
+            { "stat": "dance", "type": "pct", "value": 41.0 },
+            { "stat": "visual", "type": "pct", "value": 41.0 },
+            { "stat": "a_score", "type": "pct", "value": 10.2 }
+          ],
+          "option_skill": "クリティカルスキル Lv3",
+          "skill": "<サポータータイプのみ> 80コンボ以上時 スコアラータイプ1人に6段階クリティカル係数上昇効果 [40ビート] スタミナ879消費 ライブ中1回のみ (クリティカルスキル Lv3)",
+          "skill_verified": true,
+          "source_image": "photo_skill_lane1_3.PNG / lane1_photos_and_accessories2.PNG"
+        },
+        {
+          "name": "Unidentified Photo (Quality 165)",
+          "actual_title": null,
+          "character_label": null,
+          "quality": 165,
+          "quality_source": "ユーザー読み分（画像からは判読不能）",
+          "stats": "ボーカル +52.7%, ダンス +14764, ビジュアル +46.7%, スタミナ +32.4%, SPスコア +9.2%",
+          "structured": [
+            { "stat": "vocal", "type": "pct", "value": 52.7 },
+            { "stat": "dance", "type": "fixed", "value": 14764 },
+            { "stat": "visual", "type": "pct", "value": 46.7 },
+            { "stat": "stamina", "type": "pct", "value": 32.4 },
+            { "stat": "sp_score", "type": "pct", "value": 9.2 }
+          ],
+          "skill": "None",
+          "skill_verified": false,
+          "skill_note": "オプション欄に SPスコア+9.2% は確認。スキル行は画像上確認できず（Noneのまま）",
+          "source_image": "lane1_photos_and_accessories2.PNG（右端パネル）"
+        }
+      ],
+      "skills": [
+        {
+          "name": "ハスハスしてる優ちゃん",
+          "type": "A",
+          "level": 6,
+          "ct": 30,
+          "stamina": 157,
+          "effect": "450%のスコア獲得\nスコアラータイプ2人に8段階クリティカル係数上昇効果[47ビート]と10段階クリティカル係数上昇上限解放効果[47ビート]",
+          "verified": true
+        },
+        {
+          "name": "かんしょ～かい",
+          "type": "P",
+          "level": 6,
+          "ct": 50,
+          "stamina": 279,
+          "effect": "スコアラータイプ1人に6段階コンボスコア上昇効果[44ビート]と10段階コンボスコア上昇上限解放効果[44ビート]",
+          "verified": true
+        },
+        {
+          "name": "これぞ深夜の背徳感",
+          "type": "P",
+          "level": 5,
+          "ct": 50,
+          "stamina": 289,
+          "effect": "自身がビジュアルレーンの時\nスコアラータイプ1人に5段階Aスキルスコア上昇効果[34ビート]と10段階Aスキルスコア上昇上限解放効果[34ビート]",
+          "verified": true,
+          "note": "アイドルLv230でLv6強化可能の表示あり"
+        }
+      ],
+      "deck_verification": {
+        "vocal": { "listed_sum_pct": 308.1, "required_pct": "[308.099,308.101)", "fixed_total": 53695, "result": "OK" },
+        "dance": { "listed_sum_pct": 149.2, "required_pct": "[149.200,149.202)", "fixed_total": 86995, "result": "OK" },
+        "visual": { "listed_sum_pct": 214.7, "required_pct": "[214.700,214.701)", "fixed_total": 27884, "result": "OK" },
+        "stamina": { "listed_sum_pct": 89.8, "required_pct": "[89.792,89.810)", "fixed_total": 9096, "result": "OK" }
+      },
+      "kouryu_level": 28,
+      "diff_from_verification": "なし（全項目確認済み）。写真の実タイトル（私たちらしく/屋外プール/おはよう）を補足。"
+    },
+    {
+      "lane": 2,
+      "idol_name": "白石沙季",
+      "card_name": "から紅に染まる頬",
+      "card_id": "card-ski-05-onep-00",
+      "role": "Buffer",
+      "attribute": "Dance",
+      "level": 215,
+      "rarity": 5,
+      "rarity_bonus_permil": 1200,
+      "lane_type": "多 / ボーカル",
+      "yale_equipped": "Y プロモ EXP Lv4",
+      "accessories": [
+        {
+          "name": "Pink Potion +20",
+          "stats": "ボーカル +35500, ボーカル +35.0%",
+          "structured": [{ "stat": "vocal", "type": "fixed", "value": 35500 }, { "stat": "vocal", "type": "pct", "value": 35.0 }]
+        },
+        {
+          "name": "Green Heart +20",
+          "stats": "スタミナ +3050",
+          "structured": [{ "stat": "stamina", "type": "fixed", "value": 3050 }]
+        }
+      ],
+      "photos": [
+        {
+          "name": "小美山愛 4/10",
+          "actual_title": "星見市高台",
+          "character_label": "小美山愛 4/10",
+          "quality": 165,
+          "date": "2025/04/10",
+          "kind": "メモリアルフォト",
+          "stats": "ボーカル +64.5%, ダンス +59621, クリティカル +5862, Aスコア +13.8%",
+          "structured": [
+            { "stat": "vocal", "type": "pct", "value": 64.5 },
+            { "stat": "dance", "type": "fixed", "value": 59621 },
+            { "stat": "critical", "type": "fixed", "value": 5862 },
+            { "stat": "a_score", "type": "pct", "value": 13.8 }
+          ],
+          "option_skill": "Voブーストスキル Lv5",
+          "skill": "<バッファータイプのみ> ボーカルタイプ1人に4段階ボーカルブースト効果[28ビート] スタミナ1795消費 CT:60",
+          "skill_verified": true,
+          "source_image": "photo_skill_lane2_1.PNG / lane2_photos_and_accessories1.PNG"
+        },
+        {
+          "name": "長瀬麻奈",
+          "actual_title": "びっくりした?",
+          "character_label": "長瀬麻奈",
+          "quality": 175,
+          "date": "2024/06/24",
+          "kind": "メモリアルフォト",
+          "stats": "ボーカル +56.6%, ダンス +51.4%, ビジュアル +55.2%, Aスコア +13.6%",
+          "structured": [
+            { "stat": "vocal", "type": "pct", "value": 56.6 },
+            { "stat": "dance", "type": "pct", "value": 51.4 },
+            { "stat": "visual", "type": "pct", "value": 55.2 },
+            { "stat": "a_score", "type": "pct", "value": 13.6 }
+          ],
+          "option_skill": "強化効果延長スキル Lv7",
+          "skill": "<バッファータイプのみ> 誰かがスコア上昇状態時、スコアラータイプ1人に強化効果を6延長 スタミナ850消費 CT:50",
+          "skill_verified": true,
+          "source_image": "photo_skill_lane2_2.PNG / lane2_photos_and_accessories1.PNG"
+        },
+        {
+          "name": "星見プロ",
+          "actual_title": "みんなでBBQ",
+          "character_label": "星見プロ",
+          "quality": 165,
+          "date": "2025/06/25",
+          "kind": "メモリアルフォト",
+          "stats": "ボーカル +50.4%, ダンス +61.3%, ビジュアル +57.0%, Aスコア +13.0%",
+          "structured": [
+            { "stat": "vocal", "type": "pct", "value": 50.4 },
+            { "stat": "dance", "type": "pct", "value": 61.3 },
+            { "stat": "visual", "type": "pct", "value": 57.0 },
+            { "stat": "a_score", "type": "pct", "value": 13.0 }
+          ],
+          "option_skill": "強化効果延長スキル Lv6",
+          "skill": "誰かがスキル成功率上昇状態の時 対象1人の強化効果を7延長 スタミナ989消費 CT:50",
+          "skill_verified": true,
+          "source_image": "photo_skill_lane2_3.PNG / lane2_photos_and_accessories2.PNG"
+        },
+        {
+          "name": "兵藤雫",
+          "actual_title": "明るく君を照らしたい",
+          "character_label": "兵藤雫",
+          "quality": 175,
+          "date": "2024/02/19",
+          "kind": "メモリアルフォト",
+          "stats": "ボーカル +51.4%, ダンス +51.5%, ビジュアル +51.4%, Aスコア +13.3%",
+          "structured": [
+            { "stat": "vocal", "type": "pct", "value": 51.4 },
+            { "stat": "dance", "type": "pct", "value": 51.5 },
+            { "stat": "visual", "type": "pct", "value": 51.4 },
+            { "stat": "a_score", "type": "pct", "value": 13.3 }
+          ],
+          "option_skill": "強化効果延長スキル Lv7",
+          "skill": "誰かが集目状態の時 対象1人の強化効果を6延長 スタミナ850消費 CT:45",
+          "skill_verified": true,
+          "source_image": "photo_skill_lane2_4.PNG / lane2_photos_and_accessories2.PNG"
+        }
+      ],
+      "skills": [
+        {
+          "name": "やすらぎの贈り物",
+          "type": "A",
+          "level": 6,
+          "ct": 50,
+          "stamina": 187,
+          "effect": "480%のスコア獲得\nスコアラータイプ1人に5段階テンションUP上限解放効果[46ビート]と強化効果を3段階増強",
+          "verified": true
+        },
+        {
+          "name": "私が恋をするのなら",
+          "type": "A",
+          "level": 6,
+          "ct": 50,
+          "stamina": 202,
+          "effect": "510%のスコア獲得\n自身がボーカルレーンの時 ボーカルが高い1人の強化効果を10延長と9段階クリティカル率上昇効果[46ビート]",
+          "verified": true
+        },
+        {
+          "name": "気持ちを和歌に乗せて",
+          "type": "P",
+          "level": 5,
+          "ct": 50,
+          "stamina": 262,
+          "effect": "スコアラータイプ1人に3段階テンションUP効果[40ビート]と3段階ボーカルブースト効果[40ビート]",
+          "verified": true,
+          "note": "アイドルLv230でLv6強化可能の表示あり"
+        }
+      ],
+      "deck_verification": {
+        "vocal": { "listed_sum_pct": 312.9, "required_pct": "[312.899,312.900)", "fixed_total": 64695, "result": "OK" },
+        "dance": { "listed_sum_pct": 213.2, "required_pct": "[213.199,213.200)", "fixed_total": 87505, "result": "OK" },
+        "visual": { "listed_sum_pct": 231.6, "required_pct": "[231.599,231.601)", "fixed_total": 27884, "result": "OK" },
+        "stamina": { "listed_sum_pct": 12.0, "required_pct": "[11.986,12.004)", "fixed_total": 9396, "result": "OK" }
+      },
+      "kouryu_level": 22,
+      "diff_from_verification": "なし（全項目確認済み）。写真実タイトルと品質(165/175/165/175)・オプションスキル名を補足。"
+    },
+    {
+      "lane": 3,
+      "idol_name": "白石千紗",
+      "card_name": "紡ぎ合う憧れの時間",
+      "card_id": "card-chs-05-fest-03",
+      "role": "Scorer",
+      "attribute": "Visual",
+      "level": 230,
+      "rarity": 10,
+      "rarity_bonus_permil": 1450,
+      "lane_type": "SP / ボーカル",
+      "yale_equipped": "Y メンタル Lv1",
+      "accessories": [
+        {
+          "name": "unreadable (+20強化表記のみ確認)",
+          "stats": "ボーカル +35500, ボーカル +35.0%",
+          "structured": [{ "stat": "vocal", "type": "fixed", "value": 35500 }, { "stat": "vocal", "type": "pct", "value": 35.0 }]
+        },
+        {
+          "name": "unreadable (+20強化表記のみ確認)",
+          "stats": "クリティカル +3550",
+          "structured": [{ "stat": "critical", "type": "fixed", "value": 3550 }]
+        }
+      ],
+      "photos": [
+        {
+          "name": "unreadable",
+          "actual_title": null,
+          "quality": null,
+          "stats": "ボーカル +70.1%, ダンス +43.9%, クリティカル +2363, SPスコア +13.0%, クリティカルスコア +36.7%",
+          "structured": [
+            { "stat": "vocal", "type": "pct", "value": 70.1 },
+            { "stat": "dance", "type": "pct", "value": 43.9 },
+            { "stat": "critical", "type": "fixed", "value": 2363 },
+            { "stat": "sp_score", "type": "pct", "value": 13.0 },
+            { "stat": "critical_score", "type": "pct", "value": 36.7 }
+          ],
+          "skill": "unreadable",
+          "skill_verified": false,
+          "source_image": "lane3_photos_and_accessories1.PNG（左端パネル）"
+        },
+        {
+          "name": "小美山愛&赤崎こころ",
+          "actual_title": "かけがえのない二人",
+          "character_label": "小美山愛&赤崎こころ",
+          "quality": 175,
+          "date": "2023/10/05",
+          "kind": "メモリアルフォト",
+          "stats": "ボーカル +53.8%, ダンス +54.1%, ビジュアル +53.8%, クリティカルスコア +29.0%",
+          "structured": [
+            { "stat": "vocal", "type": "pct", "value": 53.8 },
+            { "stat": "dance", "type": "pct", "value": 54.1 },
+            { "stat": "visual", "type": "pct", "value": 53.8 },
+            { "stat": "critical_score", "type": "pct", "value": 29.0 }
+          ],
+          "option_skill": "強化効果延長スキル Lv7",
+          "skill": "誰かがクリティカル係数上昇状態の時 20%のスコア獲得 自身の強化効果を5延長 スタミナ908消費 CT:50",
+          "skill_verified": true,
+          "source_image": "photo_skill_lane3_2.PNG / lane3_photos_and_accessories1-2.PNG"
+        },
+        {
+          "name": "unreadable",
+          "actual_title": null,
+          "quality": null,
+          "stats": "ボーカル +66.7%, ダンス +50.8%, スタミナ +45.4%, SPスコア +12.2%, クリティカルスコア +38.3%",
+          "structured": [
+            { "stat": "vocal", "type": "pct", "value": 66.7 },
+            { "stat": "dance", "type": "pct", "value": 50.8 },
+            { "stat": "stamina", "type": "pct", "value": 45.4 },
+            { "stat": "sp_score", "type": "pct", "value": 12.2 },
+            { "stat": "critical_score", "type": "pct", "value": 38.3 }
+          ],
+          "skill": "unreadable",
+          "skill_verified": false,
+          "source_image": "lane3_photos_and_accessories2.PNG（中央パネル）"
+        },
+        {
+          "name": "unreadable",
+          "actual_title": null,
+          "quality": null,
+          "stats": "ボーカル +70.1%, ビジュアル +21857, メンタル +2159, SPスコア +12.0%, クリティカルスコア +35.6%",
+          "structured": [
+            { "stat": "vocal", "type": "pct", "value": 70.1 },
+            { "stat": "visual", "type": "fixed", "value": 21857 },
+            { "stat": "mental", "type": "fixed", "value": 2159 },
+            { "stat": "sp_score", "type": "pct", "value": 12.0 },
+            { "stat": "critical_score", "type": "pct", "value": 35.6 }
+          ],
+          "skill": "unreadable",
+          "skill_verified": false,
+          "source_image": "lane3_photos_and_accessories2.PNG（右端パネル）"
+        }
+      ],
+      "skills": [
+        {
+          "name": "『成宮すず』なのですわ！",
+          "type": "SP",
+          "level": 6,
+          "ct": 0,
+          "stamina": 1201,
+          "effect": "1570%のスコア獲得、ボーカル上昇状態の段階数が多い程効果上昇\n自身の獲得スコアの12%のスコア獲得",
+          "verified": true
+        },
+        {
+          "name": "星見プロ全国ツアーin愛知",
+          "type": "A",
+          "level": 6,
+          "ct": 30,
+          "stamina": 404,
+          "effect": "400%のスコア獲得、ボーカル上昇状態の段階数が多い程効果上昇\n自身にボーカル上昇超化効果[36ビート]\n[ライブバトルのみ]同じレーンの相手のCTを10増加",
+          "verified": true
+        },
+        {
+          "name": "逆襲のドッキリ企画",
+          "type": "P",
+          "level": 6,
+          "ct": 50,
+          "stamina": 866,
+          "effect": "自身がボーカルレーンの時 自身に7段階ボーカル上昇効果[43ビート]とスタミナを2560回復",
+          "verified": true
+        }
+      ],
+      "deck_verification": {
+        "vocal": { "listed_sum_pct": 362.7, "required_pct": "[362.700,362.701)", "fixed_total": 64695, "result": "OK" },
+        "dance": { "listed_sum_pct": 211.8, "required_pct": "[211.799,211.800)", "fixed_total": 27884, "result": "OK" },
+        "visual": { "listed_sum_pct": 133.8, "required_pct": "[133.799,133.800)", "fixed_total": 49741, "result": "OK", "note": "photo4 のビジュアル固定+21857 を含む。フォト%合計は 53.8 のみ（ダブルカウントなし）" },
+        "stamina": { "listed_sum_pct": 78.4, "required_pct": "[78.392,78.407)", "fixed_total": 6346, "result": "OK" }
+      },
+      "kouryu_level": 51,
+      "diff_from_verification": "なし（数値は全項目確認済み）。L3のフォト%合計は ビジュアル 53.8（photo2のみ。photo1/3/4にVi%行なし）で検算一致。"
+    },
+    {
+      "lane": 4,
+      "idol_name": "長瀬琴乃",
+      "card_name": "Perfect Bride",
+      "card_id": "card-ktn-05-wedd-00",
+      "role": "Supporter",
+      "attribute": "Dance",
+      "level": 215,
+      "rarity": 10,
+      "rarity_bonus_permil": 1450,
+      "lane_type": "SP / ダンス",
+      "yale_equipped": "Y ライブスタミナ Lv4",
+      "accessories": [
+        {
+          "name": "Pink Crystal",
+          "stats": "ボーカル +24500, ボーカル +30.0%",
+          "structured": [{ "stat": "vocal", "type": "fixed", "value": 24500 }, { "stat": "vocal", "type": "pct", "value": 30.0 }]
+        },
+        {
+          "name": "Green Heart",
+          "stats": "スタミナ +2750",
+          "structured": [{ "stat": "stamina", "type": "fixed", "value": 2750 }]
+        }
+      ],
+      "photos": [
+        {
+          "name": "それぞれの決意",
+          "character_label": "天動瑠依",
+          "quality": 150,
+          "date": "2025/06/09",
+          "kind": "メモリアルフォト",
+          "stats": "ボーカル +43.0%, ダンス +43.0%, ビジュアル +43.0%, クリティカルスコア +23.5%",
+          "structured": [
+            { "stat": "vocal", "type": "pct", "value": 43.0 },
+            { "stat": "dance", "type": "pct", "value": 43.0 },
+            { "stat": "visual", "type": "pct", "value": 43.0 },
+            { "stat": "critical_score", "type": "pct", "value": 23.5 }
+          ],
+          "option_skill": "スキル成功率UPスキル Lv3",
+          "skill": "<サポータータイプのみ> 誰かがクリティカル係数上昇状態の時 スコアラータイプ1人に2段階スキル成功率上昇効果[30ビート] スタミナ355消費 CT:50",
+          "skill_verified": true,
+          "source_image": "photo_skill_lane4_1.PNG / lane4_photos_and_accessories1.PNG"
+        },
+        {
+          "name": "パークアリーナ埼玉",
+          "character_label": "川咲さくら 11/7",
+          "quality": 175,
+          "date": "2021/11/07",
+          "kind": "ライブ",
+          "stats": "ボーカル +51.4%, ダンス +56346, ビジュアル +54292, Aスコア +13.3%",
+          "structured": [
+            { "stat": "vocal", "type": "pct", "value": 51.4 },
+            { "stat": "dance", "type": "fixed", "value": 56346 },
+            { "stat": "visual", "type": "fixed", "value": 54292 },
+            { "stat": "a_score", "type": "pct", "value": 13.3 }
+          ],
+          "option_skill": "AスキルスコアUPスキル Lv7",
+          "skill": "<サポータータイプのみ> ボーカルタイプ3人に7段階Aスキルスコア上昇効果[39ビート] スタミナ1678消費 CT:50",
+          "skill_verified": true,
+          "source_image": "photo_skill_lane4_2.PNG / lane4_photos_and_accessories1-2.PNG"
+        },
+        {
+          "name": "平気平気！",
+          "character_label": "早坂芽衣",
+          "quality": 165,
+          "date": "2024/02/25",
+          "kind": "メモリアルフォト",
+          "stats": "ボーカル +53.0%, ダンス +54.5%, ビジュアル +57.0%, Aスコア +12.7%",
+          "structured": [
+            { "stat": "vocal", "type": "pct", "value": 53.0 },
+            { "stat": "dance", "type": "pct", "value": 54.5 },
+            { "stat": "visual", "type": "pct", "value": 57.0 },
+            { "stat": "a_score", "type": "pct", "value": 12.7 }
+          ],
+          "option_skill": "クリティカルスキル Lv6",
+          "skill": "<サポータータイプのみ> 50コンボ以上時 スコアラータイプ1人に6段階クリティカル係数上昇効果[50ビート] スタミナ1649消費 ライブ中1回のみ",
+          "skill_verified": true,
+          "source_image": "photo_skill_lane4_3.PNG / lane4_photos_and_accessories2.PNG"
+        },
+        {
+          "name": "もっと強くなれるね",
+          "character_label": "一ノ瀬怜",
+          "quality": 140,
+          "date": "2025/01/16",
+          "kind": "メモリアルフォト",
+          "stats": "ボーカル +41.0%, ダンス +41.0%, ビジュアル +41.0%, Aスコア +10.2%",
+          "structured": [
+            { "stat": "vocal", "type": "pct", "value": 41.0 },
+            { "stat": "dance", "type": "pct", "value": 41.0 },
+            { "stat": "visual", "type": "pct", "value": 41.0 },
+            { "stat": "a_score", "type": "pct", "value": 10.2 }
+          ],
+          "option_skill": "クリティカルスキル Lv3",
+          "skill": "<サポータータイプのみ> 80コンボ以上時 25%のスコア獲得 隣接するアイドルに3段階クリティカル係数上昇効果[38ビート] スタミナ609消費 ライブ中1回のみ",
+          "skill_verified": true,
+          "source_image": "photo_skill_lane4_4.PNG / lane4_photos_and_accessories2.PNG"
+        }
+      ],
+      "skills": [
+        {
+          "name": "花嫁の心得",
+          "type": "A",
+          "level": 6,
+          "ct": 50,
+          "stamina": 187,
+          "effect": "530%のスコア獲得\n全員にコンボ継続効果[75ビート]\n全員に8段階消費スタミナ低下効果[75ビート]",
+          "verified": true
+        },
+        {
+          "name": "ドリームウエディング",
+          "type": "A",
+          "level": 6,
+          "ct": 50,
+          "stamina": 190,
+          "effect": "550%のスコア獲得\n隣接するアイドルのCTを15減少\n自身がビジュアルレーンの時 スコアラータイプ2人に5段階クリティカル係数上昇効果[60ビート]",
+          "verified": true
+        },
+        {
+          "name": "結婚への願望",
+          "type": "P",
+          "level": 5,
+          "ct": 40,
+          "stamina": 273,
+          "effect": "隣接するアイドルのスタミナを3600回復\n[ライブバトルのみ]同じレーンの相手のスタミナを2200消費",
+          "verified": true,
+          "note": "アイドルLv230でLv6強化可能の表示あり"
+        }
+      ],
+      "deck_verification": {
+        "vocal": { "listed_sum_pct": 273.4, "required_pct": "[273.399,273.401)", "fixed_total": 53695, "result": "OK" },
+        "dance": { "listed_sum_pct": 187.5, "required_pct": "[187.499,187.500)", "fixed_total": 84230, "result": "OK" },
+        "visual": { "listed_sum_pct": 209.0, "required_pct": "[209.000,209.001)", "fixed_total": 82176, "result": "OK" },
+        "stamina": { "listed_sum_pct": 15.0, "required_pct": "[14.984,15.001)", "fixed_total": 9096, "result": "OK" }
+      },
+      "kouryu_level": 25,
+      "diff_from_verification": "重大修正: photos を verification_data の Lane5 欄から移し替え（入れ替わり修正）。フォト%合計 Vo188.4 / Da138.5 / Vi141.0 / Sta0、フォト固定 Da56346 / Vi54292。アクセサリ・スキル・交流Lvに変更なし。"
+    },
+    {
+      "lane": 5,
+      "idol_name": "白石沙季",
+      "card_name": "胸に秘めていた情熱",
+      "card_id": "card-ski-05-waso-00",
+      "role": "Buffer",
+      "attribute": "Dance",
+      "level": 215,
+      "rarity": 6,
+      "rarity_bonus_permil": 1250,
+      "lane_type": "多 / ボーカル",
+      "yale_equipped": "Y Vocal Lv4",
+      "accessories": [
+        {
+          "name": "ピンクのマイクリボン (ボーカル)",
+          "stats": "ボーカル +35500, ボーカル +35.0%",
+          "structured": [{ "stat": "vocal", "type": "fixed", "value": 35500 }, { "stat": "vocal", "type": "pct", "value": 35.0 }]
+        },
+        {
+          "name": "緑のハートのペンダント (スタミナ)",
+          "stats": "スタミナ +3050",
+          "structured": [{ "stat": "stamina", "type": "fixed", "value": 3050 }]
+        }
+      ],
+      "photos": [
+        {
+          "name": "ふつつかものですが (ご注文はうさぎですか? 10th)",
+          "character_label": null,
+          "quality": 35,
+          "date": "2024/11/30",
+          "kind": "メモリアルフォト",
+          "stats": "ボーカル +20.0%, ダンス +20.0%, ビジュアル +20.0%, スタミナ +4.0%",
+          "structured": [
+            { "stat": "vocal", "type": "pct", "value": 20.0 },
+            { "stat": "dance", "type": "pct", "value": 20.0 },
+            { "stat": "visual", "type": "pct", "value": 20.0 },
+            { "stat": "stamina", "type": "pct", "value": 4.0 }
+          ],
+          "option_skill": "スコア獲得スキル Lv1",
+          "skill": "40%のスコア獲得\nスタミナ180消費 CT:70",
+          "skill_verified": true,
+          "source_image": "photo_skill_lane5_1.PNG / lane5_photos_and_accessories1.PNG"
+        },
+        {
+          "name": "HAPPY BIRTHDAY (旧表記: miho)",
+          "character_label": "miho",
+          "quality": 35,
+          "date": "2024/01/25",
+          "kind": "メモリアルフォト",
+          "stats": "ボーカル +20.0%, ダンス +20.0%, ビジュアル +20.0%, スタミナ +4.0%",
+          "structured": [
+            { "stat": "vocal", "type": "pct", "value": 20.0 },
+            { "stat": "dance", "type": "pct", "value": 20.0 },
+            { "stat": "visual", "type": "pct", "value": 20.0 },
+            { "stat": "stamina", "type": "pct", "value": 4.0 }
+          ],
+          "option_skill": "スコア獲得スキル Lv1",
+          "skill": "40%のスコア獲得\nスタミナ180消費 CT:70",
+          "skill_verified": true,
+          "source_image": "photo_skill_lane5_2.PNG / lane5_photos_and_accessories1.PNG"
+        },
+        {
+          "name": "パークアリーナ埼玉 (旧表記: 早坂芽衣 9/13)",
+          "character_label": "早坂芽衣 9/13",
+          "quality": 165,
+          "date": "2021/09/13",
+          "kind": "ライブ",
+          "stats": "ボーカル +50.4%, ダンス +72118, ビジュアル +59096, Aスコア +14.1%",
+          "structured": [
+            { "stat": "vocal", "type": "pct", "value": 50.4 },
+            { "stat": "dance", "type": "fixed", "value": 72118 },
+            { "stat": "visual", "type": "fixed", "value": 59096 },
+            { "stat": "a_score", "type": "pct", "value": 14.1 }
+          ],
+          "option_skill": "強化効果増強スキル Lv5",
+          "skill": "<バッファータイプのみ>\n自身がボーカルレーンの時\n85%のスコア獲得 ボーカルタイプ1人の強化効果を2段階増強\nスタミナ2016消費 CT:65",
+          "skill_verified": true,
+          "source_image": "photo_skill_lane5_3.PNG / lane5_photos_and_accessories2.PNG"
+        },
+        {
+          "name": "お姉ちゃん (旧表記: 長瀬琴乃)",
+          "character_label": "長瀬琴乃",
+          "quality": 165,
+          "date": "2024/03/24",
+          "kind": "メモリアルフォト",
+          "stats": "ボーカル +49.4%, ダンス +49.0%, ビジュアル +50.4%, Aスコア +13.1%",
+          "structured": [
+            { "stat": "vocal", "type": "pct", "value": 49.4 },
+            { "stat": "dance", "type": "pct", "value": 49.0 },
+            { "stat": "visual", "type": "pct", "value": 50.4 },
+            { "stat": "a_score", "type": "pct", "value": 13.1 }
+          ],
+          "option_skill": "強化効果増強スキル Lv4",
+          "skill": "100コンボ以上時\n45%のスコア獲得\nスコアラータイプ1人の強化効果を1段階増強\nスタミナ904消費 ライブ中1回のみ",
+          "skill_verified": true,
+          "source_image": "photo_skill_lane5_4.PNG / lane5_photos_and_accessories2.PNG"
+        }
+      ],
+      "skills": [
+        {
+          "name": "殻をやぶる",
+          "type": "A",
+          "level": 6,
+          "ct": 50,
+          "stamina": 186,
+          "effect": "570%のスコア獲得\nボーカルタイプ2人に6段階クリティカル率上昇効果[60ビート]",
+          "verified": true
+        },
+        {
+          "name": "アイドルの掟への反抗",
+          "type": "A",
+          "level": 6,
+          "ct": 50,
+          "stamina": 173,
+          "effect": "510%のスコア獲得\n隣接するアイドルに6段階ボーカル上昇効果[38ビート]\n誰かが集目状態の時 センターに4段階ボーカル上昇効果[38ビート]",
+          "verified": true
+        },
+        {
+          "name": "さらけ出す",
+          "type": "P",
+          "level": 5,
+          "ct": 60,
+          "stamina": 280,
+          "effect": "センターに9段階の集目効果[38ビート]\nセンターの強化効果を11延長",
+          "verified": true,
+          "note": "アイドルLv230でLv6強化可能の表示あり"
+        }
+      ],
+      "deck_verification": {
+        "vocal": { "listed_sum_pct": 229.8, "required_pct": "[229.800,229.801)", "fixed_total": 64695, "result": "OK" },
+        "dance": { "listed_sum_pct": 138.0, "required_pct": "[138.000,138.001)", "fixed_total": 100002, "result": "OK" },
+        "visual": { "listed_sum_pct": 158.4, "required_pct": "[158.398,158.400)", "fixed_total": 86980, "result": "OK" },
+        "stamina": { "listed_sum_pct": 20.0, "required_pct": "[20.000,20.017)", "fixed_total": 9396, "result": "OK" }
+      },
+      "kouryu_level": 22,
+      "diff_from_verification": "重大修正: photos を verification_data の Lane4 欄から移し替え（入れ替わり修正）。フォト%合計 Vo139.8 / Da89.0 / Vi90.4 / Sta8.0、フォト固定 Da72118 / Vi59096。フォト名修正: miho→HAPPY BIRTHDAY、長瀬琴乃→お姉ちゃん、早坂芽衣9/13→パークアリーナ埼玉（ライブ会場名フォト）。アクセサリ・スキル・交流Lvに変更なし。"
+    }
+  ],
+  "results": {
+    "total_score": 17529132014,
+    "critical_rate_pct": 22.3,
+    "hit_rate_pct": 94.4,
+    "miss": 0,
+    "combo": 155,
+    "scores_by_lane": {
+      "1": 21231893,
+      "2": 53435162,
+      "3": 17398054223,
+      "4": 23863258,
+      "5": 32547478
+    },
+    "note": "verification_data.json から変更なし（再分析対象外）"
+  }
+}

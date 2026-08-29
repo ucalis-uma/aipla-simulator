@@ -1,0 +1,30 @@
+[
+  {
+    "combo": 10,
+    "advantagePermil": 1050
+  },
+  {
+    "combo": 20,
+    "advantagePermil": 1100
+  },
+  {
+    "combo": 30,
+    "advantagePermil": 1150
+  },
+  {
+    "combo": 40,
+    "advantagePermil": 1200
+  },
+  {
+    "combo": 50,
+    "advantagePermil": 1250
+  },
+  {
+    "combo": 70,
+    "advantagePermil": 1300
+  },
+  {
+    "combo": 100,
+    "advantagePermil": 1500
+  }
+]
