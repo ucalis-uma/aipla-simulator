@@ -66,15 +66,29 @@ export function simulateTimeline(input: SimulateInput): TimelineResult
 
 ### 5.1 ビートノート（noteType=1）
 - 対象: **全5レーン**が独立イベント。
-- 基本スコア = `mulPermil(liveStatus, beatWeightsPermil[lane.attribute])`（切捨て）。
-  - `liveStatus = mulPermul省略 → mulPermil(lane.deck[attribute], liveStatusMultiplierPermil(snapshot, attribute))`（切捨て。research/01 §2.4「(1+上昇+ブースト−低下)×V_deck 小数切捨て」【Confirmed】）。
-- `b1Permil = b1Permil(snapshot, "beat", scoreBonusPct)`
-- `comboFactorPermil = comboFactorPermil(そのレーンのコンボ（増加前）, snapshot.combo_score_up)`（コンボ155でビート156を検算した実績から「増加前コンボ」採用【Confirmed: research/02 §3.3】）
+- 基本スコア = `(vocal成分 + dance成分 + visual成分) × λ`（切捨て）【T5実測確定・Strong estimate】:
+  - `vocal成分 = mulPermil(mulPermil(lane.deck.vocal, liveStatusMultiplierPermil(snapshot, "vocal")), beatWeightsPermil.vocal)`
+    （**発動レーン自身の** vocal バフを乘る。L4 が 反抗 の vocal_up でスコアが跳ねる実測 b60 と整合）
+  - `dance成分 = mulPermil(lane.deck.dance, beatWeightsPermil.dance)`
+  - `visual成分 = mulPermil(lane.deck.visual, beatWeightsPermil.visual)`
+  - 全レーンが**3統計の混成**基本スコアを持つ（属性単一説は L4/L1 pop比 1.13 で否定。research/12 §T5-2b）。
+  - `λ = 8/140 ≈ 0.057143`【Strong estimate】: 離散乱数スキャンで L1/L2/L4/L5 の 88% が
+    |r−round(r)|<1.5 かつ [945,1055] に収束（0.05712〜0.057145 がプラトー）。140 の由来は未解明
+    （候補: 156全ノート−A16 = 140、ビート138+SP2 = 140）。
+- `b1Permil = b1Permil(snapshot, "beat", scoreBonusPct)` = `1000 + 25×score_up + bonus.beat`
+  【Confirmed: su 25‰/段は L2 の系列で確定（su=0/50‰ は不整合）。asu/テンション不入も実測で確認】
+- `comboFactorPermil = comboFactorPermil(そのレーンのコンボ（増加前）, snapshot.combo_score_up)`
+  （コンボ155でビート156を検算した実績から「増加前コンボ」採用【Confirmed: research/02 §3.3】。
+  lane/global 両基準は本実測で無差別（b49 FAILでも combo_continue 保護でコンボ維持）→ lane 維持）
 - `fanFactorPermil = fanFactorPermil(input.fanFactorPermil, snapshot.focus)`
 - `stageFactorPermil = input.stage.stageFactorPermil`
 - `randPermil = rng.nextScoreRoll()`（イベント=レーンごとに1抽選【Estimate: ビート共有説と対立あり、T5で判定】）
 - `critFactorPermil = criticalProvider(beat, lane) ? criticalFactorPermil(lane.critExtrasPermil, snapshot.critical_coeff_up) : 1000`
 - コンボ更新: 全レーン +1（ビートノートは常に成功【Estimate】）。
+- 【T5判明・未解決】L3（スコアラー）のビートのみ実測と ×0.62〜0.70 の乖離が残る。
+  b1 から su を除外 + csu を −4段 とすると 26/39 が離散乱数整合だが、Aイベント（b2）は
+  csu=6 段で r=995 検算済みのため式レベルの差分ではなく**バフ進化（延長対象/期限）の差**が疑われる。
+  research/12 §T5-2b 参照。T5ソルバー段階で残差ビートを特定して精査する。
 
 ### 5.2 A/SPノート（noteType=2/3）
 - ノートは `position`（1始まりの優先ランク）で指定されたレーンに属し、**そのレーンのみが挑戦する**。

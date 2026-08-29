@@ -592,7 +592,7 @@ describe("T5 debug: 全ビート比検査", () => {
       lane: number;
       a: number; // pop/(basic×(b1/1000)×rest)
     }
-    for (const suCoef of [25, 50] as const) {
+    for (const suCoef of [0, 25, 50] as const) {
       const samples: Sample[] = [];
       const samples3: Sample[] = [];
       for (const bt of res.beats) {
@@ -738,6 +738,113 @@ describe("T5 debug: 全ビート比検査", () => {
       console.log(
         `[L3R] b${s.beat} true=${trueB1cb.toFixed(4)} sim=${simB1cb.toFixed(4)} ratio=${(trueB1cb / simB1cb).toFixed(4)} su=${s.snap.score_up} asu=${s.snap.a_skill_score_up} csu=${s.snap.combo_score_up} foc=${s.snap.focus} ten=${s.snap.tension_up} statMeas=${s.basicMeas}`,
       );
+    }
+  });
+
+  it("L3早期スナップショット詳細: b1-b6の効果付与履歴とスキル定義", () => {
+    const lanes = buildLanes();
+    const l3 = lanes[2];
+    if (!l3) throw new Error("L3 missing");
+    console.log(
+      `[L3DEF] deck=`, JSON.stringify(l3.deck),
+      `\n[L3DEF] A/SP/P skills:`,
+      l3.skills.map((s) => `${s.id}[${s.kind}] ct=${s.ct ?? "-"} cost=${s.staminaCost ?? 0} effects=${JSON.stringify(s.effects)}`).join("\n  "),
+      `\n[L3DEF] photos:`,
+      l3.photos.map((s) => `${s.id} limit=${s.limitPerLive ?? "-"} effects=${JSON.stringify(s.effects)}`).join("\n  "),
+    );
+    const res = simulateTimeline(buildInput(lanes));
+    for (const bt of res.beats.filter((b) => b.beat <= 6)) {
+      console.log(
+        `[L3EARLY] b${bt.beat} acts=[${bt.activations.map((a) => `${a.lane}:${a.skillId || "FAIL"}:${a.success ? "ok" : a.failReason}`).join(", ")}] L3snap=${JSON.stringify(bt.buffSnapshots[2])}`,
+      );
+    }
+  });
+
+  it("L3係数グリッド全探索: su/asu係数×csuオフセットの同時最適", () => {
+    const lanes = buildLanes();
+    const res = simulateTimeline(buildInput(lanes));
+    const liveMultV = (snap: { vocal_up: number; vocal_up_extreme: number; vocal_boost: number }) =>
+      1000 + 50 * (snap.vocal_up + snap.vocal_up_extreme) + 75 * snap.vocal_boost;
+    const LAM = 8 / 140;
+    const samples: Array<{ beat: number; a0: number; su: number; asu: number; csu: number; cbBase: number }> = [];
+    for (const bt of res.beats) {
+      if (bt.beat <= 3 || bt.noteType !== 1) continue;
+      const row = t5.timeline.find((t) => t.beat === bt.beat);
+      if (!row) continue;
+      const polluted = new Set(
+        bt.activations.filter((a) => a.success && a.gainedScore != null).map((a) => a.lane),
+      );
+      const e = bt.events.find((x) => x.lane === 3);
+      if (!e || e.critFactorPermil !== 1000 || polluted.has(3)) continue;
+      const pop = row.pops?.["3"];
+      if (pop == null || pop === 0) continue;
+      const lane = lanes[2];
+      const snap = bt.buffSnapshots[2];
+      if (!lane || !snap) continue;
+      const statMeasured = row.stat?.["3"];
+      const vocalPart =
+        statMeasured != null && statMeasured < 3.75 * lane.deck.vocal
+          ? mulPermil(statMeasured, 600)
+          : mulPermil(mulPermil(lane.deck.vocal, liveMultV(snap)), 600);
+      const basic = vocalPart + mulPermil(lane.deck.dance, 250) + mulPermil(lane.deck.visual, 150);
+      const rest = (e.fanFactorPermil / 1000) * (e.critFactorPermil / 1000);
+      // a0 = pop/(basic×fan×crit) = (b1/1000)×(cb/1000)×λ×r/1000
+      const a0 = pop / (basic * rest);
+      const cbBase = e.comboFactorPermil / (1 + 0.1 * snap.combo_score_up); // (1000+base)
+      samples.push({ beat: bt.beat, a0, su: snap.score_up, asu: snap.a_skill_score_up, csu: snap.combo_score_up, cbBase });
+    }
+    const results: Array<{ suC: number; asuC: number; off: number; ok: number; n: number }> = [];
+    for (const suC of [0, 25] as const) {
+      for (const asuC of [0, 25] as const) {
+        for (let off = 0; off >= -8; off--) {
+          let ok = 0;
+          for (const s of samples) {
+            const csuT = Math.max(0, s.csu + off);
+            const b1 = 1000 + suC * s.su + asuC * s.asu + 360;
+            const cb = s.cbBase * (1 + 0.1 * csuT);
+            const r = (s.a0 / ((b1 / 1000) * (cb / 1000) * LAM)) * 1000;
+            const rr = Math.round(r);
+            if (Math.abs(r - rr) < 1.5 && rr >= 945 && rr <= 1055) ok++;
+          }
+          results.push({ suC, asuC, off, ok, n: samples.length });
+        }
+      }
+    }
+    results.sort((x, y) => y.ok - x.ok);
+    for (const r of results.slice(0, 8)) {
+      console.log(`[L3GRID] su=${r.suC} asu=${r.asuC} csuOff=${r.off} ok=${r.ok}/${r.n}`);
+    }
+    // 最良組合せの implied-r 系列
+    const best = results[0];
+    if (best) {
+      const series = samples
+        .map((s) => {
+          const csuT = Math.max(0, s.csu + best.off);
+          const b1 = 1000 + best.suC * s.su + best.asuC * s.asu + 360;
+          const cb = s.cbBase * (1 + 0.1 * csuT);
+          return Math.round((s.a0 / ((b1 / 1000) * (cb / 1000) * LAM)) * 1000);
+        })
+        .join(",");
+      console.log(`[L3GRID] best implied-r: ${series}`);
+    }
+  });
+
+  it("L3へのsu/csu付与履歴（全ライブ）", () => {
+    const lanes = buildLanes();
+    const res = simulateTimeline(buildInput(lanes));
+    let prev = { su: 0, csu: 0 };
+    for (const bt of res.beats) {
+      const snap = bt.buffSnapshots[2];
+      if (!snap) continue;
+      if (snap.score_up !== prev.su || snap.combo_score_up !== prev.csu) {
+        const grants = bt.activations
+          .filter((a) => a.success && a.lane !== 3)
+          .map((a) => `${a.lane}:${a.skillId}`);
+        console.log(
+          `[L3G] b${bt.beat} su=${prev.su}->${snap.score_up} csu=${prev.csu}->${snap.combo_score_up} | 他レーン発動: ${grants.join(", ")}`,
+        );
+        prev = { su: snap.score_up, csu: snap.combo_score_up };
+      }
     }
   });
 

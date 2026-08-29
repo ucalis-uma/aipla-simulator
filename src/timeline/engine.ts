@@ -762,7 +762,18 @@ function comboForFactor(self: LaneState, ctx: EngineCtx): number {
 /**
  * ビートノートの精算（§5.1）。全5レーンが独立イベント。
  * コンボは「増加前」の値で係数計算（research/02 §3.3 検算【Confirmed】）。
+ *
+ * 【T5実測確定・Strong estimate】ビート基本スコア:
+ *   basic = (vocal×600×liveMult_vocal(レーン) + dance×250 + visual×150) × λ
+ * - 重みはステージの beatWeightsPermil（全レーン共通・属性混成。L4/L1 pop比 1.13 と
+ *   L4 の b60 跳ね(+19%)が vocal_up 連動で同時説明される。research/12 §T5-2b）。
+ * - λ = 8/140 ≈ 0.057143（離散乱数スキャンで L1/L2/L4/L5 の 88% が
+ *   |r−round(r)|<1.5 かつ [945,1055] に収束。140 の由来は未解明）。
+ * - A/SP ノートの基本スコアは従来どおり属性単一（vocal×600 等。10/13 検定済み）。
  */
+const BEAT_LAMBDA_NUM = 8;
+const BEAT_LAMBDA_DEN = 140;
+
 function settleBeatNote(
   note: ChartNote,
   ctx: EngineCtx,
@@ -775,9 +786,12 @@ function settleBeatNote(
     if (snap === undefined) {
       throw new Error(`settleBeatNote: snapshot missing for lane index ${idx}`);
     }
-    const attr = state.input.attribute;
-    const live = mulPermil(state.input.deck[attr], liveStatusMultiplierPermil(snap, attr));
-    const basic = mulPermil(live, ctx.input.stage.beatWeightsPermil[attr]);
+    const w = ctx.input.stage.beatWeightsPermil;
+    const basicSum =
+      mulPermil(mulPermil(state.input.deck.vocal, liveStatusMultiplierPermil(snap, "vocal")), w.vocal) +
+      mulPermil(state.input.deck.dance, w.dance) +
+      mulPermil(state.input.deck.visual, w.visual);
+    const basic = Math.floor((basicSum * BEAT_LAMBDA_NUM) / BEAT_LAMBDA_DEN);
     const b1 = b1Permil(snap, "beat", state.input.scoreBonusPct);
     const comboF = comboFactorPermil(comboForFactor(state, ctx), snap.combo_score_up, ctx.comboTable);
     const fanF = fanFactorPermil(ctx.input.fanFactorPermil, snap.focus);

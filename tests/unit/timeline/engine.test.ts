@@ -121,27 +121,28 @@ function input(
 describe("simulateTimeline: ビートスコア（§5.1）", () => {
   it("重み込み基本スコア×係数でレーン別に計算される（バフなし・中立乱数）", () => {
     const result = simulateTimeline(input([note(1, 1, 3)]));
-    // position3 → L1（vocal 100000 × 600‰ = 60000）。L3 のみ vocal 120000 → 72000、
-    // L4 は dance 50000 × 250‰ = 12500
-    expect(result.totalScore).toBe(3 * 60000 + 72000 + 12500);
+    // 総和式: vocal×600‰ + dance×250‰ + visual×150‰、さらに λ=8/140。
+    // L1: 60000+12500+3750 = 76250 → ×8/140 = 4357。L3 は vocal 120000 → 88250 → 5042。
+    // L4 も総和式のため L1 と同一（属性は dance だが基本スコアは3統計の混成）。
+    expect(result.totalScore).toBe(3 * 4357 + 5042 + 4357);
     expect(result.beats[0]?.events).toHaveLength(5);
     const l1 = result.beats[0]?.events.find((e) => e.lane === 1);
     const l3 = result.beats[0]?.events.find((e) => e.lane === 3);
     const l4 = result.beats[0]?.events.find((e) => e.lane === 4);
-    expect(l1?.basicScore).toBe(60000);
-    expect(l1?.gainedScore).toBe(60000);
-    expect(l3?.basicScore).toBe(72000);
-    expect(l4?.basicScore).toBe(12500);
-    expect(l4?.gainedScore).toBe(12500);
+    expect(l1?.basicScore).toBe(4357);
+    expect(l1?.gainedScore).toBe(4357);
+    expect(l3?.basicScore).toBe(5042);
+    expect(l4?.basicScore).toBe(4357);
+    expect(l4?.gainedScore).toBe(4357);
     // コンボはビートノートで全レーン +1
     expect(result.beats[0]?.comboAfter).toEqual([1, 1, 1, 1, 1]);
   });
 
   it("来場ファンボーナスが乗算される", () => {
     const result = simulateTimeline(input([note(1, 1, 3)], undefined, { fanFactorPermil: 1620 }));
-    // 60000 × 1620‰ = 97200（sequential 丸め）
+    // 4357 × 1620‰ = 7058（sequential 丸め）
     const l1 = result.beats[0]?.events.find((e) => e.lane === 1);
-    expect(l1?.gainedScore).toBe(97200);
+    expect(l1?.gainedScore).toBe(7058);
   });
 
   it("集目10段のファンボーナス副効果がファンファクターに加算される", () => {
@@ -169,9 +170,9 @@ describe("simulateTimeline: ビートスコア（§5.1）", () => {
       }),
     ];
     const result = simulateTimeline(input([note(1, 1, 3)], lanes, { fanFactorPermil: 1620 }));
-    // L2 のみ ファン 1620 + 50（10段）= 1670 → 60000×1.67 = 100200
+    // L2 のみ ファン 1620 + 50（10段）= 1670 → 4357×1.67 = 7276
     const l2Event = result.beats[0]?.events.find((e) => e.lane === 2);
-    expect(l2Event?.gainedScore).toBe(100200);
+    expect(l2Event?.gainedScore).toBe(7276);
     expect(result.beats[0]?.buffSnapshots[1]?.focus).toBe(10);
   });
 });
@@ -202,15 +203,15 @@ describe("simulateTimeline: 処理順と実効ビート数（§3）", () => {
     expect(beat1).toBeDefined();
     expect(beat4).toBeDefined();
     // 前半発動（L3 の target self）→ L3 のスナップショット・スコアに反映
-    // （L3: 120000×1.25×0.6 = 90000）
+    // （L3: vocal 120000×1.25×0.6 = 90000 + 12500 + 3750 = 106250 → ×8/140 = 6071）
     expect(beat1?.buffSnapshots[2]?.vocal_up).toBe(5);
-    expect(beat1?.events.find((e) => e.lane === 3)?.basicScore).toBe(90000);
+    expect(beat1?.events.find((e) => e.lane === 3)?.basicScore).toBe(6071);
     // ビート2・3も有効（残り2→1）
     expect(result.beats[1]?.buffSnapshots[2]?.vocal_up).toBe(5);
     expect(result.beats[2]?.buffSnapshots[2]?.vocal_up).toBe(5);
     // ビート4は期限切れ（残り0→除去）
     expect(beat4?.buffSnapshots[2]?.vocal_up).toBe(0);
-    expect(beat4?.events.find((e) => e.lane === 3)?.basicScore).toBe(72000);
+    expect(beat4?.events.find((e) => e.lane === 3)?.basicScore).toBe(5042);
   });
 
   it("後半発動バフは翌ビートから乗る（表記どおりの窓）", () => {
@@ -243,7 +244,7 @@ describe("simulateTimeline: 処理順と実効ビート数（§3）", () => {
     expect(activation?.beat).toBe(1);
     // ビート1のスコアには乗らない
     expect(result.beats[0]?.buffSnapshots[2]?.vocal_up).toBe(0);
-    expect(result.beats[0]?.events.find((e) => e.lane === 3)?.basicScore).toBe(72000);
+    expect(result.beats[0]?.events.find((e) => e.lane === 3)?.basicScore).toBe(5042);
     // ビート2〜4 で有効（表記どおり3ビート）
     expect(result.beats[1]?.buffSnapshots[2]?.vocal_up).toBe(5);
     expect(result.beats[2]?.buffSnapshots[2]?.vocal_up).toBe(5);
@@ -493,14 +494,15 @@ describe("simulateTimeline: 割合型・スケーリング（§5.2）", () => {
         ],
       }),
     ];
-    // b1 ビート（ファン1620）で 428490 積算 → b2 SP(pos1→L3): 基本スコア = floor(428490×120/1000) = 51418
+    // b1 ビート（ファン1620）で 4×7058+8168 = 36400 積算 → b2 SP(pos1→L3):
+    // 基本スコア = floor(36400×120/1000) = 4368
     const result = simulateTimeline(
       input([note(1, 1, 0), note(2, 3, 1)], lanes, { fanFactorPermil: 1620 }),
     );
     const ratioEvent = result.beats[1]?.events.find((e) => e.lane === 3);
-    expect(ratioEvent?.basicScore).toBe(51418);
-    // ファンが適用されるなら 51418×1.62=83297 になるため、51418 のまま = 不適用の証明
-    expect(ratioEvent?.gainedScore).toBe(51418);
+    expect(ratioEvent?.basicScore).toBe(4368);
+    // ファンが適用されるなら 4368×1.62=7076 になるため、4368 のまま = 不適用の証明
+    expect(ratioEvent?.gainedScore).toBe(4368);
   });
 
   it("type36 scaling で SkillPower が段数に応じて増加する", () => {
