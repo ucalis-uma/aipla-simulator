@@ -1,0 +1,1285 @@
+{
+ "activations": [
+  {
+   "order": 1,
+   "file": "IMG_1385.PNG",
+   "beat": 1,
+   "lane": 1,
+   "idol": "鈴村優",
+   "skill_type": "P",
+   "skill_name": "かんしょ〜かい",
+   "effects": [
+    {
+     "effect_text": "スコアラータイプ1人にコンボスコア上昇効果[44ビート]",
+     "target_idol": "白石千紗"
+    },
+    {
+     "effect_text": "スコアラータイプ1人にコンボスコア上昇上限解放[44ビート]",
+     "target_idol": "白石千紗"
+    }
+   ],
+   "stamina": "19787/20066",
+   "stat_value": 334153
+  },
+  {
+   "order": 2,
+   "file": "IMG_1386.PNG",
+   "beat": 1,
+   "lane": 1,
+   "idol": "鈴村優",
+   "skill_type": "Photo",
+   "skill_name": "スコアUPスキル",
+   "effects": [
+    {
+     "effect_text": "スコアラータイプ1人にスコア上昇効果[37ビート]",
+     "target_idol": "白石千紗"
+    }
+   ],
+   "stamina": "19023/20066",
+   "stat_value": 334153
+  },
+  {
+   "order": 3,
+   "file": "IMG_1387.PNG",
+   "beat": 1,
+   "lane": 4,
+   "idol": "長瀬琴乃",
+   "skill_type": "P",
+   "skill_name": "結婚への願望",
+   "effects": [
+    {
+     "effect_text": "隣接するアイドルのスタミナを回復",
+     "target_idol": "白石千紗, 白石沙季(Lane5)"
+    },
+    {
+     "effect_text": "同じレーンの相手のスタミナを消費",
+     "target_idol": "同じレーンの相手"
+    }
+   ],
+   "stamina": "15760/16033",
+   "stat_value": 284769
+  },
+  {
+   "order": 4,
+   "file": "IMG_1388.PNG",
+   "beat": 1,
+   "lane": 4,
+   "idol": "長瀬琴乃",
+   "skill_type": "Photo",
+   "skill_name": "AスキルスコアUPスキル",
+   "effects": [
+    {
+     "effect_text": "ボーカルタイプ3人にAスキルスコア上昇効果[39ビート]",
+     "target_idol": "白石千紗, 白石沙季(Lane2), 白石沙季(Lane5)"
+    }
+   ],
+   "stamina": "14082/16033",
+   "stat_value": 284769
+  },
+  {
+   "order": 5,
+   "file": "IMG_1389.PNG",
+   "beat": 1,
+   "lane": 2,
+   "idol": "白石沙季(Lane2)",
+   "skill_type": "P",
+   "skill_name": "気持ちを和歌に乗せて",
+   "effects": [
+    {
+     "effect_text": "スコアラータイプ1人にテンションUP効果[40ビート]",
+     "target_idol": "白石千紗"
+    },
+    {
+     "effect_text": "スコアラータイプ1人にボーカルブースト効果[40ビート]",
+     "target_idol": "白石千紗"
+    }
+   ],
+   "stamina": "15347/15609",
+   "stat_value": 401055
+  },
+  {
+   "order": 6,
+   "file": "IMG_1390.PNG",
+   "beat": 1,
+   "lane": 2,
+   "idol": "白石沙季(Lane2)",
+   "skill_type": "Photo",
+   "skill_name": "Voブーストスキル",
+   "effects": [
+    {
+     "effect_text": "ボーカルタイプ1人にボーカルブースト効果[28ビート]",
+     "target_idol": "白石千紗"
+    }
+   ],
+   "stamina": "13552/15609",
+   "stat_value": 401055
+  },
+  {
+   "order": 7,
+   "file": "IMG_1391.PNG",
+   "beat": 1,
+   "lane": 5,
+   "idol": "白石沙季(Lane5)",
+   "skill_type": "P",
+   "skill_name": "さらけ出す",
+   "effects": [
+    {
+     "effect_text": "センターに集目効果[38ビート]",
+     "target_idol": "白石千紗"
+    },
+    {
+     "effect_text": "センターの強化効果を延長",
+     "target_idol": "白石千紗"
+    }
+   ],
+   "stamina": "16052/16332",
+   "stat_value": 339715
+  },
+  {
+   "order": 8,
+   "file": "IMG_1392.PNG",
+   "beat": 1,
+   "lane": 5,
+   "idol": "白石沙季(Lane5)",
+   "skill_type": "Photo",
+   "skill_name": "スコア獲得スキル",
+   "effects": [
+    {
+     "effect_text": "スコア獲得",
+     "target_idol": "自身"
+    }
+   ],
+   "stamina": "15872/16332",
+   "stat_value": 339715
+  },
+  {
+   "order": 9,
+   "file": "IMG_1393.PNG",
+   "beat": 1,
+   "lane": 3,
+   "idol": "白石千紗",
+   "skill_type": "P",
+   "skill_name": "逆襲のドッキリ企画",
+   "effects": [
+    {
+     "effect_text": "自身にボーカル上昇効果[43ビート]",
+     "target_idol": "自身"
+    },
+    {
+     "effect_text": "自身のスタミナを回復",
+     "target_idol": "自身"
+    }
+   ],
+   "stamina": "18730/18730",
+   "stat_value": 1174168
+  },
+  {
+   "order": 10,
+   "file": "IMG_1394.PNG",
+   "beat": 2,
+   "lane": 1,
+   "idol": "鈴村優",
+   "skill_type": "Photo",
+   "skill_name": "スコアUPスキル",
+   "effects": [
+    {
+     "effect_text": "ボーカルタイプ2人にスコア上昇効果[31ビート]",
+     "target_idol": "白石千紗, 白石沙季(Lane2)"
+    }
+   ],
+   "stamina": "17460/20066",
+   "stat_value": 334153
+  },
+  {
+   "order": 11,
+   "file": "IMG_1395.PNG",
+   "beat": 2,
+   "lane": 5,
+   "idol": "白石沙季(Lane5)",
+   "skill_type": "Photo",
+   "skill_name": "スコア獲得スキル",
+   "effects": [
+    {
+     "effect_text": "スコア獲得",
+     "target_idol": "自身"
+    }
+   ],
+   "stamina": "15692/16332",
+   "stat_value": 339715
+  },
+  {
+   "order": 12,
+   "file": "IMG_1396.PNG",
+   "beat": 2,
+   "lane": 3,
+   "idol": "白石千紗",
+   "skill_type": "A",
+   "skill_name": "星見プロ全国ツアーin愛知",
+   "effects": [
+    {
+     "effect_text": "スコア獲得：ボーカル上昇状態の段階数が多い程効果上昇",
+     "target_idol": "自身"
+    },
+    {
+     "effect_text": "自身にボーカル上昇超化効果[36ビート]",
+     "target_idol": "自身"
+    },
+    {
+     "effect_text": "同じレーンの相手のCT増加",
+     "target_idol": "同じレーンの相手"
+    }
+   ],
+   "stamina": "18298/18730",
+   "stat_value": 1330723
+  },
+  {
+   "order": 13,
+   "file": "IMG_1397.PNG",
+   "beat": 2,
+   "lane": 2,
+   "idol": "白石沙季(Lane2)",
+   "skill_type": "Photo",
+   "skill_name": "強化効果延長スキル",
+   "effects": [
+    {
+     "effect_text": "スコアラータイプ1人の強化効果を延長",
+     "target_idol": "白石千紗"
+    }
+   ],
+   "stamina": "12702/15609",
+   "stat_value": 401055
+  },
+  {
+   "order": 14,
+   "file": "IMG_1398.PNG",
+   "beat": 3,
+   "lane": 2,
+   "idol": "白石沙季(Lane2)",
+   "skill_type": "Photo",
+   "skill_name": "強化効果延長スキル",
+   "effects": [
+    {
+     "effect_text": "対象の強化効果を延長",
+     "target_idol": "白石千紗"
+    }
+   ],
+   "stamina": "11852/15609",
+   "stat_value": 401055
+  },
+  {
+   "order": 15,
+   "file": "IMG_1399.PNG",
+   "beat": 3,
+   "lane": 5,
+   "idol": "白石沙季(Lane5)",
+   "skill_type": "Photo",
+   "skill_name": "強化効果増強スキル",
+   "effects": [
+    {
+     "effect_text": "ボーカルタイプ1人の強化効果を増強",
+     "target_idol": "白石千紗"
+    }
+   ],
+   "stamina": "13676/16332",
+   "stat_value": 339715
+  }
+ ],
+ "timeline": [
+  {
+   "beat": 0,
+   "combo": 0,
+   "cumulative_score": 0,
+   "beat_gained_score": 0,
+   "stamina": {
+    "1": 20066,
+    "2": 15609,
+    "3": 18730,
+    "4": 16033,
+    "5": 16332
+   },
+   "effects": {
+    "1": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "2": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "3": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "4": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "5": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ]
+   },
+   "activations": []
+  },
+  {
+   "beat": 1,
+   "combo": 1,
+   "cumulative_score": 0,
+   "beat_gained_score": 0,
+   "stamina": {
+    "1": 19787,
+    "2": 15347,
+    "3": 18730,
+    "4": 15760,
+    "5": 16052
+   },
+   "effects": {
+    "1": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "2": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "3": [
+     {
+      "id": "focus",
+      "name": "集目",
+      "stage": 9
+     },
+     {
+      "id": "vocal_up",
+      "name": "ボーカル上昇",
+      "stage": 17
+     },
+     {
+      "id": "tension_limit",
+      "name": "テンションUP上限開放",
+      "stage": 3
+     },
+     {
+      "id": "critical_coeff_up",
+      "name": "クリティカル係数上昇",
+      "stage": 7
+     },
+     {
+      "id": "stamina_cost_down",
+      "name": "消費スタミナ低下",
+      "stage": 12
+     },
+     {
+      "id": "skill_success_up",
+      "name": "スキル成功率上昇",
+      "stage": 7
+     },
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "4": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "5": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ]
+   },
+   "activations": [
+    {
+     "lane": 1,
+     "skill_name": "かんしょ〜かい",
+     "skill_type": "P"
+    },
+    {
+     "lane": 1,
+     "skill_name": "スコアUPスキル",
+     "skill_type": "Photo"
+    },
+    {
+     "lane": 4,
+     "skill_name": "結婚への願望",
+     "skill_type": "P"
+    },
+    {
+     "lane": 4,
+     "skill_name": "AスキルスコアUPスキル",
+     "skill_type": "Photo"
+    },
+    {
+     "lane": 2,
+     "skill_name": "気持ちを和歌に乗せて",
+     "skill_type": "P"
+    },
+    {
+     "lane": 2,
+     "skill_name": "Voブーストスキル",
+     "skill_type": "Photo"
+    },
+    {
+     "lane": 5,
+     "skill_name": "さらけ出す",
+     "skill_type": "P"
+    },
+    {
+     "lane": 5,
+     "skill_name": "スコア獲得スキル",
+     "skill_type": "Photo"
+    },
+    {
+     "lane": 3,
+     "skill_name": "逆襲のドッキリ企画",
+     "skill_type": "P"
+    }
+   ]
+  },
+  {
+   "beat": 2,
+   "combo": 2,
+   "cumulative_score": 514083,
+   "beat_gained_score": 514083,
+   "stamina": {
+    "1": 17460,
+    "2": 12702,
+    "3": 18298,
+    "4": 14082,
+    "5": 15692
+   },
+   "effects": {
+    "1": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "2": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "3": [
+     {
+      "id": "focus",
+      "name": "集目",
+      "stage": 3
+     },
+     {
+      "id": "vocal_up",
+      "name": "ボーカル上昇",
+      "stage": 7
+     },
+     {
+      "id": "tension_limit",
+      "name": "テンションUP上限開放",
+      "stage": 9
+     },
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     },
+     {
+      "id": "stamina_cost_down",
+      "name": "消費スタミナ低下",
+      "stage": 10
+     }
+    ],
+    "4": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "5": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ]
+   },
+   "activations": [
+    {
+     "lane": 1,
+     "skill_name": "スコアUPスキル",
+     "skill_type": "Photo"
+    },
+    {
+     "lane": 5,
+     "skill_name": "スコア獲得スキル",
+     "skill_type": "Photo"
+    },
+    {
+     "lane": 3,
+     "skill_name": "星見プロ全国ツアーin愛知",
+     "skill_type": "A"
+    },
+    {
+     "lane": 2,
+     "skill_name": "強化効果延長スキル",
+     "skill_type": "Photo"
+    }
+   ]
+  },
+  {
+   "beat": 3,
+   "combo": 3,
+   "cumulative_score": 26092825,
+   "beat_gained_score": 25578742,
+   "stamina": {
+    "1": 17460,
+    "2": 11852,
+    "3": 18298,
+    "4": 14082,
+    "5": 13676
+   },
+   "effects": {
+    "1": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "2": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "3": [
+     {
+      "id": "focus",
+      "name": "集目",
+      "stage": 15
+     },
+     {
+      "id": "vocal_up",
+      "name": "ボーカル上昇",
+      "stage": 9
+     },
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     },
+     {
+      "id": "stamina_cost_down",
+      "name": "消費スタミナ低下",
+      "stage": 10
+     }
+    ],
+    "4": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "5": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ]
+   },
+   "activations": [
+    {
+     "lane": 2,
+     "skill_name": "強化効果延長スキル",
+     "skill_type": "Photo"
+    },
+    {
+     "lane": 5,
+     "skill_name": "強化効果増強スキル",
+     "skill_type": "Photo"
+    }
+   ]
+  },
+  {
+   "beat": 4,
+   "combo": 4,
+   "cumulative_score": 26791435,
+   "beat_gained_score": 698610,
+   "stamina": {
+    "1": 17460,
+    "2": 11852,
+    "3": 18298,
+    "4": 14082,
+    "5": 13676
+   },
+   "effects": {
+    "1": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "2": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "3": [
+     {
+      "id": "focus",
+      "name": "集目",
+      "stage": 15
+     },
+     {
+      "id": "vocal_up",
+      "name": "ボーカル上昇",
+      "stage": 9
+     },
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     },
+     {
+      "id": "stamina_cost_down",
+      "name": "消費スタミナ低下",
+      "stage": 10
+     }
+    ],
+    "4": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "5": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ]
+   },
+   "activations": []
+  },
+  {
+   "beat": 5,
+   "combo": 5,
+   "cumulative_score": 27482083,
+   "beat_gained_score": 690648,
+   "stamina": {
+    "1": 17460,
+    "2": 11852,
+    "3": 18298,
+    "4": 14082,
+    "5": 13676
+   },
+   "effects": {
+    "1": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "2": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "3": [
+     {
+      "id": "focus",
+      "name": "集目",
+      "stage": 15
+     },
+     {
+      "id": "vocal_up",
+      "name": "ボーカル上昇",
+      "stage": 9
+     },
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     },
+     {
+      "id": "stamina_cost_down",
+      "name": "消費スタミナ低下",
+      "stage": 10
+     }
+    ],
+    "4": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "5": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ]
+   },
+   "activations": []
+  },
+  {
+   "beat": 6,
+   "combo": 6,
+   "cumulative_score": 27821014,
+   "beat_gained_score": 338931,
+   "stamina": {
+    "1": 17460,
+    "2": 11852,
+    "3": 18298,
+    "4": 14082,
+    "5": 13676
+   },
+   "effects": {
+    "1": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "2": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "3": [
+     {
+      "id": "combo_score_up",
+      "name": "コンボスコア上昇",
+      "stage": 8
+     },
+     {
+      "id": "combo_score_limit",
+      "name": "コンボスコア上昇上限開放",
+      "stage": 10
+     },
+     {
+      "id": "score_up",
+      "name": "スコア上昇",
+      "stage": 13
+     },
+     {
+      "id": "a_skill_score_up",
+      "name": "Aスキルスコア上昇",
+      "stage": 9
+     },
+     {
+      "id": "tension_up",
+      "name": "テンションUP",
+      "stage": 5
+     },
+     {
+      "id": "vocal_boost",
+      "name": "ボーカルブースト",
+      "stage": 9
+     },
+     {
+      "id": "focus",
+      "name": "集目",
+      "stage": 15
+     },
+     {
+      "id": "vocal_up",
+      "name": "ボーカル上昇",
+      "stage": 9
+     },
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     },
+     {
+      "id": "stamina_cost_down",
+      "name": "消費スタミナ低下",
+      "stage": 10
+     }
+    ],
+    "4": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "5": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ]
+   },
+   "activations": []
+  },
+  {
+   "beat": 7,
+   "combo": 7,
+   "cumulative_score": 28167225,
+   "beat_gained_score": 346211,
+   "stamina": {
+    "1": 17460,
+    "2": 11852,
+    "3": 18298,
+    "4": 14082,
+    "5": 13676
+   },
+   "effects": {
+    "1": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "2": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "3": [
+     {
+      "id": "focus",
+      "name": "集目",
+      "stage": 15
+     },
+     {
+      "id": "vocal_up",
+      "name": "ボーカル上昇",
+      "stage": 9
+     },
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     },
+     {
+      "id": "stamina_cost_down",
+      "name": "消費スタミナ低下",
+      "stage": 10
+     }
+    ],
+    "4": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "5": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ]
+   },
+   "activations": []
+  },
+  {
+   "beat": 8,
+   "combo": 8,
+   "cumulative_score": 28554990,
+   "beat_gained_score": 387765,
+   "stamina": {
+    "1": 17460,
+    "2": 11852,
+    "3": 18298,
+    "4": 14082,
+    "5": 13676
+   },
+   "effects": {
+    "1": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "2": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "3": [
+     {
+      "id": "focus",
+      "name": "集目",
+      "stage": 23
+     },
+     {
+      "id": "combo_score_limit",
+      "name": "コンボスコア上昇上限開放",
+      "stage": 10
+     },
+     {
+      "id": "tension_up",
+      "name": "テンションUP",
+      "stage": 13
+     },
+     {
+      "id": "vocal_boost",
+      "name": "ボーカルブースト",
+      "stage": 9
+     },
+     {
+      "id": "tension_limit",
+      "name": "テンションUP上限開放",
+      "stage": 5
+     },
+     {
+      "id": "skill_success_up",
+      "name": "スキル成功率上昇",
+      "stage": 9
+     },
+     {
+      "id": "vocal_up",
+      "name": "ボーカル上昇",
+      "stage": 9
+     },
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     },
+     {
+      "id": "stamina_cost_down",
+      "name": "消費スタミナ低下",
+      "stage": 10
+     }
+    ],
+    "4": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "5": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ]
+   },
+   "activations": []
+  },
+  {
+   "beat": 9,
+   "combo": 9,
+   "cumulative_score": 28887527,
+   "beat_gained_score": 332537,
+   "stamina": {
+    "1": 17460,
+    "2": 11852,
+    "3": 18298,
+    "4": 14082,
+    "5": 13676
+   },
+   "effects": {
+    "1": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "2": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "3": [
+     {
+      "id": "focus",
+      "name": "集目",
+      "stage": 15
+     },
+     {
+      "id": "vocal_up",
+      "name": "ボーカル上昇",
+      "stage": 9
+     },
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     },
+     {
+      "id": "stamina_cost_down",
+      "name": "消費スタミナ低下",
+      "stage": 10
+     }
+    ],
+    "4": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "5": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ]
+   },
+   "activations": []
+  },
+  {
+   "beat": 10,
+   "combo": 10,
+   "cumulative_score": 29232444,
+   "beat_gained_score": 344917,
+   "stamina": {
+    "1": 17460,
+    "2": 11852,
+    "3": 18298,
+    "4": 14082,
+    "5": 13676
+   },
+   "effects": {
+    "1": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "2": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "3": [
+     {
+      "id": "focus",
+      "name": "集目",
+      "stage": 15
+     },
+     {
+      "id": "vocal_up",
+      "name": "ボーカル上昇",
+      "stage": 9
+     },
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     },
+     {
+      "id": "stamina_cost_down",
+      "name": "消費スタミナ低下",
+      "stage": 10
+     }
+    ],
+    "4": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "5": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ]
+   },
+   "activations": []
+  },
+  {
+   "beat": 11,
+   "combo": 11,
+   "cumulative_score": 29591161,
+   "beat_gained_score": 358717,
+   "stamina": {
+    "1": 17460,
+    "2": 11852,
+    "3": 18298,
+    "4": 14082,
+    "5": 13676
+   },
+   "effects": {
+    "1": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "2": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "3": [
+     {
+      "id": "focus",
+      "name": "集目",
+      "stage": 15
+     },
+     {
+      "id": "vocal_up",
+      "name": "ボーカル上昇",
+      "stage": 9
+     },
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     },
+     {
+      "id": "stamina_cost_down",
+      "name": "消費スタミナ低下",
+      "stage": 10
+     }
+    ],
+    "4": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "5": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ]
+   },
+   "activations": []
+  },
+  {
+   "beat": 12,
+   "combo": 12,
+   "cumulative_score": 29943843,
+   "beat_gained_score": 352682,
+   "stamina": {
+    "1": 17460,
+    "2": 11852,
+    "3": 18298,
+    "4": 14082,
+    "5": 13676
+   },
+   "effects": {
+    "1": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "2": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "3": [
+     {
+      "id": "focus",
+      "name": "集目",
+      "stage": 15
+     },
+     {
+      "id": "vocal_up",
+      "name": "ボーカル上昇",
+      "stage": 9
+     },
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     },
+     {
+      "id": "stamina_cost_down",
+      "name": "消費スタミナ低下",
+      "stage": 10
+     }
+    ],
+    "4": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ],
+    "5": [
+     {
+      "id": "combo_continue",
+      "name": "コンボ継続",
+      "stage": null
+     }
+    ]
+   },
+   "activations": []
+  }
+ ]
+}

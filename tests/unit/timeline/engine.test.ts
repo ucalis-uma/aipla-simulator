@@ -272,7 +272,8 @@ describe("simulateTimeline: CT 規則（§3-9・research/08 §2.3）", () => {
         ],
       }),
     ];
-    const notes = Array.from({ length: 12 }, (_, i) => note(i + 1, 2, 3));
+    // pos4 → L1 のAノート（position 1始まり: pos1→L3, 2→L2, 3→L4, 4→L1, 5→L5）
+    const notes = Array.from({ length: 12 }, (_, i) => note(i + 1, 2, 4));
     const result = simulateTimeline(input(notes, lanes));
     const successes = result.activations.filter((a) => a.success);
     expect(successes.map((a) => a.beat)).toEqual([1, 10]);
@@ -282,13 +283,12 @@ describe("simulateTimeline: CT 規則（§3-9・research/08 §2.3）", () => {
   });
 });
 
-describe("simulateTimeline: コンボ（§5.2）", () => {
-  it("成功+1 / no_skill でリセット / コンボ継続で免除", () => {
+describe("simulateTimeline: コンボとA/SPノートのレーン归属（§5.2）", () => {
+  it("A/SPノートは該当レーンのみ挑戦し、成功+1 / no_skill リセット / コンボ継続で免除", () => {
     const lanes = defaultLanes();
     const l1 = lanes[0];
     const l2 = lanes[1];
-    const l3 = lanes[2];
-    if (l1 === undefined || l2 === undefined || l3 === undefined) {
+    if (l1 === undefined || l2 === undefined) {
       throw new Error("fixture broken");
     }
     l1.skills = [
@@ -302,7 +302,7 @@ describe("simulateTimeline: コンボ（§5.2）", () => {
         ],
       }),
     ];
-    // L2: コンボ継続を付与する Pスキル（前半発動）
+    // L2: コンボ継続を付与する Pスキル（b1 前半発動）
     l2.skills = [
       skill({
         id: "pc",
@@ -314,14 +314,21 @@ describe("simulateTimeline: コンボ（§5.2）", () => {
       }),
     ];
     const result = simulateTimeline(
-      input([note(1, 1, 3), note(2, 2, 3), note(3, 1, 3)], lanes),
+      input(
+        [note(1, 1, 0), note(2, 2, 4), note(3, 2, 2), note(4, 2, 3)],
+        lanes,
+      ),
     );
     // b1 ビート: 全レーン +1 → [1,1,1,1,1]
     expect(result.beats[0]?.comboAfter).toEqual([1, 1, 1, 1, 1]);
-    // b2 Aノート: L1 成功(+1), L2 は no_skill だがコンボ継続で維持(1), L3/L4/L5 はリセット(0)
-    expect(result.beats[1]?.comboAfter).toEqual([2, 1, 0, 0, 0]);
-    // b3 ビート: 全レーン +1
-    expect(result.beats[2]?.comboAfter).toEqual([3, 2, 1, 1, 1]);
+    // b2 A(pos4→L1): L1 成功 +1。他レーンは挑戦しないためコンボは変化しない
+    expect(result.beats[1]?.comboAfter).toEqual([2, 1, 1, 1, 1]);
+    // b3 A(pos2→L2): L2 は no_skill だがコンボ継続で維持
+    expect(result.beats[2]?.comboAfter).toEqual([2, 1, 1, 1, 1]);
+    // b4 A(pos3→L4): L4 は no_skill・コンボ継続なし → リセット
+    expect(result.beats[3]?.comboAfter).toEqual([2, 1, 1, 0, 1]);
+    // 挑戦しないレーンの FAIL は記録されない（L1/L2/L4 のみトレース存在）
+    expect(result.activations.filter((a) => !a.success).map((a) => a.lane).sort()).toEqual([2, 4]);
   });
 });
 
@@ -486,9 +493,9 @@ describe("simulateTimeline: 割合型・スケーリング（§5.2）", () => {
         ],
       }),
     ];
-    // b1 ビート（ファン1620）で 428490 積算 → b2 SP: 基本スコア = floor(428490×120/1000) = 51418
+    // b1 ビート（ファン1620）で 428490 積算 → b2 SP(pos1→L3): 基本スコア = floor(428490×120/1000) = 51418
     const result = simulateTimeline(
-      input([note(1, 1, 0), note(2, 3, 0)], lanes, { fanFactorPermil: 1620 }),
+      input([note(1, 1, 0), note(2, 3, 1)], lanes, { fanFactorPermil: 1620 }),
     );
     const ratioEvent = result.beats[1]?.events.find((e) => e.lane === 3);
     expect(ratioEvent?.basicScore).toBe(51418);
@@ -532,8 +539,8 @@ describe("simulateTimeline: 割合型・スケーリング（§5.2）", () => {
         ],
       }),
     ];
-    // b1: ビート+P前半（vocal_up 5段付与）。b2: SP → 有効SkillPower = 1000×(1000+500)/1000 = 1500
-    const result = simulateTimeline(input([note(1, 1, 0), note(2, 3, 0)], lanes));
+    // b1: ビート+P前半（vocal_up 5段付与）。b2: SP(pos1→L3) → 有効SkillPower = 1000×(1000+500)/1000 = 1500
+    const result = simulateTimeline(input([note(1, 1, 0), note(2, 3, 1)], lanes));
     const spEvent = result.beats[1]?.events.find((e) => e.lane === 3);
     expect(spEvent?.skillPowerPermil).toBe(1500);
   });
@@ -557,7 +564,7 @@ describe("simulateTimeline: トレース整合（§8）", () => {
         ],
       }),
     ];
-    const result = simulateTimeline(input([note(1, 1, 3), note(2, 2, 3)], lanes));
+    const result = simulateTimeline(input([note(1, 1, 3), note(2, 2, 4)], lanes));
     const flat = result.beats.flatMap((b) => b.activations);
     expect(flat).toEqual(result.activations);
     const sum = result.beats.reduce((acc, b) => acc + b.gainedScore, 0);

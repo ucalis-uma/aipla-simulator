@@ -50,7 +50,9 @@ export function simulateTimeline(input: SimulateInput): TimelineResult
 - 処理順: メンタル降順（`deck.mental` の大きいレーンから）。同値は `IDOL_PRIORITY_ORDER = [4,2,1,3,5]`【Confirmed: research/01 §2.1】。
 - 各レーンは各位相で **Pスキル1つ + フォト1つ** まで発動できる（「各アイドル1つ→次いでPフォト1つ」research/01 §4-7【Estimate: フォトも1つ/アイドル/位相と解釈】）。
 - 候補選択: 各レーンの `skills` / `photos` 配列の**先頭から**最初の発動可能なもの【Estimate: 上から順】。
-- **前半（ステップ7）**: 全効果行の condition が "none" の無条件スキル/フォトが対象。
+- **前半（ステップ7）**: 全効果行の condition が "none" または "battle_only" のスキル/フォトが対象。
+  （battle_only 行は通常ライブで「除外して評価」のため無条件扱い・実測 order3 の
+  結婚への願望が前半発動することで確認。P3a condition 拡張タグの仕様）
   - 初回発動はここで起こる（初期CT=0のため前半で使用可）。
 - **後半（ステップ11）**: 以下を前半と同一規則で処理。
   - 条件付きスキル/フォト（condition ≠ none を1つでも含む。条件評価はこの時点。`combo>=N` はステップ8更新後のコンボ値、`someone_*` は「他レーンに該当バフが有効」、`self_vocal_lane`/`self_visual_lane` は発動レーンの属性比較）。
@@ -75,9 +77,14 @@ export function simulateTimeline(input: SimulateInput): TimelineResult
 - コンボ更新: 全レーン +1（ビートノートは常に成功【Estimate】）。
 
 ### 5.2 A/SPノート（noteType=2/3）
-- 全レーンが順に（`[1,2,3,4,5]`【Estimate: research/01 §4-3「左から」】）挑戦を試み、以下を満たすレーンが発動:
-  - kind が一致するスキルを持つ（無ければ FAIL `no_skill`）
-  - スタミナ/CT/確率チェック合格（§3-4, §3-5）
+- ノートは `position`（1始まりの優先ランク）で指定されたレーンに属し、**そのレーンのみが挑戦する**。
+  写像: pos1→L3, pos2→L2, pos3→L4, pos4→L1, pos5→L5（POSITION_TO_LANE のインデックス position−1）。
+  **実測 A/SP 発動 18/18 がこの写像と一致**【Confirmed】。他レーンは挑戦しないため FAIL も
+  コンボ変動も発生しない（b49 の SP: L4 のみ FAIL スキル未習得、他レーンは無関係）。
+  ※ 旧版の「全レーンが [1,2,3,4,5] 順で挑戦」説は実測で否定（research/12 Phase 3b 記録）。
+- 挑戦レーンの処理:
+  - kind が一致するスキルを持たない → FAIL `no_skill`、コンボリセット（コンボ継続で免除）
+  - スタミナ/CT/確率チェック合格で発動（§3-4, §3-5）。成功 → コンボ+1、失敗 → リセット
 - 発動レーンのスコアイベント:
   - 基本スコア = `mulPermil(liveStatus[attribute], skillWeightsPermil.active|special)`（切捨て）
   - `skillPowerPermil`: 効果行 `score_get` の `powerPermil`。`scaling` ありで `perStagePermil != null` のとき `mulPermil(power, 1000 + perStage × scaling.ref の実効段数)`（`ref: "vocal_up_stages"` は `snapshot.vocal_up + snapshot.vocal_up_extreme`【Estimate】）。`perStagePermil: null` ならスケーリングなし（P3cフィッティング待ち）。
@@ -98,7 +105,7 @@ export function simulateTimeline(input: SimulateInput): TimelineResult
 |---|---|
 | 段階型バフ（mapEffectToBuffKey が非null） | 対象レーン各々に `ActiveEffect` を付与（stages=行の stages、remainingBeats=durationBeats、limitRelease 引継ぎ）。付与時に対象レーンの同種実効段数が上限超になる分は無視（aggregateBuffs がクランプ）【Confirmed: research/01 §2.2】。`durationBeats` null の段階型は現データになし（あれば永続扱い【Estimate】） |
 | `score_get` / `score_get_by_score_ratio` | §5 のスコアイベント（A/SPはステップ8内、P/フォトは発動位相内で即時） |
-| `stamina_recovery` | `value` を発動対象レーンのスタミナに加算（負値=ダメージ・下限0クランプ）。`durationBeats` があればステップ10で毎ビート `value`【Estimate: 継続型の単位は1回/ビートと解釈】 |
+| `stamina_recovery` | `value` を発動対象レーンのスタミナに加算（負値=ダメージ）。**[0, maxStamina] にクランプ**（maxStamina=デッキスタミナ。実測 order9: L3 18730−866+2560 → 18730 で上限確認【Confirmed】）。`durationBeats` があればステップ10で毎ビート `value`【Estimate: 継続型の単位は1回/ビートと解釈】 |
 | `ct_reduction` | 対象レーンの全スキル `skillCt = max(0, skillCt − value)`（b106 ドリームウエディングの隣接CT−15実測【Confirmed: research/08 §2.5】。Aスキルも短縮対象に含める【Estimate: [T1]に「Aスキル対象外」の明記がある短縮スキルがあるとのみ記載】） |
 | `ct_increase` | 対象レーンの全スキル `skillCt += value`【Estimate: 実測での発火箇所が少なく T4 で検証】 |
 | `effect_amplify` | 対象レーンのアクティブなバフ効果のうち、各BuffKeyで残りビート最大の1インスタンスに `value` 段追加【Confirmed: research/01 §2.2「残りビート数が最長のものだけが増強・延長の対象」】 |
@@ -130,16 +137,23 @@ export function simulateTimeline(input: SimulateInput): TimelineResult
 
 ## 9. 推測・要検証リスト（T4/T5 で判定すること）
 
-1. ビートノートの全レーン成功前提（MISSなし）
-2. A/SP挑戦順 `[1,2,3,4,5]`
-3. スコア乱数の抽選単位（レーンイベントごと）
-4. Pフォト1つ/アイドル/位相の上限解釈
-5. 候補選択の「配列先頭から」
-6. type36 scaling の段数参照（vocal_up+vocal_up_extreme）
-7. ratio 型の基本スコア基準（累積総スコア）
-8. score_type_1/2 の付与先解決
-9. 割合SP b103 の厳密一致（基本スコア定義含む）
-10. ct_reduction の Aスキル包含
-11. 前半/後半発動の実効ビート数規則（§3-10 の自動成立機構）
+※ T4（ビート1〜3の発動15件・スタミナ全点）で以下は解決済み【Confirmed】:
+- A/SPノートは該当レーンのみ挑戦（旧「全レーン挑戦」説は否定）
+- battle_only 行を含むスキルは無条件扱いで前半発動する
+- スタミナ回復は maxStamina でクランプ
+- P前半の各レーン処理 = 無条件Pスキル1つ + 無条件フォト1つ、条件付きは後半
+- L2 フォトの前半/後半発動スケジュール（配列順・CT・条件評価の実装と全点一致）
+
+残る検証項目:
+1. ビートノートの全レーン成功前提（MISSなし）→ T5（no_pop ラーン=MISS の可能性含む）
+2. スコア乱数の抽選単位（レーンイベントごと）
+3. type36 scaling の段数参照（vocal_up+vocal_up_extreme）
+4. ratio 型の基本スコア基準（累積総スコア）
+5. score_type_1/2 の付与先解決
+6. 割合SP b103 の厳密一致（基本スコア定義含む）
+7. ct_reduction の Aスキル包含
+8. コンボのレーン別/全体モデル（combo>=N 条件が絡む b50 以降で判定）
+9. P前半のメンタル降順規則（実測データにメンタル値が無く、発動順 L1→L4→L2→L5→L3 との
+   整合は較正値で担保。絶対値での検証は不可）
 
 既存テスト（234 passed）を壊さないこと。`npx vitest run` と `npx tsc --noEmit` を全グリーンで完了すること。

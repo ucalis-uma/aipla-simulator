@@ -55,6 +55,8 @@ const PERMANENT_BEATS = 1_000_000_000;
 /** レーンの可変状態（research/13 §2） */
 interface LaneState {
   readonly input: LaneInput;
+  /** 最大スタミナ（=デッキスタミナ。回復はここでクランプ・実測 order9 で確認） */
+  readonly maxStamina: number;
   stamina: number;
   combo: number;
   /** このレーンに付与されたアクティブ効果（付与先=このレーン） */
@@ -67,6 +69,12 @@ interface LaneState {
   readonly limitUsed: Map<string, number>;
   /** ステップ7で「前半時点で使用可だった無条件Pスキル」のID集合（後半除外用・§4） */
   readonly unconditionalReadyAtFirstHalf: Set<string>;
+  /**
+   * このビートで発動済みの種別（P/フォト各1回まで・前後半合算）。
+   * 【Estimate: 実測 b2 で L5 が前半にフォト発動済み→後半の条件付きフォト(L5-3)は
+   * b3 に持ち越された（order 11/15）。位相ごと予算説だと b2 後半で発動するはずなので否定】
+   */
+  readonly usedThisBeat: Set<"P" | "photo">;
 }
 
 /** エンジン全体で不変な文脈 */
@@ -112,6 +120,7 @@ export function simulateTimeline(input: SimulateInput): TimelineResult {
 
   const states: LaneState[] = lanes.map((laneInput) => ({
     input: laneInput,
+    maxStamina: laneInput.deck.stamina,
     stamina: laneInput.deck.stamina,
     combo: 0,
     effects: [],
@@ -119,6 +128,7 @@ export function simulateTimeline(input: SimulateInput): TimelineResult {
     skillCt: new Map<string, number>(),
     limitUsed: new Map<string, number>(),
     unconditionalReadyAtFirstHalf: new Set<string>(),
+    usedThisBeat: new Set<"P" | "photo">(),
   }));
 
   const beats: BeatTrace[] = [];
@@ -152,6 +162,7 @@ function processBeat(
   // ビート開始: 前ビートのステップ10で remaining が 0 になった効果を除去（§2）
   for (const state of states) {
     state.effects = state.effects.filter((e) => e.remainingBeats > 0);
+    state.usedThisBeat.clear();
   }
 
   // ---- ステップ1〜6 ----
@@ -194,7 +205,7 @@ function processBeat(
       }
     }
     for (const recovery of state.scheduledRecoveries) {
-      state.stamina = Math.max(0, state.stamina + recovery.value);
+      state.stamina = clampStamina(state, state.stamina + recovery.value);
       recovery.remainingBeats -= 1;
     }
     state.scheduledRecoveries = state.scheduledRecoveries.filter((r) => r.remainingBeats > 0);
@@ -237,11 +248,22 @@ function snapshotOf(state: LaneState): BuffSnapshot {
   return aggregateBuffs(state.effects.filter((e) => e.remainingBeats > 0));
 }
 
+/** スタミナは [0, maxStamina] にクランプ（実測 order9: 18730−866+2560 → 18730 で上限確認） */
+function clampStamina(state: LaneState, value: number): number {
+  return Math.min(state.maxStamina, Math.max(0, value));
+}
+
 /**
  * 対象レーン解決（§7）。
- * 【Unknown】score_type_1/score_type_2 は発動者扱い（T4 のバフmultiset照合で検証）。
- * 【Estimate】vocal_high_1/vocal_type_N の同値順は IDOL_PRIORITY_ORDER、
- * neighbors は左右1レーンずつ、same_lane_other は非バトルで対象なし。
+ *
+ * - score_type_1/score_type_2/single → **スコアラーレーン**（LaneInput.role === "Scorer"）。
+ *   実測: 発動ログの target_idol が全て「白石千紗（スコアラー）」に解決
+ *   （order 1-15・P3a「single は常にスコアラーに解決」注記）。ロール未指定時は発動者にフォールバック。
+ * - vocal_type_N/vocal_high_1 → 属性 vocal のレーンを**デッキ vocal 降順**で N 個。
+ *   実測: vocal_type_3 → [L3, L2, L5]（order4: 千紗626,223 > 沙季L2 401,055 > 沙季L5 339,715、
+ *   L1 334,153 は4位・ダンスレーンL4は対象外）で確認【Confirmed】。
+ * - neighbors → 左右1レーンずつ。実測 order3: L4 の隣接 = L3, L5【Confirmed】。
+ * - all → 全5レーン。center → L3。same_lane_other → 非バトルで対象なし【Estimate】。
  */
 function resolveTargets(
   target: EffectTarget,
@@ -255,12 +277,21 @@ function resolveTargets(
     }
     return found;
   };
+  const scorer = (): LaneState[] => {
+    const found = states.find((s) => s.input.role === "Scorer");
+    return found === undefined ? [self] : [found];
+  };
+  const vocalLanesByDeckVocalDesc = (): LaneState[] =>
+    states
+      .filter((s) => s.input.attribute === "vocal")
+      .sort((a, b) => b.input.deck.vocal - a.input.deck.vocal);
   switch (target) {
     case "self":
+      return [self];
     case "single":
     case "score_type_1":
     case "score_type_2":
-      return [self];
+      return scorer();
     case "center":
       return [byLane(3)];
     case "all":
@@ -277,21 +308,14 @@ function resolveTargets(
       return targets;
     }
     case "vocal_high_1": {
-      let best: LaneState | undefined;
-      for (const s of orderedStates(states)) {
-        if (best === undefined || s.input.deck.vocal > best.input.deck.vocal) {
-          best = s;
-        }
-      }
-      return best === undefined ? [] : [best];
+      const first = vocalLanesByDeckVocalDesc()[0];
+      return first === undefined ? [] : [first];
     }
     case "vocal_type_1":
     case "vocal_type_2":
     case "vocal_type_3": {
       const n = Number(target.slice("vocal_type_".length));
-      return orderedStates(states)
-        .filter((s) => s.input.attribute === "vocal")
-        .slice(0, n);
+      return vocalLanesByDeckVocalDesc().slice(0, n);
     }
     case "same_lane_other":
       return [];
@@ -300,7 +324,8 @@ function resolveTargets(
 
 /**
  * ステップ7/11 共通の Pスキル・フォト発動処理（§4）。
- * 各レーンにつき Pスキル1つ + フォト1つまで。候補は配列先頭から【Estimate】。
+ * 各レーンにつき Pスキル1つ + フォト1つまで（**1ビート合算**・前後半で予算共有）。
+ * 候補は配列先頭から【Estimate】。
  * - first（前半）: 無条件スキルのみ。使用可能だったIDを記録（後半除外用）。
  * - last（後半）: 条件付き（全条件成立時）+ 前半で使用可能だった無条件以外の無条件
  *   （=ステップ9でCTが0になり使用可になったもの。「2回目以降は後半発動」の機構的帰結）。
@@ -314,16 +339,17 @@ function activatePhaseSkills(
   events: LaneScoreEventTrace[],
   beat: number,
 ): void {
-  const usedKinds = new Set<"P" | "photo">();
   for (const skill of [...state.input.skills, ...state.input.photos]) {
     if (skill.kind !== "P" && skill.kind !== "photo") {
       continue; // A/SP はステップ8（settleSkillNote）で処理する
     }
     const kind: "P" | "photo" = skill.kind === "photo" ? "photo" : "P";
-    if (usedKinds.has(kind)) {
+    if (state.usedThisBeat.has(kind)) {
       continue;
     }
-    const isUnconditional = skill.effects.every((e) => e.condition === "none");
+    const isUnconditional = skill.effects.every(
+      (e) => e.condition === "none" || e.condition === "battle_only",
+    );
     if (phase === "first") {
       if (!isUnconditional) {
         continue;
@@ -343,13 +369,18 @@ function activatePhaseSkills(
     const outcome = tryActivate(state, skill, phase, ctx, states, events, beat);
     activations.push(outcome.trace);
     if (outcome.activated) {
-      usedKinds.add(kind);
+      state.usedThisBeat.add(kind);
     }
   }
   // 前半: 使用可だった無条件Pスキルを全て記録（未選択分も後半で発動しないように）
   if (phase === "first") {
     for (const skill of [...state.input.skills, ...state.input.photos]) {
-      const isUnconditional = skill.effects.every((e) => e.condition === "none");
+      if (skill.kind !== "P" && skill.kind !== "photo") {
+        continue;
+      }
+      const isUnconditional = skill.effects.every(
+        (e) => e.condition === "none" || e.condition === "battle_only",
+      );
       if (isUnconditional && isReadyIgnoringStaminaAndProbability(state, skill)) {
         state.unconditionalReadyAtFirstHalf.add(skill.id);
       }
@@ -459,12 +490,16 @@ function tryActivate(
 
   // 確率/成功率ゲート【Estimate: 抽選源の割当はUnknown。min(確率, 成功率) を
   // rng.nextCritical() のベルヌーイに流用。ゴールデン実測データは全て1000でこの経路は通らない】
-  const probability = skill.probabilityPermil ?? 1000;
-  const successRate = successRatePermil(snap, ctx.successBase);
-  const gate = Math.min(probability, successRate);
-  if (gate < 1000 && !ctx.input.rng.nextCritical()) {
-    return { trace: { ...baseTrace, success: false, failReason: "probability" }, activated: false };
-  }
+    const probability = skill.probabilityPermil ?? 1000;
+    // 成功率の基礎値が既に100%（メンタル盛り）の場合、テンション副効果（-1.5%/段）は
+    // メンタル盛りで相殺され成功率は100%のまま（research/01 §2.6。実測 stage:
+    // skill_success_rate 100%×5 の下で全82発動が成立）
+    const successRate =
+      ctx.successBase >= 1000 ? 1000 : successRatePermil(snap, ctx.successBase);
+    const gate = Math.min(probability, successRate);
+    if (gate < 1000 && !ctx.input.rng.nextCritical()) {
+      return { trace: { ...baseTrace, success: false, failReason: "probability" }, activated: false };
+    }
 
   // 発動確定
   state.stamina -= cost;
@@ -530,7 +565,7 @@ function applyEffect(
       const value = effect.value ?? 0;
       for (const target of resolveTargets(effect.target, self, states)) {
         if (effect.durationBeats == null) {
-          target.stamina = Math.max(0, target.stamina + value);
+          target.stamina = clampStamina(target, target.stamina + value);
         } else {
           target.scheduledRecoveries.push({ value, remainingBeats: effect.durationBeats });
         }
@@ -737,8 +772,11 @@ function settleBeatNote(
 }
 
 /**
- * A/SPノートの発動と精算（§5.2）。全レーンが [1,2,3,4,5] 順で挑戦【Estimate】。
- * 成功レーンはコンボ+1、未発動/FAIL レーンはコンボリセット（コンボ継続で免除）。
+ * A/SPノートの発動と精算（§5.2）。
+ *
+ * ノートは position（1始まりの優先ランク）で指定されたレーンに属し、**そのレーンのみ**が
+ * 挑戦する（実測 A/SP 発動 18/18 が pos→レーン写像と一致: pos1→L3, pos2→L2, pos3→L4,
+ * pos4→L1, pos5→L5。他レーンは挑戦しないため FAIL・コンボ変動も発生しない）。
  * 1スキルに複数スコア行がある場合は行ごとに独立イベント（§5.2【Estimate】）。
  */
 function settleSkillNote(
@@ -749,92 +787,102 @@ function settleSkillNote(
   events: LaneScoreEventTrace[],
 ): void {
   const kind: SkillKind = note.noteType === 2 ? "A" : "SP";
-  const succeeded = new Set<LaneState>();
-  const failed = new Set<LaneState>();
-
-  for (const state of states) {
-    const candidates = state.input.skills.filter((s) => s.kind === kind);
-    if (candidates.length === 0) {
-      activations.push({
-        beat: note.beat,
-        phase: "main",
-        lane: state.input.lane,
-        skillId: "",
-        kind,
-        success: false,
-        failReason: "no_skill",
-      });
-      failed.add(state);
-      continue;
-    }
-    const snap = snapshotOf(state);
-    let chosen: SkillDef | null = null;
-    let blockedStamina = false;
-    let costOfChosen = 0;
-    for (const skill of candidates) {
-      if (skill.ct != null && (state.skillCt.get(skill.id) ?? 0) > 0) {
-        continue; // in_ct
-      }
-      const cost = skill.staminaCost == null ? 0 : mulPermil(skill.staminaCost, consumptionMultiplierPermil(snap));
-      if (state.stamina < cost) {
-        blockedStamina = true;
-        continue;
-      }
-      const probability = skill.probabilityPermil ?? 1000;
-      const successRate = successRatePermil(snap, ctx.successBase);
-      const gate = Math.min(probability, successRate);
-      if (gate < 1000 && !ctx.input.rng.nextCritical()) {
-        continue; // probability
-      }
-      chosen = skill;
-      costOfChosen = cost;
-      break;
-    }
-    if (chosen === null) {
-      activations.push({
-        beat: note.beat,
-        phase: "main",
-        lane: state.input.lane,
-        skillId: candidates[0]?.id ?? "",
-        kind,
-        success: false,
-        failReason: blockedStamina ? "stamina_short" : "in_ct",
-      });
-      failed.add(state);
-      continue;
-    }
-    // 発動: スタミナ消費 → CT設定 → 効果適用（research/13 §5.2・§6。上から順【Confirmed】）
-    state.stamina -= costOfChosen;
-    if (chosen.ct != null) {
-      // 内部CTは CT−1 初期化（research/08 §2.3 実測則 gap ≥ CT−1。tryActivate のコメント参照）
-      state.skillCt.set(chosen.id, Math.max(0, chosen.ct - 1));
-    }
-    let gained = 0;
-    for (const effect of chosen.effects) {
-      if (effect.condition === "battle_only") {
-        continue;
-      }
-      gained += applyEffect(state, effect, chosen, ctx, states, events, note.beat);
-    }
+  if (note.position < 1 || note.position > 5) {
+    throw new Error(
+      `settleSkillNote: A/SP note must have position 1-5, got ${note.position} at beat ${note.beat}`,
+    );
+  }
+  const mappedLane = POSITION_TO_LANE[note.position - 1];
+  if (mappedLane === undefined) {
+    throw new Error(`settleSkillNote: POSITION_TO_LANE missing index ${note.position - 1}`);
+  }
+  const laneNum: LaneNumber = mappedLane;
+  const state = states.find((s) => s.input.lane === laneNum);
+  if (state === undefined) {
+    throw new Error(
+      `settleSkillNote: lane state missing for position ${note.position} (L${laneNum})`,
+    );
+  }
+  const candidates = state.input.skills.filter((s) => s.kind === kind);
+  if (candidates.length === 0) {
     activations.push({
       beat: note.beat,
       phase: "main",
-      lane: state.input.lane,
-      skillId: chosen.id,
+      lane: laneNum,
+      skillId: "",
       kind,
-      success: true,
-      staminaCost: costOfChosen,
-      gainedScore: gained > 0 ? gained : undefined,
+      success: false,
+      failReason: "no_skill",
     });
-    succeeded.add(state);
-  }
-
-  // コンボ更新（§5.2: 成功+1 / MISS リセット・コンボ継続で免除）
-  for (const state of states) {
-    if (succeeded.has(state)) {
-      state.combo += 1;
-    } else if (failed.has(state) && snapshotOf(state).combo_continue === 0) {
+    // MISS: コンボリセット（コンボ継続で免除・research/01 §2.2）
+    if (snapshotOf(state).combo_continue === 0) {
       state.combo = 0;
     }
+    return;
   }
+  const snap = snapshotOf(state);
+  let chosen: SkillDef | null = null;
+  let blockedStamina = false;
+  let costOfChosen = 0;
+  for (const skill of candidates) {
+    if (skill.ct != null && (state.skillCt.get(skill.id) ?? 0) > 0) {
+      continue; // in_ct
+    }
+    const cost = skill.staminaCost == null ? 0 : mulPermil(skill.staminaCost, consumptionMultiplierPermil(snap));
+    if (state.stamina < cost) {
+      blockedStamina = true;
+      continue;
+    }
+    const probability = skill.probabilityPermil ?? 1000;
+    // メンタル盛り相殺（tryActivate のコメント参照）
+    const successRate =
+      ctx.successBase >= 1000 ? 1000 : successRatePermil(snap, ctx.successBase);
+    const gate = Math.min(probability, successRate);
+    if (gate < 1000 && !ctx.input.rng.nextCritical()) {
+      continue; // probability
+    }
+    chosen = skill;
+    costOfChosen = cost;
+    break;
+  }
+  if (chosen === null) {
+    activations.push({
+      beat: note.beat,
+      phase: "main",
+      lane: laneNum,
+      skillId: candidates[0]?.id ?? "",
+      kind,
+      success: false,
+      failReason: blockedStamina ? "stamina_short" : "in_ct",
+    });
+    if (snapshotOf(state).combo_continue === 0) {
+      state.combo = 0;
+    }
+    return;
+  }
+  // 発動: スタミナ消費 → CT設定 → 効果適用（research/13 §5.2・§6。上から順【Confirmed】）
+  state.stamina -= costOfChosen;
+  if (chosen.ct != null) {
+    // 内部CTは CT−1 初期化（research/08 §2.3 実測則 gap ≥ CT−1。tryActivate のコメント参照）
+    state.skillCt.set(chosen.id, Math.max(0, chosen.ct - 1));
+  }
+  let gained = 0;
+  for (const effect of chosen.effects) {
+    if (effect.condition === "battle_only") {
+      continue;
+    }
+    gained += applyEffect(state, effect, chosen, ctx, states, events, note.beat);
+  }
+  activations.push({
+    beat: note.beat,
+    phase: "main",
+    lane: laneNum,
+    skillId: chosen.id,
+    kind,
+    success: true,
+    staminaCost: costOfChosen,
+    gainedScore: gained > 0 ? gained : undefined,
+  });
+  // 成功: コンボ+1（§5.2）
+  state.combo += 1;
 }

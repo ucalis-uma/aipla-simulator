@@ -141,6 +141,12 @@ export interface LaneInput {
   lane: LaneNumber;
   /** レーン属性（ステージ laneAttributes から解決） */
   attribute: LaneAttribute;
+  /**
+   * 編成上の役割（verification_data の role: "Scorer"/"Buffer"/"Supporter"）。
+   * score_type_1/score_type_2/single の対象解決に使う（実測では常にスコアラーに解決）。
+   * 省略時は発動レーン自身にフォールバック。
+   */
+  role?: "Scorer" | "Buffer" | "Supporter";
   /** デッキステータス（Phase 1 computeDeckStatus の deck 値。ライブ中バフ乗算の基準） */
   deck: StatValues<number>;
   /** カードスキル（A/SP/P） */
@@ -177,8 +183,12 @@ export interface ChartNote {
   beat: number;
   /** 1=ビート, 2=A, 3=SP */
   noteType: 1 | 2 | 3;
-  /** グリッド位置 0-4（position → レーンは constants.POSITION_TO_LANE） */
-  position: 0 | 1 | 2 | 3 | 4;
+  /**
+   * グリッド位置。ビートノートは 0（全レーン共通ノート）。A/SP ノートは 1-5 の
+   * 発動優先ランク（1=センターL3, 2=左L2, 3=右L4, 4=左端L1, 5=右端L5。
+   * 実測 A/SP 発動 18/18 と一致。research/13 §5.2）。
+   */
+  position: 0 | 1 | 2 | 3 | 4 | 5;
 }
 
 /**
@@ -245,7 +255,7 @@ export interface LaneScoreEventTrace {
 export interface BeatTrace {
   beat: number;
   noteType: 1 | 2 | 3;
-  position: 0 | 1 | 2 | 3 | 4;
+  position: 0 | 1 | 2 | 3 | 4 | 5;
   /** 発動トレース（処理順・スコア精算前後を含む） */
   activations: ActivationTrace[];
   /** スコアイベント（レーン別。スコア精算が行われたビートのみ） */
