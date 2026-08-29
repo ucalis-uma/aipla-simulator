@@ -750,7 +750,7 @@
       "effects": [
         {
           "type": "score_get",
-          "powerPermil": 2000,
+          "powerPermil": 200,
           "target": "self",
           "condition": "someone_critical_coeff_up",
           "durationBeats": null,
@@ -874,7 +874,7 @@
       "effects": [
         {
           "type": "score_get",
-          "powerPermil": 2500,
+          "powerPermil": 250,
           "target": "self",
           "condition": "combo>=80",
           "durationBeats": null,
@@ -904,7 +904,7 @@
       "effects": [
         {
           "type": "score_get",
-          "powerPermil": 4000,
+          "powerPermil": 400,
           "target": "self",
           "condition": "none",
           "durationBeats": null,
@@ -926,7 +926,7 @@
       "effects": [
         {
           "type": "score_get",
-          "powerPermil": 4000,
+          "powerPermil": 400,
           "target": "self",
           "condition": "none",
           "durationBeats": null,
@@ -948,7 +948,7 @@
       "effects": [
         {
           "type": "score_get",
-          "powerPermil": 8500,
+          "powerPermil": 850,
           "target": "self",
           "condition": "self_vocal_lane",
           "durationBeats": null,
@@ -978,7 +978,7 @@
       "effects": [
         {
           "type": "score_get",
-          "powerPermil": 4500,
+          "powerPermil": 450,
           "target": "self",
           "condition": "combo>=100",
           "durationBeats": null,

@@ -349,25 +349,45 @@ describe("T5 debug: 全ビート比検査", () => {
       l1samples.push(`b${bt.beat}:pop=${pop}:basic=${e.basicScore}:b1=${e.b1Permil}:cb=${e.comboFactorPermil}:A=${(pop / denom).toFixed(5)}`);
     }
     console.log("[FIT] L1 samples:", l1samples.join(" | "));
-    const probe = [6, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150];
-    for (const lane of [3, 4, 5] as LaneNumber[]) {
-      const rows: string[] = [];
-      for (const bt of result.beats) {
-        if (!probe.includes(bt.beat) || bt.noteType !== 1) continue;
-        const row = t5.timeline.find((t) => t.beat === bt.beat);
-        const e = bt.events.find((x) => x.lane === lane);
-        if (!row || !e) continue;
-        const pop = row.pops?.[String(lane)];
-        if (pop == null) continue;
-        const denom =
-          e.basicScore * (e.b1Permil / 1000) * (e.comboFactorPermil / 1000) * (e.fanFactorPermil / 1000) * (e.critFactorPermil / 1000);
-        const snap = bt.buffSnapshots[lane - 1];
-        if (!snap) continue;
-        rows.push(
-          `b${bt.beat}:A=${(pop / denom).toFixed(4)}(cb=${e.comboFactorPermil},b1=${e.b1Permil},basic=${e.basicScore},csu=${snap.combo_score_up},su=${snap.score_up},up=${snap.vocal_up}+${snap.vocal_up_extreme},bo=${snap.vocal_boost},fo=${snap.focus})`,
-        );
-      }
-      console.log(`[TS] L${lane}:`, rows.join("\n  "));
+  });
+
+  it("A/SP イベントの離散乱数検定（バフ進化+type36検証）", () => {
+    // A/SP ビートではオーナーレーンのポップ = そのスキルのスコア行合計（フォトと無干渉）。
+    // r = pop / E(1000) × 1000 が 950-1050 の整数になればモデル完全一致。
+    const POSITION_TO_LANE = [3, 2, 4, 1, 5];
+    for (const bt of result.beats) {
+      if (bt.noteType === 1 || bt.beat < 4) continue;
+      const owner = POSITION_TO_LANE[bt.position - 1];
+      const row = t5.timeline.find((t) => t.beat === bt.beat);
+      if (!row) continue;
+      const pop = row.pops?.[String(owner)];
+      if (pop == null || pop === 0) continue;
+      const evs = bt.events.filter((e) => e.lane === owner);
+      const e1000 = evs.reduce(
+        (s, e) =>
+          s +
+          computeEventScore({
+            basicScore: e.basicScore,
+            skillPowerPermil: e.skillPowerPermil,
+            b1Permil: e.b1Permil,
+            comboFactorPermil: e.comboFactorPermil,
+            fanFactorPermil: e.fanFactorPermil,
+            stageFactorPermil: 1000,
+            randPermil: 1000,
+            critFactorPermil: e.critFactorPermil,
+            roundingPolicy: "sequential",
+          }),
+        0,
+      );
+      const r = (pop / e1000) * 1000;
+      const flag = r >= 950 && r <= 1050 ? "OK" : "OUT";
+      const detail = evs
+        .map(
+          (e) =>
+            `pow=${e.skillPowerPermil},basic=${e.basicScore},b1=${e.b1Permil},cb=${e.comboFactorPermil},fan=${e.fanF ?? e.fanFactorPermil},crit=${e.critFactorPermil}${e.isRatioScore ? ",RATIO" : ""}`,
+        )
+        .join(" || ");
+      console.log(`[A/SP] b${bt.beat} L${owner} pop=${pop} E=${e1000} r=${r.toFixed(2)} [${flag}] ${detail}`);
     }
   });
 
