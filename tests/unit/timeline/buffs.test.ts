@@ -222,12 +222,15 @@ describe("aggregateBuffs", () => {
     expect(snap.vocal_up).toBe(24);
   });
 
-  it("上限解放変数型は基底キーに合算される（tension_up 4 + tension_limit 3 → 7）", () => {
+  it("上限解放変数型は段数を加算せず上限のみ拡張する（実測確定: T5 b2 A検算）", () => {
+    // tension_limit 3段を 7 に合算する旧仕様は実測で否定された:
+    // combo_score_up 6段+limit10 を16段とすると b2 Aスコアが 41.8M（実測 25.58M の
+    // 1.63 倍=乱数域外）。6段（limit は上限拡張のみ）なら 25.7M（乱数 ~995）で整合。
     const snap = aggregateBuffs([
       effect({ type: "tension_up", stages: 4, sourceSkillId: "s1" }),
       effect({ type: "tension_limit", stages: 3, sourceSkillId: "s2" }),
     ]);
-    expect(snap.tension_up).toBe(7);
+    expect(snap.tension_up).toBe(4);
     expect(snap.combo_score_up).toBe(0);
   });
 

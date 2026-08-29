@@ -260,7 +260,10 @@ export function aggregateBuffs(active: readonly ActiveEffect[]): BuffSnapshot {
     caps.set(mapped.key, prevCap === undefined ? cap : Math.max(prevCap, cap));
     if (mapped.key === "combo_continue") {
       snapshot.combo_continue += 1;
-    } else {
+    } else if (!mapped.limitRelease) {
+      // 上限解放変数型（tension_limit 等）は段数を加算しない（解放=上限拡張のみ）。
+      // 【実測根拠】b2 の Aスキル検算: combo_score_up 6段+limit10 を 16段として計算すると
+      // 41.8M（実測 25.58M の 1.63 倍=乱数域外）、6段なら 25.7M（乱数 ~995 で整合）。
       snapshot[mapped.key] += effect.stages;
     }
   }

@@ -244,6 +244,12 @@ export interface LaneScoreEventTrace {
   skillPowerPermil: number;
   /** computeEventScore に渡った B1 permil */
   b1Permil: number;
+  /** computeEventScore に渡ったコンボファクター permil（割合型は 1000） */
+  comboFactorPermil: number;
+  /** computeEventScore に渡ったファンファクター permil（割合型は 1000） */
+  fanFactorPermil: number;
+  /** 割合型スコア（score_get_by_score_ratio）か。基本スコアの基準が累積スコア */
+  isRatioScore: boolean;
   /** スコア乱数 permil */
   randPermil: number;
   /** クリティカル係数 permil（非発生 1000） */

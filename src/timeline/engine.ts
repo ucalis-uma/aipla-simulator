@@ -616,23 +616,25 @@ function applyEffect(
 }
 
 /**
- * 増強: BuffKey ごとに残りビート最大の1インスタンスへ段数加算
- * （research/01 §2.2「残りビート数が最長のものだけが増強・延長の対象」【Confirmed】）。
+ * 増強: 残りビート最大の1インスタンスへ段数加算
+ * （research/01 §2.2「残りビート数が最長のものだけが増強・延長の対象」【Confirmed】。
+ * 対象は全 BuffKey から**単一**インスタンス（実測 b3: photo-L5-3 の +2 は
+ * コンボスコア上昇(残42b)のみに付き、ライブ中ステータスは変化しない — 
+ * 実測 L3 stat が b4 で不変のことから確認。キー毎の選択は否定される）
  */
 function amplifyLongestRemaining(state: LaneState, value: number): void {
-  const longest = new Map<string, ActiveEffect>();
+  let longest: ActiveEffect | null = null;
   for (const active of state.effects) {
     const mapped = mapEffectToBuffKey(active.type);
     if (mapped === null) {
       continue;
     }
-    const current = longest.get(mapped.key);
-    if (current === undefined || active.remainingBeats > current.remainingBeats) {
-      longest.set(mapped.key, active);
+    if (longest === null || active.remainingBeats > longest.remainingBeats) {
+      longest = active;
     }
   }
-  for (const active of longest.values()) {
-    active.stages += value;
+  if (longest !== null) {
+    longest.stages += value;
   }
 }
 
@@ -706,6 +708,9 @@ function settleScoreGet(
     basicScore,
     skillPowerPermil: effectivePower,
     b1Permil: b1,
+    comboFactorPermil: comboF,
+    fanFactorPermil: fanF,
+    isRatioScore: isRatio,
     randPermil: rand,
     critFactorPermil: critF,
     gainedScore: score,
@@ -764,6 +769,9 @@ function settleBeatNote(
       basicScore: basic,
       skillPowerPermil: 1000,
       b1Permil: b1,
+      comboFactorPermil: comboF,
+      fanFactorPermil: fanF,
+      isRatioScore: false,
       randPermil: rand,
       critFactorPermil: critF,
       gainedScore: score,
