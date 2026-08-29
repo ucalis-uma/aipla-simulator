@@ -5,7 +5,7 @@
  * 実測 gained との比 (D/E) を検査する。比が [0.95, 1.05] 外のビート = モデル誤りの候補。
  * イベント数 k=1 のビート（A/SP主体）は離散乱数検定も行う。
  */
-import { describe, it } from "vitest";
+import { describe, it, expect } from "vitest";
 import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -172,12 +172,20 @@ const LANE_ATTRIBUTE: Record<LaneNumber, "vocal" | "dance" | "visual"> = {
   5: "vocal",
 };
 
+/**
+ * ステップ7/11 のレーン処理順の校正値（メンタル降順の相対値）。
+ * 【T5実測確定】全発動ログのステップ内順から真の優先順は L1 > L3 > L4 > L2 > L5:
+ * - b51 後半: L1(photo-L1-2) → L3(fest-03-3) → L4(photo-L4-3)
+ * - b47 後半: L3(photo-L3-2) → L4(photo-L4-1) → L2(photo-L2-3)
+ * - b3 後半: L2(photo-L2-3) → L5(photo-L5-3)
+ * （旧値は L3 を最下位に置き b47/b51 の順序と矛盾した）
+ */
 const CALIBRATED_MENTAL: Record<LaneNumber, number> = {
   1: 105,
-  2: 103,
-  3: 101,
-  4: 104,
-  5: 102,
+  2: 102,
+  3: 104,
+  4: 103,
+  5: 101,
 };
 
 function buildLanes(): LaneInput[] {
@@ -848,6 +856,59 @@ describe("T5 debug: 全ビート比検査", () => {
     }
   });
 
+  it("L3バフ完全再構築: vocal系列比較+発動ログ+バフ源定義", () => {
+    const lanes = buildLanes();
+    const res = simulateTimeline(buildInput(lanes));
+    // 1) 全バフ源の定義（L3に付与/延長し得るもの全て）
+    console.log("[SRC] ===== L3 に作用するスキル/フォト定義 =====");
+    for (const lane of lanes) {
+      for (const s of [...lane.skills, ...lane.photos]) {
+        const touchesL3 = s.effects.some(
+          (e) =>
+            e.target === "self" && lane.lane === 3
+            || e.target === "score_type_1" || e.target === "score_type_2"
+            || e.target === "single" || e.target === "center"
+            || e.target === "all" || e.target === "neighbors" && lane.lane === 4
+            || e.type === "effect_extension",
+        );
+        if (!touchesL3) continue;
+        console.log(
+          `[SRC] L${lane.lane} ${s.id}[${s.kind}] ct=${s.ct ?? "-"} effects=${JSON.stringify(
+            s.effects.map((e) => `${e.type}${e.type === "effect_amplify" || e.type === "effect_extension" ? `+${e.value}` : e.stages != null ? `+${e.stages}` : e.powerPermil != null ? `${e.powerPermil}‰` : ""}[${e.durationBeats ?? "∞"}]→${e.target}`),
+          )}`,
+        );
+      }
+    }
+    // 2) sim の L3 vocal 乗率系列（変化点のみ）+ 実測
+    const V = 626223;
+    const liveMultV = (snap: { vocal_up: number; vocal_up_extreme: number; vocal_boost: number }) =>
+      1000 + 50 * (snap.vocal_up + snap.vocal_up_extreme) + 75 * snap.vocal_boost;
+    console.log("[VOC] beat simMult sim(up/ext/boost) | measMult");
+    let prevSim = "";
+    for (const bt of res.beats) {
+      const snap = bt.buffSnapshots[2];
+      if (!snap) continue;
+      const m = liveMultV(snap);
+      const key = m.toFixed(0);
+      const measRow = t5.timeline.find((t) => t.beat === bt.beat);
+      const meas = measRow?.stat?.["3"];
+      if (key !== prevSim) {
+        console.log(
+          `[VOC] b${bt.beat} sim=${(m / 1000).toFixed(3)} (up=${snap.vocal_up} ext=${snap.vocal_up_extreme} boost=${snap.vocal_boost}) | meas=${meas != null ? (meas / V).toFixed(3) : "-"}`,
+        );
+        prevSim = key;
+      }
+    }
+    // 3) 発動ログ b30-b70（位相付き）
+    console.log("[ACT] ===== b30-b70 発動 =====");
+    for (const bt of res.beats.filter((b) => b.beat >= 30 && b.beat <= 70)) {
+      if (bt.activations.length === 0) continue;
+      console.log(
+        `[ACT] b${bt.beat}[${bt.noteType}]: ${bt.activations.map((a) => `L${a.lane}:${a.skillId || "-"}(${a.phase[0]})${a.success ? "" : "!"}${a.failReason ?? ""}`).join(" ")}`,
+      );
+    }
+  });
+
   it("A/SP イベントの離散乱数検定（バフ進化+type36検証）", () => {
     // A/SP ビートではオーナーレーンのポップ = そのスキルのスコア行合計（フォトと無干渉）。
     // r = pop / E(1000) × 1000 が 950-1050 の整数になればモデル完全一致。
@@ -970,5 +1031,60 @@ describe("T5 debug: 全ビート比検査", () => {
       path.join(repoRoot, "tests/golden/fixtures/t5_report.json"),
       JSON.stringify({ bad: bad.map((d) => ({ beat: d.beat, ratio: d.ratio, measured: d.measured, sim: d.simTotal })) }, null, 1),
     );
+  });
+});
+
+describe("T5 debug: 発動スケジュール突合（sim 82 vs 実測 82）", () => {
+  it("全発動の (beat, lane, skill, kind) が順序込みで一致する", () => {
+    // フォトの実測ログ名は「最後の効果行の種別」から導出されるカテゴリ名
+    // （例: L3-2=[score_get,extension]→強化効果延長スキル, L5-4=[score_get,amplify]→増強, L4-4=[score_get,ccu]→クリティカル）
+    const PHOTO_CATEGORY: Record<string, string> = {
+      score_get: "スコア獲得スキル",
+      score_get_by_score_ratio: "スコア獲得スキル",
+      score_up: "スコアUPスキル",
+      a_skill_score_up: "AスキルスコアUPスキル",
+      vocal_boost: "Voブーストスキル",
+      effect_extension: "強化効果延長スキル",
+      effect_amplify: "強化効果増強スキル",
+      critical_coeff_up: "クリティカルスキル",
+      skill_success_up: "成功率UPスキル",
+    };
+    const displayName = (id: string): string => {
+      const s = skillsGolden.skills.find((x) => x.id === id);
+      if (!s) return id;
+      if (s.kind === "photo") {
+        const last = s.effects[s.effects.length - 1];
+        return PHOTO_CATEGORY[last?.type ?? ""] ?? id;
+      }
+      // 全角チルダの表記ゆれ（golden: ～ U+FF5E / 実測ログ: 〜 U+301C）を正規化
+      return s.name.replace(/～/g, "〜");
+    };
+    const FAIL_NAME = "FAIL スキル未習得";
+    const sim = result.activations;
+    const meas = t5.activations;
+    const diffs: string[] = [];
+    if (sim.length !== meas.length) {
+      diffs.push(`件数不一致: sim=${sim.length} meas=${meas.length}`);
+    }
+    for (let i = 0; i < Math.min(sim.length, meas.length); i++) {
+      const s = sim[i] as (typeof sim)[number];
+      const m = meas[i] as (typeof meas)[number];
+      const sName = s.skillId === "" ? FAIL_NAME : displayName(s.skillId);
+      const sKind = s.kind === "photo" ? "Photo" : s.kind;
+      const mKind = m.skill_type;
+      const ok =
+        s.beat === m.beat && s.lane === m.lane && sName === m.skill_name && sKind === mKind;
+      if (!ok) {
+        diffs.push(
+          `#${i + 1} sim=(b${s.beat},L${s.lane},${sName},${sKind},${s.phase},${s.success ? "ok" : `fail:${s.failReason ?? ""}`}) meas=(b${m.beat},L${m.lane},${m.skill_name},${mKind})`,
+        );
+      }
+    }
+    if (diffs.length > 0) {
+      console.log(`[ACTDIFF] ${diffs.length}/${meas.length} 件の不一致:\n${diffs.join("\n")}`);
+    } else {
+      console.log(`[ACTDIFF] 全 ${meas.length} 件が順序込みで完全一致`);
+    }
+    expect(diffs, "発動スケジュールの不一致").toEqual([]);
   });
 });

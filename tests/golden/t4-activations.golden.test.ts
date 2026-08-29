@@ -192,15 +192,19 @@ const LANE_ATTRIBUTE: Record<LaneNumber, "vocal" | "dance" | "visual"> = {
 };
 
 /**
- * メンタルの較正値（実測データにメンタル値なし → P前半の実測発動順
- * L1→L4→L2→L5→L3 と整合する相対値。research/13 §9-9）
+ * メンタルの較正値（実測データにメンタル値なし → P前半/後半の実測発動順と整合する相対値）。
+ * 【T5実測確定】全発動ログのステップ内順から真の優先順は L1 > L3 > L4 > L2 > L5:
+ * - b51 後半: L1(photo-L1-2) → L3(fest-03-3) → L4(photo-L4-3)
+ * - b47 後半: L3(photo-L3-2) → L4(photo-L4-1) → L2(photo-L2-3)
+ * - b3 後半: L2(photo-L2-3) → L5(photo-L5-3)
+ * research/13 §9-9（旧値は L3 最下位で b47/b51 と矛盾）
  */
 const CALIBRATED_MENTAL: Record<LaneNumber, number> = {
   1: 105,
-  2: 103,
-  3: 101,
-  4: 104,
-  5: 102,
+  2: 102,
+  3: 104,
+  4: 103,
+  5: 101,
 };
 
 function buildLanes(): LaneInput[] {

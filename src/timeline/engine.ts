@@ -67,8 +67,6 @@ interface LaneState {
   readonly skillCt: Map<string, number>;
   /** フォトID → ライブ中発動回数（limitPerLive） */
   readonly limitUsed: Map<string, number>;
-  /** ステップ7で「前半時点で使用可だった無条件Pスキル」のID集合（後半除外用・§4） */
-  readonly unconditionalReadyAtFirstHalf: Set<string>;
   /**
    * このビートで発動済みの種別（P/フォト各1回まで・前後半合算）。
    * 【Estimate: 実測 b2 で L5 が前半にフォト発動済み→後半の条件付きフォト(L5-3)は
@@ -85,6 +83,13 @@ interface EngineCtx {
   readonly policy: RoundingPolicy;
   /** 累積総スコア（ratio 型スキルの基本スコア基準・§5.2） */
   readonly cumulative: { value: number };
+  /**
+   * 【T5実測確定】グローバル成功ノート数（combo>=N 条件の判定基準）。
+   * ビートノートで +1（全レーン成功扱い）、A/SP は成功時 +1。実測: L4-3(combo>=50)@b51・
+   * L4-4/L1-3(combo>=80)@b81・L5-4(combo>=100)@b101 の発火ビートは
+   * 「b49 SP FAIL を数えない全曲共通カウンタ」で完全一致（レーン別コンボは否定）。
+   */
+  readonly globalCombo: { value: number };
   /** 【一時・T5調査用】仮説切替（既定: all / lane。SimulateInput.debugOptions 参照） */
   readonly debug: { extensionMode: "all" | "longest"; comboBasis: "lane" | "global" };
   /** 処理済みビートノート数（comboBasis="global" 時のコンボ基準。増加前値を使用） */
@@ -120,6 +125,7 @@ export function simulateTimeline(input: SimulateInput): TimelineResult {
     successBase: input.successBasePermil ?? 1000,
     policy: input.roundingPolicy ?? "sequential",
     cumulative: { value: 0 },
+    globalCombo: { value: 0 },
     debug: {
       extensionMode: input.debugOptions?.extensionMode ?? "all",
       comboBasis: input.debugOptions?.comboBasis ?? "lane",
@@ -136,7 +142,6 @@ export function simulateTimeline(input: SimulateInput): TimelineResult {
     scheduledRecoveries: [],
     skillCt: new Map<string, number>(),
     limitUsed: new Map<string, number>(),
-    unconditionalReadyAtFirstHalf: new Set<string>(),
     usedThisBeat: new Set<"P" | "photo">(),
   }));
 
@@ -191,6 +196,7 @@ function processBeat(
   if (note.noteType === 1) {
     settleBeatNote(note, ctx, states, snapshotsAtScoring, events);
     ctx.beatNotesProcessed.value += 1;
+    ctx.globalCombo.value += 1; // ビートノートは常に成功（globalCombo 条件用）
     for (const state of states) {
       state.combo += 1; // ビートノートは常に成功【Estimate: research/13 §9-1】
     }
@@ -336,9 +342,13 @@ function resolveTargets(
  * ステップ7/11 共通の Pスキル・フォト発動処理（§4）。
  * 各レーンにつき Pスキル1つ + フォト1つまで（**1ビート合算**・前後半で予算共有）。
  * 候補は配列先頭から【Estimate】。
- * - first（前半）: 無条件スキルのみ。使用可能だったIDを記録（後半除外用）。
- * - last（後半）: 条件付き（全条件成立時）+ 前半で使用可能だった無条件以外の無条件
- *   （=ステップ9でCTが0になり使用可になったもの。「2回目以降は後半発動」の機構的帰結）。
+ * - first（前半）: 無条件スキルのみ。
+ * - last（後半）: 条件付き（全条件成立時）+ 無条件（ステップ9でCTが0になり
+ *   使用可になったもの。「2回目以降は後半発動」の機構的帰結）。
+ *   同ビート内の二重発火は usedThisBeat（前後半予算共有）が担保する。
+ *   【T5実測確定】旧実装の「前半使用可だった無条件を後半除外する永続集合」は
+ *   b1 でフォト予算を取られた無条件フォト（photo-L1-2 等）が以後の後半発動で
+ *   永久に block される誤りで、実測（photo-L1-2 の b51 後半発火）と矛盾したため削除。
  */
 function activatePhaseSkills(
   state: LaneState,
@@ -365,11 +375,7 @@ function activatePhaseSkills(
         continue;
       }
     } else {
-      // 後半: 前半で使用可能だった無条件は除外（§4）
-      if (isUnconditional && state.unconditionalReadyAtFirstHalf.has(skill.id)) {
-        continue;
-      }
-      if (!isUnconditional && !conditionsHold(state, skill, states)) {
+      if (!isUnconditional && !conditionsHold(state, skill, states, ctx)) {
         continue;
       }
     }
@@ -380,20 +386,6 @@ function activatePhaseSkills(
     activations.push(outcome.trace);
     if (outcome.activated) {
       state.usedThisBeat.add(kind);
-    }
-  }
-  // 前半: 使用可だった無条件Pスキルを全て記録（未選択分も後半で発動しないように）
-  if (phase === "first") {
-    for (const skill of [...state.input.skills, ...state.input.photos]) {
-      if (skill.kind !== "P" && skill.kind !== "photo") {
-        continue;
-      }
-      const isUnconditional = skill.effects.every(
-        (e) => e.condition === "none" || e.condition === "battle_only",
-      );
-      if (isUnconditional && isReadyIgnoringStaminaAndProbability(state, skill)) {
-        state.unconditionalReadyAtFirstHalf.add(skill.id);
-      }
     }
   }
 }
@@ -419,12 +411,13 @@ function conditionsHold(
   state: LaneState,
   skill: SkillDef,
   states: readonly LaneState[],
+  ctx: EngineCtx,
 ): boolean {
   return skill.effects.every(
     (e) =>
       e.condition === "none" ||
       e.condition === "battle_only" ||
-      evaluateCondition(e.condition, state, states),
+      evaluateCondition(e.condition, state, states, ctx),
   );
 }
 
@@ -432,10 +425,14 @@ function evaluateCondition(
   condition: EffectCondition,
   self: LaneState,
   states: readonly LaneState[],
+  ctx: EngineCtx,
 ): boolean {
-  const others = states.filter((s) => s.input.lane !== self.input.lane);
-  const hasActive = (lane: LaneState, type: SkillEffect["type"]): boolean =>
-    lane.effects.some((e) => e.type === type);
+  // 【T5実測確定】someone_* は自レーンを含む全レーンが対象。
+  // 実測: photo-L3-2 / photo-L4-1（someone_critical_coeff_up）が b47 に発火したのは
+  // birt-02-1（A, b47）が L3 自身（score_type_2）へ ccu+8 を付与した直後であり、
+  // 他レーンには ccu が存在しない → 自レーン包含でしか説明できない。
+  const anyone = (type: SkillEffect["type"]): boolean =>
+    states.some((s) => s.effects.some((e) => e.type === type));
   switch (condition) {
     case "none":
       return true;
@@ -446,19 +443,19 @@ function evaluateCondition(
     case "self_visual_lane":
       return self.input.attribute === "visual";
     case "someone_focus":
-      return others.some((s) => hasActive(s, "focus"));
+      return anyone("focus");
     case "someone_score_up":
-      return others.some((s) => hasActive(s, "score_up"));
+      return anyone("score_up");
     case "someone_skill_success_up":
-      return others.some((s) => hasActive(s, "skill_success_up"));
+      return anyone("skill_success_up");
     case "someone_critical_coeff_up":
-      return others.some((s) => hasActive(s, "critical_coeff_up"));
+      return anyone("critical_coeff_up");
     case "combo>=50":
-      return self.combo >= 50;
+      return ctx.globalCombo.value >= 50;
     case "combo>=80":
-      return self.combo >= 80;
+      return ctx.globalCombo.value >= 80;
     case "combo>=100":
-      return self.combo >= 100;
+      return ctx.globalCombo.value >= 100;
   }
 }
 
@@ -514,10 +511,13 @@ function tryActivate(
   // 発動確定
   state.stamina -= cost;
   if (skill.ct != null) {
-    // 内部CTは CT−1 で初期化する（research/08 §2.3 実測: 表示は満値だが再使用可能最小
-    // 間隔は CT−1。発動ビート内のステップ9減算と合わせ、内部は発動ビートで実質2進む。
-    // これにより scoring 時に ct==0 になる最小ビートが 発動+CT−1 となり実測則と一致）
-    state.skillCt.set(skill.id, Math.max(0, skill.ct - 1));
+    // 【T5実測確定】CT は満タンでセットし、ステップ9の減算に委ねる。
+    // 前半発動は同ビート内のステップ9で減算されるため実効 CT−1（CTが0になったビートの
+    // step11 で再使用可・gap CT−1）、後半発動は減算されないため実効 CT（gap CT）。
+    // 実測 gap 系列（かんしょ 49/50/50、逆襲 50/50/35、さらけ出す 59/46）を完全再現する。
+    // 旧「CT−1 初期化」は前半発動で gap CT−2 を生み research/08 §2.3 の実測則
+    // （gap ≥ CT−1）に違反していたため修正。
+    state.skillCt.set(skill.id, skill.ct);
   }
   if (skill.kind === "photo" && skill.limitPerLive != null) {
     state.limitUsed.set(skill.id, (state.limitUsed.get(skill.id) ?? 0) + 1);
@@ -918,8 +918,8 @@ function settleSkillNote(
   // 発動: スタミナ消費 → CT設定 → 効果適用（research/13 §5.2・§6。上から順【Confirmed】）
   state.stamina -= costOfChosen;
   if (chosen.ct != null) {
-    // 内部CTは CT−1 初期化（research/08 §2.3 実測則 gap ≥ CT−1。tryActivate のコメント参照）
-    state.skillCt.set(chosen.id, Math.max(0, chosen.ct - 1));
+    // 【T5実測確定】CT は満タンでセット（tryActivate のコメント参照。ステップ9減算に委ねる）
+    state.skillCt.set(chosen.id, chosen.ct);
   }
   let gained = 0;
   for (const effect of chosen.effects) {
@@ -940,4 +940,5 @@ function settleSkillNote(
   });
   // 成功: コンボ+1（§5.2）
   state.combo += 1;
+  ctx.globalCombo.value += 1;
 }

@@ -255,7 +255,7 @@ describe("simulateTimeline: 処理順と実効ビート数（§3）", () => {
 });
 
 describe("simulateTimeline: CT 規則（§3-9・research/08 §2.3）", () => {
-  it("Aスキルの最小再使用間隔は CT−1（CT10 → gap9）", () => {
+  it("Aスキルの最小再使用間隔は CT（CT10 → gap10・【T5実測確定】CT満タンセット+ステップ9減算）", () => {
     const lanes = defaultLanes();
     const l1 = lanes[0];
     if (l1 === undefined) {
@@ -277,10 +277,13 @@ describe("simulateTimeline: CT 規則（§3-9・research/08 §2.3）", () => {
     const notes = Array.from({ length: 12 }, (_, i) => note(i + 1, 2, 4));
     const result = simulateTimeline(input(notes, lanes));
     const successes = result.activations.filter((a) => a.success);
-    expect(successes.map((a) => a.beat)).toEqual([1, 10]);
-    // 中間ビートは in_ct で FAIL（b10 に再発動したため b11/b12 も再び CT 中）
+    // 発動時 CT満タン → ステップ9減算で b10 開始時に残1 → b10 のステップ9で0になるが
+    // A ノートはステップ8発動のため b10 は不発、b11 から再使用可（gap CT=10）。
+    // Pスキル前半発動の場合は CT0 到達ビートの step11 で発火するため gap CT−1（実測 b1→b50）。
+    expect(successes.map((a) => a.beat)).toEqual([1, 11]);
+    // 中間ビートは in_ct で FAIL
     const ctFails = result.activations.filter((a) => !a.success && a.failReason === "in_ct");
-    expect(ctFails.map((a) => a.beat)).toEqual([2, 3, 4, 5, 6, 7, 8, 9, 11, 12]);
+    expect(ctFails.map((a) => a.beat)).toEqual([2, 3, 4, 5, 6, 7, 8, 9, 10, 12]);
   });
 });
 
