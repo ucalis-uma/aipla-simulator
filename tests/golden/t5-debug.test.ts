@@ -384,7 +384,7 @@ describe("T5 debug: 全ビート比検査", () => {
       const detail = evs
         .map(
           (e) =>
-            `pow=${e.skillPowerPermil},basic=${e.basicScore},b1=${e.b1Permil},cb=${e.comboFactorPermil},fan=${e.fanF ?? e.fanFactorPermil},crit=${e.critFactorPermil}${e.isRatioScore ? ",RATIO" : ""}`,
+            `pow=${e.skillPowerPermil},basic=${e.basicScore},b1=${e.b1Permil},cb=${e.comboFactorPermil},fan=${e.fanFactorPermil},crit=${e.critFactorPermil}${e.isRatioScore ? ",RATIO" : ""}`,
         )
         .join(" || ");
       console.log(`[A/SP] b${bt.beat} L${owner} pop=${pop} E=${e1000} r=${r.toFixed(2)} [${flag}] ${detail}`);
