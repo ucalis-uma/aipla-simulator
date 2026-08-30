@@ -459,3 +459,87 @@ tests/golden/t5-l3fit.test.ts（一時ハーネス）で L3 各ビートの実�
 - tests/golden/t5-solver.test.ts: 連続乱数ビート毎厳密逆算ソルバー（全面書き換え）
 - tests/golden/fixtures/t5_replay_rands.json: 生成乱数列（連続値 717 イベント分）
 - tests/golden/t5-scores.golden.test.ts: ゴールデンテスト（新規・4 tests）
+
+---
+
+## Phase 4（2026-08-30 完了）— シミュレータ CLI / 単一HTML UI
+
+### 完了内容
+
+#### 1. 共通ビルダー（`src/sim/build.ts`）
+- 編成（verification_data_v2.json と同一スキーマ）+ ステージ + 譜面 + データ源（`SimSourceData`）
+  → `SimulateInput` を構築する CLI/UI/テスト共通モジュール。旧 CLI・ゴールデンテスト・
+  ソルバーに重複していた deck 構築（toStatBonus/yell/scoreBonusPct 等）を単一化
+- **レーン属性の一般化**: 旧実装のハードコード `{1:vocal,...,4:dance,...}` を廃止し、
+  ステージの `laneAttributes`（position 1-5 属性コード）× `POSITION_TO_LANE` から導出
+- `audience` 指定時は `fanBonusPermil` でファンファクターをテーブル引き（16,000→1620‰）
+- `disabledSkillIds` でスキル/フォトを無効化（UI のチェックボックス用）・
+  golden スキルの元カード不一致は警告（`sk-` 接頭辞 ↔ `card-` の正規化比較）
+- `laneBreakdown(beats)`: レーン別 × 種別（beat/A/SP/P/photo）の獲得スコア内訳集計。
+  これに伴い `LaneScoreEventTrace` に `sourceKind` を追加（トレース専用・数値に影響なし）
+
+#### 2. CLI（`src/cli/simulate.ts` 全面書き換え・`npm run simulate`）
+- 出力: **確定値**（NeutralRng=乱数1000固定・critなし・確率ゲート必通過）+ **Monte Carlo 統計**
+  （min/max/mean/median/p10/p90・レーン別 mean）+ **レーン別内訳** + **ビート別タイムライン**
+  （レーン別獲得・発動明細・累積・コンボ・スタミナ・バフスナップショット）
+- オプション: `--n`（MC回数）/ `--crit-rate` / `--seed`（ContinuousRng=mulberry32 で再現可能）/ `--out`
+- 新 RNG: `src/rng/random.ts`（**ContinuousRng**: 連続値 [950,1050] のシード決定論 RNG）と
+  `src/rng/neutral.ts`（**NeutralRng**: 確定値ラン用。nextCritical=true は確率ゲート通過用で
+  クリティカル係数は criticalProvider 側で無効化する構成）
+- `rng/types.ts` の契約 JSDoc を T5 確定（連続値）に更新（FixedRng の離散値は初期フェーズの
+  近似として残置と明記）
+- 確定値（T5編成・rand=1000・critなし）= **2,501,593,723**。実測 17.5B との差はほぼ
+  クリティカル係数（×1.7〜4.65）由来の正しい挙動（実測乱数で crit を無効化しても 2.52B を確認）
+
+#### 3. 単一HTML UI（`ui/` + `tools/build_ui.mjs`・`npm run build:ui`）
+- 成果物: **`dist/aipura_simulator.html`（323KB 単一ファイル）**。esbuild で ui/app.ts
+  （コア src/ をバンドル・49KB）+ data/ JSON（269KB: cards 491 / params 780 / golden skills 35 /
+  audience 1000行 / stage / chart）+ T5実測プリセットを埋め込み、**file:// 直開きで動作**（fetch 不要）
+- 編成設定: 5レーン（カード491件から選択・Lv・開花☆・交流Lv・ロール・メンタル）・
+  スキル/フォトの有効化チェックボックス（効果・CT・消費・確度タグ付き）・
+  フォト/アクセサリのステータス補正 JSON エディタ・スタッフ/エール入力・
+  来場者数（ファンファクター自動表示）・成功率・クリティカル率・MC回数・シード・ミスノート
+- 結果表示: KPI（確定値/期待値/中央値/10-90%/min-max）・**レーン別内訳表**（種別内訳+構成比）・
+  **スコア推移グラフ**（canvas・確定値累積）・**バフ推移ヒートマップ**（レーン×14キー選択・
+  157ビート）・**タイムライン表**（レーン別ポップ・★crit・発動明細）・**確度タグ凡例**
+  （Confirmed/Estimate/Unknown + スキル単位のバッジ）
+- 編成 JSON エクスポート（**CLI の --input と同一スキーマで CLI/UI 相互運用**）・インポート・
+  localStorage 保存/復元・T5実測プリセット復元
+- テスト: `tests/unit/sim/ui-pipeline.test.ts`（build_ui と同一のデータ組み立てで確定値一致。
+  **このテストが build_ui.mjs の cards/params/skills のアンラップ漏れバグを検出**）と
+  `tests/ui/smoke.test.ts`（jsdom でビルド成果物を実行: 5レーン描画・491カード・
+  実行→KPI/内訳/タイムライン 156行・確定値 2,501,593,723 一致）
+
+#### 4. クリーンアップ
+- **debugOptions を削除**（T5確定後の撤去計画どおり）: engine.ts は確定値を定数化
+  （`BEAT_CB_CSU_PERMIL=11.5` / `BEAT_CB_CSU_AMP_PERMIL=57.5` を export、
+  延長=all・増強=perKey(vue対象外)・ビートB1の su=25‰（b1Permil から仮説パラメータ引数を削除）・
+  ビートCB基準=表示コンボ・A/SP付与の減算スキップ=true）。`SimulateInput.debugOptions` と
+  `beatNotesProcessed`（comboBasis=global 用で未使用）を削除
+- 一時診断ファイルの整理:
+  - `tests/golden/t5-debug.test.ts`（14テスト）と `fixtures/t5_report.json` を削除
+  - `tests/golden/t5-solver.test.ts` → **`tools/t5_solver.ts` に移行**（`npm run solve:t5`。
+    共有ビルダー使用。収束確認: 2 反復・okBeats=119/155・diff=0・fixture 再生成）
+  - `t5-scores.golden.test.ts` を共有ビルダー経由に書き換え（レーン内訳整合テスト追加）
+- ゴールデン（17,529,132,014 一致）は t5-scores で維持
+
+### 検証結果
+- **293 passed / 1 skipped、`tsc --noEmit`（root）と `tsc -p ui` ともにゼロエラー**
+- CLI: `npm run simulate -- --input examples/t5-sample.json --n 50 --seed 3` で
+  確定値 2,501,593,723 / MC mean 2,505,668,406（n=50）を出力
+- UI: jsdom スモーク 3 テストでレンダリング・実行・値一致を確認
+
+### 設計メモ
+- 確定値ランの NeutralRng は nextCritical()=true を返す（確率/成功率ゲート<100% のスキルを
+  「必ず成立」として確定値に含めるため）。クリティカル係数は criticalProvider=()=>false で別系統に無効化
+- UI のデータ埋め込みは `<script type="application/json">` + `<` の `\u003c` エスケープ
+  （`</script>` 混入対策）。アプリ JS は esbuild IIFE でインライン
+- CLI/UI は `deck`/`stage`/`chart`/`missedNotes`/`mentalOverride`/`disabledSkillIds`/`critRate` の
+  共通スキーマで相互運用（UI エクスポート → CLI 実行が可能）
+
+### 残課題（次フェーズ候補）
+1. クリティカル率式の解明（`critRate` は確率パラメータのまま。ccu と戦闘値の関係）
+2. 他楽曲/他編成への拡張（skills_golden.json は実測 5 カード分のみ。マスタ skillDetails の
+   変換パーサー拡張が必要）
+3. UI のフォト/アクセサリ個別フォーム化（現在は JSON エディタ）・複数ステージ/譜面の同梱
+4. 期待値の厳密計算（クリティカル確率を含む閉形式または大規模 MC）

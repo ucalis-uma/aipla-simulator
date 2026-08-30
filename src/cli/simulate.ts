@@ -1,303 +1,199 @@
 #!/usr/bin/env node
 /**
- * Phase 4 MVP: タイムライン・スコアシミュレーター CLI。
+ * Phase 4: タイムライン・スコアシミュレーター CLI。
  *
  * 使い方:
- *   npx tsx src/cli/simulate.ts --input <deck.json> [--n 1000] [--crit-rate 0] [--out out.json]
+ *   npm run simulate -- --input examples/t5-sample.json [--n 1000] [--crit-rate 0]
+ *                       [--seed 1] [--out out.json]
  *
  * 入力 JSON（--input・編成+ステージ+チャート）:
  * {
- *   "deck":    スコア分析サンプル/verification_data_v2.json と同一スキーマ
+ *   "deck":    verification_data_v2.json と同一スキーマ
  *              （staff_bonus / yale_bonus / characters[5]）,
- *   "stage":   { "file": "qt-daily-003-19", "laneAttributes": [2,2,1,2,2] },
+ *              ※ "deckFile" で外部 JSON 参照も可（入力ファイルからの相対パス）
+ *   "stage":   { "file": "qt-daily-003-19" },
  *   "chart":   { "file": "chart-hsm-004-001" },
- *   "missedNotes": [{ "beat": 1, "lane": 1 }, ...]   （省略可）
- *   "mentalOverride": { "1": 105, ... }              （省略可）
+ *   "audience": 16000,                      （省略可・来場ファン数→ファンファクター。省略時 1620‰ 固定）
+ *   "successBasePermil": 1000,              （省略可・成功率の基礎値）
+ *   "missedNotes": [{ "beat": 1, "lane": 1 }, ...],   （省略可）
+ *   "mentalOverride": { "1": 105, ... },    （省略可・P発動順=メンタル降順に影響）
+ *   "disabledSkillIds": ["sk-..."],         （省略可・スキル/フォトの無効化）
+ *   "critRate": 0                           （省略可・クリティカル確率 0-1。レート式は未解明）
  * }
  *
  * 出力（stdout / --out）:
- *   { settings, stats: { min, max, mean, median, p10, p90 }, timeline: 中央値ランのビート毎明細 }
+ *   {
+ *     settings,
+ *     confirmed: { totalScore, lanes: レーン別内訳, timeline: ビート毎明細 },  // 乱数中立（rand=1000・crit なし）
+ *     stats: { min, max, mean, median, p10, p90, laneMeans }                  // Monte Carlo N 回
+ *   }
  *
- * スコア乱数は連続値 [0.95,1.05]（T5確定・at-end 丸め）。クリティカル率は確率パラメータ
- * （crit-rate・既定 0。レート式は未解明のため T5 では実測フラグ注入で検証）。
- * サンプル: tests/golden/ の T5 編成を使う場合は sample deck 生成スクリプト参照。
+ * スコア乱数は連続値 [0.95,1.05]（T5確定・at-end 丸め）。クリティカル率の式は未解明のため
+ * critRate パラメータ（既定 0）。シード固定で再現可能（ContinuousRng = mulberry32）。
  */
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { computeDeckStatus } from "../formula/baseStatus.js";
-import { pctToPermil } from "../rounding.js";
 import { simulateTimeline } from "../timeline/engine.js";
+import type { TimelineResult } from "../timeline/types.js";
 import { EVENT_RAND_MIN_PERMIL, EVENT_RAND_MAX_PERMIL } from "../formula/scoreEvent.js";
-import type {
-  ChartNote,
-  LaneInput,
-  LaneNumber,
-  SimulateInput,
-  SkillDef,
-  StageInput,
-} from "../timeline/types.js";
+import { ContinuousRng } from "../rng/random.js";
+import { NeutralRng } from "../rng/neutral.js";
 import type { ScoreRng } from "../rng/types.js";
-import type { CardDef, CardParameterRow, StatBonus, StatValues, YellBonus } from "../types.js";
+import {
+  buildSimulateInput,
+  laneBreakdown,
+  type ChartFile,
+  type DeckJsonV2,
+  type SimSourceData,
+  type SimulateInputBase,
+  type StageWeights,
+} from "../sim/build.js";
+import type { AudienceAdvantageRow } from "../formula/fan.js";
+import type { CardDef, CardParameterRow } from "../types.js";
+import type { SkillDef } from "../timeline/types.js";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 
 interface CliArgs {
   input: string;
   n: number;
-  critRate: number;
+  critRate: number | null;
+  seed: number;
   out: string | null;
 }
 
 function parseArgs(argv: string[]): CliArgs {
-  const args: CliArgs = { input: "", n: 1000, critRate: 0, out: null };
+  const args: CliArgs = { input: "", n: 1000, critRate: null, seed: 1, out: null };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "--input") args.input = argv[++i] ?? "";
     else if (a === "--n") args.n = Number(argv[++i] ?? 1000);
     else if (a === "--crit-rate") args.critRate = Number(argv[++i] ?? 0);
+    else if (a === "--seed") args.seed = Number(argv[++i] ?? 1);
     else if (a === "--out") args.out = argv[++i] ?? null;
   }
   if (!args.input) {
-    console.error("usage: simulate.ts --input <deck.json> [--n 1000] [--crit-rate 0] [--out out.json]");
+    console.error(
+      "usage: simulate.ts --input <config.json> [--n 1000] [--crit-rate 0] [--seed 1] [--out out.json]",
+    );
     process.exit(1);
   }
   return args;
 }
 
-interface StructuredStat {
-  stat: string;
-  type: "pct" | "fixed";
-  value: number;
-}
-interface PhotoOrAccessory {
-  name: string;
-  structured: StructuredStat[];
-}
-interface CharacterV2 {
-  lane: number;
-  card_id: string;
-  level: number;
-  rarity: number;
-  role: string;
-  kouryu_level: number;
-  stats: {
-    base: { vocal: number; dance: number; visual: number; stamina: number };
-    total_after_non_skill_modifiers: { vocal: number; dance: number; visual: number; stamina: number };
-  };
-  photos: PhotoOrAccessory[];
-  accessories: PhotoOrAccessory[];
-}
-interface DeckJson {
-  staff_bonus: Record<"vocal" | "dance" | "visual" | "stamina" | "mental" | "critical", number>;
-  yale_bonus: {
-    vocal_pct: number;
-    dance_pct: number;
-    visual_pct: number;
-    stamina: number;
-    mental: number;
-    critical: number;
-    beat_score_pct: number;
-    a_skill_score_pct: number;
-    sp_skill_score_pct: number;
-    critical_score_pct: number;
-  };
-  characters: CharacterV2[];
-}
 interface SimConfigJson {
   /** 編成（inline）。deckFile との併用不可 */
-  deck?: DeckJson;
-  /** 編成 JSON へのパス（入力ファイルからの相対・verification_data_v2.json と同一スキーマ） */
+  deck?: DeckJsonV2;
+  /** 編成 JSON へのパス（入力ファイルからの相対） */
   deckFile?: string;
-  stage: { file: string; laneAttributes: [number, number, number, number, number] };
+  stage: { file: string };
   chart: { file: string };
-  missedNotes?: Array<{ beat: number; lane: number }>;
-  mentalOverride?: Record<string, number>;
+  audience?: number;
   fanFactorPermil?: number;
   successBasePermil?: number;
+  missedNotes?: Array<{ beat: number; lane: number }>;
+  mentalOverride?: Record<string, number>;
+  disabledSkillIds?: string[];
+  critRate?: number;
 }
 
-/** 実乱数源（ScoreRng 実装）。スコア乱数=連続値 [950,1050]、クリティカル=critRate */
-class RandomRng implements ScoreRng {
-  constructor(private readonly critRate: number) {}
-  nextScoreRoll(): number {
-    return EVENT_RAND_MIN_PERMIL + Math.random() * (EVENT_RAND_MAX_PERMIL - EVENT_RAND_MIN_PERMIL);
+function loadSourceData(stageFile: string, chartFile: string): SimSourceData {
+  const read = (p: string): unknown => JSON.parse(readFileSync(p, "utf-8"));
+  const cards = (read(path.join(repoRoot, "data/cards.json")) as { cards: CardDef[] }).cards;
+  const cardParameters = (read(path.join(repoRoot, "data/card_parameters.json")) as { rows: CardParameterRow[] })
+    .rows;
+  const skillsGolden = (read(path.join(repoRoot, "data/skills_golden.json")) as { skills: SkillDef[] })
+    .skills;
+  const stages: Record<string, StageWeights> = {};
+  const stageJson = read(path.join(repoRoot, "data/stages", `${stageFile}.json`)) as StageWeights;
+  stages[stageFile] = stageJson;
+  const charts: Record<string, ChartFile> = {};
+  charts[chartFile] = read(path.join(repoRoot, "data/charts", `${chartFile}.json`)) as ChartFile;
+  let audienceAdvantage: AudienceAdvantageRow[] | undefined;
+  try {
+    audienceAdvantage = read(path.join(repoRoot, "data/stages/audience_advantage.json")) as AudienceAdvantageRow[];
+  } catch {
+    audienceAdvantage = undefined;
   }
-  nextCritical(): boolean {
-    return Math.random() < this.critRate;
+  return { cards, cardParameters, skillsGolden, stages, charts, audienceAdvantage };
+}
+
+/** 1シミュレーション実行（乱数源とクリティカル判定源を注入） */
+function run(
+  base: SimulateInputBase,
+  rng: ScoreRng,
+  criticalProvider: (beat: number, lane: number) => boolean,
+): TimelineResult {
+  return simulateTimeline({ ...base, criticalProvider, rng });
+}
+
+function buildInput(cfg: SimConfigJson, inputPath: string): SimulateInputBase {
+  if (!cfg.deck && cfg.deckFile) {
+    const deckPath = path.resolve(path.dirname(inputPath), cfg.deckFile);
+    cfg.deck = JSON.parse(readFileSync(deckPath, "utf-8")) as DeckJsonV2;
   }
-}
-
-function toStatBonus(items: PhotoOrAccessory[]): StatBonus[] {
-  return items.map((item) => {
-    const pct: Record<string, number> = {};
-    const fixed: Record<string, number> = {};
-    for (const s of item.structured) {
-      if (s.type === "pct") pct[s.stat] = (pct[s.stat] ?? 0) + pctToPermil(s.value);
-      else fixed[s.stat] = (fixed[s.stat] ?? 0) + s.value;
-    }
-    return { pct, fixed };
-  });
-}
-
-function sumScorePct(items: PhotoOrAccessory[], key: string): number {
-  let sum = 0;
-  for (const item of items) {
-    for (const s of item.structured) {
-      if (s.stat === key && s.type === "pct") sum += pctToPermil(s.value);
-    }
+  if (!cfg.deck) {
+    throw new Error("input must have `deck` (inline) or `deckFile` (path)");
   }
-  return sum;
-}
-
-function yell(y: DeckJson["yale_bonus"]): YellBonus {
-  return {
-    statPct: {
-      vocal: pctToPermil(y.vocal_pct),
-      dance: pctToPermil(y.dance_pct),
-      visual: pctToPermil(y.visual_pct),
-    },
-    statFix: { stamina: y.stamina, mental: y.mental, critical: y.critical },
-    scorePct: {
-      beat: pctToPermil(y.beat_score_pct),
-      active: pctToPermil(y.a_skill_score_pct),
-      special: pctToPermil(y.sp_skill_score_pct),
-      criticalScore: pctToPermil(y.critical_score_pct),
-    },
-  };
-}
-
-const LANE_ATTRIBUTE: Record<LaneNumber, "vocal" | "dance" | "visual"> = {
-  1: "vocal",
-  2: "vocal",
-  3: "vocal",
-  4: "dance",
-  5: "vocal",
-};
-
-interface BuiltConfig {
-  lanes: LaneInput[];
-  notes: ChartNote[];
-  stage: StageInput;
-  fanFactorPermil: number;
-  successBasePermil: number;
-  missedNotes: Array<{ beat: number; lane: LaneNumber }>;
-}
-
-function buildConfig(cfgJson0: SimConfigJson): BuiltConfig {
-  const cfg: SimConfigJson & { deck: DeckJson } = cfgJson0 as never;
-  const cardsData = JSON.parse(
-    readFileSync(path.join(repoRoot, "data/cards.json"), "utf-8"),
-  ) as { cards: CardDef[] };
-  const cards = cardsData.cards;
-  const paramsData = JSON.parse(
-    readFileSync(path.join(repoRoot, "data/card_parameters.json"), "utf-8"),
-  ) as { rows: CardParameterRow[] };
-  const params = paramsData.rows;
-  const skillsGolden = JSON.parse(
-    readFileSync(path.join(repoRoot, "data/skills_golden.json"), "utf-8"),
-  ) as { skills: SkillDef[] };
-  const stageData = JSON.parse(
-    readFileSync(path.join(repoRoot, "data/stages", `${cfg.stage.file}.json`), "utf-8"),
-  ) as {
-    beatWeightsPermil: { vocal: number; dance: number; visual: number };
-    skillWeightsPermil: { active: number; special: number };
-  };
-  const chartData = JSON.parse(
-    readFileSync(path.join(repoRoot, "data/charts", `${cfg.chart.file}.json`), "utf-8"),
-  ) as { notes: Array<{ beat: number; type: number; position: number }> };
-
-  const Y = yell(cfg.deck.yale_bonus);
-  const lanes: LaneInput[] = [];
-  for (const ch of cfg.deck.characters) {
-    const lane = ch.lane as LaneNumber;
-    const card = cards.find((c) => c.id === ch.card_id);
-    if (!card) throw new Error(`card not found: ${ch.card_id}`);
-    const row = params.find((r) => r.id === card.cardParameterId && r.level === ch.level);
-    if (!row) throw new Error(`card parameter not found: ${card.cardParameterId} @Lv${ch.level}`);
-    const result = computeDeckStatus(
-      {
-        card,
-        level: ch.level,
-        rarity: ch.rarity,
-        kouryuLevel: ch.kouryu_level,
-        staff: cfg.deck.staff_bonus,
-        yell: Y,
-        equipment: { photos: toStatBonus(ch.photos), accessories: toStatBonus(ch.accessories) },
-      },
-      row,
-    );
-    const mental = Number(cfg.mentalOverride?.[String(lane)] ?? ch.stats.base.stamina);
-    const deck: StatValues<number> = { ...result.deck, mental, critical: 0 };
-    const equipment = [...ch.photos, ...ch.accessories];
-    lanes.push({
-      lane,
-      attribute: LANE_ATTRIBUTE[lane],
-      role: ch.role as LaneInput["role"],
-      deck,
-      skills: skillsGolden.skills.filter(
-        (s) => s.lane === lane && (s.kind === "A" || s.kind === "SP" || s.kind === "P"),
-      ),
-      photos: skillsGolden.skills.filter(
-        (s) => s.lane === lane && s.kind === "photo" && (s.effects?.length ?? 0) > 0,
-      ),
-      scoreBonusPct: {
-        beat: Y.scorePct.beat + sumScorePct(equipment, "beat_score"),
-        active: Y.scorePct.active + sumScorePct(equipment, "a_score"),
-        special: Y.scorePct.special + sumScorePct(equipment, "sp_score"),
-        passive: sumScorePct(equipment, "p_score"),
-      },
-      critExtrasPermil: Y.scorePct.criticalScore + sumScorePct(equipment, "critical_score"),
-    });
-  }
-  lanes.sort((a, b) => a.lane - b.lane);
-  const notes: ChartNote[] = chartData.notes.map((n) => ({
-    beat: n.beat,
-    noteType: n.type as 1 | 2 | 3,
-    position: n.position as ChartNote["position"],
-  }));
-  const stage: StageInput = {
-    id: cfg.stage.file,
-    laneAttributes: cfg.stage.laneAttributes as StageInput["laneAttributes"],
-    beatWeightsPermil: stageData.beatWeightsPermil,
-    skillWeightsPermil: {
-      active: stageData.skillWeightsPermil.active,
-      special: stageData.skillWeightsPermil.special,
-    },
-    stageFactorPermil: 1000,
-  };
-  return {
-    lanes,
-    notes,
-    stage,
-    fanFactorPermil: cfg.fanFactorPermil ?? 1620,
-    successBasePermil: cfg.successBasePermil ?? 1000,
-    missedNotes: (cfg.missedNotes ?? []).map((m) => ({
-      beat: m.beat,
-      lane: m.lane as LaneNumber,
-    })),
-  };
-}
-
-function runOnce(cfg: BuiltConfig, rng: ScoreRng): number {
-  const input: SimulateInput = {
-    lanes: cfg.lanes,
-    notes: cfg.notes,
-    stage: cfg.stage,
+  const data = loadSourceData(cfg.stage.file, cfg.chart.file);
+  const built = buildSimulateInput({
+    deck: cfg.deck,
+    stageFile: cfg.stage.file,
+    chartFile: cfg.chart.file,
+    data,
+    audience: cfg.audience,
     fanFactorPermil: cfg.fanFactorPermil,
     successBasePermil: cfg.successBasePermil,
-    criticalProvider: (beat, lane) => rng.nextCritical(),
-    rng,
-    roundingPolicy: "at-end",
     missedNotes: cfg.missedNotes,
-  };
-  return simulateTimeline(input).totalScore;
+    mentalOverride: cfg.mentalOverride,
+    disabledSkillIds: cfg.disabledSkillIds,
+  });
+  for (const w of built.warnings) {
+    console.error(`[warn] ${w}`);
+  }
+  return built.base;
 }
 
 function percentile(sorted: number[], p: number): number {
   if (sorted.length === 0) return 0;
   const idx = Math.min(sorted.length - 1, Math.max(0, Math.round((sorted.length - 1) * p)));
   return sorted[idx]!;
+}
+
+function timelineOf(res: TimelineResult) {
+  let cum = 0;
+  const beats = res.beats.map((bt) => {
+    const gained = bt.events.reduce((s, e) => s + e.gainedScore, 0);
+    cum += gained;
+    return {
+      beat: bt.beat,
+      type: bt.noteType,
+      position: bt.position,
+      events: bt.events.map((e) => ({
+        lane: e.lane,
+        kind: e.sourceKind,
+        gained: e.gainedScore,
+        crit: e.critFactorPermil > 1000,
+      })),
+      activations: bt.activations.map((a) => ({
+        lane: a.lane,
+        skill: a.skillId,
+        kind: a.kind,
+        phase: a.phase,
+        success: a.success,
+        gained: a.gainedScore ?? 0,
+        failReason: a.failReason,
+        staminaCost: a.staminaCost,
+      })),
+      gained,
+      cumulative: cum,
+      combo: [...bt.comboAfter],
+      stamina: [...bt.staminaAfter],
+      buffs: bt.buffSnapshots.map((s) => ({ ...s })),
+    };
+  });
+  return beats;
 }
 
 function main(): void {
@@ -307,103 +203,64 @@ function main(): void {
     console.error(`input not found: ${inputPath}`);
     process.exit(1);
   }
-  const cfgJson = JSON.parse(readFileSync(inputPath, "utf-8")) as SimConfigJson;
-  if (!cfgJson.deck && cfgJson.deckFile) {
-    const deckPath = path.resolve(path.dirname(inputPath), cfgJson.deckFile);
-    cfgJson.deck = JSON.parse(readFileSync(deckPath, "utf-8")) as DeckJson;
-  }
-  if (!cfgJson.deck) {
-    console.error("input must have `deck` (inline) or `deckFile` (path)");
-    process.exit(1);
-  }
-  const cfg = buildConfig(cfgJson);
-  const rng = new RandomRng(args.critRate);
+  const cfg = JSON.parse(readFileSync(inputPath, "utf-8")) as SimConfigJson;
+  const critRate = args.critRate ?? cfg.critRate ?? 0;
+  const base = buildInput(cfg, inputPath);
 
+  // ---- 確定値（乱数中立: rand=1000・crit なし・確率ゲートは必通過）----
+  const confirmedRes = run(base, new NeutralRng(), () => false);
+  const confirmed = {
+    totalScore: confirmedRes.totalScore,
+    lanes: laneBreakdown(confirmedRes.beats),
+    timeline: timelineOf(confirmedRes),
+  };
+
+  // ---- Monte Carlo（シード固定・連続値乱数）----
   const scores: number[] = [];
+  const laneSums = new Map<number, number>();
   for (let i = 0; i < args.n; i++) {
-    scores.push(runOnce(cfg, rng));
+    const rng = new ContinuousRng(args.seed + i, critRate);
+    const res = run(base, rng, () => rng.nextCritical());
+    scores.push(res.totalScore);
+    for (const bt of res.beats) {
+      for (const e of bt.events) {
+        laneSums.set(e.lane, (laneSums.get(e.lane) ?? 0) + e.gainedScore);
+      }
+    }
   }
   const sorted = [...scores].sort((a, b) => a - b);
   const mean = scores.reduce((a, b) => a + b, 0) / scores.length;
-  const median = percentile(sorted, 0.5);
-
-  // 代表ラン（中央値に最も近いスコア）のタイムライン明細
-  let bestIdx = 0;
-  let bestDiff = Infinity;
-  for (let i = 0; i < scores.length; i++) {
-    const d = Math.abs(scores[i]! - median);
-    if (d < bestDiff) {
-      bestDiff = d;
-      bestIdx = i;
-    }
-  }
-  const timelineRng = new RandomRng(args.critRate);
-  const timelineScores: number[] = [];
-  for (let i = 0; i <= bestIdx; i++) {
-    timelineScores.push(runOnce(cfg, timelineRng));
-  }
-  const input: SimulateInput = {
-    lanes: cfg.lanes,
-    notes: cfg.notes,
-    stage: cfg.stage,
-    fanFactorPermil: cfg.fanFactorPermil,
-    successBasePermil: cfg.successBasePermil,
-    criticalProvider: () => timelineRng.nextCritical(),
-    rng: timelineRng,
-    roundingPolicy: "at-end",
-    missedNotes: cfg.missedNotes,
-  };
-  const rep = simulateTimeline(input);
-  const timeline = rep.beats.map((bt) => {
-    let cum = 0;
-    let gained = 0;
-    for (const e of bt.events) {
-      cum += e.gainedScore;
-      gained += e.gainedScore;
-    }
-    return {
-      beat: bt.beat,
-      type: bt.noteType,
-      position: bt.position,
-      events: bt.events.map((e) => ({
-        lane: e.lane,
-        gained: e.gainedScore,
-        crit: e.critFactorPermil > 1000,
-      })),
-      gained,
-      cumulative: cum,
-    };
-  });
-  // 累積の再構築（gained はビート毎合算のため）
-  let cum = 0;
-  for (const t of timeline) {
-    cum += t.gained;
-    t.cumulative = cum;
-  }
+  const laneMeans = [...laneSums.entries()]
+    .sort((a, b) => a[0] - b[0])
+    .map(([lane, sum]) => ({ lane, mean: Math.round(sum / args.n) }));
 
   const result = {
     settings: {
       n: args.n,
-      critRate: args.critRate,
-      stage: cfgJson.stage.file,
-      chart: cfgJson.chart.file,
+      critRate,
+      seed: args.seed,
+      stage: cfg.stage.file,
+      chart: cfg.chart.file,
+      fanFactorPermil: base.fanFactorPermil,
       roundingPolicy: "at-end",
       randRange: [EVENT_RAND_MIN_PERMIL, EVENT_RAND_MAX_PERMIL],
+      randType: "continuous (float)",
     },
+    confirmed,
     stats: {
       min: sorted[0],
       max: sorted[sorted.length - 1],
       mean: Math.round(mean),
-      median,
+      median: percentile(sorted, 0.5),
       p10: percentile(sorted, 0.1),
       p90: percentile(sorted, 0.9),
+      laneMeans,
     },
-    timeline,
   };
   const json = JSON.stringify(result, null, 1);
   if (args.out) {
     writeFileSync(path.resolve(args.out), json, "utf-8");
-    console.log(`written: ${path.resolve(args.out)}`);
+    console.error(`written: ${path.resolve(args.out)}`);
   }
   console.log(json);
 }

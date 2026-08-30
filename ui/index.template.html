@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>アイプラ ライブスコア シミュレータ</title>
+<style>
+/*%APP_CSS%*/
+</style>
+</head>
+<body>
+<header>
+  <h1>アイプラ ライブスコア シミュレータ <span class="ver">MVP・単一HTML版</span></h1>
+  <div class="header-meta">計算コア: T5実測検証済（総スコア 1 の位一致）／データ built_at <span id="built-at"></span>／確度凡例は下部パネル</div>
+</header>
+<main>
+  <section id="config-root"></section>
+  <section id="results" hidden>
+    <h2>結果</h2>
+    <div id="kpi-root" class="kpis"></div>
+    <div class="result-block">
+      <h3>レーン別内訳（確定値ラン）</h3>
+      <div class="table-wrap"><table id="lane-table"></table></div>
+    </div>
+    <div class="result-block">
+      <h3>スコア推移（確定値ラン・累積）</h3>
+      <canvas id="score-graph"></canvas>
+    </div>
+    <div class="result-block">
+      <h3>バフ推移（スコア時点スナップショット・実効段数）</h3>
+      <div class="buff-controls">
+        <select id="buff-lane"></select>
+        <div id="buff-keys" class="buff-keys"></div>
+      </div>
+      <div class="table-wrap scroll-y"><table id="buff-heatmap" class="buff-table"></table></div>
+    </div>
+    <div class="result-block">
+      <h3>ビート別タイムライン（確定値ラン・★=クリティカル）</h3>
+      <div class="table-wrap scroll-y"><table id="timeline-table"></table></div>
+    </div>
+  </section>
+  <section class="result-block">
+    <h3>確度タグ凡例（Confidence）</h3>
+    <div id="confidence-body"></div>
+  </section>
+  <footer>
+    <p>本ツールはファンメイドの解析実装です。ゲーム内数値の権利は QualiArts / バンダイナムコ arts に帰属します。</p>
+  </footer>
+</main>
+<script id="embedded-data" type="application/json">%DATA_JSON%</script>
+<script>
+/*%APP_JS%*/
+</script>
+</body>
+</html>

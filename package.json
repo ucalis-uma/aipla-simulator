@@ -9,10 +9,14 @@
     "simulate": "npx -y tsx src/cli/simulate.ts",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "build:data": "node tools/importers/build_data.mjs"
+    "typecheck:ui": "tsc --noEmit -p ui",
+    "build:data": "node tools/importers/build_data.mjs",
+    "build:ui": "node tools/build_ui.mjs",
+    "solve:t5": "npx -y tsx tools/t5_solver.ts"
   },
   "devDependencies": {
     "@types/node": "^26.4.0",
+    "jsdom": "^30.0.1",
     "typescript": "^5.6.0",
     "vitest": "^2.1.0"
   }

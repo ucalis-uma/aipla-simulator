@@ -386,7 +386,7 @@ export type B1Kind = "beat" | "active" | "special" | "passive";
  * 各対象式（1000 + 各種上昇バフ + テンション + エール/フォト% の加算合算）:
  * - beat:    1000 + 25×score_up + bonus.beat
  *   テンションはビートに入らない（S2明記・research/02 §1.3【Confirmed】）。
- *   beatSuCoefPermil は【一時・T5調査用】の仮説パラメータ（既定 25‰/段）。
+ *   score_up の 25‰/段係数は T5実測で確定（su 50‰ 説は 80.6%→88.6% の離散整合率低下で棄却）。
  * - active:  1000 + 50×a_skill_score_up + 25×score_up + 50×tension_up + bonus.active
  *   （research/02 §1.3【Confirmed・A】）
  * - special: 1000 + 30×sp_skill_score_up + 25×score_up + 50×tension_up + bonus.special
@@ -399,12 +399,11 @@ export function b1Permil(
   snapshot: BuffSnapshot,
   kind: B1Kind,
   scoreBonusPct: ScoreBonusPct,
-  beatSuCoefPermil = 25,
 ): number {
   switch (kind) {
     case "beat":
       return (
-        1000 + beatSuCoefPermil * snapshot.score_up + scoreBonusPct.beat
+        1000 + SCORE_UP_PER_STAGE_PERMIL * snapshot.score_up + scoreBonusPct.beat
       );
     case "active":
       return (

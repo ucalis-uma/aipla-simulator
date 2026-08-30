@@ -221,34 +221,8 @@ export interface SimulateInput {
    * かつ b1-4 リージョンの達成帯がミスなしでは不成立）。
    */
   missedNotes?: ReadonlyArray<{ beat: number; lane: LaneNumber }>;
-  /** 丸めポリシー（既定 "sequential"。T4/T5 で判定） */
+  /** 丸めポリシー（既定 "sequential"。T4/T5 で at-end が確定・推奨は "at-end"） */
   roundingPolicy?: RoundingPolicy;
-  /**
-   * 【一時・T5調査用】未確定仕様の仮説切替。T5確定後に削除する。
-   * - extensionMode: effect_extension の適用範囲（all=延長可能な全インスタンス / longest=最長残りのみ / none=延長なし）
-   * - comboBasis: コンボ係数の基準コンボ数（lane=レーン別状態 / global=処理済みビートノート数）
-   * - beatSuPermil: ビート B1 の score_up 係数‰/段（既定 25）
-   * - beatCsuPermil: ビート CB の combo_score_up 平係数‰/段（既定 11.5。T5実測フィット）
-   * - beatCsuAmpPermil: ビート CB のコンボボーナスXに対する csu 連成係数‰/段
-   *   （X_eff = X×(1000+amp×csu)/1000。既定 57.5。T5実測フィット）
-   * - beatComboBasis: ビート CB の基準コンボ（display=表示コンボ=beat-1【T5確定】/ lane=レーン別）
-   * - amplifyMode: effect_amplify の対象選択（perKey=キー毎に最長残り 1 インスタンス【T5確定】/
-   *   single=全体で最長 1 インスタンス）
-   * - ampAffectsExtreme: 増強の対象に vocal_up_extreme を含むか（実測では false が正）
-   * - spDurN1: A/SP（ステップ8）付与の段階型効果が付与ビートのステップ10減算を
-   *   スキップするか（実測では true が正）
-   */
-  debugOptions?: {
-    extensionMode?: "all" | "longest" | "none";
-    comboBasis?: "lane" | "global";
-    beatSuPermil?: number;
-    beatCsuPermil?: number;
-    beatCsuAmpPermil?: number;
-    beatComboBasis?: "lane" | "display";
-    amplifyMode?: "single" | "perKey";
-    ampAffectsExtreme?: boolean;
-    spDurN1?: boolean;
-  };
 }
 
 /** 発動1件のトレース（T4: 発動ログとの突合用） */
@@ -271,6 +245,8 @@ export interface ActivationTrace {
 /** レーン1件分のスコアイベントトレース（T5: 検算用） */
 export interface LaneScoreEventTrace {
   lane: LaneNumber;
+  /** スコアの発生源種（beat=ビートノート / A / SP / P / photo）。レーン別内訳集計用（Phase 4） */
+  sourceKind: SkillKind | "beat";
   /** 基本スコア（乗算前。ビート: 重み込みステータス / A・SP: レーン色ステータス×重み×SkillPower前） */
   basicScore: number;
   /** computeEventScore に渡った SkillPower permil（scaling 反映後） */
