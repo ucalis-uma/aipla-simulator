@@ -12,6 +12,7 @@
 import { floorDiv, mulPermil } from "../rounding.js";
 import {
   COMBO_ADVANTAGE_TABLE,
+  baseComboBonusPermil,
   comboFactorPermil,
   type ComboAdvantageRow,
 } from "../formula/combo.js";
@@ -32,6 +33,7 @@ import { IDOL_PRIORITY_ORDER, POSITION_TO_LANE } from "./constants.js";
 import type {
   ActivationTrace,
   BeatTrace,
+  BuffKey,
   BuffSnapshot,
   ChartNote,
   EffectCondition,
@@ -90,8 +92,18 @@ interface EngineCtx {
    * 「b49 SP FAIL を数えない全曲共通カウンタ」で完全一致（レーン別コンボは否定）。
    */
   readonly globalCombo: { value: number };
-  /** 【一時・T5調査用】仮説切替（既定: all / lane。SimulateInput.debugOptions 参照） */
-  readonly debug: { extensionMode: "all" | "longest"; comboBasis: "lane" | "global" };
+  /** 【一時・T5調査用】仮説切替（既定: all / lane / 25 / 11.5 / 57.5 / display。SimulateInput.debugOptions 参照） */
+  readonly debug: {
+    extensionMode: "all" | "longest" | "none";
+    comboBasis: "lane" | "global";
+    beatSuPermil: number;
+    beatCsuPermil: number;
+    beatCsuAmpPermil: number;
+    beatComboBasis: "lane" | "display";
+    amplifyMode: "single" | "perKey";
+    ampAffectsExtreme: boolean;
+    spDurN1: boolean;
+  };
   /** 処理済みビートノート数（comboBasis="global" 時のコンボ基準。増加前値を使用） */
   readonly beatNotesProcessed: { value: number };
 }
@@ -129,6 +141,13 @@ export function simulateTimeline(input: SimulateInput): TimelineResult {
     debug: {
       extensionMode: input.debugOptions?.extensionMode ?? "all",
       comboBasis: input.debugOptions?.comboBasis ?? "lane",
+      beatSuPermil: input.debugOptions?.beatSuPermil ?? 25,
+      beatCsuPermil: input.debugOptions?.beatCsuPermil ?? 11.5,
+      beatCsuAmpPermil: input.debugOptions?.beatCsuAmpPermil ?? 57.5,
+      beatComboBasis: input.debugOptions?.beatComboBasis ?? "display",
+      amplifyMode: input.debugOptions?.amplifyMode ?? "perKey",
+      ampAffectsExtreme: input.debugOptions?.ampAffectsExtreme ?? false,
+      spDurN1: input.debugOptions?.spDurN1 ?? true,
     },
     beatNotesProcessed: { value: 0 },
   };
@@ -216,6 +235,11 @@ function processBeat(
   // ---- ステップ10: 全効果のビート数 −1（継続回復/消費はここで処理）----
   for (const state of states) {
     for (const effect of state.effects) {
+      if (effect.skipFirstDecay) {
+        // A/SP（ステップ8）付与効果は付与ビートの減算をスキップ（spDurN1）
+        effect.skipFirstDecay = false;
+        continue;
+      }
       if (effect.remainingBeats < PERMANENT_BEATS) {
         effect.remainingBeats -= 1;
       }
@@ -552,17 +576,22 @@ function applyEffect(
   states: readonly LaneState[],
   events: LaneScoreEventTrace[],
   beat: number,
+  skipFirstDecay = false,
 ): number {
   const mapped = mapEffectToBuffKey(effect.type);
   if (mapped !== null) {
     const targets = resolveTargets(effect.target, self, states);
     for (const target of targets) {
+      // 【ユーザー確定 2026-08-30】付与時に上限で切り捨てない（超過分は内部保持）。
+      // 19段に+4段→内部23/表示20。期限切れ（インスタンス単位除去）後も内部段数が
+      // 上限以上なら上限を維持する。クランプは aggregateBuffs（スナップショット時）のみ。
       target.effects.push({
         type: effect.type,
         stages: effect.stages ?? 1,
         limitRelease: mapped.limitRelease || effect.limitRelease === true,
         remainingBeats: effect.durationBeats == null ? PERMANENT_BEATS : effect.durationBeats,
         sourceSkillId: skill.id,
+        skipFirstDecay,
       });
     }
     return 0;
@@ -605,13 +634,20 @@ function applyEffect(
     case "effect_amplify": {
       const value = effect.value ?? 0;
       for (const target of resolveTargets(effect.target, self, states)) {
-        amplifyLongestRemaining(target, value);
+        if (ctx.debug.amplifyMode === "perKey") {
+          amplifyLongestPerKey(target, value, ctx.debug.ampAffectsExtreme);
+        } else {
+          amplifyLongestRemaining(target, value);
+        }
       }
       return 0;
     }
     case "effect_extension": {
       const value = effect.value ?? 0;
       for (const target of resolveTargets(effect.target, self, states)) {
+        if (ctx.debug.extensionMode === "none") {
+          continue; // 仮説: 延長なし（インスタンスは表記どおりの期限で切れる）
+        }
         if (ctx.debug.extensionMode === "longest") {
           // 仮説: 増強と同様に「残りビート最長の1インスタンスのみ」延長
           const extendable = target.effects.filter((a) => a.remainingBeats < PERMANENT_BEATS);
@@ -640,11 +676,45 @@ function applyEffect(
 }
 
 /**
- * 増強: 残りビート最大の1インスタンスへ段数加算
- * （research/01 §2.2「残りビート数が最長のものだけが増強・延長の対象」【Confirmed】。
- * 対象は全 BuffKey から**単一**インスタンス（実測 b3: photo-L5-3 の +2 は
- * コンボスコア上昇(残42b)のみに付き、ライブ中ステータスは変化しない — 
- * 実測 L3 stat が b4 で不変のことから確認。キー毎の選択は否定される）
+ * 【T5実測確定 2026-08-30】増強: BuffKey 毎に残りビート最大の 1 インスタンスへ段数加算。
+ * 根拠: b38 の L2 A やすらぎの贈り物（amplify+3 → L3）発動後の L3 パネル
+ * （research/14）で csu 8→11・su 13→16・テンション 5→8・asu 9→12 が同時に +3、
+ * かつ b3 の photo-L5-3（amplify+2）で csu 6→8・su 11→13・テンション 3→5・
+ * asu 7→9 が同時に +2。単一インスタンス選択（旧実装）では同時多キー +N を説明できない。
+ * vue（vocal_up_extreme）は対象外: b3/b38 の増強後も vue 段数は 10 のまま
+ * （b3-b67 の stat 倍率差分に vue 250‰ が固定で現れる・ampAffectsExtreme で切替可）。
+ */
+function amplifyLongestPerKey(state: LaneState, value: number, affectsExtreme: boolean): void {
+  const best = new Map<BuffKey, ActiveEffect>();
+  for (const active of state.effects) {
+    const mapped = mapEffectToBuffKey(active.type);
+    if (mapped === null) {
+      continue;
+    }
+    if (mapped.key === "vocal_up_extreme" && !affectsExtreme) {
+      continue;
+    }
+    if (mapped.limitRelease) {
+      // 上限解放変数型（tension_limit 等）は段数を持たない実体のため増強対象外
+      // （対象に含めると、や長い残りビートを理由に増強が吸収され段数バフが伸びない。
+      //  実測: b38 の amplify+3 はテンション（やすらぎの tension_limit ではなく
+      //  和歌の tension_up インスタンス）に乗る）
+      continue;
+    }
+    const prev = best.get(mapped.key);
+    if (prev === undefined || active.remainingBeats > prev.remainingBeats) {
+      best.set(mapped.key, active);
+    }
+  }
+  for (const active of best.values()) {
+    // 【ユーザー確定 2026-08-30】増強による加算も上限で切り捨てない（超過分は内部保持）。
+    active.stages += value;
+  }
+}
+
+/**
+ * 旧実装: 全 BuffKey から残りビート最大の 1 インスタンスのみ加算。
+ * （増強は最長のものだけが対象説。実測では上記 perKey が確定したため既定でない）
  */
 function amplifyLongestRemaining(state: LaneState, value: number): void {
   let longest: ActiveEffect | null = null;
@@ -658,6 +728,7 @@ function amplifyLongestRemaining(state: LaneState, value: number): void {
     }
   }
   if (longest !== null) {
+    // 【ユーザー確定 2026-08-30】増強による加算も上限で切り捨てない（超過分は内部保持）。
     longest.stages += value;
   }
 }
@@ -680,9 +751,11 @@ function settleScoreGet(
 
   let basicScore: number;
   let effectivePower: number;
+  let basicScoreRaw: number | undefined;
   if (isRatio) {
     // 割合型: 基本スコア = 累積総スコア × SkillPower（切捨て）、コンボ/ファン不適用
-    // 【Unknown: 累積の厳密な基準（全体かレーン別か等）は T5 の b103 検算で判定】
+    // 【T5実測確定: 基準はレーン累積+A行加算後（b103検算 basic=533,472,897=4,445,607,475×0.12）】
+    basicScoreRaw = ctx.cumulative.value;
     basicScore = floorDiv(ctx.cumulative.value * powerPermil, 1000);
     effectivePower = 1000;
   } else {
@@ -698,10 +771,11 @@ function settleScoreGet(
           : 1000; // P/フォト: 重みデータがないため 1000（§5.3【Estimate】）
     basicScore = mulPermil(live, weight);
     // type36 scaling（perStagePermil が null の間はスケーリングなし・P3c でフィッティング）
+    // perStagePermil は T5実測フィット値（2.5 等、小数になり得る）のため素の乗算で計算する
     const scaling = effect.scaling;
     if (scaling != null && scaling.perStagePermil != null) {
       const refStages = scalingStages(scaling.ref, snap);
-      effectivePower = mulPermil(powerPermil, 1000 + scaling.perStagePermil * refStages);
+      effectivePower = Math.floor((powerPermil * (1000 + scaling.perStagePermil * refStages)) / 1000);
     } else {
       effectivePower = powerPermil;
     }
@@ -713,7 +787,12 @@ function settleScoreGet(
   const comboF = isRatio ? 1000 : comboFactorPermil(comboForFactor(self, ctx), snap.combo_score_up, ctx.comboTable);
   const fanF = isRatio ? 1000 : fanFactorPermil(ctx.input.fanFactorPermil, snap.focus);
   const rand = ctx.input.rng.nextScoreRoll();
-  const crit = ctx.input.criticalProvider(beat, self.input.lane);
+  // 【T5実測確定】フォト行はクリティカル判定の対象外（b47/b132/b125 のポップが
+  // 全て非critの達成帯に成立。crit適用では r≈200-930 になり範囲外）
+  const crit =
+    skill.kind === "photo"
+      ? false
+      : ctx.input.criticalProvider(beat, self.input.lane);
   const critF = crit ? criticalFactorPermil(self.input.critExtrasPermil, snap.critical_coeff_up) : 1000;
   const score = computeEventScore({
     basicScore,
@@ -735,6 +814,7 @@ function settleScoreGet(
     comboFactorPermil: comboF,
     fanFactorPermil: fanF,
     isRatioScore: isRatio,
+    ratioBaseCumScore: isRatio ? basicScoreRaw : undefined,
     randPermil: rand,
     critFactorPermil: critF,
     gainedScore: score,
@@ -786,14 +866,30 @@ function settleBeatNote(
     if (snap === undefined) {
       throw new Error(`settleBeatNote: snapshot missing for lane index ${idx}`);
     }
+    // ミスノート: 挑戦自体が発生しない（スコア・乱数・コンボ不変）
+    if (
+      ctx.input.missedNotes?.some(
+        (m) => m.beat === note.beat && m.lane === state.input.lane,
+      )
+    ) {
+      return;
+    }
     const w = ctx.input.stage.beatWeightsPermil;
     const basicSum =
       mulPermil(mulPermil(state.input.deck.vocal, liveStatusMultiplierPermil(snap, "vocal")), w.vocal) +
       mulPermil(state.input.deck.dance, w.dance) +
       mulPermil(state.input.deck.visual, w.visual);
     const basic = Math.floor((basicSum * BEAT_LAMBDA_NUM) / BEAT_LAMBDA_DEN);
-    const b1 = b1Permil(snap, "beat", state.input.scoreBonusPct);
-    const comboF = comboFactorPermil(comboForFactor(state, ctx), snap.combo_score_up, ctx.comboTable);
+    const b1 = b1Permil(snap, "beat", state.input.scoreBonusPct, ctx.debug.beatSuPermil);
+    // 【T5実測確定】ビートCBの基準コンボは表示コンボ（=beat-1、A/SPビートも含む）。
+    // L1単独検証: 表示基準で 129/130 が r∈[945,1055] に収束（レーン別基準は 118/130）。
+    const comboCount =
+      ctx.debug.beatComboBasis === "display" ? note.beat - 1 : comboForFactor(state, ctx);
+    const baseX = baseComboBonusPermil(comboCount, ctx.comboTable);
+    // 【T5実測フィット】csu はコンボボーナスXを強化し（X_eff = X×(1000+amp×csu)/1000）、
+    // 平係数 c を持つ。c=11.5‰/段・amp=57.5‰/段（L3 118/133 hit、med=1000）。
+    const xEff = Math.floor((baseX * (1000 + ctx.debug.beatCsuAmpPermil * snap.combo_score_up)) / 1000);
+    const comboF = Math.floor(((1000 + xEff) * (1000 + ctx.debug.beatCsuPermil * snap.combo_score_up)) / 1000);
     const fanF = fanFactorPermil(ctx.input.fanFactorPermil, snap.focus);
     const rand = ctx.input.rng.nextScoreRoll();
     const crit = ctx.input.criticalProvider(note.beat, state.input.lane);
@@ -926,7 +1022,7 @@ function settleSkillNote(
     if (effect.condition === "battle_only") {
       continue;
     }
-    gained += applyEffect(state, effect, chosen, ctx, states, events, note.beat);
+    gained += applyEffect(state, effect, chosen, ctx, states, events, note.beat, ctx.debug.spDurN1);
   }
   activations.push({
     beat: note.beat,

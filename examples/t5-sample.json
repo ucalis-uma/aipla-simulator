@@ -1,0 +1,13 @@
+{
+  "deckFile": "../スコア分析サンプル/verification_data_v2.json",
+  "stage": { "file": "qt-daily-003-19", "laneAttributes": [2, 2, 1, 2, 2] },
+  "chart": { "file": "chart-hsm-004-001" },
+  "missedNotes": [
+    { "beat": 1, "lane": 1 },
+    { "beat": 1, "lane": 2 },
+    { "beat": 1, "lane": 3 },
+    { "beat": 1, "lane": 4 },
+    { "beat": 1, "lane": 5 }
+  ],
+  "mentalOverride": { "1": 105, "2": 102, "3": 104, "4": 103, "5": 101 }
+}

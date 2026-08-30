@@ -17,10 +17,14 @@ export const POSITION_TO_LANE: readonly [LaneNumber, LaneNumber, LaneNumber, Lan
 ];
 
 /**
- * アイドル処理順・対象選択の優先レーン順。
- * メンタル降順、同値は「左から 4-2-1-3-5」（research/01 §2.1【Confirmed】）。
+ * アイドル処理順・対象選択の同値タイブレーク順。
+ * 【ユーザー確定 2026-08-29】メンタル降順が原則で、メンタル同数の場合の発動順は
+ * L3 → L2 → L4 → L1 → L5（=発動優先位置①センター→②センター左→③センター右→
+ * ④左端→⑤右端の順、POSITION_TO_LANE と一致）。
+ * ※ 本実測編成ではメンタル同数が発生しないため 82/82 発動一致には影響しない
+ *   （規則の正しさの問題）。research/01 §2.1 の「4-2-1-3-5」説は本規則に訂正。
  */
-export const IDOL_PRIORITY_ORDER: readonly LaneNumber[] = [4, 2, 1, 3, 5];
+export const IDOL_PRIORITY_ORDER: readonly LaneNumber[] = [3, 2, 4, 1, 5];
 
 /**
  * ステージ属性コード → 属性名（data/stages/qt-daily-003-19.json laneAttributes=[2,2,1,2,2] が
@@ -35,6 +39,21 @@ export const ATTRIBUTE_CODE_TO_NAME: ReadonlyMap<number, "vocal" | "dance" | "vi
 
 /** ステータス系バフの1段あたり値（permil・research/01 §2.2【Confirmed】） */
 export const STATUS_UP_PER_STAGE_PERMIL = 50;
+/**
+ * ボーカル上昇超化（vocal_up_extreme）の1段あたり値。
+ * 【T5実測確定 2026-08-30】旧 50‰ 説は誤り。根拠: L3 stat_value の倍率差分
+ * （research/08 §3・research/14）— b2 A（fest-03-2 vue+10）で ×1.875→×2.125
+ * （+250‰）であり、vue 25‰×10段 = 250‰ でしか説明できない。
+ * b3-b67 の ×2.375〜×3.6743 全差分も 50×vu + 25×vue + 75×vb で完全整合。
+ */
+export const STATUS_UP_EXTREME_PER_STAGE_PERMIL = 25;
+/**
+ * ライブ中ステータス倍率のクランプ上限（×3.75）。
+ * 【T5実測確定 2026-08-30】research/08 §3 のとおり L3 stat_value は b68 以降
+ * floor(626,223×3.75) = 2,348,336 に完全固定。内部段数は超過分を保持するが
+ * 倍率は 3750‰ で頭打ち。
+ */
+export const LIVE_STATUS_MULTIPLIER_CAP = 3750;
 /** ブーストは上昇と別系統で加算重複（10段+10段=+125%） */
 export const STATUS_BOOST_PER_STAGE_PERMIL = 75;
 export const STATUS_DOWN_PER_STAGE_PERMIL = 50;

@@ -185,3 +185,36 @@ export function simulateTimeline(input: SimulateInput): TimelineResult
    絶対値の検証は不可・メンタル降順規則自体は research/01 §2.1【Confirmed】）
 
 既存テスト（234 passed）を壊さないこと。`npx vitest run` と `npx tsc --noEmit` を全グリーンで完了すること。
+
+---
+
+## §9 T5 ゴールデン確定仕様（2026-08-30・総スコア 1 の位まで完全一致）
+
+総スコア 17,529,132,014 に完全一致し、統合リージョンを除く全 119 ビートの累積スコアが
+実測 cumulative と一致（tests/golden/t5-scores.golden.test.ts）。
+
+| 項目 | 確定値 |
+|---|---|
+| スコア乱数 | **連続値（float, [0.95,1.05]）**。整数パーミル仮定は棄却 |
+| 丸めポリシー | **at-end（全ファクター積算→最終 1 回 floor）**。sequential は棄却 |
+| ビート CB | X=baseComboBonus(表示コンボ=beat-1)、X_eff=floor(X×(1000+57.5×csu)/1000)、CB=floor((1000+X_eff)×(1000+11.5×csu)/1000) |
+| ビート B1 | 1000+25×su+360 |
+| フォト行のクリティカル | **非適用**（b47/b132/b125 のポップが全て非 crit で成立） |
+| ミスノート | b1 全レーン（LIVE START 取りこぼし）。SimulateInput.missedNotes |
+| type36 スケーリング | A fest-03-2: 2.5‰/段（vb+vue 基準）／SP fest-03-1: 11‰/段 |
+| photo-L3-2 score_get | **160‰**（テキスト表記 20% と食い違い・ポップ実測で確定） |
+| wedding A type20 | **combo_score_up+5 [60b]** target=score_type_1（旧 ccu+5 解釈は棄却） |
+| 比率行基準 | レーン累積+15700 行加算後の累積 ×120‰（trace.ratioBaseCumScore） |
+| ポップ表示精度 | 10 万単位 truncation（100K 幅）。精密判定には不十分 |
+
+### 検証の枠組み
+- 逆算ソルバー（tests/golden/t5-solver.test.ts）がビート毎に実測 gained をターゲットに
+  連続乱数 r を逆算（単一イベント: BigInt 厳密逆算／複数イベント: 一様 f 二分探索+最終イベント
+  残余吸収／比率行: 先行乱数 1000 固定の構成的不動点）。
+- 失敗ビートは前方統合（最大 4 行）で総和一致を解く（フレーム帰属・表示遅延の例外 20 区間 36 ビート）。
+- ゴールデンテストは乱数列をリプレイし、total + 全ビート累積 + リージョン総和を検証する。
+
+### 既知の残課題
+- b1-3 の gained 帰属（表示遅延）と b47-51 等のフレーム帰属は「リージョン総和一致」でのみ検証。
+  ビート単位の一致は計測データの制約により検証対象外。
+- ポップの OCR 誤読（b97=330万は 350万の誤読等）が少数残る。gained/cumulative は信頼できる。

@@ -6,6 +6,7 @@
   "description": "IDOLY PRIDE (JP) live score calculator - pure-function calc core",
   "scripts": {
     "test": "vitest run",
+    "simulate": "npx -y tsx src/cli/simulate.ts",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "build:data": "node tools/importers/build_data.mjs"

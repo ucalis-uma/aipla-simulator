@@ -1,7 +1,8 @@
 /**
  * buffs.ts 単体テスト（合成データのみ。実測大ファイルは読まない）。
  *
- * 出典: research/01 §2.2（合成=加算・上限超過は付与時に無視）・§2.3（10段+10段=2.25倍）・
+ * 出典: research/01 §2.2（合成=加算。上限超過は付与時に切り捨てず内部保持=【ユーザー確定
+ *       2026-08-30】・表示値のみスナップショット時にクランプ）・§2.3（10段+10段=2.25倍）・
  *       §2.6（テンション副効果 -1.5%/段・集目 3段+21‰〜10段+50‰）、
  *       research/02 §1.3（B1 構成）・§1.6（段数上限・limit解放 20→30）、
  *       P3a 写像仕様（上限解放変数型の基底キー統合）。
@@ -206,12 +207,56 @@ describe("aggregateBuffs", () => {
     expect(snap.vocal_up).toBe(10);
   });
 
-  it("上限クランプ: vocal_up 12段+12段=24 → 20（research/01 §2.2・超過分は無視）", () => {
+  it("上限クランプ: vocal_up 12段+12段=24 → 20（表示値のみクランプ・超過分は内部保持）", () => {
     const snap = aggregateBuffs([
       effect({ type: "vocal_up", stages: 12, sourceSkillId: "s1" }),
       effect({ type: "vocal_up", stages: 12, sourceSkillId: "s2" }),
     ]);
     expect(snap.vocal_up).toBe(20);
+  });
+
+  it("【ユーザー確定 2026-08-30】over-cap 内部保持: 19段+4段 → 表示20（切り捨てない）", () => {
+    // 付与時に切り捨てないため aggregateBuffs には未整形の19段+4段が渡る。
+    // スナップショット（計算式・見た目で使う値）だけが上限20でクランプされる。
+    const snap = aggregateBuffs([
+      effect({ type: "vocal_up", stages: 19, sourceSkillId: "s1" }),
+      effect({ type: "vocal_up", stages: 4, sourceSkillId: "s2" }),
+    ]);
+    expect(snap.vocal_up).toBe(20);
+  });
+
+  it("【ユーザー確定 2026-08-30】over-cap 保持: 期限切れ後も内部段数が上限以上なら上限維持", () => {
+    // 内部23段（19+2+2）→ 2段のインスタンスが期限切れ → 内部21段 → 表示20のまま維持。
+    // 旧仕様（付与時に超過分を無視）では2段目が付与されず期限切れ後に 19 に落ちるため、
+    // 本テストは保持セマンティクスの回帰検知になる。
+    // 期待値は old 説だと 19、new 説だと 20。
+    const before = aggregateBuffs([
+      effect({ type: "vocal_up", stages: 19, remainingBeats: 3, sourceSkillId: "s1" }),
+      effect({ type: "vocal_up", stages: 2, remainingBeats: 1, sourceSkillId: "s2" }),
+      effect({ type: "vocal_up", stages: 2, remainingBeats: 3, sourceSkillId: "s3" }),
+    ]);
+    expect(before.vocal_up).toBe(20);
+    // s2（2段）が期限切れした直後の集計
+    const after = aggregateBuffs([
+      effect({ type: "vocal_up", stages: 19, remainingBeats: 2, sourceSkillId: "s1" }),
+      effect({ type: "vocal_up", stages: 2, remainingBeats: 2, sourceSkillId: "s3" }),
+    ]);
+    expect(after.vocal_up).toBe(20);
+  });
+
+  it("over-cap 保持は limitRelease なしの内部23段にも適用され、解放時に露出する", () => {
+    // 内部24段（12+12）を保持。limitRelease 到着で cap30 になると保持分の 24 が表示される。
+    const withoutLimit = aggregateBuffs([
+      effect({ type: "vocal_up", stages: 12, sourceSkillId: "s1" }),
+      effect({ type: "vocal_up", stages: 12, sourceSkillId: "s2" }),
+    ]);
+    expect(withoutLimit.vocal_up).toBe(20);
+    const withLaterLimit = aggregateBuffs([
+      effect({ type: "vocal_up", stages: 12, sourceSkillId: "s1" }),
+      effect({ type: "vocal_up", stages: 12, sourceSkillId: "s2" }),
+      effect({ type: "vocal_up", stages: 1, sourceSkillId: "s3", limitRelease: true }),
+    ]);
+    expect(withLaterLimit.vocal_up).toBe(25);
   });
 
   it("limitRelease 付きソースが混ざるとキー上限が30へ拡張", () => {
@@ -272,11 +317,11 @@ describe("liveStatusMultiplierPermil", () => {
     expect(liveStatusMultiplierPermil(snap, "vocal")).toBe(2250);
   });
 
-  it("vocal_up_extreme は vocal_up（上昇系）に加算される【Estimate】", () => {
+  it("vocal_up_extreme の1段値は 25‰（T5実測確定: L3 stat 倍率差分）", () => {
     expect(
       liveStatusMultiplierPermil(snapshotOf({ vocal_up: 10, vocal_up_extreme: 10 }), "vocal"),
-    ).toBe(2000);
-    expect(liveStatusMultiplierPermil(snapshotOf({ vocal_up_extreme: 30 }), "vocal")).toBe(2500);
+    ).toBe(1750);
+    expect(liveStatusMultiplierPermil(snapshotOf({ vocal_up_extreme: 30 }), "vocal")).toBe(1750);
   });
 
   it("dance/visual は常に 1000（対称 type が現データに無いため）", () => {

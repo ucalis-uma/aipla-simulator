@@ -214,16 +214,40 @@ export interface SimulateInput {
   criticalProvider: CritProvider;
   /** スコア乱数源（必須。Mode R は FixedRng(1000) 系） */
   rng: ScoreRng;
+  /**
+   * ミスノート（谱面ノートをプレイヤーが取りこぼした組）。
+   * 指定された (beat, lane) のビートは挑戦自体が発生せず、スコア・乱数・レーンコンボも変動しない。
+   * T5実測では b1 の L1/L2/L4/L5（LIVE START 直後の取りこぼし。b1 のポップが全レーン null、
+   * かつ b1-4 リージョンの達成帯がミスなしでは不成立）。
+   */
+  missedNotes?: ReadonlyArray<{ beat: number; lane: LaneNumber }>;
   /** 丸めポリシー（既定 "sequential"。T4/T5 で判定） */
   roundingPolicy?: RoundingPolicy;
   /**
    * 【一時・T5調査用】未確定仕様の仮説切替。T5確定後に削除する。
-   * - extensionMode: effect_extension の適用範囲（all=延長可能な全インスタンス / longest=最長残りのみ）
+   * - extensionMode: effect_extension の適用範囲（all=延長可能な全インスタンス / longest=最長残りのみ / none=延長なし）
    * - comboBasis: コンボ係数の基準コンボ数（lane=レーン別状態 / global=処理済みビートノート数）
+   * - beatSuPermil: ビート B1 の score_up 係数‰/段（既定 25）
+   * - beatCsuPermil: ビート CB の combo_score_up 平係数‰/段（既定 11.5。T5実測フィット）
+   * - beatCsuAmpPermil: ビート CB のコンボボーナスXに対する csu 連成係数‰/段
+   *   （X_eff = X×(1000+amp×csu)/1000。既定 57.5。T5実測フィット）
+   * - beatComboBasis: ビート CB の基準コンボ（display=表示コンボ=beat-1【T5確定】/ lane=レーン別）
+   * - amplifyMode: effect_amplify の対象選択（perKey=キー毎に最長残り 1 インスタンス【T5確定】/
+   *   single=全体で最長 1 インスタンス）
+   * - ampAffectsExtreme: 増強の対象に vocal_up_extreme を含むか（実測では false が正）
+   * - spDurN1: A/SP（ステップ8）付与の段階型効果が付与ビートのステップ10減算を
+   *   スキップするか（実測では true が正）
    */
   debugOptions?: {
-    extensionMode?: "all" | "longest";
+    extensionMode?: "all" | "longest" | "none";
     comboBasis?: "lane" | "global";
+    beatSuPermil?: number;
+    beatCsuPermil?: number;
+    beatCsuAmpPermil?: number;
+    beatComboBasis?: "lane" | "display";
+    amplifyMode?: "single" | "perKey";
+    ampAffectsExtreme?: boolean;
+    spDurN1?: boolean;
   };
 }
 
@@ -259,6 +283,11 @@ export interface LaneScoreEventTrace {
   fanFactorPermil: number;
   /** 割合型スコア（score_get_by_score_ratio）か。基本スコアの基準が累積スコア */
   isRatioScore: boolean;
+  /**
+   * 割合型スコアの基本スコア基準となった累積スコア（自身の加算前・×SkillPower 前）。
+   * 逆算ソルバーが乱数変更に伴う basicScore の再計算に使う（T5 b103 等）。
+   */
+  ratioBaseCumScore?: number;
   /** スコア乱数 permil */
   randPermil: number;
   /** クリティカル係数 permil（非発生 1000） */

@@ -121,13 +121,20 @@ describe("computeEventScore（BigInt フォールバック）", () => {
 });
 
 describe("computeEventScore（入力バリデーション）", () => {
-  it.each([949, 1051, 999.5])("randPermil=%j は範囲外で throw", (rand) => {
+  // 【T5確定】スコア乱数は連続値（float）のため非整数も妥当。範囲外のみ throw。
+  it.each([949, 1051, NaN, Infinity])("randPermil=%j は範囲外で throw", (rand) => {
     expect(() => computeEventScore({ basicScore: 1, randPermil: rand })).toThrow();
   });
 
   it("randPermil は 950 と 1050 が許容される", () => {
     expect(computeEventScore({ basicScore: 100, randPermil: 950 })).toBe(95);
     expect(computeEventScore({ basicScore: 100, randPermil: 1050 })).toBe(105);
+  });
+
+  it("【T5確定】randPermil は連続値（非整数 permil）も許容される", () => {
+    // 999.5‰ は T5 逆算ソルバーが実際に生成した種類の値
+    const v = computeEventScore({ basicScore: 100000, randPermil: 999.5 });
+    expect(v).toBe(Math.floor((100000 * 999.5) / 1000));
   });
 
   it.each([

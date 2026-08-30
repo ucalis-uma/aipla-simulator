@@ -254,6 +254,63 @@ describe("simulateTimeline: 処理順と実効ビート数（§3）", () => {
   });
 });
 
+describe("simulateTimeline: over-cap 内部保持（【ユーザー確定 2026-08-30】）", () => {
+  it("上限超過の付与は切り捨てず、期限切れ後も内部段数が上限以上なら上限を維持する", () => {
+    // L3 に vocal_up を 19段[5b] + 2段[2b] + 2段[3b]（後半発動）で付与:
+    //   b1: 19+2=21 → 表示20（超過分は切り捨てない）
+    //   b2: 21 → 20
+    //   b3: 2段[2b]が期限切れ → 内部21 → 表示20を維持（旧仕様の付与時切り捨てなら19に落ちる）
+    //   b4/b5: 21 → 20
+    //   b6: 全インスタンス期限切れ → 0
+    const lanes = defaultLanes();
+    const l3 = lanes[2];
+    if (l3 === undefined) {
+      throw new Error("fixture broken");
+    }
+    l3.skills = [
+      skill({
+        id: "p-19",
+        kind: "P",
+        lane: 3,
+        ct: 100,
+        effects: [
+          { type: "vocal_up", stages: 19, durationBeats: 5, target: "self", condition: "none" },
+        ],
+      }),
+      skill({
+        id: "p-2",
+        kind: "P",
+        lane: 3,
+        ct: 100,
+        effects: [
+          {
+            type: "vocal_up",
+            stages: 2,
+            durationBeats: 3,
+            target: "self",
+            condition: "self_vocal_lane", // L3 は vocal → 後半発動
+          },
+        ],
+      }),
+    ];
+    l3.photos = [
+      skill({
+        id: "ph-2",
+        kind: "photo",
+        lane: 3,
+        limitPerLive: 1, // b1 のみ発動（ct:null のフォトの毎ビート再発動を防止）
+        effects: [
+          { type: "vocal_up", stages: 2, durationBeats: 2, target: "self", condition: "none" },
+        ],
+      }),
+    ];
+    const notes = [1, 2, 3, 4, 5, 6].map((b) => note(b, 1, 0));
+    const result = simulateTimeline(input(notes, lanes));
+    const snaps = result.beats.map((bt) => bt.buffSnapshots[2]?.vocal_up);
+    expect(snaps).toEqual([20, 20, 20, 20, 20, 0]);
+  });
+});
+
 describe("simulateTimeline: CT 規則（§3-9・research/08 §2.3）", () => {
   it("Aスキルの最小再使用間隔は CT（CT10 → gap10・【T5実測確定】CT満タンセット+ステップ9減算）", () => {
     const lanes = defaultLanes();
@@ -396,7 +453,7 @@ describe("simulateTimeline: スタミナ（§3-4・§6）", () => {
 });
 
 describe("simulateTimeline: P前半の選択順（§4）", () => {
-  it("メンタル降順・同値は [4,2,1,3,5] 順で発動する", () => {
+  it("メンタル降順・同値は [3,2,4,1,5]（発動優先位置①〜⑤順）で発動する", () => {
     const lanes: LaneInput[] = [
       lane(1, { deck: deck({ mental: 400 }) }),
       lane(2, { deck: deck({ mental: 500 }) }),
@@ -420,8 +477,8 @@ describe("simulateTimeline: P前半の選択順（§4）", () => {
     const firstHalf = result.activations
       .filter((a) => a.phase === "first" && a.success)
       .map((a) => a.lane);
-    // メンタル: L4=L2(500・同値→[4,2]順) > L1(400) > L3(300) > L5(200)
-    expect(firstHalf).toEqual([4, 2, 1, 3, 5]);
+    // メンタル: L4=L2(500・同値→タイブレーク [3,2,4,1,5] で L2 が先) > L1(400) > L3(300) > L5(200)
+    expect(firstHalf).toEqual([2, 4, 1, 3, 5]);
   });
 });
 

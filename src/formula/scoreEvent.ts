@@ -121,12 +121,12 @@ export function computeEventScore(input: EventScoreInput): number {
   requireNonNegInt(critFactorPermil, "critFactorPermil");
   requireNonNegInt(fixedScore, "fixedScore");
   if (
-    !Number.isInteger(randPermil) ||
+    !Number.isFinite(randPermil) ||
     randPermil < EVENT_RAND_MIN_PERMIL ||
     randPermil > EVENT_RAND_MAX_PERMIL
   ) {
     throw new Error(
-      `randPermil must be an integer in [${EVENT_RAND_MIN_PERMIL}, ${EVENT_RAND_MAX_PERMIL}], got ${randPermil}`,
+      `randPermil must be a finite number in [${EVENT_RAND_MIN_PERMIL}, ${EVENT_RAND_MAX_PERMIL}], got ${randPermil}`,
     );
   }
 
@@ -157,6 +157,17 @@ function multiplySequential(basicScore: number, factors: readonly number[]): num
   let value = basicScore;
   let valueBig = 0n;
   for (const permil of factors) {
+    if (!Number.isInteger(permil)) {
+      // 連続乱数（float）ステップ: float64 で計算（値域は安全整数内）
+      if (!isBig) {
+        value = Math.floor((value * permil) / 1000);
+      } else {
+        value = Number(valueBig) >= 0 ? Math.floor((Number(valueBig) * permil) / 1000) : 0;
+        isBig = false;
+        valueBig = 0n;
+      }
+      continue;
+    }
     if (!isBig) {
       const product = value * permil;
       if (Number.isSafeInteger(product)) {
@@ -174,14 +185,26 @@ function multiplySequential(basicScore: number, factors: readonly number[]): num
 
 /**
  * at-end: 全ファクターを厳密に積算し、最後に 1000^n で切り捨てる。
- * 浮動小数の境界誤差を避けるため常に BigInt を使用する。
+ *
+ * T5確定: ゲーム本体はこの方式（最終floorのみ）。sequential では crit 係数との
+ * 二重 floor により約21.5%の目標値が到達不能になり（b156で実際に発生）、
+ * 実測と矛盾するため。連続乱数（float）ステップは float64 で積算する
+ * （ BigInt 基数の相対誤差 2^-53 ≪ score 刻みで floor 結果は不変）。
  */
 function multiplyAtEnd(basicScore: number, factors: readonly number[]): number {
   let numerator = BigInt(basicScore);
   let denominator = 1n;
+  let floatMul = 1;
   for (const permil of factors) {
-    numerator *= BigInt(permil);
-    denominator *= 1000n;
+    if (Number.isInteger(permil)) {
+      numerator *= BigInt(permil);
+      denominator *= 1000n;
+    } else {
+      floatMul *= permil / 1000;
+    }
   }
-  return Number(numerator / denominator);
+  if (floatMul === 1) {
+    return Number(numerator / denominator);
+  }
+  return Math.floor((Number(numerator) * floatMul) / Number(denominator));
 }

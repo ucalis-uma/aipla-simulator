@@ -363,3 +363,99 @@ b50=2.975/b51=3.325/b60=3.675/b68+=上限3.75）+ b45 の su 低下タイミン�
 1. L3 延長セマンティクス確定（インスタンス追跡 fitter + stat 列/su 期限の逆算）→ L3 ビート統合
 2. type36 フィッティング（b69/b103/b156）
 3. ソルバー → t5_replay_rands.json → T5 本テスト（ReplayRng で cumulative 157点完全一致）
+
+### T5 調査フェーズ4（2026-08-30）— over-cap 確定・L3 実態解明・ソルバー基盤
+
+#### バフ上限超過（over-cap）仕様の確定・実装（タスク1完了）
+【ユーザー確定 2026-08-30】「バフは上限段数を超えて付与されても内部的には切り捨てず
+超過分を保持する。計算式・見た目で使う値は上限でクランプされるが、後から一部インスタンスの
+期限が切れても内部段数が上限以上であれば上限段数を維持する（19段に+4段→内部23/表示20。
+次ビートで2段切れても内部21/表示20）」。
+- 実装調査の結果、エンジン本体は既にこの挙動（applyEffect は stages を無整形で push、
+  期限切れはインスタンス単位除去、aggregateBuffs が合算後に clamp）であることを確認。
+  修正は JSDoc の旧仕様記述（research/01 §2.2「付与時に無視」）の訂正と回帰テスト追加。
+- buffs.ts: ファイルヘッダ+aggregateBuffs+ActiveEffect の JSDoc を新仕様に更新。
+- buffs.test.ts: 「19+4→表示20」「期限切れ後も20維持（旧仕様なら19）」「limit解放時に
+  内部24が露出（12+12+1limit→25）」の3テスト追加。
+- engine.test.ts: P×2+フォトで 19段[5b]+2段[2b]+2段[3b] を付与し b1-b6 のスナップショット
+  [20,20,20,20,20,0] を検証するエンドツーエンドテスト追加。
+- **273 passed / 1 skipped、typecheck 0 エラー。**
+
+#### L3 ビート残差の実態（fit 窓列挙による）
+tests/golden/t5-l3fit.test.ts（一時ハーネス）で L3 各ビートの実現可能 (su_t, csu_t) 整数ペアを列挙:
+- **photo-L1-2（su+8[31b]）の対象は vocal_type_2 = L2 と L3 の両方**（golden 確認）。
+  L2 のビート fit は su 係数 25‰ を強く要求（su=25 で 70/81、su=0 で 28/81）
+  → su 25‰/段・L1-2 の L2/L3 付与は確定。
+- **L3 ビートは sim の su=11 を受け入れない**（b6-b19 は (su≈0-3, c≈3-4) 窓、b45-46 は
+  (su3, c4) 窓）。一方 **b47/b97 の photo-L3-2 passive イベントは (su3, csu8) / (su14, csu14)
+  で整合**（score_get 系は B1_passive に su 入り・CB 10%/段で sim と一致）。
+- **b132 passive は c≈22 を要求**（sim csu=20）→ b118 の photo-L5-3 増強(+2)が実ゲームでは
+  csu に乗った証拠。sim の「全体最長1インスタンス」増強選択は要修正候補
+  （vocal_type_1 の最長＝csu インスタンス、またはキー単位選択）。
+- **ビートと passive で csu の効き方が矛盾**（b45-46 ビートは c≈3-4、b47 passive は c=8-9）。
+  ビート CB の csu 係数 5%/段説（debugOptions.beatCsuPermil=50）だと b6-b19・b45-46 が_fit_
+  するが b21 以降が崩れる。ビート B1 の su 係数 0 説（beatSuPermil=0）でも同様に部分整合。
+- 実測 pop 列にはフレーム混入汚染がある（b40 L3=863300、b120 L3=3800000、b45 L2/L4 異常等）
+  → pop ベースの fit は汚染ビートの除外が必須。gained/cumulative 列は自己整合
+  （cum差分==gained 157/157・最終=total_score 17,529,132,014）。
+- **gained 列はスキル/フォトのスコアを最大1行後ろに記録する**（b2 の A が b3 行、
+  photo-L3-2 が b47→b48 行。ビートスコアは同時行）。フレーム異常はローカルに総和保存。
+
+#### T5 ソルバー（tests/golden/t5-solver.test.ts・一時）を実装
+- 乱数消費順にトレースイベントを復元し、行単位の gained をターゲットに
+  r∈[950,1050] 整数の厳密一致（Σ computeEventScore(rand)==gained）を解く。
+  行で解けない場合はフレーム異常を考慮し隣接行と統合したリージョン（最大3行）で総和一致。
+- クリティカルフラグ（yellow_lanes）を反映（b4/b5 の L3 は crit: critF≈3151、
+  b156 は crit かつ ccu=30 で critF≈4651）。b103 の割合型行は累積依存のため反復収束。
+- 結果: 55 リージョン中 5 が厳密解。**残りは (a) L3 ビートの系統的過大（×0.60-0.85・
+  全ビートリージョンの s≈0.70-0.79 の主因）、(b) type36 の perStagePermil 未フィッティング
+  （b69 s=1.93・b156 s=1.20・b103 s=1.84）、(c) A/SP 単発イベントの 1-9% の係数誤差
+  （b30 s=1.02・b80 s=0.94・b106 s=1.09 等）に分類される。**
+- L3 ビートの s が buff 推移と連動して変動することから、根本原因は「L3 のビート B1/CB
+  構造またはバフ進化（延長/増強の対象）」である可能性が高い。passive イベントは整合
+  しているため、**ビート固有の係数構造（su/csu/bonus の組み合わせ）の機械探索**が次一手。
+
+#### 次ターン（T5 継続）
+1. L3 ビート構造の確定: (beatSu, beatCsu, bonus.beat 有無, 延長/増強対象) の仮説空間を
+   ソルバーの厳密一致率で評価する（debugOptions を拡張済み: beatSuPermil/beatCsuPermil/
+   extensionMode none 追加）。
+2. 増強（amplify）の対象選択: b118 +2 が csu に乗る実測 → 「vocal_type_1 の最長」または
+   「キー内最長」説をエンジンに実装して検証。
+3. type36: L3 ビート確定後に b69/b156/b103 の 3 方程式で perStagePermil を確定し
+   skills_golden.json へ反映（engine の scaling 実装は済み）。
+4. ソルバー再実行 → t5_replay_rands.json 生成 → T5 本テスト
+   （ReplayRng で total_score 17,529,132,014 完全一致+リージョン照合）を実装。
+
+---
+
+## P3d: T5 ゴールデン完全一致達成（2026-08-30・連続乱数確定）
+
+### 結果
+- **総スコア 17,529,132,014 に 1 の位まで完全一致**（tests/golden/t5-scores.golden.test.ts 4/4 PASS）。
+- **統合リージョンを除く全 119 ビートで累積スコアが実測 cumulative と 1 の位まで一致**（CUMCHECK errors=0）。
+- 統合リージョン 20 区間 36 ビート（b1-3 表示遅延 / b47-51, b68-72, b80-87, b97-98, b101-103, b106-109, b123-124, b130-132, b146-151 のフレーム帰属・ポップ混入ゾーン）もローカル総和で完全一致。
+- ソルバー: tests/golden/t5-solver.test.ts（ビート毎厳密逆算、2 反復で収束、fixtures/t5_replay_rands.json 生成）。
+
+### 本セッションで確定した仕様（【T5確定】）
+1. **スコア乱数は連続値（float, [0.95,1.05]）**。整数パーミル仮定では単一 A スキル 9 イベントの ±0.03% ワobble が説明不能だったが、連続値なら全イベントが成立帯に収まる。computeEventScore の randPermil 検証を非整数許容に変更。
+2. **丸めは at-end（最終 floor のみ）**。sequential（ステップ毎 floor）では crit 係数との二重 floor により約 21.5% の目標値が到達不能になり（b156 で発生）、実測と矛盾。
+3. **フォト行はクリティカル判定の対象外**。b47/b132/b125 のポップが全て非 crit で成立（crit 適用では r≈200-930 で範囲外）。
+4. **b1 は全レーンミス**（LIVE START 直後の取りこぼし）。b1 のポップが全レーン null、かつ b1-3 リージョンの達成帯がミスなしでは不成立（s=0.9491）。missedNotes を SimulateInput に追加。
+5. **b97/b132 の L3 ビートはクリティカル**。フォトポップの遮蔽で critFlags 抽出から欠落していた（b97 を crit 扱いすると領域 97-100 の s=1.158→1.001、b132 で 1.186→1.002）。t5_measured.json に補正。
+6. **wedding A（sk-ktn-05-wedd-00-2）の type20 効果は combo_score_up+5 [60b]**（旧解釈 critical_coeff_up+self_visual_lane 不発は誤り）。b107 以降 csu=min(26+5,30)=30（かんしょ combo_score_limit+10 の上限でクランプ）となり b106-155 の全領域 s∈[0.987,1.023] に成立。旧解釈では critF=4,901 が必要になり b116+ の実測と矛盾。
+7. **type36 スケーリング**: A fest-03-2 は perStage=2.5‰/段（b2/b69/b156 の 3 点フィット、成立帯 [2.37,2.78]）、SP fest-03-1 は perStage=11‰/段（比率行との結合 A×2.68689+667M=15,147M → A≈5,390M、成立帯 p∈[10.9,11.1]）。初版の SP=90 は比率行の結合係数 1.68689 を忘れた誤りだった。
+8. **photo-L3-2 の score_get は 160‰**（テキスト表記 20% と食い違い）。b47/b97/b132 のポップ（万 truncation）から確定。b97 のポップ 330万は誤 OCR（350万なら r=986 で成立）。
+9. **比率行の基準累積はレーン累積+A行加算後**（trace に ratioBaseCumScore を追加。b103 検算 basic=533,472,897=4,445,607,475×0.12）。
+10. **比率行を含むリージョンの逆算は構成的不動点**: 先行乱数を 1000 に固定すると base' が反復に依存しなくなり 1 反復で収束。uniform f 方式は利得 −1.687 の発散振動を生んだ（実測 diff 列が等比 ±1.687 で発散することを確認）。
+11. ポップ表示は **10 万単位 truncation**（390万 = [3.90M, 4.00M) の 100K 幅）。ポップによる r の精密判定は不可で、gained/cumulative が信頼できる。
+12. 残サ: b106-113 は (csu=30) 解釈で領域 106-109 s=1.012 / 110-113 s=0.987 に解決。b97-100 s=1.001 / 130-133 s=1.002。
+
+### 変更ファイル
+- src/formula/scoreEvent.ts: randPermil 検証の非整数許容、multiplySequential/multiplyAtEnd の float 乱数対応
+- src/timeline/engine.ts: missedNotes 対応、フォト行 crit 除外、ratioBaseCumScore トレース追加、type36 スケーリングの素の乗算化
+- src/timeline/types.ts: SimulateInput.missedNotes、LaneScoreEventTrace.ratioBaseCumScore
+- data/skills_golden.json: photo-L3-2 pow 200→160、fest-03-2 perStage=2.5、fest-03-1 perStage=11、wedd-00-2 type20→combo_score_up+5
+- tests/golden/fixtures/t5_measured.json: b97/b132 の critFlags 補正
+- tests/golden/t5-solver.test.ts: 連続乱数ビート毎厳密逆算ソルバー（全面書き換え）
+- tests/golden/fixtures/t5_replay_rands.json: 生成乱数列（連続値 717 イベント分）
+- tests/golden/t5-scores.golden.test.ts: ゴールデンテスト（新規・4 tests）
