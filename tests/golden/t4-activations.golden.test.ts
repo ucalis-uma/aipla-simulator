@@ -198,13 +198,18 @@ const LANE_ATTRIBUTE: Record<LaneNumber, "vocal" | "dance" | "visual"> = {
  * - b47 後半: L3(photo-L3-2) → L4(photo-L4-1) → L2(photo-L2-3)
  * - b3 後半: L2(photo-L2-3) → L5(photo-L5-3)
  * research/13 §9-9（旧値は L3 最下位で b47/b51 と矛盾）
+ *
+ * メンタル実数は research/14 §4（ステータス一覧 PNG の読み取り値）:
+ * L1=8996 > L3=8074 > L4=5890 > L2=5880 = L5=5880。
+ * L2/L5 は同値のため b3 後半 L2→L5 の順は同値タイブレーク
+ * （IDOL_PRIORITY_ORDER=[3,2,4,1,5]）で解決される【ユーザー確定 2026-08-29】
  */
 const CALIBRATED_MENTAL: Record<LaneNumber, number> = {
-  1: 105,
-  2: 102,
-  3: 104,
-  4: 103,
-  5: 101,
+  1: 8996,
+  2: 5880,
+  3: 8074,
+  4: 5890,
+  5: 5880,
 };
 
 function buildLanes(): LaneInput[] {
@@ -273,6 +278,9 @@ class NeutralRng implements ScoreRng {
   nextCritical(): boolean {
     return false;
   }
+  nextFloat(): number {
+    return 0;
+  }
 }
 
 function buildInput(lanes: LaneInput[]): SimulateInput {
@@ -304,7 +312,6 @@ function buildInput(lanes: LaneInput[]): SimulateInput {
     roundingPolicy: "sequential",
   };
 }
-
 // ---- ゴールデン期待値（measured_data_v2 発動ログ order 1〜15 の写像）----
 // skill_name → skillId は data/skills_golden.json の name 照合で確定させている
 // （波ダンジョンの文字种違いを避けるため ID を直書きする）

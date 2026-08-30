@@ -81,6 +81,38 @@ describe("ContinuousRng", () => {
     expect(() => new ContinuousRng(1, -0.1)).toThrow();
     expect(() => new ContinuousRng(1, 1.1)).toThrow();
   });
+
+  it("nextFloat は [0, 1) の一様実数（動的クリティカル抽選用）", () => {
+    const rng = new ContinuousRng(9);
+    const n = 20000;
+    let sum = 0;
+    let inRange = 0;
+    for (let i = 0; i < n; i++) {
+      const f = rng.nextFloat();
+      if (f >= 0 && f < 1) inRange++;
+      sum += f;
+    }
+    expect(inRange).toBe(n);
+    expect(Math.abs(sum / n - 0.5)).toBeLessThan(0.01);
+  });
+
+  it("nextFloat は同一シードで決定論的", () => {
+    const a = new ContinuousRng(77);
+    const b = new ContinuousRng(77);
+    const seqA = Array.from({ length: 16 }, () => a.nextFloat());
+    const seqB = Array.from({ length: 16 }, () => b.nextFloat());
+    expect(seqA).toEqual(seqB);
+  });
+
+  it("nextFloat で 50% しきい値抽選が約 50% 成立する", () => {
+    const rng = new ContinuousRng(31);
+    let hits = 0;
+    const n = 20000;
+    for (let i = 0; i < n; i++) {
+      if (rng.nextFloat() < 0.5) hits++;
+    }
+    expect(Math.abs(hits / n - 0.5)).toBeLessThan(0.02);
+  });
 });
 
 describe("NeutralRng", () => {

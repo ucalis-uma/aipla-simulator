@@ -67,4 +67,8 @@ export class FixedRng implements ScoreRng {
   nextCritical(): boolean {
     return this.nextU32() < this.critThreshold;
   }
+
+  nextFloat(): number {
+    return this.nextU32() / TWO_POW_32;
+  }
 }

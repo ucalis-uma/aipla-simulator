@@ -18,7 +18,9 @@
  *   "missedNotes": [{ "beat": 1, "lane": 1 }, ...],   （省略可）
  *   "mentalOverride": { "1": 105, ... },    （省略可・P発動順=メンタル降順に影響）
  *   "disabledSkillIds": ["sk-..."],         （省略可・スキル/フォトの無効化）
- *   "critRate": 0                           （省略可・クリティカル確率 0-1。レート式は未解明）
+ *   "critRate": 0.5                         （省略可・基礎クリティカル率 0-1。Peing確定仕様:
+ *                                            min(0.50, base) + crit率バフ5%/段 を動的抽選。
+ *                                            既定 0.50）
  * }
  *
  * 出力（stdout / --out）:
@@ -28,8 +30,8 @@
  *     stats: { min, max, mean, median, p10, p90, laneMeans }                  // Monte Carlo N 回
  *   }
  *
- * スコア乱数は連続値 [0.95,1.05]（T5確定・at-end 丸め）。クリティカル率の式は未解明のため
- * critRate パラメータ（既定 0）。シード固定で再現可能（ContinuousRng = mulberry32）。
+ * スコア乱数は連続値 [0.95,1.05]（T5確定・at-end 丸め）。クリティカルは動的モード
+ * （baseCritRate・Peing確定 2026-08-30）でスナップショット毎に抽選する。シード固定で再現可能。
  */
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import path from "node:path";
@@ -45,6 +47,7 @@ import {
   laneBreakdown,
   type ChartFile,
   type DeckJsonV2,
+  type MasterSkillDef,
   type SimSourceData,
   type SimulateInputBase,
   type StageWeights,
@@ -69,13 +72,13 @@ function parseArgs(argv: string[]): CliArgs {
     const a = argv[i];
     if (a === "--input") args.input = argv[++i] ?? "";
     else if (a === "--n") args.n = Number(argv[++i] ?? 1000);
-    else if (a === "--crit-rate") args.critRate = Number(argv[++i] ?? 0);
+    else if (a === "--crit-rate") args.critRate = Number(argv[++i] ?? 0.5);
     else if (a === "--seed") args.seed = Number(argv[++i] ?? 1);
     else if (a === "--out") args.out = argv[++i] ?? null;
   }
   if (!args.input) {
     console.error(
-      "usage: simulate.ts --input <config.json> [--n 1000] [--crit-rate 0] [--seed 1] [--out out.json]",
+      "usage: simulate.ts --input <config.json> [--n 1000] [--crit-rate 0.5] [--seed 1] [--out out.json]",
     );
     process.exit(1);
   }
@@ -95,6 +98,7 @@ interface SimConfigJson {
   missedNotes?: Array<{ beat: number; lane: number }>;
   mentalOverride?: Record<string, number>;
   disabledSkillIds?: string[];
+  /** 基礎クリティカル率 0-1（Peing確定仕様の動的モード。省略時 0.5） */
   critRate?: number;
 }
 
@@ -105,18 +109,92 @@ function loadSourceData(stageFile: string, chartFile: string): SimSourceData {
     .rows;
   const skillsGolden = (read(path.join(repoRoot, "data/skills_golden.json")) as { skills: SkillDef[] })
     .skills;
+  // 【Phase 6】マスタ自動解析スキル（全カード・Estimate）。golden があるカードは
+  // buildSimulateInput がそちらを優先する
+  let skillsByCard: SimSourceData["skillsByCard"];
+  try {
+    skillsByCard = (read(path.join(repoRoot, "data/skills_master.json")) as { byCard: never })
+      .byCard as never;
+  } catch {
+    skillsByCard = undefined;
+  }
   const stages: Record<string, StageWeights> = {};
-  const stageJson = read(path.join(repoRoot, "data/stages", `${stageFile}.json`)) as StageWeights;
-  stages[stageFile] = stageJson;
+  const stageJsonPath = path.join(repoRoot, "data/stages", `${stageFile}.json`);
+  if (existsSync(stageJsonPath)) {
+    stages[stageFile] = read(stageJsonPath) as StageWeights;
+  } else {
+    // 【Phase 6】data/stages/ に個別ファイルが無いステージは stages_index から構築する
+    const idx = read(path.join(repoRoot, "data/stages_index.json")) as {
+      quests: Array<{ id: string; c: number; ch: number }>;
+      configs: Array<{
+        a: number[];
+        w: number[];
+        aw: number[];
+      }>;
+      charts: string[];
+    };
+    const quest = idx.quests.find((q) => q.id === stageFile);
+    if (quest === undefined) {
+      throw new Error(`stage not found in data: ${stageFile}`);
+    }
+    const cfg = idx.configs[quest.c]!;
+    stages[stageFile] = {
+      beatWeightsPermil: { vocal: cfg.w[0]!, dance: cfg.w[1]!, visual: cfg.w[2]! },
+      skillWeightsPermil: { active: cfg.aw[0]!, special: cfg.aw[1]! },
+      laneAttributes: cfg.a,
+    };
+  }
   const charts: Record<string, ChartFile> = {};
-  charts[chartFile] = read(path.join(repoRoot, "data/charts", `${chartFile}.json`)) as ChartFile;
+  const chartPath = path.join(repoRoot, "data/charts", `${chartFile}.json`);
+  if (existsSync(chartPath)) {
+    charts[chartFile] = read(chartPath) as ChartFile;
+  } else {
+    const all = read(path.join(repoRoot, "data/charts_all.json")) as Record<string, Array<[number, number]>>;
+    const compact = all[chartFile];
+    if (compact === undefined) {
+      throw new Error(`chart not found in data: ${chartFile}`);
+    }
+    charts[chartFile] = {
+      notes: compact.map(([type, position], i) => ({
+        beat: i + 1,
+        type: type as 1 | 2 | 3,
+        position,
+      })),
+    };
+  }
   let audienceAdvantage: AudienceAdvantageRow[] | undefined;
   try {
     audienceAdvantage = read(path.join(repoRoot, "data/stages/audience_advantage.json")) as AudienceAdvantageRow[];
   } catch {
     audienceAdvantage = undefined;
   }
-  return { cards, cardParameters, skillsGolden, stages, charts, audienceAdvantage };
+  // 【Phase 9】ステージのライブボーナスPスキル（research/16 §1）。無ければ undefined
+  let liveBonusesByQuest: Record<string, MasterSkillDef[]> | undefined;
+  try {
+    liveBonusesByQuest = (read(path.join(repoRoot, "data/live_bonuses.json")) as {
+      byQuest: Record<string, MasterSkillDef[]>;
+    }).byQuest;
+  } catch {
+    liveBonusesByQuest = undefined;
+  }
+  let characterNames: Record<string, string> | undefined;
+  try {
+    characterNames = (read(path.join(repoRoot, "data/characters.json")) as { characters: Record<string, string> })
+      .characters;
+  } catch {
+    characterNames = undefined;
+  }
+  return {
+    cards,
+    cardParameters,
+    skillsGolden,
+    stages,
+    charts,
+    audienceAdvantage,
+    skillsByCard,
+    liveBonusesByQuest,
+    characterNames,
+  };
 }
 
 /** 1シミュレーション実行（乱数源とクリティカル判定源を注入） */
@@ -127,8 +205,7 @@ function run(
 ): TimelineResult {
   return simulateTimeline({ ...base, criticalProvider, rng });
 }
-
-function buildInput(cfg: SimConfigJson, inputPath: string): SimulateInputBase {
+function buildInput(cfg: SimConfigJson, inputPath: string, critRate: number): SimulateInputBase {
   if (!cfg.deck && cfg.deckFile) {
     const deckPath = path.resolve(path.dirname(inputPath), cfg.deckFile);
     cfg.deck = JSON.parse(readFileSync(deckPath, "utf-8")) as DeckJsonV2;
@@ -137,6 +214,15 @@ function buildInput(cfg: SimConfigJson, inputPath: string): SimulateInputBase {
     throw new Error("input must have `deck` (inline) or `deckFile` (path)");
   }
   const data = loadSourceData(cfg.stage.file, cfg.chart.file);
+  // 【Phase 9】ステージのライブボーナスを表示（SimulateInput へは buildSimulateInput が注入）
+  const liveBonusDefs = data.liveBonusesByQuest?.[cfg.stage.file];
+  if (liveBonusDefs !== undefined && liveBonusDefs.length > 0) {
+    for (const lb of liveBonusDefs) {
+      console.error(
+        `[live-bonus] ${lb.id} CT${lb.ct ?? "—"}: ${(lb as unknown as { description?: string }).description || lb.name}`,
+      );
+    }
+  }
   const built = buildSimulateInput({
     deck: cfg.deck,
     stageFile: cfg.stage.file,
@@ -148,6 +234,7 @@ function buildInput(cfg: SimConfigJson, inputPath: string): SimulateInputBase {
     missedNotes: cfg.missedNotes,
     mentalOverride: cfg.mentalOverride,
     disabledSkillIds: cfg.disabledSkillIds,
+    baseCritRate: critRate,
   });
   for (const w of built.warnings) {
     console.error(`[warn] ${w}`);
@@ -204,23 +291,26 @@ function main(): void {
     process.exit(1);
   }
   const cfg = JSON.parse(readFileSync(inputPath, "utf-8")) as SimConfigJson;
-  const critRate = args.critRate ?? cfg.critRate ?? 0;
-  const base = buildInput(cfg, inputPath);
+  // 【Peing確定 2026-08-30】クリティカルは動的モード（baseCritRate・既定 0.5）。
+  // critRate 0 で非発生（旧挙動）。確定値ランは常に crit なし。
+  const critRate = args.critRate ?? cfg.critRate ?? 0.5;
+  const base = buildInput(cfg, inputPath, critRate);
 
   // ---- 確定値（乱数中立: rand=1000・crit なし・確率ゲートは必通過）----
-  const confirmedRes = run(base, new NeutralRng(), () => false);
+  const confirmedBase = { ...base, baseCritRate: undefined };
+  const confirmedRes = run(confirmedBase, new NeutralRng(), () => false);
   const confirmed = {
     totalScore: confirmedRes.totalScore,
     lanes: laneBreakdown(confirmedRes.beats),
     timeline: timelineOf(confirmedRes),
   };
 
-  // ---- Monte Carlo（シード固定・連続値乱数）----
+  // ---- Monte Carlo（シード固定・連続値乱数・crit は動的モードで抽選）----
   const scores: number[] = [];
   const laneSums = new Map<number, number>();
   for (let i = 0; i < args.n; i++) {
-    const rng = new ContinuousRng(args.seed + i, critRate);
-    const res = run(base, rng, () => rng.nextCritical());
+    const rng = new ContinuousRng(args.seed + i);
+    const res = run(base, rng, () => false);
     scores.push(res.totalScore);
     for (const bt of res.beats) {
       for (const e of bt.events) {
@@ -237,7 +327,7 @@ function main(): void {
   const result = {
     settings: {
       n: args.n,
-      critRate,
+      baseCritRate: critRate,
       seed: args.seed,
       stage: cfg.stage.file,
       chart: cfg.chart.file,

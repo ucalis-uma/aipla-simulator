@@ -18,6 +18,7 @@ export * from "./timeline/constants.js";
 export * from "./timeline/buffs.js";
 export * from "./timeline/engine.js";
 export * from "./sim/build.js";
+export * from "./optimizer/index.js";
 // timeline/constants.js と formula/critical.js で同値（50‰）の同名定数が重複するため、
 // 明示 re-export で曖昧性を解消する（値は同一のため挙動に差はない）
 export { CRITICAL_COEFF_UP_PER_STAGE_PERMIL } from "./timeline/constants.js";

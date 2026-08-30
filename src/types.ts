@@ -22,14 +22,21 @@ export interface StatBonus {
   fixed: Partial<Record<StatKey, number>>;
 }
 
+/** カードのロール（INFO PRIDE のカードタイプ。1=Scorer / 2=Buffer / 3=Supporter） */
+export type CardRole = "Scorer" | "Buffer" | "Supporter";
+
 export interface CardDef {
   id: string;
   name: string;
   characterId: string;
+  /** 画像アセットID（CDN img_card_thumb_{v}_{assetId}。id サフィックスと不一致のカードがごく一部ある） */
+  assetId?: string;
   initialRarity: number;
   cardParameterId: string;
   ratiosPermil: { vocal: number; dance: number; visual: number; stamina: number };
   skillIds: string[];
+  /** カード固有ロール（vendors Card.json type から導出・未定義は従来データ） */
+  role?: CardRole;
 }
 
 /** CardParameter の1行（レベル別マスター値） */

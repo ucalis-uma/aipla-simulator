@@ -6,7 +6,9 @@
  * `950 + u32 / 2^32 × 100` で [950, 1050] の連続値へ写像する
  * （u32/2^32 は倍精度で誤差なく表現できるため決定論的）。
  *
- * クリティカル確率は【Unknown】のため注入式（既定 0）。
+ * クリティカル: 動的モード（SimulateInput.baseCritRate・Peing確定式）では
+ * nextFloat() が使われる。critProbability 注入式（nextCritical）は
+ * 確率/成功率ゲート用に残置（既定 0）。
  */
 import { floorOf } from "../rounding.js";
 import { SCORE_ROLL_MIN_PERMIL, type ScoreRng } from "./types.js";
@@ -56,5 +58,10 @@ export class ContinuousRng implements ScoreRng {
 
   nextCritical(): boolean {
     return this.nextU32() < this.critThreshold;
+  }
+
+  /** [0, 1) 一様実数（動的クリティカル抽選用。Peing確定仕様） */
+  nextFloat(): number {
+    return this.nextU32() / TWO_POW_32;
   }
 }

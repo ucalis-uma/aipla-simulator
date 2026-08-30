@@ -22,12 +22,21 @@ const uiData = {
     cards: read("data/cards.json").cards,
     cardParameters: read("data/card_parameters.json").rows,
     skillsGolden: read("data/skills_golden.json").skills,
+    skillsByCard: read("data/skills_master.json").byCard,
     stages: { "qt-daily-003-19": read("data/stages/qt-daily-003-19.json") },
     charts: { "chart-hsm-004-001": read("data/charts/chart-hsm-004-001.json") },
     audienceAdvantage: read("data/stages/audience_advantage.json"),
+    // 【Phase 9】ステージのライブボーナス（questId → Pスキル定義。buildSimulateInput が注入）
+    liveBonusesByQuest: read("data/live_bonuses.json").byQuest,
   },
+  chartsAll: read("data/charts_all.json"),
+  stagesIndex: read("data/stages_index.json"),
+  accessories: read("data/accessories.json").accessories,
+  characters: read("data/characters.json").characters,
   sampleDeck: read("スコア分析サンプル/verification_data_v2.json"),
-  calibratedMental: { 1: 105, 2: 102, 3: 104, 4: 103, 5: 101 },
+  // メンタルは UI 側で自動算出される（100×(1+交流Men%)+スタッフ+エール+装備固定・
+  // baseStatus.ts の SUB_STATS 分岐。T5 実測 8996/5880/8074/5890/5880 と 1 の位まで一致済み）。
+  // 較正値の埋め込みは廃止（Phase 8.3）
   defaultMissedNotes: [1, 2, 3, 4, 5].map((lane) => ({ beat: 1, lane })),
   stageFile: "qt-daily-003-19",
   chartFile: "chart-hsm-004-001",

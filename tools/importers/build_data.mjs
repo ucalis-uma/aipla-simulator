@@ -149,15 +149,28 @@ async function main() {
   const chartRows = loadVendor("MusicChartPattern.json");
 
   // --- cards.json ---
+  // ロールはカード固有の情報（INFO PRIDE のカードタイプ）。vendors Card.json の type で決まる:
+  // 1=Scorer（スコアラー・SPスキル持ち） / 2=Buffer / 3=Supporter（サポーター）
+  // 実測検証編成（verification_data_v2）の 5 レーンの role と type の対応から確定。
+  const CARD_TYPE_TO_ROLE = { 1: "Scorer", 2: "Buffer", 3: "Supporter" };
   const cards = cardRows
     .map((r) => {
       const ctx = `Card ${r?.id}`;
+      const role = CARD_TYPE_TO_ROLE[r.type];
+      if (role === undefined) {
+        warnings.push(`Card ${r?.id}: 不明なカードタイプ ${r.type}（ロールを Scorer にフォールバック）`);
+      }
       return {
         id: requireField(r, "id", ctx),
         name: requireField(r, "name", ctx),
         characterId: requireField(r, "characterId", ctx),
+        // 画像アセットID（CDN の img_card_thumb_{v}_{assetId}）。ほとんどのカードは
+        // id の "card-" を除いたサフィックスと一致するが、ごく一部不一致がある
+        // （例: card-ktn-02-casl-00 → "ktn-02-eve-00"）
+        assetId: typeof r.assetId === "string" ? r.assetId : "",
         initialRarity: num(requireField(r, "initialRarity", ctx), ctx),
         cardParameterId: requireField(r, "cardParameterId", ctx),
+        role: role ?? "Scorer",
         ratiosPermil: {
           vocal: num(requireField(r, "vocalRatioPermil", ctx), ctx),
           dance: num(requireField(r, "danceRatioPermil", ctx), ctx),

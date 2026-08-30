@@ -14,6 +14,7 @@ import {
 } from "../../../src/sim/build.js";
 import { simulateTimeline } from "../../../src/timeline/engine.js";
 import { NeutralRng } from "../../../src/rng/neutral.js";
+import { ContinuousRng } from "../../../src/rng/random.js";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -34,6 +35,9 @@ const data: SimSourceData = {
     "chart-hsm-004-001": readJson(path.join(repoRoot, "data/charts/chart-hsm-004-001.json")) as never,
   },
   audienceAdvantage: readJson(path.join(repoRoot, "data/stages/audience_advantage.json")) as never,
+  skillsByCard: (readJson(path.join(repoRoot, "data/skills_master.json")) as {
+    byCard: Record<string, never[]>;
+  }).byCard as never,
 };
 
 const T5_DECK = readJson(
@@ -101,7 +105,9 @@ describe("buildSimulateInput", () => {
     expect(built.warnings).toEqual([]);
   });
 
-  it("選択カードと golden スキルの元カードが不一致なら警告", () => {
+  it("選択カードにマスタスキル（skillsByCard）があればそちらを使用する（Phase 6）", () => {
+    // golden は fest-03 のスキル。birt カードに差し替えると golden スキルではなく
+    // マスタ解析スキル（sk-yu-05-birt-02-*）が L3 にセットされる
     const swapped: DeckJsonV2 = {
       ...T5_DECK,
       characters: T5_DECK.characters.map((c) =>
@@ -113,7 +119,34 @@ describe("buildSimulateInput", () => {
       stageFile: "qt-daily-003-19",
       chartFile: "chart-hsm-004-001",
       data,
+      mentalOverride: MENTAL,
     });
+    const l3 = b2.base.lanes[2]!;
+    expect(l3.skills.length).toBeGreaterThan(0);
+    for (const s of l3.skills) {
+      expect(s.id.startsWith("sk-yu-05-birt-02")).toBe(true);
+      expect(s.lane).toBe(3);
+    }
+    // 元カード一致の golden スキルは存在しないため不一致警告は出ない
+    expect(b2.warnings).toEqual([]);
+  });
+
+  it("skillsByCard が無いデータでは golden スキルにフォールバックし不一致を警告する（旧動作）", () => {
+    const dataNoMaster: SimSourceData = { ...data, skillsByCard: undefined };
+    const swapped: DeckJsonV2 = {
+      ...T5_DECK,
+      characters: T5_DECK.characters.map((c) =>
+        c.lane === 3 ? { ...c, card_id: "card-yu-05-birt-02" } : c,
+      ),
+    };
+    const b2 = buildSimulateInput({
+      deck: swapped,
+      stageFile: "qt-daily-003-19",
+      chartFile: "chart-hsm-004-001",
+      data: dataNoMaster,
+    });
+    // golden スキル（fest-03 のもの）がレーンのまま使われ、元カード不一致の警告が出る
+    expect(b2.base.lanes[2]!.skills.length).toBeGreaterThan(0);
     expect(b2.warnings.length).toBeGreaterThan(0);
     expect(b2.warnings[0]).toContain("L3");
   });
@@ -141,6 +174,45 @@ describe("buildSimulateInput", () => {
       audience: 16000,
     });
     expect(b2.base.fanFactorPermil).toBe(1620);
+  });
+
+  it("baseCritRate を SimulateInput へ透過する（Peing確定・動的クリティカル用）", () => {
+    const withRate = buildSimulateInput({
+      deck: T5_DECK,
+      stageFile: "qt-daily-003-19",
+      chartFile: "chart-hsm-004-001",
+      data,
+      baseCritRate: 0.5,
+    });
+    expect(withRate.base.baseCritRate).toBe(0.5);
+    // 未指定時は undefined（criticalProvider フォールバック）
+    const withoutRate = buildSimulateInput({
+      deck: T5_DECK,
+      stageFile: "qt-daily-003-19",
+      chartFile: "chart-hsm-004-001",
+      data,
+    });
+    expect(withoutRate.base.baseCritRate).toBeUndefined();
+  });
+
+  it("baseCritRate=0.5 の動的モードで MC 相当ランが完走し crit が発生する", () => {
+    const b2 = buildSimulateInput({
+      deck: T5_DECK,
+      stageFile: "qt-daily-003-19",
+      chartFile: "chart-hsm-004-001",
+      data,
+      baseCritRate: 0.5,
+      missedNotes: MISSED_B1,
+      mentalOverride: MENTAL,
+    });
+    const res = simulateTimeline({
+      ...b2.base,
+      rng: new ContinuousRng(3),
+      criticalProvider: () => false,
+    });
+    const critEvents = res.beats.flatMap((bt) => bt.events).filter((e) => e.critFactorPermil > 1000);
+    // 基礎50%で156ビート×5レーン相当の抽選 → crit ゼロはほぼ起きない
+    expect(critEvents.length).toBeGreaterThan(10);
   });
 
   it("存在しないステージ/チャート/レベルはエラー", () => {

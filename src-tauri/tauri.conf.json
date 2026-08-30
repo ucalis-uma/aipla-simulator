@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Aipura Score Simulator",
+  "version": "0.1.0",
+  "identifier": "jp.fanmade.aipura-score-sim",
+  "build": {
+    "beforeDevCommand": "npm run build:ui",
+    "beforeBuildCommand": "npm run build:ui",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "アイプラ ライブスコア シミュレータ",
+        "width": 1360,
+        "height": 900,
+        "minWidth": 900,
+        "minHeight": 600,
+        "url": "aipura_simulator.html"
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "icon": ["icons/icon.ico"],
+    "resources": [],
+    "copyright": "Fan-made tool. Game data (c) QualiArts / Bandai Namco Arts."
+  }
+}

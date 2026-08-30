@@ -64,4 +64,14 @@ export class ReplayRng implements ScoreRng {
     this.critIndex++;
     return crit;
   }
+
+  /**
+   * 動的クリティカル抽選用の一様実数。リプレイは実測 crit 列の注入が目的のため
+   * fail-closed（呼ばれたら契約違反として throw）。
+   */
+  nextFloat(): number {
+    throw new Error(
+      "ReplayRng: nextFloat() is not supported — replay mode injects measured crit flags via criticalProvider",
+    );
+  }
 }

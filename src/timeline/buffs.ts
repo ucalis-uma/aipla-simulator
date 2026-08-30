@@ -16,7 +16,7 @@
  * - B1 の構成: research/02 §1.3（A【Confirmed】/SP【Strong estimate】/P【Estimate】）
  * - 段数上限（基本上限20・テンション/集目/成功率10・vocal_up_extreme 30）と
  *   limit解放（30へ拡張）: research/02 §1.6・research/06 BF2【Confirmed】
- * - テンション副効果（成功率 -1.5%/段）・集目副効果（ファンボーナス 3段+21‰〜10段+50‰）:
+ * - テンション副効果（成功率 -1.5%/段）・集目副効果（ファンボーナス 1段+7‰〜10段+50‰・Peing確定）:
  *   research/01 §2.6【Confirmed】
  * - 消費スタミナ（低減 -5%/段・ブースト副効果 +1%/段）: research/01 §2.2・§4-4【Confirmed】
  * - 上限解放変数型（tension_limit 等）の基底キー統合: P3a 写像仕様【Confirmed】
@@ -31,6 +31,7 @@
 import { floorDiv } from "../rounding.js";
 import {
   A_SKILL_SCORE_UP_PER_STAGE_PERMIL,
+  BEAT_SCORE_UP_PER_STAGE_PERMIL,
   BOOST_STAMINA_COST_PER_STAGE_PERMIL,
   COMBO_SCORE_UP_PER_STAGE_PERMIL,
   CRITICAL_COEFF_UP_PER_STAGE_PERMIL,
@@ -41,6 +42,7 @@ import {
   FOCUS_STAGE_CAP,
   LIMIT_RELEASE_STAGE_CAP,
   LIVE_STATUS_MULTIPLIER_CAP,
+  P_SKILL_SCORE_UP_PER_STAGE_PERMIL,
   SCORE_UP_PER_STAGE_PERMIL,
   SKILL_SUCCESS_STAGE_CAP,
   SKILL_SUCCESS_UP_PER_2_STAGES_PERMIL,
@@ -50,6 +52,7 @@ import {
   STATUS_DOWN_PER_STAGE_PERMIL,
   STATUS_UP_EXTREME_PER_STAGE_PERMIL,
   STATUS_UP_PER_STAGE_PERMIL,
+  STEALTH_FAN_BONUS_PERMIL,
   STAMINA_COST_DOWN_PER_STAGE_PERMIL,
   STAMINA_COST_UP_PER_STAGE_PERMIL,
   TENSION_STAGE_CAP,
@@ -86,6 +89,12 @@ export interface ActiveEffect {
    * 減算対象外（ステップ10 を既に通過）。
    */
   skipFirstDecay?: boolean;
+  /**
+   * 【Peing確定 2026-08-31】超化（capExtend）: このインスタンスの段数ぶん同種バフの
+   * 上限も拡張する（通常上限20 → 実効25。テンション10 → 15）。
+   * aggregateBuffs が key ごとの最大拡張量を上限に加算する。
+   */
+  capExtend?: boolean;
 }
 
 /** 効果型 → 集計キーの写像結果 */
@@ -113,16 +122,27 @@ const STAGED_BUFF_KEY_MAP: ReadonlyMap<EffectType, BuffKeyMapping> = new Map<
   ["vocal_up", { key: "vocal_up", limitRelease: false }],
   ["vocal_boost", { key: "vocal_boost", limitRelease: false }],
   ["vocal_up_extreme", { key: "vocal_up_extreme", limitRelease: false }],
+  ["vocal_down", { key: "vocal_down", limitRelease: false }],
+  ["dance_up", { key: "dance_up", limitRelease: false }],
+  ["dance_boost", { key: "dance_boost", limitRelease: false }],
+  ["dance_down", { key: "dance_down", limitRelease: false }],
+  ["visual_up", { key: "visual_up", limitRelease: false }],
+  ["visual_boost", { key: "visual_boost", limitRelease: false }],
+  ["visual_down", { key: "visual_down", limitRelease: false }],
+  ["beat_score_up", { key: "beat_score_up", limitRelease: false }],
   ["tension_up", { key: "tension_up", limitRelease: false }],
   ["score_up", { key: "score_up", limitRelease: false }],
   ["a_skill_score_up", { key: "a_skill_score_up", limitRelease: false }],
   ["sp_skill_score_up", { key: "sp_skill_score_up", limitRelease: false }],
+  ["p_skill_score_up", { key: "p_skill_score_up", limitRelease: false }],
   ["combo_score_up", { key: "combo_score_up", limitRelease: false }],
   ["critical_coeff_up", { key: "critical_coeff_up", limitRelease: false }],
   ["critical_rate_up", { key: "critical_rate_up", limitRelease: false }],
   ["stamina_cost_down", { key: "stamina_cost_down", limitRelease: false }],
+  ["stamina_cost_up", { key: "stamina_cost_up", limitRelease: false }],
   ["skill_success_up", { key: "skill_success_up", limitRelease: false }],
   ["focus", { key: "focus", limitRelease: false }],
+  ["stealth", { key: "stealth", limitRelease: false }],
   ["combo_continue", { key: "combo_continue", limitRelease: false }],
   // 上限解放変数型（基底キーへ統合・P3a 写像仕様）
   ["tension_limit", { key: "tension_up", limitRelease: true }],
@@ -143,18 +163,31 @@ export function mapEffectToBuffKey(type: EffectType): BuffKeyMapping | null {
 /** BuffKey ごとの1段あたり値（permil）。出典は各定数の JSDoc 参照 */
 const PER_STAGE_PERMIL_BY_KEY: Record<BuffKey, number> = {
   vocal_up: STATUS_UP_PER_STAGE_PERMIL,
-  vocal_up_extreme: STATUS_UP_PER_STAGE_PERMIL,
+  vocal_up_extreme: STATUS_UP_EXTREME_PER_STAGE_PERMIL,
   vocal_boost: STATUS_BOOST_PER_STAGE_PERMIL,
+  vocal_down: STATUS_DOWN_PER_STAGE_PERMIL,
+  dance_up: STATUS_UP_PER_STAGE_PERMIL,
+  dance_boost: STATUS_BOOST_PER_STAGE_PERMIL,
+  dance_down: STATUS_DOWN_PER_STAGE_PERMIL,
+  visual_up: STATUS_UP_PER_STAGE_PERMIL,
+  visual_boost: STATUS_BOOST_PER_STAGE_PERMIL,
+  visual_down: STATUS_DOWN_PER_STAGE_PERMIL,
+  beat_score_up: BEAT_SCORE_UP_PER_STAGE_PERMIL,
   tension_up: TENSION_UP_PER_STAGE_PERMIL,
   score_up: SCORE_UP_PER_STAGE_PERMIL,
   a_skill_score_up: A_SKILL_SCORE_UP_PER_STAGE_PERMIL,
   sp_skill_score_up: SP_SKILL_SCORE_UP_PER_STAGE_PERMIL,
+  p_skill_score_up: P_SKILL_SCORE_UP_PER_STAGE_PERMIL,
   combo_score_up: COMBO_SCORE_UP_PER_STAGE_PERMIL,
   critical_coeff_up: CRITICAL_COEFF_UP_PER_STAGE_PERMIL,
   critical_rate_up: CRITICAL_RATE_UP_PER_STAGE_PERMIL,
   stamina_cost_down: STAMINA_COST_DOWN_PER_STAGE_PERMIL,
+  stamina_cost_up: STAMINA_COST_UP_PER_STAGE_PERMIL,
   skill_success_up: SKILL_SUCCESS_UP_PER_STAGE_PERMIL,
   focus: FOCUS_APPEAL_PER_STAGE_PERMIL,
+  // ステルス自体の段値は「ファン引力度 -5%/段」（来場者数の動的モデルが無いため未使用）。
+  // 実装する副効果（他4レーンのファンボーナス加算）は stealthFanBonusPermil のテーブル参照。
+  stealth: STATUS_DOWN_PER_STAGE_PERMIL,
   combo_continue: 0,
 };
 
@@ -181,7 +214,7 @@ export function stageCapPermil(type: EffectType, limitRelease: boolean): number 
 /**
  * 基本の段数上限（limit解放前）。research/02 §1.6・research/06 BF2【Confirmed】。
  * - vocal_up_extreme: 30（最初から30固定。解放変数型ではない）
- * - tension_up / focus / skill_success_up: 10
+ * - tension_up / focus / skill_success_up / stealth: 10
  * - その他の段階型: 20
  */
 function baseStageCap(type: EffectType): number {
@@ -192,6 +225,7 @@ function baseStageCap(type: EffectType): number {
     case "tension_limit":
       return TENSION_STAGE_CAP;
     case "focus":
+    case "stealth":
       return FOCUS_STAGE_CAP;
     case "skill_success_up":
       return SKILL_SUCCESS_STAGE_CAP;
@@ -220,22 +254,33 @@ export function stageCap(type: EffectType, limitRelease: boolean): number {
   return base;
 }
 
-/** 未所有キー 0 の空スナップショット（全14キー必須・types.ts の BuffKey 順） */
+/** 未所有キー 0 の空スナップショット（全24キー必須・types.ts の BuffKey 順） */
 function emptySnapshot(): BuffSnapshot {
   return {
     vocal_up: 0,
     vocal_boost: 0,
     vocal_up_extreme: 0,
+    vocal_down: 0,
+    dance_up: 0,
+    dance_boost: 0,
+    dance_down: 0,
+    visual_up: 0,
+    visual_boost: 0,
+    visual_down: 0,
+    beat_score_up: 0,
     tension_up: 0,
     score_up: 0,
     a_skill_score_up: 0,
     sp_skill_score_up: 0,
+    p_skill_score_up: 0,
     combo_score_up: 0,
     critical_coeff_up: 0,
     critical_rate_up: 0,
     stamina_cost_down: 0,
+    stamina_cost_up: 0,
     skill_success_up: 0,
     focus: 0,
+    stealth: 0,
     combo_continue: 0,
   };
 }
@@ -255,11 +300,11 @@ function emptySnapshot(): BuffSnapshot {
  *   cap はその key への寄与の中で最も大きいもの（=limit解放があれば30）を使う。
  * - combo_continue は段数ではなく「有効インスタンス数」を入れる
  *   （保護は ≥1 で成立。research/01 §2.2 の効果表では段数を持たない特殊効果）。
- * - 未所有キーは 0。戻り値は全14キーを必ず持つ（BuffSnapshot 契約）。
+ * - 未所有キーは 0。戻り値は全24キーを必ず持つ（BuffSnapshot 契約）。
  * - 上限解放変数型（tension_limit 等）は基底キーに合算される。
  *
  * @param active レーンに有効な段階型効果（remainingBeats>0 のもののみ。即時型は不可）
- * @returns 実効段数スナップショット（全14キー・上限クランプ済みの表示値）
+ * @returns 実効段数スナップショット（全24キー・上限クランプ済みの表示値）
  */
 export function aggregateBuffs(active: readonly ActiveEffect[]): BuffSnapshot {
   const snapshot = emptySnapshot();
@@ -272,6 +317,10 @@ export function aggregateBuffs(active: readonly ActiveEffect[]): BuffSnapshot {
   // （ハスハス critical_coeff_limit+10、実測 30 固定）。旧仕様「解放で一律 30」は
   // テンション 15 と矛盾するため本仕様に訂正。
   const releases = new Map<BuffKey, number>();
+  // 【Peing確定 2026-08-31】超化（capExtend）インスタンスの段数ぶん同種バフの上限を拡張する。
+  // 複数の超化が同キーに付与された場合は最大値を採用（「効果は常に一定」の解釈・上限解放
+  // releases と同方針。加算説は資料が無いため未採用）。
+  const extensions = new Map<BuffKey, number>();
   for (const effect of active) {
     if (!Number.isInteger(effect.stages) || effect.stages <= 0) {
       throw new Error(
@@ -291,6 +340,10 @@ export function aggregateBuffs(active: readonly ActiveEffect[]): BuffSnapshot {
     const cap = isVarType ? baseStageCap(effect.type) : stageCap(effect.type, effect.limitRelease === true);
     const prevCap = caps.get(mapped.key);
     caps.set(mapped.key, prevCap === undefined ? cap : Math.max(prevCap, cap));
+    if (effect.capExtend === true) {
+      const prevExt = extensions.get(mapped.key) ?? 0;
+      extensions.set(mapped.key, Math.max(prevExt, effect.stages));
+    }
     if (mapped.key === "combo_continue") {
       snapshot.combo_continue += 1;
     } else if (isVarType) {
@@ -305,7 +358,8 @@ export function aggregateBuffs(active: readonly ActiveEffect[]): BuffSnapshot {
   }
   for (const [key, cap] of caps) {
     const rel = releases.get(key) ?? 0;
-    snapshot[key] = Math.min(snapshot[key], cap + rel);
+    const ext = extensions.get(key) ?? 0;
+    snapshot[key] = Math.min(snapshot[key], cap + rel + ext);
   }
   return snapshot;
 }
@@ -313,32 +367,45 @@ export function aggregateBuffs(active: readonly ActiveEffect[]): BuffSnapshot {
 /**
  * ライブ中ステータス倍率（permil）を返す（research/01 §2.2・§2.4【Confirmed】）。
  *
- *   1000 + 50×(上昇段) + 25×(超化段) + 75×(ブースト段) − 50×(低下段)
+ *   1000 + 50×(上昇段) + 50×(超化段) + 75×(ブースト段) − 50×(低下段)
  *
- * - attr=vocal: 上昇 = vocal_up、超化 = vocal_up_extreme、ブースト = vocal_boost。
- * - 【T5実測確定 2026-08-30】vocal_up_extreme の 1 段値は 25‰
- *   （旧 50‰ 説は research/08 §3 の L3 stat_value 倍率差分で否定。定数の JSDoc 参照）。
- *   上昇/ブーストは別系統で加算重複（research/01 §2.3【Confirmed】）。
- * - 低下は BuffKey に低下キーが無いため常に 0（減算の形だけ将来のために用意）。
- * - attr=dance/visual: 該当 type（dance_up 等）が現データに存在しないため常に 1000。
- *   実装としては vocal_up 等と対称のキーが BuffKey に無いだけである。
+ * - attr=vocal: 上昇 = vocal_up、超化 = vocal_up_extreme、ブースト = vocal_boost、
+ *   低下 = vocal_down。
+ * - attr=dance/visual: vocal の対称拡張（Phase 6 マスタ一般化＋Phase 9 低下追加・
+ *   【Estimate】実測に dance/visual バフの発動なし。同式で対称実装）。
+ * - 【Peing確定 2026-08-31】超化（vocal_up_extreme）は 1段 50‰（元バフと同値）で
+ *   常に+5段階分=+250‰（定数 JSDoc 参照。旧 25‰×表記段数説は訂正・合計値は同一）。
+ * - 【T5実測確定 2026-08-30】倍率は 3750‰（×3.75）でクランプ。
  */
 export function liveStatusMultiplierPermil(
   snapshot: BuffSnapshot,
   attr: LaneAttribute,
 ): number {
-  if (attr !== "vocal") {
-    return 1000;
-  }
-  const upStages = snapshot.vocal_up;
-  const extremeStages = snapshot.vocal_up_extreme;
-  const boostStages = snapshot.vocal_boost;
+  const upStages =
+    attr === "vocal"
+      ? snapshot.vocal_up
+      : attr === "dance"
+        ? snapshot.dance_up
+        : snapshot.visual_up;
+  const extremeStages = attr === "vocal" ? snapshot.vocal_up_extreme : 0;
+  const boostStages =
+    attr === "vocal"
+      ? snapshot.vocal_boost
+      : attr === "dance"
+        ? snapshot.dance_boost
+        : snapshot.visual_boost;
+  const downStages =
+    attr === "vocal"
+      ? snapshot.vocal_down
+      : attr === "dance"
+        ? snapshot.dance_down
+        : snapshot.visual_down;
   const raw =
     1000 +
     STATUS_UP_PER_STAGE_PERMIL * upStages +
     STATUS_UP_EXTREME_PER_STAGE_PERMIL * extremeStages +
     STATUS_BOOST_PER_STAGE_PERMIL * boostStages -
-    STATUS_DOWN_PER_STAGE_PERMIL * 0;
+    STATUS_DOWN_PER_STAGE_PERMIL * downStages;
   // 【T5実測確定 2026-08-30】ライブ中ステータス倍率は 3750‰（×3.75）でクランプされる。
   // research/08 §3: L3 stat_value は b68-156 の全 30 サンプルで 2,348,336 = floor(626,223×3.75)
   // に完全固定（この間 b101 の増強等で段数が増えても表示無反応）= 「×3.75（+275%）という
@@ -351,7 +418,11 @@ export function liveStatusMultiplierPermil(
 /**
  * 消費スタミナ倍率（permil）を返す（research/01 §2.2「消費スタミナ+1%/段」・§4-4【Confirmed】）。
  *
- *   1000 − 50×stamina_cost_down + 50×0(増加typeは現データに無い) + 10×vocal_boost
+ *   1000 − 50×stamina_cost_down + 50×stamina_cost_up + 10×vocal_boost
+ *
+ * - 【Peing確定 2026-08-31】消費増加（stamina_consumption_increase）は「スタミナ消費量に
+ *   最大2倍の補正が入る低下効果」（質問箱 id=1190040607）。50‰×20段=+1000‰=2倍で
+ *   上限と整合。バトル主体だが self 対象のものがスコアライブでも消費に乗る
  *
  * - ブースト副効果（消費 +1%/段）は vocal_boost のみ。vocal_up_extreme は含めない
  *   （research/01 §2.3 の表は「ブースト」行の副効果。extreme は上昇系の 30段上限版）。
@@ -364,7 +435,7 @@ export function consumptionMultiplierPermil(snapshot: BuffSnapshot): number {
   return (
     1000 -
     STAMINA_COST_DOWN_PER_STAGE_PERMIL * snapshot.stamina_cost_down +
-    STAMINA_COST_UP_PER_STAGE_PERMIL * 0 +
+    STAMINA_COST_UP_PER_STAGE_PERMIL * snapshot.stamina_cost_up +
     BOOST_STAMINA_COST_PER_STAGE_PERMIL * snapshot.vocal_boost
   );
 }
@@ -384,16 +455,18 @@ export type B1Kind = "beat" | "active" | "special" | "passive";
  * B1 スコアボーナス（permil）を返す（research/02 §1.3）。
  *
  * 各対象式（1000 + 各種上昇バフ + テンション + エール/フォト% の加算合算）:
- * - beat:    1000 + 25×score_up + bonus.beat
+ * - beat:    1000 + 25×score_up + 100×beat_score_up + bonus.beat
  *   テンションはビートに入らない（S2明記・research/02 §1.3【Confirmed】）。
  *   score_up の 25‰/段係数は T5実測で確定（su 50‰ 説は 80.6%→88.6% の離散整合率低下で棄却）。
+ *   beat_score_up（100‰/段・research/02 §1.3）は T5 実測編成に未出現のため検証は間接的
+ *   （定数準拠・【Estimate】）。
  * - active:  1000 + 50×a_skill_score_up + 25×score_up + 50×tension_up + bonus.active
  *   （research/02 §1.3【Confirmed・A】）
  * - special: 1000 + 30×sp_skill_score_up + 25×score_up + 50×tension_up + bonus.special
  *   （research/02 §1.3【Strong estimate・SP】）
- * - passive: 1000 + 25×score_up + bonus.passive
- *   （research/02 §1.3【Estimate・P】。Pスキルスコアアップ型（+10%/段）は現データに
- *   未出現のため除外。出現が確認されたら P_SKILL_SCORE_UP_PER_STAGE_PERMIL 項を追加）
+ * - passive: 1000 + 100×p_skill_score_up + 25×score_up + bonus.passive
+ *   （research/02 §1.3【Estimate・P】。Pスキルスコアアップ型は 1段 +10%
+ *   （P_SKILL_SCORE_UP_PER_STAGE_PERMIL=100。Phase 9 でマスタ passive_skill_score_up に対応）
  */
 export function b1Permil(
   snapshot: BuffSnapshot,
@@ -403,7 +476,10 @@ export function b1Permil(
   switch (kind) {
     case "beat":
       return (
-        1000 + SCORE_UP_PER_STAGE_PERMIL * snapshot.score_up + scoreBonusPct.beat
+        1000 +
+        SCORE_UP_PER_STAGE_PERMIL * snapshot.score_up +
+        BEAT_SCORE_UP_PER_STAGE_PERMIL * snapshot.beat_score_up +
+        scoreBonusPct.beat
       );
     case "active":
       return (
@@ -422,7 +498,12 @@ export function b1Permil(
         scoreBonusPct.special
       );
     case "passive":
-      return 1000 + SCORE_UP_PER_STAGE_PERMIL * snapshot.score_up + scoreBonusPct.passive;
+      return (
+        1000 +
+        P_SKILL_SCORE_UP_PER_STAGE_PERMIL * snapshot.p_skill_score_up +
+        SCORE_UP_PER_STAGE_PERMIL * snapshot.score_up +
+        scoreBonusPct.passive
+      );
   }
 }
 
@@ -449,16 +530,13 @@ export function successRatePermil(snapshot: BuffSnapshot, successBasePermil: num
 /**
  * 集目（focus）副効果のファンボーナス（permil）を返す。
  *
- * research/01 §2.6「3段+2.1%〜10段+5.0%」【Confirmed】（research/02 §1.10 も同じ内訳）。
- *
- * テーブル解釈【Estimate】: constants.FOCUS_FAN_BONUS_PERMIL = [0,0,21,28,35,42,46,48,49,50]
- * は要素数10=段数上限(FOCUS_STAGE_CAP)10 と整合するよう「インデックス=段数-1」で参照する
- * （constants のコメント「インデックス=段数 0-9」を素直に読むと table[3]=28 となり、
- * research の「3段+21‰」と矛盾するため。1-2段は研究上の値が無く、副効果は3段からと
- * 解釈して 0）。ゴールデンテスト（T4/T5）の実測突合時に要再確認。
+ * 【Peing確定 2026-08-31・research/16 §2】「1〜5段は +0.7%/段、6〜10段は +0.3%/段」
+ * （最大+5.0%）。FOCUS_FAN_BONUS_PERMIL = [7,14,21,28,35,38,41,44,47,50] を
+ * 「インデックス=段数-1」で参照する。旧 research/01 §2.6 の「3段+2.1%〜10段+5.0%」
+ * （1-2段=0 の部分観測テーブル）は本確定値に訂正。
  *
  * @param focusStages 集目の実効段数（0 以上の整数）
- * @returns ファンボーナス permil（0段=0、3段=21、9段=49、10段以上=50 で頭打ち）
+ * @returns ファンボーナス permil（0段=0、1段=7、6段=38、10段以上=50 で頭打ち）
  */
 export function focusFanBonusPermil(focusStages: number): number {
   if (!Number.isInteger(focusStages) || focusStages < 0) {
@@ -474,6 +552,37 @@ export function focusFanBonusPermil(focusStages: number): number {
   const bonus = FOCUS_FAN_BONUS_PERMIL[focusStages - 1];
   if (bonus === undefined) {
     throw new Error(`focusFanBonusPermil: no table entry for focusStages=${focusStages}`);
+  }
+  return bonus;
+}
+
+/**
+ * ステルス（stealth）副効果のファンボーナス（permil）を返す。
+ *
+ * ステルス中のレーン**以外**の4レーンのファンボーナス（B3）に加算される
+ * （research/01 §2.6「他4人のファンボーナス+」）。
+ * 【Peing確定 2026-08-31】5段=+1.8% / 6段=+2.1% / 10段=+3.7%、
+ * 6→10段は +0.4%/段で一意確定（7段=25・8段=29・9段=33）。
+ * 1〜4段は資料が無いため【Unknown】→ 0 近似（STEALTH_FAN_BONUS_PERMIL 参照）。
+ *
+ * @param stealthStages ステルスの実効段数（0 以上の整数）
+ */
+export function stealthFanBonusPermil(stealthStages: number): number {
+  if (!Number.isInteger(stealthStages) || stealthStages < 0) {
+    throw new Error(
+      `stealthFanBonusPermil: stealthStages must be a non-negative integer, got ${stealthStages}`,
+    );
+  }
+  if (stealthStages <= 0) {
+    return 0;
+  }
+  if (stealthStages >= STEALTH_FAN_BONUS_PERMIL.length) {
+    const maxBonus = STEALTH_FAN_BONUS_PERMIL[STEALTH_FAN_BONUS_PERMIL.length - 1];
+    return maxBonus ?? 37;
+  }
+  const bonus = STEALTH_FAN_BONUS_PERMIL[stealthStages - 1];
+  if (bonus === undefined) {
+    throw new Error(`stealthFanBonusPermil: no table entry for stealthStages=${stealthStages}`);
   }
   return bonus;
 }

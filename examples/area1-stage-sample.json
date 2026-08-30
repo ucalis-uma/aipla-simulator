@@ -1,0 +1,11 @@
+{
+ "deckFile": "t5-sample-deck.json",
+ "stage": {
+  "file": "qt-area-1-001"
+ },
+ "chart": {
+  "file": "chart-hsm-006-001"
+ },
+ "audience": 8000,
+ "critRate": 0.5
+}

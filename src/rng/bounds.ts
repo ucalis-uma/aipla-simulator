@@ -7,7 +7,7 @@
  */
 import { SCORE_ROLL_MAX_PERMIL, SCORE_ROLL_MIN_PERMIL, type ScoreRng } from "./types.js";
 
-/** 常に最小値を返す RNG（950 / 非クリティカル） */
+/** 常に最小値を返す RNG（950 / 非クリティカル / nextFloat=0） */
 export class MinRng implements ScoreRng {
   nextScoreRoll(): number {
     return SCORE_ROLL_MIN_PERMIL;
@@ -16,9 +16,13 @@ export class MinRng implements ScoreRng {
   nextCritical(): boolean {
     return false;
   }
+
+  nextFloat(): number {
+    return 0;
+  }
 }
 
-/** 常に最大値を返す RNG（1050 / 常にクリティカル） */
+/** 常に最大値を返す RNG（1050 / 常にクリティカル / nextFloat=最大） */
 export class MaxRng implements ScoreRng {
   nextScoreRoll(): number {
     return SCORE_ROLL_MAX_PERMIL;
@@ -26,5 +30,9 @@ export class MaxRng implements ScoreRng {
 
   nextCritical(): boolean {
     return true;
+  }
+
+  nextFloat(): number {
+    return 1 - Number.EPSILON;
   }
 }

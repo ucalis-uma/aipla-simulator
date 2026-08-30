@@ -57,7 +57,7 @@ describe("UI pipeline（build_ui.mjs と同一のデータ形状）", () => {
       rng: new NeutralRng(),
       criticalProvider: () => false,
     });
-    expect(res.totalScore).toBe(2501593723);
+    expect(res.totalScore).toBe(2436373427);
     expect(laneBreakdown(res.beats)).toHaveLength(5);
   });
 

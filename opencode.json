@@ -1,0 +1,28 @@
+﻿{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "baijp": {
+      "models": {
+        "glm-5.3-flash": {
+          "options": {
+            "reasoningEffort": "high"
+          },
+          "variants": {
+            "low": {
+              "reasoningEffort": "low"
+            },
+            "medium": {
+              "reasoningEffort": "medium"
+            },
+            "high": {
+              "reasoningEffort": "high"
+            },
+            "max": {
+              "reasoningEffort": "max"
+            }
+          }
+        }
+      }
+    }
+  }
+}

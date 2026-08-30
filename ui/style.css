@@ -53,7 +53,7 @@ h3 { font-size: 13.5px; margin: 0 0 8px; }
 .field textarea { font-family: Consolas, monospace; font-size: 11px; }
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 8px; }
 .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px 10px; }
-.static { padding: 5px 6px; font-weight: 600; }
+.hint { font-size: 10px; color: var(--dim); margin-top: 2px; }
 .card-name { font-size: 11px; color: var(--dim); margin: -2px 0 4px; }
 .stage-info { font-size: 12px; margin-bottom: 8px; }
 .note { font-size: 11px; color: var(--dim); margin-top: 6px; }
@@ -124,3 +124,142 @@ td.crit { color: #b03024; font-weight: 700; }
 .conf-list dt { margin-top: 8px; }
 .conf-list dd { margin: 2px 0 0 0; font-size: 12px; }
 footer { margin-top: 30px; color: var(--dim); font-size: 11px; }
+
+/* ---- Phase 6: モーダル・ピッカー ---- */
+.sp-tabs { display: flex; gap: 4px; margin-bottom: 8px; flex-wrap: wrap; }
+.sp-tabs button {
+  padding: 5px 12px; border: 1px solid var(--line); border-radius: 14px;
+  background: #fff; cursor: pointer; font-size: 12px; font-weight: 600; color: var(--dim);
+}
+.sp-tabs button.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.cat-chip {
+  display: inline-block; padding: 0 6px; margin-left: 4px; border-radius: 3px;
+  font-size: 10px; font-weight: 700; color: #fff; vertical-align: 1px;
+  background: #7a8194;
+}
+.cat-chip.cat-highscore { background: #d4972f; }
+.cat-chip.cat-ex { background: #b0483f; }
+.cat-chip.cat-tower { background: #6f5fb0; }
+.cat-chip.cat-main { background: #3b4f9e; }
+.cat-chip.cat-daily { background: #2e8b57; }
+.cat-chip.cat-exercise, .cat-chip.cat-tutorial, .cat-chip.cat-other { background: #7a8194; }
+.modal {
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(30, 34, 48, 0.55);
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 40px 16px;
+}
+/* hidden 属性で確実に消す（.modal の display:flex が hidden を打ち消すのを防ぐ） */
+.modal[hidden] { display: none !important; }
+.modal-box {
+  background: var(--panel); border-radius: 10px; border: 1px solid var(--line);
+  width: min(860px, 96vw); max-height: 84vh; overflow-y: auto;
+  padding: 14px 18px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+}
+.modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.modal-head h3 { margin: 0; }
+.modal-search, .modal-filters input[type="search"] { width: 60%; padding: 6px 8px; border: 1px solid var(--line); border-radius: 5px; font-size: 13px; }
+.modal-filters { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+.modal-filters select { padding: 5px 6px; border: 1px solid var(--line); border-radius: 5px; }
+.modal-list { max-height: 56vh; overflow-y: auto; border-top: 1px solid var(--line); }
+.modal-list.hidden { display: none; }
+.pick-row { padding: 6px 8px; border-bottom: 1px solid #eef0f5; cursor: pointer; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.pick-row:hover { background: #eef3fd; }
+.pick-head { padding: 6px 8px; background: #f2f4fa; font-size: 12.5px; }
+.diff { background: #3b4f9e; color: #fff; border-radius: 3px; padding: 0 5px; font-size: 10.5px; font-weight: 700; }
+.dim { color: var(--dim); font-size: 11px; }
+.btn-like.wide { width: 100%; text-align: center; }
+.chip {
+  display: inline-block; background: #eef1f8; border-radius: 3px;
+  padding: 0 5px; font-size: 10px; font-weight: 600; color: #33406b; margin-left: 3px;
+}
+.chip.acc-vocal { background: #fbe4ec; color: #b03a60; }
+.chip.acc-dance { background: #e2f0fa; color: #2a6f9e; }
+.chip.acc-visual { background: #f1e6fa; color: #7a4fa0; }
+.chip.acc-stamina, .chip.acc-mental, .chip.acc-technique { background: #eef1f8; color: #33406b; }
+.role-chip { display: inline-block; padding: 3px 8px; font-weight: 700; }
+.role-chip.role-scorer { background: #fdeaea; color: #b0483f; }
+.role-chip.role-buffer { background: #e8f0fd; color: #3b5f9e; }
+.role-chip.role-supporter { background: #e9f7ee; color: #2e7d4f; }
+.acc-head { font-size: 11.5px; color: var(--dim); margin: 8px 0 4px; font-weight: 700; }
+.acc-slots { display: flex; flex-direction: column; gap: 4px; margin: 4px 0; }
+.acc-slot {
+  display: flex; gap: 6px; align-items: center;
+  border: 1px dashed var(--line); border-radius: 6px;
+  background: #fafbfe; padding: 3px 6px; min-height: 34px;
+  cursor: pointer;
+}
+.acc-slot:hover { background: #eef3fd; border-color: #b8c6ee; }
+.acc-slot.acc-slot-empty { justify-content: center; color: var(--dim); font-size: 11.5px; }
+.acc-slot .acc-thumb { cursor: pointer; }
+.acc-slot-body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.acc-slot-name { font-size: 11.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.acc-slot-chips { display: flex; gap: 2px; flex-wrap: wrap; }
+.acc-slot-chips .chip { margin-left: 0; }
+.acc-list { display: flex; gap: 6px; flex-wrap: wrap; margin: 4px 0; }
+.acc-item {
+  display: inline-flex; gap: 4px; align-items: center;
+  background: #f6f7fb; border: 1px solid var(--line); border-radius: 5px;
+  padding: 2px 6px; font-size: 11.5px;
+}
+.mini-btn {
+  border: none; background: transparent; cursor: pointer; color: var(--ng);
+  font-size: 11px; padding: 0 2px;
+}
+.deck-slots { display: flex; gap: 6px; flex-wrap: wrap; }
+.error-note { color: var(--ng); }
+
+/* ---- Phase 7: タブ・サムネイル・オプティマイザ ---- */
+.tabs { display: flex; gap: 6px; margin-bottom: 14px; border-bottom: 2px solid var(--line); }
+.tab {
+  border: none; background: transparent; cursor: pointer;
+  font-size: 14px; font-weight: 700; color: var(--dim);
+  padding: 8px 16px; border-radius: 8px 8px 0 0;
+}
+.tab.active { background: var(--panel); color: var(--text); border-bottom: 2px solid #4a6fd4; margin-bottom: -2px; }
+.card-thumb {
+  display: inline-flex; width: 48px; height: 48px; flex: 0 0 48px;
+  border-radius: 6px; overflow: hidden; background: #1d2233;
+  position: relative; vertical-align: middle;
+}
+.card-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.card-thumb.thumb-sm { width: 32px; height: 32px; flex: 0 0 32px; }
+.card-fallback {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 20px; color: #fff;
+}
+.card-fallback[hidden] { display: none !important; }
+.card-thumb.thumb-sm .card-fallback { font-size: 14px; }
+.card-head { display: flex; gap: 8px; align-items: center; margin: 6px 0; }
+.card-head .card-name { flex: 1; }
+.bond-ctrl {
+  display: flex; gap: 6px; align-items: center; font-size: 12.5px;
+  background: #f4ecfa; border: 1px solid #d9c3ee; border-radius: 6px;
+  padding: 5px 8px; margin: 4px 0;
+}
+.acc-thumb {
+  width: 22px; height: 22px; border-radius: 4px; object-fit: cover;
+  background: #1d2233; flex: 0 0 22px;
+}
+.acc-item img[data-acc-thumb][hidden] { display: none; }
+.pick-row .card-thumb { margin-right: 2px; }
+.opt-lane-ctrl { display: flex; gap: 10px; align-items: center; padding: 4px 0; flex-wrap: wrap; }
+.opt-lane-ctrl select { padding: 4px 6px; border: 1px solid var(--line); border-radius: 5px; }
+.opt-entry {
+  display: flex; gap: 12px; align-items: center;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  padding: 10px 14px; margin: 8px 0;
+}
+.opt-rank { font-size: 20px; font-weight: 800; color: #4a6fd4; flex: 0 0 44px; }
+.opt-main { flex: 1; min-width: 0; }
+.opt-score { font-size: 14px; margin-bottom: 4px; }
+.opt-cards { margin: 0; padding-left: 18px; font-size: 12.5px; }
+.opt-cards li { margin: 2px 0; display: flex; gap: 6px; align-items: center; list-style: decimal; }
+#opt-results .opt-entry button { flex: 0 0 auto; }
+
+/* Phase 9: ライブボーナス表示 */
+.lb-chip {
+  display: inline-block; background: #4a2e86; color: #fff;
+  border-radius: 999px; padding: 1px 8px; font-size: 11px; font-weight: 700;
+}

@@ -16,4 +16,8 @@ export class NeutralRng implements ScoreRng {
   nextCritical(): boolean {
     return true;
   }
+  /** [0, 1) 一様実数。確定値ランは抽選しないため 0（判定式 `nextFloat() < rate` で成立側） */
+  nextFloat(): number {
+    return 0;
+  }
 }

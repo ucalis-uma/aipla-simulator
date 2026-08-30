@@ -3,6 +3,9 @@ vendor/
 dist/
 coverage/
 *.log
+# Tauri / Rust ビルド成果物
+src-tauri/target/
+src-tauri/gen/
 # heavy measured assets (kept locally, not tracked; tests reference JSON only)
 スコア分析サンプル/lane1/
 スコア分析サンプル/lane2/

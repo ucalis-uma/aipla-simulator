@@ -15,8 +15,10 @@ import type {
   ChartNote,
   LaneInput,
   LaneNumber,
+  LaneScoreEventTrace,
   SimulateInput,
   SkillDef,
+  SkillEffect,
   StageInput,
 } from "../../../src/timeline/types.js";
 import type { ScoreRng } from "../../../src/rng/types.js";
@@ -27,12 +29,16 @@ class ConstRng implements ScoreRng {
   constructor(
     private readonly roll: number = 1000,
     private readonly crit: boolean = false,
+    private readonly float: number = 0,
   ) {}
   nextScoreRoll(): number {
     return this.roll;
   }
   nextCritical(): boolean {
     return this.crit;
+  }
+  nextFloat(): number {
+    return this.float;
   }
 }
 
@@ -636,5 +642,209 @@ describe("simulateTimeline: トレース整合（§8）", () => {
     const aEvent = result.beats[1]?.events.find((e) => e.lane === 1);
     expect(aEvent).toBeDefined();
     expect(aEvent?.skillPowerPermil).toBe(4500);
+  });
+});
+
+/**
+ * 【Phase 6】マスタ一般化: dance/visual バフ・beat_score_up・拡張ターゲット。
+ * 【Estimate】実測ゴールデンに同型なし（vocal 対称の実装検証）。
+ */
+describe("simulateTimeline: Phase 6 マスタ一般化", () => {
+  it("dance_up は dance 属性レーンのビート基本スコア（dance 成分）を倍増させる", () => {
+    const lanes = defaultLanes();
+    const l4 = lanes[3];
+    if (l4 === undefined) throw new Error("fixture broken");
+    l4.skills = [
+      skill({
+        id: "p-dup",
+        kind: "P",
+        lane: 4,
+        effects: [
+          { type: "dance_up", stages: 10, durationBeats: 5, target: "self", condition: "none" },
+        ],
+      }),
+    ];
+    // L4 基本値（バフなし・dance 属性でも総和式）: vocal 60000 + dance 12500 + visual 3750 = 76250
+    // dance_up 10段 → dance 成分 12500×(1000+500)/1000 = 18750 → 76250+6250 = 82500
+    const withBuff = simulateTimeline(input([note(1, 1, 0)], lanes));
+    const ev = withBuff.beats[0]?.events.find((e) => e.lane === 4);
+    // 基本スコア = floor(82500×8/140) = 4714
+    expect(ev?.basicScore).toBe(Math.floor((82500 * 8) / 140));
+  });
+
+  it("beat_score_up はビート B1 に 100‰/段で乗る", () => {
+    const lanes = defaultLanes();
+    const l1 = lanes[0];
+    if (l1 === undefined) throw new Error("fixture broken");
+    l1.skills = [
+      skill({
+        id: "p-bsu",
+        kind: "P",
+        lane: 1,
+        effects: [
+          { type: "beat_score_up", stages: 3, durationBeats: 5, target: "all", condition: "none" },
+        ],
+      }),
+    ];
+    const res = simulateTimeline(input([note(1, 1, 0)], lanes));
+    const ev = res.beats[0]?.events.find((e) => e.lane === 1);
+    // b1 = 1000 + 100×3 = 1300
+    expect(ev?.b1Permil).toBe(1300);
+  });
+
+  it("dance_type_1 / buffer_type_1 の対象解決", () => {
+    const lanes = defaultLanes();
+    const l3 = lanes[2];
+    if (l3 === undefined) throw new Error("fixture broken");
+    lanes[0]!.role = "Buffer";
+    lanes[4]!.role = "Buffer";
+    lanes[3]!.role = "Buffer";
+    l3.skills = [
+      skill({
+        id: "p-tgt",
+        kind: "P",
+        lane: 3,
+        effects: [
+          // dance_type_1 → dance 属性は L4 のみ（ct 用の発動可否とは無関係・スナップショットで確認）
+          { type: "vocal_up", stages: 2, durationBeats: 5, target: "dance_type_1", condition: "none" },
+        ],
+      }),
+      skill({
+        id: "p-tgt2",
+        kind: "P",
+        lane: 3,
+        // buffer_type_1 → Buffer ロールの中で属性ステータス最大（L4 dance 280000? → deck[attribute]）
+        effects: [
+          { type: "score_up", stages: 2, durationBeats: 5, target: "buffer_type_1", condition: "none" },
+        ],
+      }),
+    ];
+    const res = simulateTimeline(input([note(1, 1, 0)], lanes));
+    const snap = res.beats[0]?.buffSnapshots[3]; // L4
+    // dance_type_1 = L4 → vocal_up が L4 に付与される
+    expect(snap?.vocal_up).toBe(2);
+  });
+});
+
+/**
+ * 【Peing確定 2026-08-30】動的クリティカル発生率（質問箱 id=1189080032 / id=1186806688）。
+ * effectiveCritRate = min(0.50, baseCritRate) + critical_rate_up段 × 5%。
+ * - >= 1.0 → 確定（抽選なし）
+ * - それ以外 → rng.nextFloat() < effectiveCritRate
+ */
+describe("simulateTimeline: 動的クリティカル発生率（Peing確定 2026-08-30）", () => {
+  /** クリティカル判定のみ観測する RNG（スコア乱数は中立） */
+  class CritProbeRng implements ScoreRng {
+    readonly floats: number[] = [];
+    constructor(private readonly value: () => number) {}
+    nextScoreRoll(): number {
+      return 1000;
+    }
+    nextCritical(): boolean {
+      return false;
+    }
+    nextFloat(): number {
+      const v = this.value();
+      this.floats.push(v);
+      return v;
+    }
+  }
+
+  function oneBeatWithRate(
+    baseCritRate: number | undefined,
+    float: number,
+    effect?: SkillEffect,
+  ): { events: LaneScoreEventTrace[]; floats: number[] } {
+    const lanes = defaultLanes();
+    const l1 = lanes[0];
+    if (l1 === undefined) throw new Error("fixture broken");
+    if (effect) {
+      l1.skills = [skill({ id: "p-crit", kind: "P", lane: 1, effects: [effect] })];
+    }
+    const rng = new CritProbeRng(() => float);
+    const res = simulateTimeline(
+      input([note(1, 1, 0)], lanes, {
+        rng,
+        baseCritRate,
+        // baseCritRate 未指定時のフォールバックが呼ばれたことを検出できるように
+        criticalProvider: () => {
+          throw new Error("criticalProvider should not be called in dynamic mode");
+        },
+      }),
+    );
+    return { events: res.beats[0]?.events ?? [], floats: rng.floats };
+  }
+
+  it("baseCritRate=0.5・バフなし → 抽選（float < 0.5 で発生）", () => {
+    const crit = oneBeatWithRate(0.5, 0.499).events.find((e) => e.lane === 1);
+    expect(crit?.critFactorPermil).toBeGreaterThan(1000);
+    const noCrit = oneBeatWithRate(0.5, 0.5).events.find((e) => e.lane === 1);
+    // 境界: float === rate は不発生（厳密な <）
+    expect(noCrit?.critFactorPermil).toBe(1000);
+  });
+
+  it("基礎率は 0.50 で頭打ち（0.8 を指定しても 0.5 相当）", () => {
+    // 0.5 < float < 0.8 の値で発生しなければクランプの証明
+    const ev = oneBeatWithRate(0.8, 0.6).events.find((e) => e.lane === 1);
+    expect(ev?.critFactorPermil).toBe(1000);
+    const ev2 = oneBeatWithRate(0.8, 0.499).events.find((e) => e.lane === 1);
+    expect(ev2?.critFactorPermil).toBeGreaterThan(1000);
+  });
+
+  it("critical_rate_up 10段で 0.5+0.5=100% → 確定（抽選呼び出しなし）", () => {
+    const { events, floats } = oneBeatWithRate(0.5, 0.999, {
+      type: "critical_rate_up",
+      stages: 10,
+      durationBeats: 5,
+      target: "all",
+      condition: "none",
+    });
+    expect(events.find((e) => e.lane === 1)?.critFactorPermil).toBeGreaterThan(1000);
+    // 確定クリティカルは nextFloat を消費しない
+    expect(floats).toHaveLength(0);
+  });
+
+  it("baseCritRate=0 でも critical_rate_up 20段で 100% 確定", () => {
+    const ev = oneBeatWithRate(0, 0.999, {
+      type: "critical_rate_up",
+      stages: 20,
+      durationBeats: 5,
+      target: "all",
+      condition: "none",
+    }).events.find((e) => e.lane === 1);
+    expect(ev?.critFactorPermil).toBeGreaterThan(1000);
+  });
+
+  it("未指定時は criticalProvider にフォールバック（ゴールデン互換）", () => {
+    const lanes = defaultLanes();
+    const res = simulateTimeline(
+      input([note(1, 1, 0)], lanes, { criticalProvider: () => true }),
+    );
+    // 全レーン crit → critF > 1000
+    for (const e of res.beats[0]?.events ?? []) {
+      expect(e.critFactorPermil).toBeGreaterThan(1000);
+    }
+  });
+
+  it("フォトのスコア行は動的モードでもクリティカル判定の対象外", () => {
+    const lanes = defaultLanes();
+    const l1 = lanes[0];
+    if (l1 === undefined) throw new Error("fixture broken");
+    l1.photos = [
+      skill({
+        id: "photo-x",
+        kind: "photo",
+        lane: 1,
+        ct: null,
+        effects: [
+          { type: "score_get", powerPermil: 400, target: "self", condition: "none", durationBeats: null },
+        ],
+      }),
+    ];
+    // P 前半でフォト発動 → score_get 行は crit にならない（確定クリティカル条件でも）
+    const res = simulateTimeline(input([note(1, 1, 0)], lanes, { baseCritRate: 0.5 }));
+    const photoEv = res.beats[0]?.events.find((e) => e.sourceKind === "photo");
+    expect(photoEv).toBeDefined();
+    expect(photoEv?.critFactorPermil).toBe(1000);
   });
 });

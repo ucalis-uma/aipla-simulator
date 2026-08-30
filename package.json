@@ -12,9 +12,16 @@
     "typecheck:ui": "tsc --noEmit -p ui",
     "build:data": "node tools/importers/build_data.mjs",
     "build:ui": "node tools/build_ui.mjs",
-    "solve:t5": "npx -y tsx tools/t5_solver.ts"
+    "solve:t5": "npx -y tsx tools/t5_solver.ts",
+    "build:data:ext": "node tools/importers/build_data_phase6.mjs",
+    "validate:skills": "node tools/validate_skills_master.mjs",
+    "download:icons": "node tools/download_card_icons.mjs",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build"
   },
   "devDependencies": {
+    "@tauri-apps/cli": "^2.11.4",
     "@types/node": "^26.4.0",
     "jsdom": "^30.0.1",
     "typescript": "^5.6.0",

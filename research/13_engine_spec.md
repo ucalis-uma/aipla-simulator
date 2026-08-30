@@ -47,8 +47,11 @@ export function simulateTimeline(input: SimulateInput): TimelineResult
 
 ## 4. Pスキル・フォトの選択規則（ステップ7/11共通）
 
-- 処理順: メンタル降順（`deck.mental` の大きいレーンから）。同値は `IDOL_PRIORITY_ORDER = [4,2,1,3,5]`【Confirmed: research/01 §2.1】。
-  【T5実測確定】本実測編成のメンタル降順は **L1 > L3 > L4 > L2 > L5**（§9-9 参照）。
+- 処理順: メンタル降順（`deck.mental` の大きいレーンから）。同値は `IDOL_PRIORITY_ORDER = [3,2,4,1,5]`
+  （L3→L2→L4→L1→L5・発動優先位置順）【ユーザー確定 2026-08-29・research/01 §2.1 の 42135 説は訂正】。
+  【T5実測確定】本実測編成のメンタル実数（research/14 §4）は
+  **L1(8996) > L3(8074) > L4(5890) > L2(5880) = L5(5880)**。
+  L2/L5 は同値で、b3 後半の実測発動順 L2→L5 はタイブレーク規則で再現される。
 - 各レーンは各位相で **Pスキル1つ + フォト1つ** まで発動できる（「各アイドル1つ→次いでPフォト1つ」research/01 §4-7【Estimate: フォトも1つ/アイドル/位相と解釈】）。
 - 候補選択: 各レーンの `skills` / `photos` 配列の**先頭から**最初の発動可能なもの【Estimate: 上から順】。
 - **前半（ステップ7）**: 全効果行の condition が "none" または "battle_only" のスキル/フォトが対象。
@@ -179,10 +182,13 @@ export function simulateTimeline(input: SimulateInput): TimelineResult
 6. 割合SP b103 の厳密一致（基本スコア定義含む）
 7. ct_reduction の Aスキル包含
 8. コンボのレーン別/全体モデル（combo>=N 条件が絡む b50 以降で判定）
-9. P前半/後半のメンタル降順規則（実測データにメンタル値が無いため較正値で担保）。
-   【T5実測確定】本実測編成の相対順は **L1 > L3 > L4 > L2 > L5** まで確定
-   （b51 後半 L1→L3→L4 / b47 後半 L3→L4→L2 / b3 後半 L2→L5 の発動順から。
-   絶対値の検証は不可・メンタル降順規則自体は research/01 §2.1【Confirmed】）
+9. P前半/後半のメンタル降順規則。
+   【2026-08-31 確定】メンタルは**算出値**で担保される: 100×(1+交流Men%)＋スタッフ固定＋エール固定＋
+   フォト/アクセ固定（research/01 §1.4・baseStatus.ts SUB_STATS 分岐）。
+   T5 実測 5 レーンの算出値 8996/5880/8074/5890/5880 は research/14 §4 の実数と 1 の位まで完全一致
+   （L3: 100×1.50 + 5165 + 600 + 2159 = 8074）。
+   相対順 **L1 > L3 > L4 > L2 = L5**（b51 後半 L1→L3→L4 / b47 後半 L3→L4→L2 / b3 後半 L2→L5 の
+   発動順と完全一致。L2=L5 同値は配置優先度 IDOL_PRIORITY_ORDER=[3,2,4,1,5] で解決）。
 
 既存テスト（234 passed）を壊さないこと。`npx vitest run` と `npx tsc --noEmit` を全グリーンで完了すること。
 
@@ -218,3 +224,52 @@ export function simulateTimeline(input: SimulateInput): TimelineResult
 - b1-3 の gained 帰属（表示遅延）と b47-51 等のフレーム帰属は「リージョン総和一致」でのみ検証。
   ビート単位の一致は計測データの制約により検証対象外。
 - ポップの OCR 誤読（b97=330万は 350万の誤読等）が少数残る。gained/cumulative は信頼できる。
+
+---
+
+## §10 ライブボーナス（ステージ側Pスキル）【Phase 9・Peing確定 2026-08-31】
+
+research/16_peing_verified_specs.md §1 の実装仕様。データ源は `data/live_bonuses.json`
+（Quest.liveBonusGroupId → LiveBonusGroup → LiveBonus → LiveAbility → Skill.json の連携で抽出）。
+
+### 10.1 ビート内処理順への組み込み（§3 の拡張）
+| ステップ | 内容 |
+|---|---|
+| 6.5（新設） | **ライブボーナス前半発動** — 全アイドルPスキルより先頭。無条件（+編成人数条件 `count_<unit>>=N` 成立）ライボが対象。付与バフは同ビートのスコア精算に乗る（実効ビート数=表記-1） |
+| 7〜10 | 従来どおり（アイドルP前半→スコア精算→CT-1→効果ビート数-1）。ライボ CT も step9 で減算 |
+| 11（先頭） | **ライブボーナス後半発動** — 後半Pスキル群の中で最も最初。動的条件（`someone_*`/`combo>=N`/`someone_recovered`）を評価し未成立時は保留。CT が step9 で 0 になった無条件ライボの再発動もここ（アイドルPと同一規則） |
+
+- 予算: ライボはアイドルの P/フォト予算（各1回/ビート）と**独立**。ライボ毎に前後半合算1回。
+- 対象解決のアンカーはセンター（L3）【Estimate: neighbor 基準は現データのライボに未出現】。
+- トレース: 成功時のみ `kind="live_bonus"`・`lane=0`。
+
+### 10.2 発動条件（triggerId → EffectCondition）
+| triggerId | condition | 発動位相 |
+|---|---|---|
+| （無し） | none | 前半 |
+| tg-someone_status-<X> | someone_<EffectType>（20 種） | 後半 |
+| tg-combo-N | combo>=N（グローバル成功ノート数） | 後半 |
+| tg-someone_recovered | someone_recovered（ビート中の回復受けレーン） | 後半 |
+| tg-more_than_character_count-<unit>-N | count_<unit>>=N（UNIT_MEMBERS 定数・静的成立） | 前半（成立時） |
+
+- `someone_*` は自レーンを含む全レーンが評価対象（T5実測確定の準用）。
+- 条件評価は `target="trigger"` の解決にも使う（条件成立レーンに効果を付与）。
+
+### 10.3 CT と同期仕様
+- 発動時に CT 満タン→step9 減算（アイドルPと同一モデル）。前半発動の実効間隔 CT-1・後半発動は CT。
+- **「CT短縮ライボで短縮されたPスキルはライボの発動タイミングに収束（同期）する」（research/16 §1）**:
+  追加ルールは不要。Pスキルの CT が step9 で 0 になったビートの後半=ライボ再発動と同位相で
+  発火するという CT モデルの帰結として自然に成立する。
+- `live_bonus_ct_reduction`（マスタ live_ability_cool_time_reduction）はライボ側 CT を短縮する
+  アイドルスキル効果（Phase 9 で対応）。
+
+### 10.4 Phase 9 のその他の拡張（§2・§5・§6 への影響）
+- BuffKey 拡張（24キー）: `vocal_down/dance_down/visual_down`（低下・-50‰/段）／`p_skill_score_up`
+  （P スコア上昇・b1 passive に +100‰/段）／`stealth`（副効果で他4レーンの fanFactor に加算:
+  STEALTH_FAN_BONUS_PERMIL・5段=18‰/6段=21‰/10段=37‰・1-4段 Unknown=0 近似）／`stamina_cost_up`
+  （消費増加・+50‰/段・最大2倍）。
+- 超化（add_effect_value_*）: **表記段階数はダミーで一律「元バフ+5段階分（固定）」**。
+  capExtend=true のインスタンスは同種バフの上限をその段数ぶん拡張（20→25・テンション 10→15）。
+  vocal_up_extreme の1段値は 50‰（STATUS_UP_EXTREME_PER_STAGE_PERMIL。golden fest-03-2 は
+  stages 10→5 に修正・合計 +250‰ 不変・type36 perStage は 2.5→3.0 に再較正）。
+- 集目副効果テーブル確定値: FOCUS_FAN_BONUS_PERMIL = [7,14,21,28,35,38,41,44,47,50]。

@@ -105,7 +105,31 @@ export interface SimSourceData {
   charts: Record<string, ChartFile>;
   /** 来場ファンボーナステーブル（audience 昇順）。audience 指定時に使用 */
   audienceAdvantage?: AudienceAdvantageRow[];
+  /**
+   * 【Phase 6】カードID → A/SP/P スキル（マスタ Skill.json 自動解析・data/skills_master.json）。
+   * 効果値は実測較正されていない（skills_golden は実測 5 カード分のみ）ため Estimate。
+   * 選択カードに golden スキル（元カード一致）があればそちらを優先する。
+   */
+  skillsByCard?: Record<string, readonly MasterSkillDef[]>;
+  /**
+   * 【Phase 9】ステージのライブボーナスPスキル（data/live_bonuses.json・questId → 定義列）。
+   * research/16 §1: 全アイドルPスキルより最優先（前半）・後半Pスキル群の先頭（後半）で発動。
+   * キーはステージ（Quest）ID。buildSimulateInput が stageFile に対応する定義を
+   * SimulateInput.liveBonusSkills へ注入する（disabledSkillIds で個別無効化可）。
+   */
+  liveBonusesByQuest?: Record<string, readonly MasterSkillDef[]>;
+  /** 【Phase 9】characterId → 名前（UI 表示用。CLI/テストでは省略可） */
+  characterNames?: Record<string, string>;
 }
+
+/** マスタ自動解析スキル（lane は構築時に選択レーンへ上書きされる） */
+export type MasterSkillDef = Omit<SkillDef, "lane"> & {
+  lane: null;
+  /** 解析できなかった効果行数（Estimate タグの根拠） */
+  unsupportedEffects?: number;
+  /** 楽曲限定等の未評価条件（Estimate タグの根拠） */
+  conditionalNote?: string | null;
+};
 
 // ---------------------------------------------------------------------------
 // ビルドオプション / 結果
@@ -130,6 +154,11 @@ export interface BuildSimOptions {
   mentalOverride?: Record<string, number>;
   /** 無効化するスキル/フォト ID（UI のチェックボックス用） */
   disabledSkillIds?: readonly string[];
+  /**
+   * 【Peing確定 2026-08-30】基礎クリティカル発生率（0-1。既定 0.50）。
+   * 指定時は動的クリティカル判定（min(0.50, base) + crit_rate_up×5%）を有効化する。
+   */
+  baseCritRate?: number;
 }
 
 /** rng / criticalProvider を除いた SimulateInput（呼び出し側で乱数源を設定して使用） */
@@ -210,14 +239,18 @@ export function laneAttributeOf(
   return name;
 }
 
-/** カードに存在するレベル行の列（UI のレベル選択用。昇順） */
+/** 現行のゲーム内レベルキャップ（2026-08 時点・将来的なキャップ解放時に更新する）。
+ *  マスタ（CardParameter）は先行実装分のレベル行を含むため、UI 選択肢と既定値はこの上限で抑える。 */
+export const CURRENT_LEVEL_CAP = 230;
+
+/** カードに存在するレベル行の列（UI のレベル選択用。昇順・現行キャップ 230 まで） */
 export function availableLevels(data: SimSourceData, cardId: string): number[] {
   const card = data.cards.find((c) => c.id === cardId);
   if (card === undefined) {
     return [];
   }
   return data.cardParameters
-    .filter((r) => r.id === card.cardParameterId)
+    .filter((r) => r.id === card.cardParameterId && r.level <= CURRENT_LEVEL_CAP)
     .map((r) => r.level)
     .sort((a, b) => a - b);
 }
@@ -273,14 +306,32 @@ export function buildSimulateInput(options: BuildSimOptions): BuildSimResult {
       },
       row,
     );
-    const mental = Number(options.mentalOverride?.[String(lane)] ?? 100);
-    const deckStatus: StatValues<number> = { ...result.deck, mental, critical: 0 };
+    // メンタルはデッキ値式で自動算出される（research/01 §1.4: 全員初期値100・
+    // 交流Men%×100・スタッフ固定・エール固定・フォト/アクセ固定を加算。
+    // T5 実測 5 レーン（8996/5880/8074/5890/5880）と 1 の位まで一致済み・2026-08-31）。
+    // deck.mental は P スキル発動順（メンタル降順）にのみ使用され、スコア式には直接入らない。
+    // mentalOverride は任意の上書き（T5 検証ハーネス・UI 手入力用）
+    const overrideRaw = options.mentalOverride?.[String(lane)];
+    const deckStatus: StatValues<number> = {
+      ...result.deck,
+      mental: overrideRaw !== undefined ? Number(overrideRaw) : result.deck.mental,
+      critical: 0,
+    };
     const equipment = [...ch.photos, ...ch.accessories];
-    const laneSkills = data.skillsGolden.filter(
+    // golden スキルの元カード ID（"sk-" 接頭辞 ↔ "card-" の正規化比較）
+    const ownerCardIdOf = (s: SkillDef): string | null =>
+      s.cardId == null || s.cardId === ""
+        ? null
+        : s.cardId.startsWith("sk-")
+          ? `card-${s.cardId.slice(3)}`
+          : s.cardId;
+    // レーンの golden スキルのうち、選択カード自身のもの（実測較正済み）
+    const cardGoldenSkills = data.skillsGolden.filter(
       (s) =>
         s.lane === lane &&
         (s.kind === "A" || s.kind === "SP" || s.kind === "P") &&
-        !disabled.has(s.id),
+        !disabled.has(s.id) &&
+        ownerCardIdOf(s) === ch.card_id,
     );
     const lanePhotos = data.skillsGolden.filter(
       (s) =>
@@ -289,16 +340,46 @@ export function buildSimulateInput(options: BuildSimOptions): BuildSimResult {
         (s.effects?.length ?? 0) > 0 &&
         !disabled.has(s.id),
     );
-    // golden スキルの元カードと選択カードの不一致は警告（スキル効果の較正が
-    // 実測カード由来のため。ブロックはしない）
-    // ※ skills_golden.json の cardId は "sk-" 接頭辞形式（sk-yu-05-birt-02 ↔ card-yu-05-birt-02）
-    for (const s of [...laneSkills, ...lanePhotos]) {
-      if (s.cardId != null && s.cardId !== "") {
-        const ownerCardId = s.cardId.startsWith("sk-") ? `card-${s.cardId.slice(3)}` : s.cardId;
-        if (ownerCardId !== card.id) {
+    let laneSkills: SkillDef[];
+    if (cardGoldenSkills.length > 0) {
+      // 実測較正済みスキル（golden）を優先
+      laneSkills = cardGoldenSkills;
+    } else if (data.skillsByCard && data.skillsByCard[ch.card_id] !== undefined) {
+      // 【Phase 6】マスタ自動解析スキル（未較正・Estimate）。
+      // lane を選択レーンへ上書きし、未対応効果（unsupportedEffects）は警告に記録
+      laneSkills = data.skillsByCard[ch.card_id]!
+        .filter((s) => !disabled.has(s.id))
+        .map((s) => ({ ...s, lane }));
+      for (const s of laneSkills) {
+        const master = s as unknown as MasterSkillDef;
+        if (master.unsupportedEffects) {
           warnings.push(
-            `L${lane}: skill "${s.id}" (${s.name}) belongs to card ${ownerCardId}, not selected card ${card.id}`,
+            `L${lane}: skill "${s.id}" (${s.name}) has ${master.unsupportedEffects} unsupported effect(s) from master (Estimate)`,
           );
+        }
+        if (master.conditionalNote) {
+          warnings.push(
+            `L${lane}: skill "${s.id}" (${s.name}) is conditional [${master.conditionalNote}] — treated as unconditional (Estimate)`,
+          );
+        }
+      }
+    } else {
+      // マスタ未対応カード: レーンの golden スキルをそのまま使用（旧動作）。
+      // 元カード不一致は警告（スキル効果の較正が実測カード由来のため）
+      laneSkills = data.skillsGolden.filter(
+        (s) =>
+          s.lane === lane &&
+          (s.kind === "A" || s.kind === "SP" || s.kind === "P") &&
+          !disabled.has(s.id),
+      );
+      for (const s of [...laneSkills, ...lanePhotos]) {
+        if (s.cardId != null && s.cardId !== "") {
+          const ownerCardId = s.cardId.startsWith("sk-") ? `card-${s.cardId.slice(3)}` : s.cardId;
+          if (ownerCardId !== card.id) {
+            warnings.push(
+              `L${lane}: skill "${s.id}" (${s.name}) belongs to card ${ownerCardId}, not selected card ${card.id}`,
+            );
+          }
         }
       }
     }
@@ -343,17 +424,30 @@ export function buildSimulateInput(options: BuildSimOptions): BuildSimResult {
     fanFactorPermil = fanBonusPermil(options.audience, data.audienceAdvantage);
   }
 
+  // 【Phase 9】ライブボーナス（ステージ側Pスキル）。無効化リストはスキル/フォトと共用
+  const liveBonusSkills = data.liveBonusesByQuest?.[options.stageFile]?.filter(
+    (s) => !disabled.has(s.id),
+  );
+  // ユニット人数条件（count_liz>=1 等）の判定用に編成のキャラクターIDを渡す
+  const formationCharacterIds = deck.characters.map((ch) => {
+    const card = data.cards.find((c) => c.id === ch.card_id);
+    return card?.characterId ?? "";
+  });
+
   const base: SimulateInputBase = {
     lanes,
     notes,
     stage,
     fanFactorPermil,
     successBasePermil: options.successBasePermil ?? 1000,
+    baseCritRate: options.baseCritRate,
     roundingPolicy: "at-end",
     missedNotes: options.missedNotes?.map((m) => ({
       beat: m.beat,
       lane: m.lane as LaneNumber,
     })),
+    liveBonusSkills,
+    formationCharacterIds,
   };
   return { base, lanes, warnings };
 }
@@ -362,7 +456,7 @@ export function buildSimulateInput(options: BuildSimOptions): BuildSimResult {
 // 集計ヘルパー（レーン別内訳）
 // ---------------------------------------------------------------------------
 
-export type ScoreKind = "beat" | "A" | "SP" | "P" | "photo";
+export type ScoreKind = "beat" | "A" | "SP" | "P" | "photo" | "live_bonus";
 
 export interface LaneBreakdownEntry {
   lane: LaneNumber;
@@ -383,7 +477,7 @@ export function laneBreakdown(beats: readonly BeatTrace[]): LaneBreakdownEntry[]
       e = {
         lane,
         total: 0,
-        byKind: { beat: 0, A: 0, SP: 0, P: 0, photo: 0 },
+        byKind: { beat: 0, A: 0, SP: 0, P: 0, photo: 0, live_bonus: 0 },
         events: 0,
         activations: 0,
       };
@@ -393,13 +487,17 @@ export function laneBreakdown(beats: readonly BeatTrace[]): LaneBreakdownEntry[]
   };
   for (const bt of beats) {
     for (const ev of bt.events) {
-      const e = entry(ev.lane);
-      e.total += ev.gainedScore;
-      e.byKind[ev.sourceKind] += ev.gainedScore;
-      e.events += 1;
+      // ライブボーナス由来のスコアイベントはレーン非所属のため内訳集計から除外
+      if (ev.lane >= 1) {
+        const e = entry(ev.lane);
+        e.total += ev.gainedScore;
+        e.byKind[ev.sourceKind] += ev.gainedScore;
+        e.events += 1;
+      }
     }
     for (const act of bt.activations) {
-      if (act.success) {
+      if (act.success && act.lane !== 0) {
+        // ライブボーナス（lane=0）の発動はレーン別発動数にカウントしない
         entry(act.lane).activations += 1;
       }
     }

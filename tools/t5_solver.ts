@@ -68,7 +68,8 @@ const ver = readJson(path.join(sampleDir, "verification_data_v2.json")) as DeckJ
 const t5 = readJson(path.join(repoRoot, "tests/golden/fixtures/t5_measured.json")) as T5Measured;
 
 /** メンタル実測キャリブレーション（research/14 §7。成功率は全成立のため戦闘値のみ影響） */
-const CALIBRATED_MENTAL: Record<string, number> = { 1: 105, 2: 102, 3: 104, 4: 103, 5: 101 };
+// メンタル実数（research/14 §4・T5 実測）。L2=L5=5880 は同値でタイブレークは優先位置順
+const CALIBRATED_MENTAL: Record<string, number> = { 1: 8996, 2: 5880, 3: 8074, 4: 5890, 5: 5880 };
 
 function buildBase(): ReturnType<typeof buildSimulateInput>["base"] {
   return buildSimulateInput({
@@ -99,6 +100,9 @@ class ArrayRng implements ScoreRng {
   }
   nextCritical(): boolean {
     return false;
+  }
+  nextFloat(): number {
+    return 0;
   }
   get consumed(): number {
     return this.i;

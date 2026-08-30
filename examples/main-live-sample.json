@@ -1,0 +1,11 @@
+{
+ "deckFile": "t5-sample-deck.json",
+ "stage": {
+  "file": "qt-main-1-055-08"
+ },
+ "chart": {
+  "file": "chart-moon-004-001"
+ },
+ "audience": 8000,
+ "critRate": 0.5
+}

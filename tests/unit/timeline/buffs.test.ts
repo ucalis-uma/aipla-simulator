@@ -23,22 +23,33 @@ import {
 } from "../../../src/timeline/buffs.js";
 import type { BuffKey, BuffSnapshot, EffectType } from "../../../src/timeline/types.js";
 
-/** 未所有キー 0 のスナップショット（テスト用。全14キー） */
+/** 未所有キー 0 のスナップショット（テスト用。全24キー） */
 function snapshotOf(overrides: Partial<BuffSnapshot> = {}): BuffSnapshot {
   return {
     vocal_up: 0,
     vocal_boost: 0,
     vocal_up_extreme: 0,
+    vocal_down: 0,
+    dance_up: 0,
+    dance_boost: 0,
+    dance_down: 0,
+    visual_up: 0,
+    visual_boost: 0,
+    visual_down: 0,
+    beat_score_up: 0,
     tension_up: 0,
     score_up: 0,
     a_skill_score_up: 0,
     sp_skill_score_up: 0,
+    p_skill_score_up: 0,
     combo_score_up: 0,
     critical_coeff_up: 0,
     critical_rate_up: 0,
     stamina_cost_down: 0,
+    stamina_cost_up: 0,
     skill_success_up: 0,
     focus: 0,
+    stealth: 0,
     combo_continue: 0,
     ...overrides,
   };
@@ -58,16 +69,27 @@ const ALL_BUFF_KEYS: readonly BuffKey[] = [
   "vocal_up",
   "vocal_boost",
   "vocal_up_extreme",
+  "vocal_down",
+  "dance_up",
+  "dance_boost",
+  "dance_down",
+  "visual_up",
+  "visual_boost",
+  "visual_down",
+  "beat_score_up",
   "tension_up",
   "score_up",
   "a_skill_score_up",
   "sp_skill_score_up",
+  "p_skill_score_up",
   "combo_score_up",
   "critical_coeff_up",
   "critical_rate_up",
   "stamina_cost_down",
+  "stamina_cost_up",
   "skill_success_up",
   "focus",
+  "stealth",
   "combo_continue",
 ];
 
@@ -83,6 +105,14 @@ describe("mapEffectToBuffKey", () => {
       key: "vocal_up_extreme",
       limitRelease: false,
     });
+  });
+
+  it("Phase 6 対称型（dance/visual/beat_score）も同名キーに写像", () => {
+    expect(mapEffectToBuffKey("dance_up")).toEqual({ key: "dance_up", limitRelease: false });
+    expect(mapEffectToBuffKey("dance_boost")).toEqual({ key: "dance_boost", limitRelease: false });
+    expect(mapEffectToBuffKey("visual_up")).toEqual({ key: "visual_up", limitRelease: false });
+    expect(mapEffectToBuffKey("visual_boost")).toEqual({ key: "visual_boost", limitRelease: false });
+    expect(mapEffectToBuffKey("beat_score_up")).toEqual({ key: "beat_score_up", limitRelease: false });
   });
 
   it("上限解放変数型は基底キーへ統合し limitRelease=true（P3a 写像仕様）", () => {
@@ -317,17 +347,28 @@ describe("liveStatusMultiplierPermil", () => {
     expect(liveStatusMultiplierPermil(snap, "vocal")).toBe(2250);
   });
 
-  it("vocal_up_extreme の1段値は 25‰（T5実測確定: L3 stat 倍率差分）", () => {
+  it("vocal_up_extreme の1段値は 50‰（Peing確定: 超化=一律+5段階分・表記段数はダミー）", () => {
+    // 【Peing確定 2026-08-31】超化は表記段階数によらず「元のバフの+5段階分（固定）」。
+    // golden fest-03-2 は stages=5（旧 10段×25‰=250‰ と 5段×50‰=250‰ で合計値は同一）
     expect(
-      liveStatusMultiplierPermil(snapshotOf({ vocal_up: 10, vocal_up_extreme: 10 }), "vocal"),
-    ).toBe(1750);
-    expect(liveStatusMultiplierPermil(snapshotOf({ vocal_up_extreme: 30 }), "vocal")).toBe(1750);
+      liveStatusMultiplierPermil(snapshotOf({ vocal_up: 7, vocal_up_extreme: 5 }), "vocal"),
+    ).toBe(1000 + 350 + 250);
+    // T5実測の ×1.875→×2.125（+250‰）を再現
+    expect(liveStatusMultiplierPermil(snapshotOf({ vocal_up_extreme: 5 }), "vocal")).toBe(1250);
   });
 
-  it("dance/visual は常に 1000（対称 type が現データに無いため）", () => {
-    const snap = snapshotOf({ vocal_up: 10, vocal_boost: 10, vocal_up_extreme: 5 });
-    expect(liveStatusMultiplierPermil(snap, "dance")).toBe(1000);
-    expect(liveStatusMultiplierPermil(snap, "visual")).toBe(1000);
+  it("dance/visual: 対称キーが効く（Phase 6 一般化）・vocal バフは流入しない", () => {
+    const snap = snapshotOf({ dance_up: 4, dance_boost: 2, visual_up: 6, vocal_up: 10 });
+    // dance: 1000 + 50×4 + 75×2 = 1350
+    expect(liveStatusMultiplierPermil(snap, "dance")).toBe(1350);
+    // visual: 1000 + 50×6 = 1300
+    expect(liveStatusMultiplierPermil(snap, "visual")).toBe(1300);
+    // vocal バフは dance/visual に流入しない
+    expect(liveStatusMultiplierPermil(snap, "dance")).not.toBe(
+      liveStatusMultiplierPermil(snap, "vocal"),
+    );
+    // dance/visual に超化キーはない（extreme は vocal 専用）
+    expect(liveStatusMultiplierPermil(snapshotOf({ vocal_up_extreme: 30 }), "dance")).toBe(1000);
   });
 });
 
@@ -407,13 +448,15 @@ describe("successRatePermil", () => {
 describe("focusFanBonusPermil", () => {
   it.each([
     [0, 0],
-    [1, 0],
-    [2, 0],
+    [1, 7],
+    [2, 14],
     [3, 21],
-    [9, 49],
+    [5, 35],
+    [6, 38],
+    [9, 47],
     [10, 50],
     [12, 50],
-  ])("focus %i段 → +%i‰（research/01 §2.6: 3段+2.1%〜10段+5.0%）", (stages, expected) => {
+  ])("focus %i段 → +%i‰（Peing確定 2026-08-31: 1-5段+0.7%/段・6-10段+0.3%/段）", (stages, expected) => {
     expect(focusFanBonusPermil(stages)).toBe(expected);
   });
 
@@ -430,5 +473,90 @@ describe("fanFactorPermil", () => {
 
   it("focus 0段 → basePermil そのまま", () => {
     expect(fanFactorPermil(1620, 0)).toBe(1620);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 9（Peing確定仕様 2026-08-31）: 超化 capExtend・ステルス・低下バフ・Pスコア
+// ---------------------------------------------------------------------------
+import { stealthFanBonusPermil } from "../../../src/timeline/buffs.js";
+
+describe("Phase 9: 超化（capExtend）の上限拡張", () => {
+  it("通常上限20に達した score_up に超化+5段 → 実効25（上限も+5拡張）", () => {
+    const snap = aggregateBuffs([
+      effect({ type: "score_up", stages: 20 }),
+      effect({ type: "score_up", stages: 5, capExtend: true, sourceSkillId: "choka" }),
+    ]);
+    expect(snap.score_up).toBe(25);
+  });
+
+  it("テンション10（上限10）+ 超化5段 → 実効15（peing: 「10段＋超化は上限解放15段と同価値」）", () => {
+    const snap = aggregateBuffs([
+      effect({ type: "tension_up", stages: 10 }),
+      effect({ type: "tension_up", stages: 5, capExtend: true, sourceSkillId: "choka" }),
+    ]);
+    expect(snap.tension_up).toBe(15);
+  });
+
+  it("超化なしの通常20段は従来どおり 20 でクランプ", () => {
+    const snap = aggregateBuffs([
+      effect({ type: "score_up", stages: 23 }),
+      effect({ type: "score_up", stages: 4, sourceSkillId: "other" }),
+    ]);
+    expect(snap.score_up).toBe(20);
+  });
+
+  it("超化の上限拡張は最大のインスタンスを採用（効果は常に一定の解釈）", () => {
+    const snap = aggregateBuffs([
+      effect({ type: "score_up", stages: 5, capExtend: true, sourceSkillId: "choka-a" }),
+      effect({ type: "score_up", stages: 5, capExtend: true, sourceSkillId: "choka-b" }),
+    ]);
+    expect(snap.score_up).toBe(10);
+  });
+});
+
+describe("Phase 9: ステータス低下バフ（vocal/dance/visual_down）", () => {
+  it("低下バフは -50‰/段でライブ中ステータス倍率から減算される", () => {
+    const snap = snapshotOf({ vocal_up: 4, vocal_down: 2 });
+    expect(liveStatusMultiplierPermil(snap, "vocal")).toBe(1000 + 200 - 100);
+    expect(liveStatusMultiplierPermil(snap, "dance")).toBe(1000);
+  });
+
+  it("dance_down/visual_down も対称に効く", () => {
+    const snap = snapshotOf({ dance_down: 3, visual_down: 1 });
+    expect(liveStatusMultiplierPermil(snap, "dance")).toBe(1000 - 150);
+    expect(liveStatusMultiplierPermil(snap, "visual")).toBe(1000 - 50);
+  });
+});
+
+describe("Phase 9: P スキルスコア上昇（p_skill_score_up）", () => {
+  it("b1 passive に 100‰/段で加算される", () => {
+    const snap = snapshotOf({ p_skill_score_up: 3, score_up: 2 });
+    const b1 = b1Permil(snap, "passive", { beat: 0, active: 0, special: 0, passive: 0 });
+    expect(b1).toBe(1000 + 300 + 50);
+  });
+
+  it("beat/active/special には乗らない", () => {
+    const snap = snapshotOf({ p_skill_score_up: 5 });
+    expect(b1Permil(snap, "beat", { beat: 0, active: 0, special: 0, passive: 0 })).toBe(1000);
+    expect(b1Permil(snap, "active", { beat: 0, active: 0, special: 0, passive: 0 })).toBe(1000);
+  });
+});
+
+describe("Phase 9: ステルス副効果（stealthFanBonusPermil）", () => {
+  it.each([
+    [0, 0],
+    [5, 18], // peing確定: 5段 +1.8%
+    [6, 21], // peing確定: 6段 +2.1%
+    [10, 37], // peing確定: 10段 +3.7%
+    [12, 37],
+  ])("stealth %i段 → +%i‰（peing id=1188720397・1-4段は Unknown=0 近似）", (stages, expected) => {
+    expect(stealthFanBonusPermil(stages)).toBe(expected);
+  });
+
+  it("7-9段は 6→10段が +4‰/段で一意確定（25/29/33）", () => {
+    expect(stealthFanBonusPermil(7)).toBe(25);
+    expect(stealthFanBonusPermil(8)).toBe(29);
+    expect(stealthFanBonusPermil(9)).toBe(33);
   });
 });

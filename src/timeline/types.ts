@@ -18,12 +18,18 @@ export type LaneNumber = 1 | 2 | 3 | 4 | 5;
 /** レーン属性（レーン色） */
 export type LaneAttribute = "vocal" | "dance" | "visual";
 
-/** スキル種別（skills_golden.json の kind） */
-export type SkillKind = "A" | "SP" | "P" | "photo";
+/** スキル種別（skills_golden.json の kind。live_bonus=ステージのライブボーナス） */
+export type SkillKind = "A" | "SP" | "P" | "photo" | "live_bonus";
 
 /**
  * 効果type（skills_golden.json の type 文字列・P3aでマスタ efficacyType から写像）。
- * 本実測に現れた24種のみを列挙する。未出現の対称型（dance_up 等）は需要が生じた時点で追加。
+ * 本実測に現れた24種＋Phase 6（マスタ一般化）で追加の対称型＋Phase 9（Peing確定仕様）で追加:
+ * - vocal_down/dance_down/visual_down: ステータス低下バフ（1段 -5%）
+ * - p_skill_score_up: P スキルスコア上昇バフ（1段 +10%・b1 passive に加算）
+ * - stealth: ステルス（audience_amount_reduction。副効果で他4レーンのファンボーナス+）
+ * - live_bonus_ct_reduction: ライブボーナス（ステージ側）の CT を短縮する即時効果
+ * dance_up/dance_boost/visual_up/visual_boost/beat_score_up はマスタ頻出のため追加
+ * （【Estimate】実測ゴールデンには出現しない。vocal 系との対称で実装）。
  */
 export type EffectType =
   | "score_get"
@@ -31,6 +37,14 @@ export type EffectType =
   | "vocal_up"
   | "vocal_boost"
   | "vocal_up_extreme"
+  | "dance_up"
+  | "dance_boost"
+  | "visual_up"
+  | "visual_boost"
+  | "beat_score_up"
+  | "vocal_down"
+  | "dance_down"
+  | "visual_down"
   | "tension_up"
   | "tension_limit"
   | "combo_score_up"
@@ -40,7 +54,9 @@ export type EffectType =
   | "critical_rate_up"
   | "a_skill_score_up"
   | "sp_skill_score_up"
+  | "p_skill_score_up"
   | "stamina_cost_down"
+  | "stamina_cost_up"
   | "stamina_recovery"
   | "combo_continue"
   | "ct_reduction"
@@ -49,9 +65,11 @@ export type EffectType =
   | "effect_amplify"
   | "score_up"
   | "skill_success_up"
-  | "focus";
+  | "focus"
+  | "stealth"
+  | "live_bonus_ct_reduction";
 
-/** 効果の対象（skills_golden.json の target。12種） */
+/** 効果の対象（skills_golden.json の target。12種＋Phase 6/9 マスタ一般化で追加） */
 export type EffectTarget =
   | "self"
   | "score_type_1"
@@ -64,9 +82,52 @@ export type EffectTarget =
   | "center"
   | "vocal_type_1"
   | "single"
-  | "vocal_type_3";
+  | "vocal_type_3"
+  // ---- Phase 6（マスタ SkillTarget 一般化・【Estimate】ゴールデンに同型の実測なし）----
+  | "buffer_type_1"
+  | "buffer_type_2"
+  | "buffer_type_3"
+  | "supporter_type_1"
+  | "supporter_type_2"
+  | "supporter_type_3"
+  | "dance_type_1"
+  | "dance_type_2"
+  | "dance_type_3"
+  | "visual_type_1"
+  | "visual_type_2"
+  | "visual_type_3"
+  | "dance_high_1"
+  | "visual_high_1"
+  | "vocal_high_2"
+  | "vocal_high_3"
+  // ---- Phase 9（ライブボーナス・マスタ SkillTarget 拡張・【Estimate】）----
+  | "score_type_3"
+  | "score_type_5"
+  | "buffer_type_5"
+  | "supporter_type_5"
+  | "vocal_type_5"
+  | "dance_type_5"
+  | "visual_type_5"
+  | "dance_high_2"
+  | "dance_high_3"
+  | "visual_high_2"
+  | "visual_high_3"
+  | "stamina_high_1"
+  | "stamina_low_1"
+  | "stamina_low_2"
+  | "stamina_low_3"
+  /** 条件（トリガー）を満たしたレーン（例: 「X状態の時、その人に…」の X 状態のレーン） */
+  | "trigger"
+  /** 特定バフ状態を持つレーン N 人（target-status-<type>-<n>） */
+  | "status_vocal_up_1"
+  | "status_dance_up_1"
+  | "status_dance_up_3"
+  | "status_a_skill_score_up_1"
+  | "status_a_skill_score_up_2"
+  | "status_a_skill_score_up_3"
+  | "status_a_skill_score_up_5";
 
-/** 発動条件（skills_golden.json の condition。11種） */
+/** 発動条件（skills_golden.json の condition。11種＋Phase 9 拡張） */
 export type EffectCondition =
   | "none"
   | "self_visual_lane"
@@ -78,7 +139,36 @@ export type EffectCondition =
   | "someone_skill_success_up"
   | "someone_critical_coeff_up"
   | "combo>=50"
-  | "combo>=100";
+  | "combo>=100"
+  // ---- Phase 9（ライブボーナス等のトリガー tg-someone_status-* / tg-combo-90 / 編成人数）----
+  | "combo>=90"
+  | "someone_critical_rate_up"
+  | "someone_beat_score_up"
+  | "someone_a_skill_score_up"
+  | "someone_sp_skill_score_up"
+  | "someone_p_skill_score_up"
+  | "someone_tension_up"
+  | "someone_vocal_up"
+  | "someone_dance_up"
+  | "someone_visual_up"
+  | "someone_vocal_boost"
+  | "someone_dance_boost"
+  | "someone_visual_boost"
+  | "someone_vocal_down"
+  | "someone_dance_down"
+  | "someone_visual_down"
+  | "someone_stamina_cost_down"
+  | "someone_stealth"
+  /** 誰かがスタミナ回復効果を受けた時（tg-someone_recovered） */
+  | "someone_recovered"
+  /** 編成にユニットメンバーが N 人以上（tg-more_than_character_count-<unit>-<N>） */
+  | "count_liz>=1"
+  | "count_moon>=1"
+  | "count_sun>=1"
+  | "count_pajm>=1"
+  | "count_leader>=1"
+  | "count_tri>=1"
+  | "count_thrx>=1";
 
 /** type36（段階数が多い程）のスケーリング指定 */
 export interface EffectScaling {
@@ -103,8 +193,16 @@ export interface SkillEffect {
   value?: number;
   /** type36 のスケーリング指定 */
   scaling?: EffectScaling;
-  /** 上限解放（同種バフの最大段数を30へ拡張。research/06_test_plan BF2） */
+  /** 上限解放（同種バフの最大段数を30へ拡張。research/06 BF2） */
   limitRelease?: boolean;
+  /**
+   * 【Peing確定 2026-08-31】超化効果（add_effect_value_*）: 段数表記はダミーで
+   * 効果は「元のバフの+5段階分（固定）」。true のときこのインスタンスの段数ぶん
+   * 同種バフの上限も拡張する（通常上限20 → 超化で実効25。テンション10 → 15）。
+   * 出典: 質問箱 id=1190010925「超化や上限解放は段階数は存在するものの効果は常に一定」/
+   * id=1189874405「テンション超化はテンション5段相当。10段＋超化は上限解放15段と同価値」
+   */
+  capExtend?: boolean;
   target: EffectTarget;
   condition: EffectCondition;
   confidence?: string;
@@ -165,6 +263,12 @@ export interface LaneInput {
   critExtrasPermil: number;
 }
 
+/**
+ * ライブボーナス（ステージ側Pスキル）の定義。レーン非所属のため lane は null
+ * （data/live_bonuses.json 由来。発動者はステージ全体・対象解決のアンカーはセンター）。
+ */
+export type LiveBonusSkillDef = Omit<SkillDef, "lane"> & { lane: LaneNumber | null };
+
 /** ステージ入力（data/stages/qt-daily-003-19.json から） */
 export interface StageInput {
   id: string;
@@ -193,9 +297,12 @@ export interface ChartNote {
 
 /**
  * クリティカル判定の供給源。
- * 【Unknown】クリティカル率の式は未解明のため、エンジンは判定を外部委譲する。
+ * 【Peing確定 2026-08-30】動的モード（SimulateInput.baseCritRate 指定時）は
+ * エンジンが effectiveCritRate = min(0.50, baseCritRate) + critical_rate_up段 × 5%
+ * をスナップショット毎に計算して rng.nextFloat() で抽選するため本契約は使われない
+ * （フォト行は従来どおりクリティカル判定の対象外）。
  * - ゴールデン（Mode R）: measured_data_v2.json critical_flags.beats の黄ポップ抽出を注入
- * - 通常シミュレーション: 実装側で確率ロールを実装（rng.nextCritical() 等）
+ * - 動的モード未指定時のフォールバックとしても使用する
  */
 export type CritProvider = (beat: number, lane: LaneNumber) => boolean;
 
@@ -210,8 +317,22 @@ export interface SimulateInput {
   comboAdvantageTable?: readonly ComboAdvantageRow[];
   /** 成功率の基礎値 permil（min(1, 席埋率×メンタル/要求) の結果。既定 1000。本実測は全成立） */
   successBasePermil?: number;
-  /** クリティカル判定の供給源（必須） */
+  /** クリティカル判定の供給源（必須。baseCritRate 指定時の動的モードでは参照されない） */
   criticalProvider: CritProvider;
+  /**
+   * 【Peing確定 2026-08-30】基礎クリティカル発生率（0-1。UI設定値・既定 0.50）。
+   * 指定時は動的クリティカル判定を有効化する:
+   *   effectiveCritRate = min(0.50, baseCritRate) + snapshot.critical_rate_up × 5%
+   *   - effectiveCritRate >= 1.0 → 確定クリティカル（抽選なし・常に発生）
+   *   - それ以外 → rng.nextFloat() < effectiveCritRate で抽選
+   *   - フォト行は T5確定どおりクリティカル判定の対象外
+   * 根拠: 質問箱 id=1189080032「クリティカル→発生確率に影響、最大で発生率+50%
+   * （50%に必要なクリティカル値はステージによって異なる）/ クリティカル率バフは
+   * 1段階あたり+5%、20段で+100%となり確実にクリティカルが発生」・
+   * id=1186806688「クリ値が高いとクリ発生率最大50%まで上がる、要求値はライブ毎に異なる」。
+   * 未指定時は criticalProvider（実測リプレイ等）に委譲（ゴールデンテスト互換）。
+   */
+  baseCritRate?: number;
   /** スコア乱数源（必須。Mode R は FixedRng(1000) 系） */
   rng: ScoreRng;
   /**
@@ -223,6 +344,18 @@ export interface SimulateInput {
   missedNotes?: ReadonlyArray<{ beat: number; lane: LaneNumber }>;
   /** 丸めポリシー（既定 "sequential"。T4/T5 で at-end が確定・推奨は "at-end"） */
   roundingPolicy?: RoundingPolicy;
+  /**
+   * 【Phase 9・Peing確定】ステージのライブボーナスPスキル（data/live_bonuses.json 由来）。
+   * research/16 §1: 全アイドルPスキル（メンタル降順）より**先頭（最優先）**で判定・発動する。
+   * 前半発動（無条件・スコア精算前）と後半発動（条件付き・スコア精算後の後半Pスキル群の先頭）に対応。
+   * CT はステージ側で個別管理（step9で減算）。
+   */
+  liveBonusSkills?: readonly LiveBonusSkillDef[];
+  /**
+   * 編成5レーンのキャラクターID（L1..L5順。data/cards.json の characterId）。
+   * ライブボーナスのユニット人数条件（count_liz>=1 等）の判定に使用。
+   */
+  formationCharacterIds?: readonly string[];
 }
 
 /** 発動1件のトレース（T4: 発動ログとの突合用） */
@@ -230,7 +363,10 @@ export interface ActivationTrace {
   beat: number;
   /** 処理位相（research/01 §4: first=P前半, main=A/SP/ビート発動, last=P後半） */
   phase: "first" | "main" | "last";
-  lane: LaneNumber;
+  /**
+   * 発動レーン。ライブボーナス（ステージ側・レーン非所属）は 0。
+   */
+  lane: LaneNumber | 0;
   skillId: string;
   kind: SkillKind;
   success: boolean;
@@ -300,16 +436,27 @@ export type BuffKey =
   | "vocal_up"
   | "vocal_boost"
   | "vocal_up_extreme"
+  | "vocal_down"
+  | "dance_up"
+  | "dance_boost"
+  | "dance_down"
+  | "visual_up"
+  | "visual_boost"
+  | "visual_down"
+  | "beat_score_up"
   | "tension_up"
   | "score_up"
   | "a_skill_score_up"
   | "sp_skill_score_up"
+  | "p_skill_score_up"
   | "combo_score_up"
   | "critical_coeff_up"
   | "critical_rate_up"
   | "stamina_cost_down"
+  | "stamina_cost_up"
   | "skill_success_up"
   | "focus"
+  | "stealth"
   | "combo_continue";
 
 /** 1レーンの実効段数スナップショット（全キー必須・未所有は 0） */
