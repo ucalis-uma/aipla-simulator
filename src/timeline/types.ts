@@ -127,7 +127,7 @@ export type EffectTarget =
   | "status_a_skill_score_up_3"
   | "status_a_skill_score_up_5";
 
-/** 発動条件（skills_golden.json の condition。11種＋Phase 9 拡張） */
+/** 発動条件（skills_golden.json の condition。11種＋Phase 9 拡張＋Phase 8-B2 フォトマスタ準拠拡張） */
 export type EffectCondition =
   | "none"
   | "self_visual_lane"
@@ -168,7 +168,48 @@ export type EffectCondition =
   | "count_pajm>=1"
   | "count_leader>=1"
   | "count_tri>=1"
-  | "count_thrx>=1";
+  | "count_thrx>=1"
+  // ---- Phase 8-B2（フォトスキルのマスタ準拠条件・engine 拡張）----
+  /** 自レーンがダンス色（tg-position_attribute_dance） */
+  | "self_dance_lane"
+  /** 自レーンがセンター（L3・tg-center） */
+  | "self_center"
+  /** 自レーンが左端（L1・tg-most_left） */
+  | "self_most_left"
+  /** 自レーンが右端（L5・tg-most_right） */
+  | "self_most_right"
+  /**
+   * 自レーンが <BuffKey> 状態（tg-status-*。「ボーカル上昇状態の時」等）。
+   * engine は自レーンの実効スナップショットで判定する。
+   */
+  | `status_${BuffKey}`
+  /** 自レーンのスタミナが N% 以上/以下（tg-stamina_higher-N / tg-stamina_lower-N） */
+  | `stamina>=${number}`
+  | `stamina<=${number}`
+  /** コンボが N 以下（tg-combo_less_equal-N） */
+  | `combo<=${number}`
+  /** 誰かがスタミナ N% 以下（tg-someone_stamina_lower-N） */
+  | `someone_stamina<=${number}`
+  /**
+   * 【Estimate: 常時発動近似】楽曲限定（tg-music-*）/ クリティカル発動時（tg-critical）/
+   * 誰かがSP発動前（tg-before_special_skill_by_someone）/ 集目段数条件（tg-fan_engage_higher-N）/
+   * テンションタイプ条件（tg-mood_type-*）。engine は楽曲/発動履歴の文脈を持たないため
+   * 無条件で成立扱いする（UI の条件セレクトには「（常時発動近似）」表記）。
+   */
+  | "music_limited"
+  | "critical_timing"
+  | "someone_before_special"
+  | "fan_engage_higher"
+  | "mood_type"
+  // ---- Phase 8-B4（フォト作成の拡張条件）----
+  /** 70コンボ以上時（tg-combo-70 相当・やる気士docs） */
+  | "combo>=70"
+  /**
+   * ビート時、N%の確率で（やる気士docs 専用フォトの「ビート時、10%確率で」等）。
+   * 発動試行ごとに rng.nextFloat() < N/100 で抽選（確定値ランは NeutralRng.nextFloat()=0
+   * により常に成立 = 既存の確率/成功率ゲートと同じ「全抽選成立」規約）。
+   */
+  | `beat_chance=${number}`;
 
 /** type36（段階数が多い程）のスケーリング指定 */
 export interface EffectScaling {
@@ -191,8 +232,19 @@ export interface SkillEffect {
   durationBeats?: number | null;
   /** 即時量（ct_reduction:15 / stamina_recovery:2560 / effect_extension:10 等） */
   value?: number;
-  /** type36 のスケーリング指定 */
-  scaling?: EffectScaling;
+  /** type36 のスケーリング指定。明示 null は type36 未対応マーカー（スケーリングなしで計算） */
+  scaling?: EffectScaling | null;
+  /**
+   * 【Phase 8-B4】延長/増強の絞り込み対象バフ（与・クリティカル率延長 等）。
+   * effect_extension / effect_amplify 専用。未指定 = 全バフが対象（T5 実測の挙動・不変）。
+   */
+  buffKey?: BuffKey;
+  /**
+   * 【Phase 8-B4】延長/増強の範囲スコープ。given = 自分が付与した効果のみ（レーン検索・
+   * 「与・○○延長」）、received = 自分が受けている効果のみ（従来動作・「被・○○延長」）。
+   * 未指定 = received（T5 実測と同一経路・既存テスト不変）。
+   */
+  scope?: "given" | "received";
   /** 上限解放（同種バフの最大段数を30へ拡張。research/06 BF2） */
   limitRelease?: boolean;
   /**

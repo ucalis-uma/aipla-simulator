@@ -37,7 +37,8 @@ import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { simulateTimeline } from "../timeline/engine.js";
-import type { TimelineResult } from "../timeline/types.js";
+import type { LaneNumber, TimelineResult } from "../timeline/types.js";
+import { myPhotoToSkillDef, type MyPhotoDef } from "../photos.js";
 import { EVENT_RAND_MIN_PERMIL, EVENT_RAND_MAX_PERMIL } from "../formula/scoreEvent.js";
 import { ContinuousRng } from "../rng/random.js";
 import { NeutralRng } from "../rng/neutral.js";
@@ -100,6 +101,13 @@ interface SimConfigJson {
   disabledSkillIds?: string[];
   /** 基礎クリティカル率 0-1（Peing確定仕様の動的モード。省略時 0.5） */
   critRate?: number;
+  /**
+   * 【Phase 8-B9】マイフォト帳（UI エクスポートと同一形式・CLI でも解決）。
+   * photoEquip[lane-1] = 装着する myPhotos の ID 列。スキル持ちフォトは
+   * myPhotoToSkillDef で SkillDef 化して buildSimulateInput へ渡す。
+   */
+  myPhotos?: unknown[];
+  photoEquip?: unknown[];
 }
 
 function loadSourceData(stageFile: string, chartFile: string): SimSourceData {
@@ -184,6 +192,13 @@ function loadSourceData(stageFile: string, chartFile: string): SimSourceData {
   } catch {
     characterNames = undefined;
   }
+  // 【Phase 8-B3】レベル別スキル定義（編成 JSON の skill_levels 指定に使用）。無ければ undefined
+  let skillLevels: SimSourceData["skillLevels"];
+  try {
+    skillLevels = read(path.join(repoRoot, "data/skills_levels.json")) as SimSourceData["skillLevels"];
+  } catch {
+    skillLevels = undefined;
+  }
   return {
     cards,
     cardParameters,
@@ -194,6 +209,7 @@ function loadSourceData(stageFile: string, chartFile: string): SimSourceData {
     skillsByCard,
     liveBonusesByQuest,
     characterNames,
+    skillLevels,
   };
 }
 
@@ -223,6 +239,20 @@ function buildInput(cfg: SimConfigJson, inputPath: string, critRate: number): Si
       );
     }
   }
+  // 【Phase 8-B9】マイフォト帳の装備（myPhotos + photoEquip）からユーザーフォトスキルを収集。
+  // UI の collectUserPhotoSkills と同一規則（レーン=配列 index+1・photoIndex=装着順）。
+  const myPhotos = Array.isArray(cfg.myPhotos) ? (cfg.myPhotos as MyPhotoDef[]) : [];
+  const photoEquip = Array.isArray(cfg.photoEquip) ? (cfg.photoEquip as unknown[]).map((ids) => (Array.isArray(ids) ? (ids as string[]) : [])) : [];
+  const userPhotoSkills = myPhotos.length > 0
+    ? photoEquip.flatMap((ids, i) =>
+        ids.flatMap((pid, j) => {
+          const p = myPhotos.find((x) => x?.id === pid);
+          if (p === undefined) return [];
+          const def = myPhotoToSkillDef(p, (i + 1) as LaneNumber, j + 1);
+          return def !== null ? [def] : [];
+        }),
+      )
+    : undefined;
   const built = buildSimulateInput({
     deck: cfg.deck,
     stageFile: cfg.stage.file,
@@ -235,6 +265,7 @@ function buildInput(cfg: SimConfigJson, inputPath: string, critRate: number): Si
     mentalOverride: cfg.mentalOverride,
     disabledSkillIds: cfg.disabledSkillIds,
     baseCritRate: critRate,
+    userPhotoSkills,
   });
   for (const w of built.warnings) {
     console.error(`[warn] ${w}`);

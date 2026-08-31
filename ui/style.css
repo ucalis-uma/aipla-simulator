@@ -18,7 +18,8 @@ body {
   line-height: 1.5;
 }
 header {
-  background: linear-gradient(135deg, #3b4f9e, #7a5fb8);
+  /* 【Phase 8-B8】紫テーマ → 黄色テーマ（ユーザー要望） */
+  background: linear-gradient(135deg, #a8780f, #d4972f);
   color: #fff;
   padding: 14px 20px;
 }
@@ -73,10 +74,11 @@ details summary { cursor: pointer; font-size: 12px; color: var(--accent); }
 }
 .attr-vocal { background: #e56b96; }
 .attr-dance { background: #4fa3d8; }
-.attr-visual { background: #b887d8; }
+/* 【Phase 8-B8】ステータス色の法則: Vo=ピンク・Da=青・Vi=黄 */
+.attr-visual { background: #e8a912; }
 .kind-A, .kind-SP { background: #d4972f; }
 .kind-P { background: #7a8194; }
-.kind-photo { background: #6f5fb0; }
+.kind-photo { background: #d4972f; }
 .kind-beat { background: #8fa3c8; }
 .badge { display: inline-block; padding: 0 5px; border-radius: 3px; font-size: 10px; font-weight: 700; }
 .badge-c { background: #e3f4e9; color: #1e7a46; }
@@ -139,7 +141,7 @@ footer { margin-top: 30px; color: var(--dim); font-size: 11px; }
 }
 .cat-chip.cat-highscore { background: #d4972f; }
 .cat-chip.cat-ex { background: #b0483f; }
-.cat-chip.cat-tower { background: #6f5fb0; }
+.cat-chip.cat-tower { background: #d4972f; }
 .cat-chip.cat-main { background: #3b4f9e; }
 .cat-chip.cat-daily { background: #2e8b57; }
 .cat-chip.cat-exercise, .cat-chip.cat-tutorial, .cat-chip.cat-other { background: #7a8194; }
@@ -176,12 +178,13 @@ footer { margin-top: 30px; color: var(--dim); font-size: 11px; }
 }
 .chip.acc-vocal { background: #fbe4ec; color: #b03a60; }
 .chip.acc-dance { background: #e2f0fa; color: #2a6f9e; }
-.chip.acc-visual { background: #f1e6fa; color: #7a4fa0; }
+.chip.acc-visual { background: #fdf3dc; color: #9a6d00; }
 .chip.acc-stamina, .chip.acc-mental, .chip.acc-technique { background: #eef1f8; color: #33406b; }
+/* 【Phase 8-B8】ロール色: サポーター=赤・バッファー=青・スコアラー=黄 */
 .role-chip { display: inline-block; padding: 3px 8px; font-weight: 700; }
-.role-chip.role-scorer { background: #fdeaea; color: #b0483f; }
+.role-chip.role-scorer { background: #fdf3dc; color: #9a6d00; }
 .role-chip.role-buffer { background: #e8f0fd; color: #3b5f9e; }
-.role-chip.role-supporter { background: #e9f7ee; color: #2e7d4f; }
+.role-chip.role-supporter { background: #fbe4e1; color: #b03024; }
 .acc-head { font-size: 11.5px; color: var(--dim); margin: 8px 0 4px; font-weight: 700; }
 .acc-slots { display: flex; flex-direction: column; gap: 4px; margin: 4px 0; }
 .acc-slot {
@@ -235,7 +238,7 @@ footer { margin-top: 30px; color: var(--dim); font-size: 11px; }
 .card-head .card-name { flex: 1; }
 .bond-ctrl {
   display: flex; gap: 6px; align-items: center; font-size: 12.5px;
-  background: #f4ecfa; border: 1px solid #d9c3ee; border-radius: 6px;
+  background: #fdf6e3; border: 1px solid #eedc9a; border-radius: 6px;
   padding: 5px 8px; margin: 4px 0;
 }
 .acc-thumb {
@@ -260,6 +263,89 @@ footer { margin-top: 30px; color: var(--dim); font-size: 11px; }
 
 /* Phase 9: ライブボーナス表示 */
 .lb-chip {
-  display: inline-block; background: #4a2e86; color: #fff;
+  display: inline-block; background: #a8780f; color: #fff;
   border-radius: 999px; padding: 1px 8px; font-size: 11px; font-weight: 700;
 }
+
+/* ---- Phase 8-A/8-B: アクセサリ役割警告・フォト5スロット・マイフォト帳 ---- */
+.acc-slot.acc-slot-warn { border-color: #e0a800; background: #fffaf0; }
+.chip.chip-warn { background: #fff3cd; color: #8a6d00; }
+.chip.chip-retouch { background: #ffe9f2; color: #b03a8c; font-weight: 700; }
+.chip.tag-chip { background: #eef3fd; color: #3b5f9e; }
+.photo-eq-head { font-size: 11.5px; color: var(--dim); margin: 10px 0 4px; font-weight: 700; }
+.photo-eq-list { display: flex; flex-direction: column; gap: 4px; margin: 4px 0; }
+.photo-eq-row {
+  display: flex; gap: 4px; align-items: center; flex-wrap: wrap;
+  background: #fafbfe; border: 1px solid var(--line); border-radius: 6px;
+  padding: 3px 6px; font-size: 11.5px;
+}
+.photo-eq-name { white-space: nowrap; }
+.photo-eq-summary { flex: 1 1 160px; min-width: 120px; }
+.photo-row-ops { display: inline-flex; gap: 2px; margin-left: auto; }
+.photo-editor { display: flex; flex-direction: column; gap: 6px; }
+.photo-frame {
+  display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
+  background: #fafbfe; border: 1px solid var(--line); border-radius: 6px;
+  padding: 5px 8px; font-size: 12px;
+}
+.photo-frame[disabled] { opacity: 0.55; }
+.photo-frame-sub { background: #f6f7fb; }
+.photo-frame-no { font-weight: 700; color: var(--dim); flex: 0 0 34px; }
+.photo-frame select, .photo-frame input[type="number"] {
+  padding: 4px 6px; border: 1px solid var(--line); border-radius: 5px; font-size: 12px;
+}
+.photo-frame input[type="number"] { width: 90px; }
+.photo-frame input[type="text"] {
+  flex: 1; min-width: 140px; padding: 4px 6px; border: 1px solid var(--line); border-radius: 5px; font-size: 12.5px;
+}
+.photo-frame label.inline { display: inline-flex; gap: 3px; align-items: center; font-size: 11.5px; color: var(--dim); white-space: nowrap; }
+.photo-frame .btn-like { font-size: 12px; }
+.photo-row { flex-wrap: wrap; }
+.photo-row .photo-row-ops { margin-left: auto; }
+#ph-tags button[data-tag].active { background: #3b5f9e; color: #fff; }
+.opt-photo-ctrl .tag-chip { font-size: 11.5px; margin-right: 4px; }
+
+/* ---- Phase 8-B2: 効果リッチ表示・手持ち一括編集・フォトマスタ ---- */
+.fx-row { display: inline-flex; gap: 3px; flex-wrap: wrap; align-items: center; }
+.fx {
+  display: inline-block; padding: 1px 6px; border-radius: 4px;
+  font-size: 11px; font-weight: 600; white-space: nowrap;
+  background: #eef1f8; color: #33406b; border: 1px solid #dfe3ee;
+}
+.fx b { font-weight: 800; }
+.fx-buff { background: #e8f0fd; color: #2a529e; border-color: #c9d7f2; }
+.fx-score { background: #e6f5ea; color: #22703d; border-color: #c4e4cd; }
+.fx-crit { background: #fdeee0; color: #9a5a12; border-color: #f2d8bc; }
+.fx-utility { background: #eef1f8; color: #4a5578; border-color: #dfe3ee; }
+.fx-debuff { background: #fdeaea; color: #a02f2f; border-color: #f2c9c9; }
+.fx-grant { background: #fdf3dc; color: #9a6d00; border-color: #f2e2a8; }
+.fx-dur { background: #f4f4f6; color: #555; }
+.fx-target { background: #f4f4f6; color: #555; }
+.fx-cond { background: #fff7e0; color: #8a6d00; border-color: #efe0a8; }
+.fx-meta { background: #f4f4f6; color: #555; }
+.chip-mochi { background: #e6f5ea !important; color: #22703d !important; font-weight: 700; }
+.chip-focus { background: #fdeaea; color: #a02f2f; }
+.chip-skill { background: #e8f0fd; color: #2a529e; }
+.bulk-bar {
+  display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
+  background: #eef3fd; border: 1px solid #b8c6ee; border-radius: 6px;
+  padding: 6px 8px; margin: 6px 0; font-size: 12px;
+}
+.bulk-bar .btn-like { font-size: 11.5px; }
+.photo-row input[type="checkbox"] { flex: 0 0 auto; }
+
+/* 【Phase 8-B5】編成中フォトのグレー表示と付け替え確認 */
+.photo-row.photo-used { opacity: 0.55; }
+.photo-row.photo-used:hover { opacity: 0.85; }
+.chip.chip-used { background: #ececec; color: #666; }
+.photo-swap-confirm { background: #fff7e0; border: 1px solid #efe0a8; border-radius: 6px; padding: 4px 8px; font-size: 12px; }
+
+/* 【Phase 8-B8】ステータス色の法則（Vo=ピンク・Da=青・Vi=黄）。
+   フォトの自己ステ/付与チップ・デッキ値プレビューに適用 */
+.fx-stat-vocal { background: #fbe4ec; color: #b03a60; border-color: #f2c9d8; }
+.fx-stat-dance { background: #e2f0fa; color: #2a6f9e; border-color: #c9dff2; }
+.fx-stat-visual { background: #fdf3dc; color: #9a6d00; border-color: #f2e2a8; }
+.deck-preview .stat-vocal { color: #c2437a; }
+.deck-preview .stat-dance { color: #2a6f9e; }
+.deck-preview .stat-visual { color: #9a6d00; }
+.deck-preview .stat-stamina { color: #33406b; }

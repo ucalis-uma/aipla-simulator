@@ -1212,3 +1212,518 @@ deck.mental = floor( 100 × (1000 + 交流Men‰ + 装備Men%) / 1000 )
    副効果（他4レーン +1.8〜3.7%）のみ実装。
 5. ライボレベルはマスタの liveAbilityLevel（全行 5）をそのまま使用。UI でのレベル変更入力は
    未対応（将来拡張）。
+
+---
+
+## Phase 8-A/8-B/8-C（2026-08-31 完了）— フォトUI 改善（アクセサリスロット役割分離・フォト5スロットエディタ＆マイフォト帳・統合オプティマイザ）
+
+### 完了内容
+
+#### Phase 8-A: アクセサリスロットの役割分離
+- **スロット1 = 基礎3ステータス（vocal/dance/visual 分類）用・スロット2 = Sta/Men/Cri
+  （stamina/mental/technique 分類）用**に分離（`ui/app.ts` の `ACC_SLOT_CLASSES`）。
+- アクセサリピッカーはスロット役割に合わない分類をリスト・タブから除外
+  （タブ列: スロット1 = [すべて/Vo/Da/Vi/専用]・スロット2 = [すべて/Sta/Men/Cri/専用]）。
+  見出しに役割ラベル（「スロット1（Vo/Da/Vi用）」等）を表示。
+- `setAccessory()` はマスタ分類で役割を判定し、役割外の指定は正役割スロットへ**自動振り分け**
+  （占有済みなら上書き・status に注記）。
+- 「おまかせ装備」はスロット1=レーン属性一致の Vo/Da/Vi 分類・スロット2=Sta/Men/Cri 分類の
+  最強候補を独立に選定（従来の全体Top2ではスロット2が Vo になり得る問題を修正）。
+- 旧データ（手入力 JSON 等）でスロット役割と分類が不一致の装備は `acc-slot-warn` の
+  警告チップを表示（データは壊さない）。
+
+#### Phase 8-B: フォト5スロットエディタ ＆ タグ付きマイフォト帳
+- **新コアモジュール `src/photos.ts`**:
+  - `MyPhotoDef`（id/name/kindLabel/tags/retouch/skill/frames）・`PhotoFrame`（self /
+    grant_neighbors / grant_center / grant_scorer × stat × pct/fixed）・`PhotoSkillDef`。
+  - 変換: `myPhotoToEquipEntry()`（structured 形式・自己枠は既存キー/付与枠は `grant_<target>_<stat>`
+    キー（常に pct））、`myPhotoToSkillDef()`（kind:"photo" の SkillDef。score_get → powerPermil・
+    即時系 → value・段階系 → stages+durationBeats に写像）。
+  - バリデーション: `validateMyPhoto()`（ステータス枠上限: スキルあり 4 枠 / なし 5 枚枠・
+    付与は % のみ）、`validatePhotoEquip()`（**レタッチ1枚制限**・1人最大5枚）。
+  - 同梱テンプレート `defaultPhotoTemplates()`: 理論値Vo70%イメトレ / 実用Vo53% /
+    隣接Voレタッチ / センタークリスコレタッチ / Voブーストレタッチ（4段28b） /
+    スコア獲得40%フォト【Estimate: 数値は質問箱・実測運用の代表ライン】。
+- **付与効果の解決（`src/sim/build.ts`）**:
+  - structured キー `grant_<target>_<stat>`（pct）を対象レーンの装備と同一プールへ加算
+    （出典: **Peing id=1187940162**「センタークリティカルスコアや隣接ステータスは通常の
+    クリティカルスコア%やステータスと同種類として取り扱われます」）。
+  - neighbors = 左右1レーンずつ（L1/L5 は1レーン・engine の neighbors 解決と同一規則）、
+    center = L3、scorer = role Scorer のレーン。stat 系はデッキ値%プール、
+    スコア系（beat/a/sp/critical/p_score）は scoreBonusPct / critExtrasPermil へ。
+  - `BuildSimOptions.userPhotoSkills`（kind:"photo"・lane 設定済み SkillDef）を
+    LaneInput.photos へマージ（disabledSkillIds で個別無効化可）。
+- **UI（`ui/app.ts`）**:
+  - レーンカードに「フォト（マイフォト帳）」セクション: 装備フォト一覧（種別/レタッチ/タグ
+    チップ・効果サマリ・✎編集・✕解除）・[📚 マイフォト帳から装備]・[＋ 新規フォト作成]。
+    旧 JSON textarea は「上級: フォト(JSON)・旧形式の直接編集」details に格納（互換維持）。
+  - **フォト設定モーダル（5スロット入力）**: フォト名/種別/タグ（カンマ区切り）/レタッチ
+    チェック + 枠1（スキルなし↔スキル持ち切替・効果種別22種/段数|効果値|値/持続ビート/
+    対象/条件/CT/消費/ライブ中1回） + 枠2〜5（自己ステ・隣接付与・センター付与・スコアラー
+    付与 × Vo〜Cri・ビート/A/SP/クリスコ/Pスコア × %|固定値）。スキル持ちにすると枠5が
+    無効化（過剰盛り自動防止・保存時に frames を4枠へトリム）。
+  - **マイフォト帳ピッカー**: 検索 + タグチップ絞り込み + ▶装備/✎編集/✕削除。
+    LocalStorage キー `aipura-sim-myphotos-v1`。
+  - **初期同梱テンプレート**: T5 実測フォト16枚（data/skills_golden.json の photo スキル ×
+    verification_data_v2.json の実測 structured 値を自動合成・`buildT5PhotoTemplates()`）+
+    `defaultPhotoTemplates()`（レタッチ有無は実測から不明のため T5 分は retouch=false【Estimate】）。
+  - `toDeck()` は装備フォトを structured 変換して photos にマージ・
+    `collectUserPhotoSkills()` が buildSimulateInput へスキルを注入。
+  - エクスポート JSON に `myPhotos` + `photoEquip`（UI 再インポート用）を追加。
+    deck.characters[].photos には structured 変換済みが含まれるため CLI でも
+    ステータス/付与は再現可（ユーザーフォトスキルのみ CLI 非対応・data 側 golden photo のみ）。
+
+#### Phase 8-C: 統合オプティマイザ（カード固定 ＋ タグ指定フォト配分）
+- `src/optimizer/index.ts` に制約を追加:
+  - `requiredCardId`（**必須採用・レーン自由**）: プールに強制追加し、重み最小の自由レーンへ
+    先行配置。局所探索では必須カードが入っているレーンの置き換えを禁止。
+  - `photoPool`（タグ絞り込み済み `MyPhotoDef[]`）: カード探索後、上位編成に対して
+    「1枚追加で最も伸びる (フォト, レーン) 組」の**貪欲割当**を実施。
+    ゲーム内ルール（レタッチ1枚・1人最大5枚・同一フォト全体で1回）は `validatePhotoEquip`
+    で厳守。結果の `OptimizerEntry.photoIds`（レーン1-5）に記録。
+- UI（オプティマイザタブ）: **必須採用セレクト**（全491カード）・**フォト込み探索チェック** +
+  タグ絞り込みチェックボックス（帳のタグから自動生成・いずれか一致でプール化）。
+  ランキングにフォトチップ（📷 名前）を表示・「この編成を反映」でカード＋フォト装備を
+  一括反映。評価条件注記を更新（アクセサリなし/交流Lv1/メンタル100/全員Scorer）。
+
+### テスト・検証
+- `tests/unit/photos.test.ts`（新規 11 本）: 変換（自己/付与キー・SkillDef 写像）・
+  バリデーション（枠上限/レタッチ/付与 pct のみ）・テンプレート構造。
+- `tests/unit/sim/photo-grants.test.ts`（新規 5 本）: grant_* 解決の統合テスト
+  （隣接 = L±1・センター = L3・スコアラー = role・スコア系付与の critExtras/scoreBonusPct 反映・
+  userPhotoSkills のマージと無効化）。デッキ値は千分率整数演算で 1 の位まで検証。
+- `tests/unit/optimizer/photo-optimizer.test.ts`（新規 4 本）: 必須採用カード含有・
+  フォト配分（重複なし・フォトあり > フォトなし）・レタッチ制約・photoPool 未指定時の null。
+- `tests/ui/smoke.test.ts`: スロット役割テスト更新（タブ絞り込み・役割ラベル・
+  専用品の分類制約）+ 新規 5 本（帳の同梱/検索/タグ絞り込み・保存と LocalStorage 永続化・
+  レタッチ1枚制限・スキル枠減少とシミュレーション完走・統合オプティマイザ）。
+  **計 26 本全パス。**
+- **385 tests（384 passed / 1 skipped）**・`tsc --noEmit`（root / ui）ゼロエラー・
+  `build:data:ext` / `build:ui` 成功。
+- **T5 ゴールデン 17,529,132,014 不変**・**UI/CLI 確定値 2,436,373,427 不変**
+  （既存フォト/アクセサリの読み込み経路は無変更・grant_ キーは旧データに存在しないため
+  影響ゼロ）。
+
+### 設計メモ・決定事項
+1. 付与は「対象レーンの装備と同一プールへの加算」とした（Peing id=1187940162 確定・
+   エンジン本体は無変更で build 時に解決）。付与値は % のみ対応（固定値付与は質問箱
+   id=1189223503 の通り「SP・A固定値は％に比べ 0 に等しい」ため非対応）。
+2. センター/スコアラー付与は自分自身が該当する場合も適用（センクリフォトをセンター本人が
+   持つ運用が Peing 上確認されるため）。neighbors は engine と同一の左右1レーン規則で
+   自己は含まない。
+3. フォトのレタッチ有無は実測から判定できないため T5 実測テンプレートは retouch=false
+   （制限対象外）【Estimate】。ユーザーはエディタで切替可能。
+4. レタッチ1枚制限・スキル枠減少（第1枠占有→ステータス枠4）・1人最大5枚はタスク指示の
+   ゲーム内ルールとして実装（質問箱では明文化回答を確認できず・model レベルの仕様採用）。
+5. マイフォト帳のフォト画像はマスタに存在しないため（Phase 8 収集調査の結論）名前＋
+   種別/タグチップで代替表示。
+6. オプティマイザのフォト込み評価は「装備=フォトのみ」の共通前提（アクセサリ・交流は
+   対象外）。フォト配分は貪欲（1枚追加の最大ゲイン選択）で、最適性は保証しない
+   （時間予算内のヒューリスティック）。
+
+---
+
+## Phase 8-B2（2026-08-31 完了）— フォトマスタ統合・条件全種対応・リッチ表示・手持ち一括編集
+
+### 完了内容
+
+1. **フォトマスタの発見と統合（INFO PRIDE メモリアルフォト一覧の実装）**
+   - ベンダーマスタ（MalitsPlus/ipr-master-diff）に **PhotoAllInOne.json（262枚のフォト実体）** と
+     **PhotoAbility.json（374種の能力定義・品質→値テーブル photoAbilityLevels）** が存在することを確認
+     （Phase 6〜8-B 時点の「フォトのマスタデータは存在しない」結論を撤回・訂正）。
+   - `tools/importers/build_data_phase6.mjs` に `buildPhotosMaster()` を追加し、
+     **data/photos_master.json**（photos 262 枚 + skillsById フォトスキル 45 種）を生成:
+     - **初期品質**: PhotoAllInOne.level（品質35が標準）
+     - **能力 → structured**: effectValue は「初期品質における値×10（% 表記では ÷10）」。
+       **実測検証**: ふつつかものですが（品質35）vocal_multiply_distribution=200 → 実測 Vo+20.0%、
+       stamina=40 → Sta+4.0% と完全一致。add=固定値 / multiply*=割合で type を判別。
+     - **付与能力**: pab-*-pa-target-neighbor / -pa-target-center を grant_neighbors_*/grant_center_*
+       キーへ写像（Phase 8-B の grant 解決に接続）。
+     - **フォトスキル**: pab-passive-skill_<skillId> を Skill.json から解析
+       （ID の「passive-skill_」接頭辞・ゼロパディング差 5-01↔5-1 を吸収。28→45 種に回収改善）。
+   - UI に **フォトマスタピッカー**（帳から「📖 フォトマスタから追加」）: 種別フィルタ
+     （メモリアルフォト/研修用フォト/専用/スキル付き）・検索・初期品質の値を初期値として帳に追加。
+     専用フォト（focusCharacterId・222枚）は「専用」「キャラ名」「品質N」タグを自動付与。
+   - 未対応能力 21 種（multiply_distribution-4/-5 の一部等）は photosUnsupportedAbility に集計して表示
+     （スキル能力は全種対応）。
+
+2. **フォトスキルの条件種をマスタ準拠で拡充**
+   - マスタ SkillTrigger.json（143種）のうちフォトスキルが実際に使用するトリガーを抽出し、
+     エンジンの `EffectCondition` 型と `evaluateCondition` に追加実装:
+     - **新規評価対応**: `self_dance_lane` / `self_center` / `self_most_left` / `self_most_right` /
+       `status_<BuffKey>`（自レーンが X 状態）/ `stamina>=N`・`stamina<=N`（自レーン スタミナ%）/
+       `someone_stamina<=N` / `combo<=N`
+     - **常時発動近似【Estimate】**: `music_limited`（楽曲限定）/ `critical_timing`（クリティカル発動時）/
+       `someone_before_special`（誰かがSP発動前）/ `fan_engage_higher`（集目段数条件）/
+       `mood_type`（テンションタイプ）。engine は楽曲/発動履歴の文脈を持たないため無条件成立扱いで
+       UI に「（常時発動近似）」表記。
+   - UI の条件セレクトを 10 種 → **72 種**に拡充（コンボ上下限・レーン属性/配置・自他バフ状態 21 種・
+     スタミナ高低・誰かが回復・ユニット人数 7 種・近似 5 種）。
+
+3. **効果・スキル表示のリッチ化（平文 → チップ）**
+   - `fxChipHtml()`: 効果1行を色分けチップで表示（バフ=青・スコア系=緑・クリティカル=橙・
+     即時/補助=灰・デバフ=赤・付与=紫・持続/対象/条件=専用チップ）。
+     例: `[Voブースト +4段] [28b] [→ボーカルタイプ1人]`、条件付きは `[⏳80コンボ以上時]` を前置。
+   - `photoSummaryHtml()`: フォト1枚のスキル（CT/消費/ライブ中1回メタ込み）と全枠をチップで表示。
+   - スキル一覧（A/SP/P・フォト・ライボ）・マイフォト帳・装備行・フォトマスタ一覧すべてに適用。
+
+4. **手持ちタグ付けの簡略化＆一括編集**
+   - 帳の各行に **🎒（手持ちワンタッチ付与/解除）** ボタン追加。**装備時にも手持ちタグを自動付与**。
+   - **複数選択一括編集バー**: 行の左端チェックボックスで複数選択 →
+     「手持ちタグを付ける/外す」「タグ追加（カンマ区切り）」「🗑 選択を削除」。
+
+5. **T5 実測プリセットの 4 枚/レーン表示問題を修正**
+   - 原因: レーンのフォト表示が「マイフォト帳装備」のみで、旧形式（verification_data_v2.json 互換）
+     のフォト 4 枚が表示されていなかった。
+   - 修正: `photoEquipHtml()` が **実測/JSON 行（通常チップ）＋ 帳装備行の両方**を表示するように変更
+     （合計枚数も併記）。旧 JSON 行にも ✕ 削除ボタンを付け、スキルなしフォト（photo-L1-4 等・
+     effects 空）もテンプレート化対象に追加（T5 テンプレート 16 枚→20 枚相当）。
+
+6. **種別ラベルの整理**: 「その他」→ **「通常」** に改称（フォト種別セレクト・legacy 行チップ）。
+
+### テスト・検証
+- `tests/unit/photos.test.ts` +4 本（計 15）: photos_master.json 実データで 262 枚読込・
+  ふつつかものですが の初期値が T5 実測と一致・マスタ→MyPhotoDef 変換がバリデーションを通る
+  （発見された stamina_recovery スキルのバリデータ漏れを修正）・専用タグ付与。
+- `tests/ui/smoke.test.ts` +5 本（計 31）: T5 プリセット 4 枚/レーン表示・フォトマスタピッカー
+  （初期品質値・専用フィルタ・帳追加）・手持ち一括編集・リッチチップ表示・条件セレクト 72 種。
+- **394 tests（393 passed / 1 skipped）**・typecheck（root / ui）ゼロエラー・build:data:ext / build:ui 成功。
+- **T5 ゴールデン不変**（エンジン拡張は既存条件の評価を変更しない case 追加・default フォールバックのみ）・
+  **UI/CLI 確定値 2,436,373,427 不変**。
+
+### 設計メモ・決定事項
+1. フォトマスタの品質→値は photoAbilityLevels（品質 10〜250 のテーブル）に存在するが、
+   今回は初期品質の値のみ structured 化した（イメトレ強化値はユーザー編集）。
+   品質変更時のテーブル引きは将来拡張。
+2. フォト画像（img_photo_thumb_*）は INFO PRIDE CDN に存在せず（400）、UI は名前＋チップ表示のまま。
+3. `status_<BuffKey>` 条件は「アクティブ効果の付与有無」で判定（段数下限なし・近似）。
+4. フォトスキルの kind は "photo" のまま（ライブボーナスと異なりレーン所属）。
+5. 楽曲限定（music_limited）はマスタに 5 種のみ（けいおん！コラボ・tg-music-music-clb-004）。
+   将来的にステージ情報から楽曲判定可能になったら engine 対応を再検討。
+
+## Phase 8-B3（2026-08-31 完了）— スキルLv選択（Lv1-6）・カードレベル制約の裏取りと実装
+
+### 裏取り（マスタデータ検証）
+
+1. **スキルLvごとの要求カードレベル（requiredCardLevel）**
+   - ベンダーマスタ Skill.json の `levels[].requiredCardLevel` を全 1482 スキルで集計した結果、
+     **枠別に完全一致**（1例外もなし）:
+     - 枠1: `[0, 40, 60, 90, 150, 180]`（Lv2=Lv40〜Lv6=Lv180）
+     - 枠2: `[0, 50, 70, 110, 160, 200]`
+     - 枠3: `[0, 100, 130, 170, 210, 230]`（Lv6 にはカード Lv230 = 現行キャップが必要）
+     - 枠4（絆覚醒）: `[0, 120, 140, 190, 220, 240]`（Lv6 は現行キャップ到達不可 → 実質 Lv5 止まり）
+   - **独立検証**: T5 ゴールデンの実スキルレベル（L1/L2/L4/L5 = Lv215 → 枠3 は Lv5・L3 = Lv230 → 枠3 は Lv6）
+     が要求テーブルの許可最大と完全一致（unit テストで常時検証）。
+
+2. **カードレベル解放（CardLevelRelease.json）**
+   - `card_level_release_1` の type 意味論を確定（type1/type4 = number は通し番号、type7 = 累積追加）:
+     - type1 = スキル枠解放: `[1, 20, 80]`（3枠目 = Lv80）
+     - type7 = フォト枠追加: `[1, 1, 65, 105]`（初期2枚・3枚目 = Lv65・4枚目 = Lv105）
+     - type4 = アクセサリ枠解放: `[1, 35, 45]`
+     - type2/3 = その他（Lv30）
+
+### 実装
+
+1. **data**: `data/unlocks.json`（解放テーブル・buildUnlocks が生成）と
+   **data/skills_levels.json**（全スキル × Lv1-6 のコンパクト codec・1.2MB）を新設。
+   codec は短キー + 型/対象/条件のテーブル参照（フル形式 ~4MB → ~1.2MB）。
+   `scaling: null`（type36 未対応マーカー）は `sn: 1` フラグで往復一致を保持。
+2. **src/skillLevels.ts**（新設）: `buildSkillLevelIndex` / `decodeSkillLevel` / `maxSkillLevelOf`。
+   lane はダミー 1 で復元（呼び出し側が上書き）。
+3. **src/sim/build.ts**: `DeckCharacter.skill_levels`（skillId → Lv1-6）を追加。
+   laneSkills 解決後、指定レベルの定義へ上書き（golden 較正スキルをレベル変更した場合は
+   マスタ解析値に置き換わる旨の警告を出力）。未指定・最大Lv相当は golden/マスタ既定のまま
+   （**T5 不変**）。
+4. **UI**: スキル行に **Lv1-6 セレクト**（要求カードレベル超過の Lv は disabled「（カードLvNが必要）」・
+   既定 = カードレベルから選べる最大Lv）・カードレベル変更時に未解放枠を 🔒 表示＆無効化、
+   スキルLvを最大可能レベルへクランプ。フォト欄ヘッダに「上限 N 枚@LvM」・超過時に警告、
+   帳/エディタ装備時にフォト枠数上限をバリデーション。
+5. **バグ修正**: build_ui.mjs が `skillsLevels` を `UiData` トップレベルに埋め込んでおり
+   `SimSourceData.skillLevels`（`data` 内）へ渡っていなかったため、
+   **レベル変更がスコアに一切反映されない**問題を発見・修正（`data.skillLevels` へ移動）。
+
+### テスト・検証
+- `tests/unit/skill-levels.test.ts` 新設 9 本: codec 復元整合（Lv6 = skills_master と deep equal）・
+  Lv1/Lv6 効果値・golden 無上書き/置換警告・スコア低下・要求テーブル・maxSkillLevelOf・
+  解放テーブル・T5 golden レベル一致（裏取り検証）。
+- `tests/ui/smoke.test.ts` +4 本（計 35）: Lv セレクト表示（golden 初期選択・Lv230 disabled）・
+  レベル低下での 🔒 ロック＆クランプ・スキルLv低下でスコア変化（上書きが deck に反映）・
+  フォト枠上限ヘッダ/超過警告。
+- **407 tests（406 passed / 1 skipped）**・typecheck（root / ui）ゼロエラー・build:data:ext / build:ui 成功。
+- **T5 ゴールデン 17,529,132,014 不変**・**UI/CLI 確定値 2,436,373,427 不変**
+  （デフォルト動作 = golden レベルのままなので既存較正に影響なし）。
+
+### 設計メモ・決定事項
+1. マスタ解析値（skills_master）は Lv6 のみが T5 実測較正の対象。Lv1-5 はマスタ生値であり
+   実機未検証（UI のタイトルヒントに明記）。
+2. 枠4（絆覚醒スキル）の Lv6 は要求カードレベル 240 > 現行キャップ 230 のため到達不可
+   （マスタデータ上の将来解放に備えたテーブル保持）。
+3. `scaling?: EffectScaling | null` に型拡張（明示 null = type36 未対応マーカー・スケーリングなし計算）。
+
+## Phase 8-B4（2026-08-31 完了）— 専用フォト分類の訂正・与/被レタッチ・70コンボ/ビート確率条件
+
+### 専用フォト分類の訂正（ユーザー指摘）
+- focusCharacterId は「そのキャラが写っているフォト」を示すだけであり、
+  **専用フォトとは別物**。やる気士docs の専用フォト（
+  https://docs.google.com/spreadsheets/d/1TbNkGW2cZ-VhmIe63MhSCENkgqXbear8BshC6b57y8I
+  ・キャラ別フィルム☆3以上/☆9以上の 3〜4 択システム）は PhotoAllInOne の
+  メモリアルフォト一覧には含まれない別系統マスタ。
+- 表記を修正: 帳タグ「専用」→**「撮影キャラ」**、マスタピッカーのフィルタ
+  「専用（撮影キャラ固定）」→「撮影キャラ付き（キャラ指定）」、チップ「専用:」→「撮影:」。
+  photos.test.ts のアサーションも「専用タグが付かない」ことに変更。
+
+### 与/被スコープ付き延長・増強レタッチ（フォト作成への追加）
+- エンジン拡張（src/timeline/types.ts・buffs.ts・engine.ts）:
+  - `SkillEffect.buffKey?: BuffKey`（延長/増強の絞り込み対象バフ）
+  - `SkillEffect.scope?: "given" | "received"`（与 = 自分が付与した効果のみ・
+    received = 自分が受けている効果のみ。未指定 = received = T5 実測と同一経路で**不変**）
+  - `ActiveEffect.sourceLane`（付与レーン記録。与判定に使用・ライボはセンター 3）
+  - 与系の探索は全レーンの effects から `sourceLane === 自レーン` を収集
+    （自レーンへの自己付与も「与えた」に含める【Estimate: 実機未確認】）。
+- フォトエディタ: 種別「強化効果延長/増強」選択時に **被（自分が受けている）/与（自分が与えた）**
+  セレクトと **絞り込みバフ** セレクト（Vo/Da/Vi 上昇・ブースト・スコア系・クリ率・テンション等 19 種）
+  を表示。表示はゲーム内準拠（与・クリ率延長+4 / 被・Voブースト増強+2 等）。
+  写像: `PhotoSkillDef.buffKey/scope` → `myPhotoToSkillDef` → SkillEffect。
+- T5 実測の effect_extension/amplify は buffKey/scope 未指定のため既存経路そのまま（不変）。
+
+### フォト作成の条件追加
+- **70コンボ以上時**（`combo>=70`）: evaluateCondition に case 追加。
+- **ビート時、10%の確率で**（`beat_chance=N`・やる気士docs 専用フォト由来）:
+  発動試行（後半ビート）ごとに `rng.nextFloat() < N/100` で抽選。確定値ランは
+  NeutralRng.nextFloat()=0 で常に成立（既存の確率/成功率ゲートと同じ「全抽選成立」規約）。
+  ライブボーナス（liveBonusConditionsHold）も同一評価経路で対応。
+- UI 条件セレクトに「70コンボ以上時」「ビート時、10%の確率で」を追加（76 種）。
+
+### テスト・検証
+- `tests/unit/timeline/retouch.test.ts` 新設 6 本: 被・延長/増強の buffKey 絞り込み
+  （一致バフのみ有効）・与・延長/増強（付与者のみ有効・非付与者は無効果）・
+  beat_chance=10 の抽選成立/不成立・combo>=70 の条件ゲート。
+- `tests/unit/photos.test.ts` +1 本（計 16）: buffKey/scope の写像と「与・/被・」要約表記。
+- `tests/ui/smoke.test.ts` +1 本（計 36）: エディタで与系スコープ+絞り込みバフを選択して
+  保存 → LocalStorage に反映。
+- **415 tests（414 passed / 1 skipped）**・typecheck（root / ui）ゼロエラー。
+- **T5 ゴールデン不変**・**UI/CLI 確定値 2,436,373,427 不変**
+  （エンジン拡張は未指定時に既存経路を通る case 追加のみ）。
+
+### 設計メモ・決定事項
+1. 専用フォト（やる気士docs のキャラ別フィルム）のマスタデータは vendor に存在せず
+   （PhotoAllInOne/PhotoAbility のみ）、手入力での再現が必要。条件種自体は本Phase で
+   追加済みのため、ユーザーがフォトエディタで手動作成できる。
+2. 与系スコープの自バフ扱い（自分への自己付与を「与えた」に含める）は実機未確認の
+   【Estimate】。実機観察があれば修正。
+3. beat_chance の抽選源は nextFloat()（動的クリティカルと同一ソース）。MC の再現性は
+   seed で担保される。確定値ランでは常に成立（ゲーム内の期待値の近似としては
+   効果量を確率で割る必要があるが、発動回数ベースのモデルは現行エンジンの構造に従う）。
+
+## Phase 8-B5（2026-08-31 完了）— 延長/増強の対象型とレタッチ型の区別・trigger 対象・同フォト 1 編成 1 枚ルール
+
+### 対象指定の延長/増強とレタッチ（与/被）の区別
+- 延長/増強のスコープは必須ではなく **3 択**（Phase 8-B4 で与/被のみだったのを改善）:
+  - **指定なし** = 対象セレクトで指定した対象にいる効果を延長/増強する**通常フォトスキル**
+    （T5 の「びっくりした?」= スコアラー1人の全効果延長、「かけがえのない二人」等）
+  - **与（自分が与えたバフ）** / **被（自分が受けているバフ）** = 特定条件で発動する
+    **レタッチ系**フォトスキル（与・クリ率延長 等）
+- 表示も区別: スコープなし = 「全バフ延長+5」（与/被 接頭辞なし）・
+  与/被 = 「与・クリ率延長+4」「被・Voブースト増強+2」。
+  `PhotoSkillDef.scope` と `SkillEffect.scope` に null を許容（未指定 = T5 実測経路そのまま）。
+
+### 対象セレクトの拡張（T5 実測フォトと同型が作成可能に）
+- **「条件を満たした対象」**（`target: "trigger"`）を追加（T5「明るく君を照らしたい」=
+  誰かが集目状態の時・その人に延長 の同型が作成可能に）。
+  エンジンは `evaluateCondition` の条件成立レーン（triggerLanes）を対象として解決済みだが、
+  **P/フォトスキルには triggerLanes が配線されていなかった**ため実質未対応だった。
+  - `conditionsHold` を `{ ok, triggerLanes }` 返却に変更（liveBonusConditionsHold と同型）
+  - `activatePhaseSkills` → `tryActivate` → `applyEffect` へ triggerLanes を受け渡し
+    （無条件スキルは空 = 従来どおり。T5 ゴールデンは target=trigger を未使用で不変）
+- **「ボーカルタイプ3人」**（`vocal_type_3`）を追加（T5 L4「パークアリーナ埼玉」の
+  AスキルスコアUP対象・エンジンの resolveTargets は既対応で UI 選択肢のみ追加）。
+
+### 同じフォトは 1 編成に 1 枚まで（付け替え方式）
+- マイフォト帳: 編成中のフォトは **グレー表示（opacity 0.55）＋「編成中:L◯」チップ**
+  （このレーン装備中は「このレーンに装備済み」チップ）。装備ボタンを押すと
+  **「もうすでに編成されています（L◯ が装備中）。このキャラに付け替えますか？」** の
+  インライン確認（[付け替える]/[キャンセル]）が出て、実行すると他レーンから装備を
+  取り上げてこのレーンへ移動（ステータスに移動元レーンを表示）。
+- フォトエディタの「保存してこのレーンに装備」も同ルールで**他レーンから自動付け替え**
+  （確認なしで移動・ステータスに表示）。同一レーンへの重複装備は禁止のまま。
+- スタイル: `.photo-row.photo-used`（グレー）・`.chip-used`・`.photo-swap-confirm` を追加。
+
+### テスト・検証
+- `tests/unit/timeline/retouch.test.ts` +2 本（計 8）: スコープ指定なしの対象指定延長
+  （スコアラー1人のバフを延長）・trigger 対象（条件成立者への延長が発動）。
+- `tests/ui/smoke.test.ts` +1 本（計 37）: 編成中フォトのグレー/「編成中:L1」表示・
+  装備時の付け替え確認（キャンセル/実行）・実行後に他レーンから移動すること。
+- **418 tests（417 passed / 1 skipped）**・typecheck（root / ui）ゼロエラー。
+- **T5 ゴールデン不変**・**UI/CLI 確定値 2,436,373,427 不変**。
+
+### 設計メモ・決定事項
+1. 対象型の延長/増強は「バフ指定なし」で全キーが対象（T5 の photo-L2-2 は
+   someone_score_up 時のスコアラーの全効果を延長するため全キー指定が正しい）。
+   バフ指定と組み合わせることも可能（指定バフのみ延長）。
+2. 与系レタッチの自バフ扱い（自己付与を「与えた」に含める）は Phase 8-B4 の
+   【Estimate】を継続。スコープ指定なしの対象型は T5 実測と同型のため確定。
+
+## Phase 8-B6（2026-08-31 完了）— フォトのステータスとスキル表示の統合・装備解除でスキルも外れる連動
+
+### 不具合の原因
+- レーンカードに **2 つの別窓**があった: 「フォト（N）」details（golden フォトスキルの
+  チェックボックスのみ）と「マイフォト装備」リスト（ステータス＋帳装備の解除ボタン）。
+- buildSimulateInput は golden フォトスキルを **レーンスコープで無条件注入**しており、
+  装備（photosJson / photoEquip）と完全に独立していた。このため実測/JSON フォトを
+  装備解除してもステータスのみが変動しスキルが効いたままだった。
+
+### 実装（統合＋連動）
+1. **スキル表示を装備リストに統合**（ユーザー提案の「まとめて一つ」案を採用）:
+   - 実測/JSON フォト行: ステータスチップ＋対応する golden フォトスキルの
+     チップ＆有効/無効チェックボックス（photoIndex=i ↔ i 番目の装着フォトの対応）。
+   - マイフォト帳装備行: ステータス/スキルチップ＋スキル有効/無効チェックボックス
+     （新設 `LaneUiState.disabledUserPhotoSkills`。無効分は collectUserPhotoSkills /
+     collectDisabled の両方で除外）。
+   - 従来の「フォト（N）」details は削除（スキルの A/SP/P details は従来どおり）。
+2. **連動ルール**: golden フォトスキル photoIndex=i は「i 番目に装着した実測/JSON フォト」
+   に対応。装備数を減らすと対応位置のスキルも外れる（外すたびに後続が前に詰まる・
+   フォトアイテム自身にスキルが紐づくゲーム仕様の近似【Estimate: 位置対応モデル】）。
+   - UI: collectDisabled に photoIndex > 装備数の無効化を追加
+   - **build.ts（CLI/テスト共通経路）**: photoIndex <= ch.photos.length フィルタを追加
+     （T5 実測は photoIndex 1-4 ↔ photos 4 枚で全件該当・**不変**）
+3. マイフォト装備の解除（photoEquip.splice）は既にステータスとスキルの両方に効く
+   （collectUserPhotoSkills が photoEquip 由来のため）。帳装備の解除でも同様に連動。
+
+### テスト・検証
+- `tests/unit/photo-link.test.ts` 新設 2 本: photoIndex フィルタ（4→3→2→0 枚で
+  photo-L1-1..3 の注入数が追従・0 枚で全滅）・装備削減でスコア低下（スキルも外れている）。
+- `tests/ui/smoke.test.ts` +2 本（計 39）: 実測フォトの順次解除で golden スキル行が
+  連動して消えスコアも変わる・マイフォトスキルの装備行チェックで個別無効/有効。
+- **422 tests（421 passed / 1 skipped）**・typecheck（root / ui）ゼロエラー。
+- **T5 ゴールデン不変**・**UI/CLI 確定値 2,436,373,427 不変**。
+
+### 設計メモ・決定事項
+1. 実測/JSON フォト（レガシ JSON）はスキル情報を持たないため、golden スキルとの対応は
+   装着位置（photoIndex）モデルとした。フォトを 1 枚外すと残りが前詰めになり、
+   位置対応のスキルも前詰めで残る（全外しで全滅）。ゲーム内の「フォトアイテム固有スキル」
+   モデルとの差分はレガシ JSON にスキル ID が無いことによる制約。
+2. マイフォト帳のフォトはスキルを own しているため、解除すればスキルも確実に外れる
+   （帳装備は photoEquip 唯一の情報源）。
+
+## Phase 8-B7（2026-08-31 完了）— アクセサリソート・一括装備解除・テンプレレタッチ訂正・スキル持ち取り消し
+
+### 実装
+
+1. **アクセサリピッカーに効果値ソート**（ユーザー要望: Sta/Men/Cri 選択後の画面で大きさ順）:
+   - ソートセレクト「効果値: 大きい順（降順・既定）/ 小さい順（昇順）/ 既定順」を追加。
+   - 比較キー = 選択タブの分類（すべてタブはこのスロットの許可分類全体）に一致する
+     structured 効果の最大値。同名複数行（★違い）も含めて昇順/降順に並ぶ。
+2. **一括装備解除ボタン**:
+   - レーン別: フォト欄ヘッダに「🗑 全て外す」（実測/JSON photosJson + マイフォト帳 photoEquip
+     の両方を空にする）、アクセサリ欄ヘッダに「🗑 全て外す」（accessoriesJson を空にする）。
+     装備があるときのみ表示。
+   - 編成全体: 「編成（アイドル 5 人）」見出しに「🗑 全レーンのフォト・アクセサリを外す」を追加
+     （5 レーンのフォトとアクセサリを一括解除・件数をステータスに表示）。
+3. **理論値/実用イメトレテンプレートのレタッチ訂正**（ユーザー指摘）:
+   - 理論値Vo70%イメトレ・実用Vo53%イメトレの retouch を true → **false** に変更
+     （レタッチ枠は 1 人 1 枚のためブースト等の実レタッチを優先すべき）。
+   - 既存 LocalStorage 帳にも反映（loadMyPhotos でテンプレート定義と retouch フラグが
+     異なる保存済みエントリを訂正。ユーザー編集の数値は触らない）。
+   - 伴って smoke の「レタッチ1枚制限」テストは実レタッチのテンプレート
+     （隣接Voレタッチ/センタークリスコレタッチ）を使用するよう変更。
+
+4. **フォトエディタの「↩ スキルなしに戻す」**（ユーザー要望: スキル持ちにする の押し間違い解消）:
+   - スキル持ちフォトの条件行に「↩ スキルなしに戻す」ボタンを追加。押すと skill=null、
+     ステータス枠 5 枚に復活（欠けた枠は空欄で補完）してエディタを再描画する。
+
+### テスト・検証
+- `tests/ui/smoke.test.ts` +3 本（計 42）: アクセサリソート（降順⇔昇順で先頭行が入れ替わる）・
+  一括解除（レーン別フォト/アクセサリ・編成全体で 5 レーン全消し）・スキルなしに戻す
+  （枠1が元に戻り枠5復活）。
+- 途中、テンプレ retouch 変更に伴い「レタッチ1枚制限」テストが実レタッチテンプレートを
+  使うよう修正（旧テストは理論値/実用の retouch=true を前提していた）。
+- **425 tests（424 passed / 1 skipped）**・typecheck（root / ui）ゼロエラー。
+- **T5 ゴールデン不変**・**UI/CLI 確定値 2,436,373,427 不変**。
+
+### 設計メモ・決定事項
+1. アクセサリソートの比較キーは「タブ分類に一致する structured 効果の最大値」。
+   固定値と % が混在する場合（Vo 系の fixed+pct 複合等）は固定値が支配する
+   （マスタのアクセサリは効果 1〜2 行・fixed 主体のため実用上の問題なし）。
+2. テンプレートの retouch 訂正は起動時にフラグのみマイグレーション（数値は保持）。
+
+### Phase 8-B7 追記（同日・ Cri タブのソート修正）
+- アクセサリピッカーのソートが Cri（technique 分類）タブのみ機能しない不具合を修正:
+  technique 分類の効果行 stat は `critical` であるため、分類キーと効果 stat の不一致で
+  比較値が全件 -1 になり並び替えが空振りしていた。分類→stat の写像
+  （technique → [critical, technique]）を追加し解消。smoke テストも Cri タブでの
+  昇順/降順入れ替わりを検証するよう変更（42 tests）。
+
+## Phase 8-B8（2026-08-31 完了）— UIテーマの黄色化・ステータス/ロール色の法則
+
+### 実装（ui/style.css・ui/app.ts のみ・計算ロジック不変）
+
+1. **紫テーマ → 黄色テーマ**（ユーザー要望）:
+   - ヘッダグラデーション（#3b4f9e→#7a5fb8 → #a8780f→#d4972f）・フォトスキルバッジ
+     （.kind-photo #6f5fb0 → #d4972f）・VENUSタワーチップ（.cat-tower）・ライボチップ
+     （.lb-chip #4a2e86 → #a8780f）・付与チップ（.fx-grant → 黄系）・絆覚醒コントロール
+     （.bond-ctrl → 黄系）を黄色系に変更。
+2. **ステータス色の法則（Vo=ピンク・Da=青・Vi=黄）**:
+   - 属性チップ（.attr-visual #b887d8 → #e8a912。Vo/Da は既存のピンク/青を踏襲）。
+   - フォトの自己ステ/付与チップ・実測/JSON フォト行の能力チップに
+     `fx-stat-vocal`（ピンク）/`fx-stat-dance`（青）/`fx-stat-visual`（黄）を適用
+     （STAT_FX_CLASS マップ。その他キーは自己ステ=グレー・付与=黄の従来色）。
+   - デッキ値プレビュー（Vo/Da/Vi/Sta 数値）も同法則で色分け
+     （.stat-vocal #c2437a・.stat-dance #2a6f9e・.stat-visual #9a6d00）。
+   - アクセサリ分類チップ（.acc-visual 紫 → 黄）も同法則。
+3. **ロール色（サポーター=赤・バッファー=青・スコアラー=黄）**:
+   - .role-chip.role-supporter → 赤（#fbe4e1/#b03024）
+   - .role-chip.role-buffer → 青（#e8f0fd/#3b5f9e・既存踏襲）
+   - .role-chip.role-scorer → 黄（#fdf3dc/#9a6d00）
+
+### テスト・検証
+- smoke 42/42・typecheck（root / ui）ゼロエラー・build:ui 成功。
+- 計算ロジック・データは不変のため **T5 ゴールデン/確定値 2,436,373,427 不変**（CSS/表示のみ）。
+
+## Phase 8-B9（2026-08-31 完了）— 画像→編成JSON 生成プロンプト & CLI の myPhotos 対応
+
+### 背景・目的
+ユーザーが T5 実測編成を画像から `aipura-sim-config.json` として手作業で作成した実績
+（`スコア分析サンプル/` のスクリーンショット → verification_data_v2 形式）を自動化するため、
+AI エージェント（画像分析＋ファイル操作＋シェル実行）に渡す**生成プロンプト**を整備した。
+
+### 実装
+
+1. **`prompts/deck-json-from-images.md`**（新設・エージェント向けプロンプト）:
+   - 手順 0: 参照ファイル一覧（verification_data_v2.json＝正規サンプル・examples/t5-sample.json・
+     src/cli/simulate.ts の入力定義・src/sim/build.ts の型・data/cards.json＝card_id/role 検索・
+     data/stages_index.json＝stage/chart 検索・src/photos.ts＝PhotoSkillDef）を読ませてから
+     着手させる（スキーマ捏造の防止）。
+   - 手順 1: 画像種別（lane{N}_charactor / photos_and_accessories / skill / photo_skill /
+     staff / yale / 交流レベル / ステージ / result）ごとの抽出項目表。読み取れない箇所の
+     捏造禁止・ユーザー質問を明記。
+   - 手順 2: 出力 JSON スキーマ（deck + stage/chart + 設定 + myPhotos/photoEquip の
+     UI/CLI 共通フォーマット）をコメント付きで提示。単位規則（yale_pct・structured pct は %、
+     fanFactorPermil のみ ‰）、grant_* 付与キー、ロールは cards.json 準拠、
+     譜面 ID は `stages_index.charts[quest.ch]` で解決、を明記。
+   - **フォトスキルの 2 経路**（最重要）: golden フォトスキルは photoIndex ↔ 装着位置で
+     自動注入されること・T5 以外の構成では golden と異なるスキルを
+     `disabledSkillIds`（photo-L{レーン}-*）で無効化し myPhotos/photoEquip で与えることを指示。
+   - 手順 3: 検証コマンド（`npx tsx src/cli/simulate.ts --input <file> --n 0 --crit-rate 0`）と
+     実機スコアとの照合・警告確認。
+   - **コード変更が必要なケースの判断表**: 新 stat キー / 新 grant 対象 / 新効果型 /
+     新条件それぞれの実装手順（ファイルと関数名を具体的に列挙）・未解明仕様は
+     `tools/peing_search.py` で自己解決→【Unknown】報告、【Estimate】タグ規律・
+     千分率整数演算・T5 確定値 2,436,373,427 不変の鉄律を含む。
+   - `{{OUTPUT_PATH}}` / `{{IMAGE_PATHS}}` のプレースホルダ付き（コピペで運用可能）。
+
+2. **CLI に myPhotos/photoEquip 対応を追加**（src/cli/simulate.ts）:
+   - これまで `myPhotos`/`photoEquip` は UI のみで解決され、CLI 検証では
+     ユーザーフォトスキルが無視されるギャップがあった（エージェントの CLI 検証と
+     UI 実行でスコアが食い得る問題）。
+   - `myPhotoToSkillDef` で SkillDef 化し `buildSimulateInput.userPhotoSkills` へ渡す
+     （UI の collectUserPhotoSkills と同一規則: レーン = 配列 index+1・photoIndex = 装着順・
+     不明 ID は無視）。
+
+### テスト・検証
+- `tests/unit/cli-myphotos.test.ts` 新設 3 本: myPhotos+photoEquip のユーザーフォトスキルが
+  CLI スコアに反映される（ブーストあり > なし）・不明 ID は警告なしで無視・
+  T5 サンプルは myPhotos なしで確定値 2,436,373,427 のまま。
+- プロンプト内の参照パス・効果型/対象/条件キー・UI 定数がすべて実在することをスクリプトで検証。
+- **428 tests（427 passed / 1 skipped）**・typecheck ゼロエラー。
+- ユーザー作成の `aipura-sim-config.json`（myPhotos 24 枚・photoEquip 空込み）を CLI で
+  実行し **2,436,373,427**（T5 確定値と一致）を確認。

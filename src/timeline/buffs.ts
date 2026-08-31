@@ -59,7 +59,7 @@ import {
   TENSION_SUCCESS_DOWN_PER_2_STAGES_PERMIL,
   TENSION_UP_PER_STAGE_PERMIL,
 } from "./constants.js";
-import type { BuffKey, BuffSnapshot, EffectType, LaneAttribute } from "./types.js";
+import type { BuffKey, BuffSnapshot, EffectType, LaneAttribute, LaneNumber } from "./types.js";
 
 /**
  * レーンに有効な段階型効果1件（skills_golden.json 由来の SkillEffect を
@@ -80,6 +80,11 @@ export interface ActiveEffect {
   remainingBeats: number;
   /** 出所スキルID（トレース用） */
   sourceSkillId: string;
+  /**
+   * 【Phase 8-B4】付与レーン（与・○○延長/増強の「自分が付与した効果」判定用）。
+   * ライブボーナスはレーン非所属のため 3（センター・engine がアンカーに使用する値）を記録。
+   */
+  sourceLane: LaneNumber;
   /**
    * 【T5実測確定 2026-08-30】付与ビートのステップ10減算をスキップするフラグ。
    * A/SP（ステップ8発動）の段階型効果はステップ10で減算されない

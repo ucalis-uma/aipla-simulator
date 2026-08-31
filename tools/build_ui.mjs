@@ -28,10 +28,16 @@ const uiData = {
     audienceAdvantage: read("data/stages/audience_advantage.json"),
     // 【Phase 9】ステージのライブボーナス（questId → Pスキル定義。buildSimulateInput が注入）
     liveBonusesByQuest: read("data/live_bonuses.json").byQuest,
+    // 【Phase 8-B3】レベル別スキル定義（skill_levels 上書き解決用・SimSourceData の一部）
+    skillLevels: read("data/skills_levels.json"),
   },
   chartsAll: read("data/charts_all.json"),
   stagesIndex: read("data/stages_index.json"),
   accessories: read("data/accessories.json").accessories,
+    // 【Phase 8-B2】フォトマスタ（メモリアルフォト一覧・初期品質・フォトスキル）
+    photosMaster: read("data/photos_master.json"),
+    // 【Phase 8-B3】カードレベル解放テーブル
+    unlocks: read("data/unlocks.json"),
   characters: read("data/characters.json").characters,
   sampleDeck: read("スコア分析サンプル/verification_data_v2.json"),
   // メンタルは UI 側で自動算出される（100×(1+交流Men%)+スタッフ+エール+装備固定・

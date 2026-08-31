@@ -61,6 +61,7 @@ function effect(overrides: Partial<ActiveEffect> & { type: EffectType }): Active
     stages: 1,
     remainingBeats: 10,
     sourceSkillId: "test-skill",
+    sourceLane: 1,
     ...overrides,
   };
 }

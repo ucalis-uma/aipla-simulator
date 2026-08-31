@@ -46,6 +46,11 @@ const REQUIRED = [
   "LiveBonusGroup",
   "LiveBonus",
   "LiveAbility",
+  // 【Phase 8-B2】フォトマスタ（メモリアルフォト一覧・初期品質・能力）
+  "PhotoAllInOne",
+  "PhotoAbility",
+  // 【Phase 8-B3】カードレベル解放（スキル枠/フォト枠の解放レベル・CardLevelRelease）
+  "CardLevelRelease",
 ];
 
 // vendor に無いテーブル（Character/Accessory/SkillTarget 等）は取得して補う
@@ -918,6 +923,126 @@ function buildAccessories(rows, stats) {
   return out;
 }
 
+/**
+ * 【Phase 8-B2】フォトマスタ（data/photos_master.json）の生成。
+ *
+ * PhotoAllInOne.json（262枚のフォト実体・初期品質 level・能力 abilities）×
+ * PhotoAbility.json（能力定義・photoAbilityLevels = 品質→値）を合成し、
+ * UI のマイフォト帳に取り込める形式（PhotoMasterDef）へ変換する。
+ *
+ * 値の単位検証（T5 実測との突合）:
+ * - ふつつかものですが（phot-clb-mission-2411-4・初期品質35）:
+ *   vocal_multiply_distribution effectValue=200 → 実測 Vo+20.0% と一致（effectValue/10 = %）
+ * - stamina_multiply_distribution effectValue=40 → 実測 Sta+4.0% と一致
+ * → effectValue は初期品質（PhotoAllInOne.level）における値 ×10（permil 相当）。
+ * 初期品質以外の品質では PhotoAbility.photoAbilityLevels の品質補間値を UI 側で使用する。
+ *
+ * 能力の target 接尾辞（-pa-target-neighbor / -pa-target-center）は structured の
+ * grant_ キー（隣接/センター付与）へ写像する【Phase 8-B2・Peing id=1187940162 準拠】。
+ */
+function buildPhotosMaster(photoRows, photoAbilityRows, skillRows, characterRows, stats) {
+  const abilityMap = new Map(photoAbilityRows.map((a) => [String(a.id), a]));
+  const skillMap = new Map(skillRows.map((s) => [String(s.id), s]));
+  const charNames = new Map(characterRows.map((c) => [String(c.id), String(c.name ?? c.id)]));
+  /** PhotoAbility.id → { stat, grant }（structured キー）。null はスキル能力・未対応 */
+  const abilityToStat = (abilityId, ability) => {
+    // passive スキル能力（pab-passive-skill_<skillId>）。Skill.json の ID は
+    // 「passive-skill_」接頭辞付き / 数値接尾のゼロパディング差（5-01 ↔ 5-1）があるため
+    // 候補を順に試す
+    let m = /^pab-passive[-_]skill[-_]([a-z0-9-]+)$/.exec(abilityId);
+    if (m) {
+      const raw = m[1];
+      const stripped = raw.replace(/-(\d+)$/, (_z, d) => `-${Number(d)}`);
+      const candidates = [raw, stripped, `passive-skill_${raw}`, `passive-skill_${stripped}`];
+      for (const c of candidates) {
+        if (skillMap.has(c)) return { skillId: c };
+      }
+      stats.photosMissingSkill.add(raw);
+      return { skillId: null };
+    }
+    // 能力名の接尾辞から対象を判定（-pa-target-neighbor / -pa-target-center）
+    let grant = null;
+    if (/-pa-target-neighbor/.test(abilityId)) grant = "neighbors";
+    else if (/-pa-target-center/.test(abilityId)) grant = "center";
+    // stat 名の切り出し: pab- 以降を最長一致のステムで分類
+    //（hyphen/underscore が混在: pab-vocal_multiply_distribution-5 / pab-beat-score-up_multiply-1）
+    const rest = abilityId.slice("pab-".length);
+    const STEMS = [
+      ["active-skill-score-up", "a_score"],
+      ["active_skill_score_up", "a_score"],
+      ["special-skill-score-up", "sp_score"],
+      ["special_skill_score_up", "sp_score"],
+      ["passive-skill-score-up", "p_score"],
+      ["passive_skill_score_up", "p_score"],
+      ["beat-score-up", "beat_score"],
+      ["beat_score_up", "beat_score"],
+      ["critical-score-up", "critical_score"],
+      ["critical_score_up", "critical_score"],
+      ["vocal", "vocal"],
+      ["dance", "dance"],
+      ["visual", "visual"],
+      ["stamina", "stamina"],
+      ["mental", "mental"],
+      ["technique", "critical"],
+    ];
+    for (const [stem, stat] of STEMS) {
+      if (!rest.startsWith(stem)) continue;
+      const suffix = rest.slice(stem.length);
+      // 続きは _multiply* / _add / -multiply / -add 系のみ stat 能力として扱う
+      if (!/^[-_](multiply|add)/.test(suffix)) return null;
+      // add = 固定値 / multiply* = 割合（%）
+      const isFixed = /^[-_]add/.test(suffix);
+      return { stat, grant, isFixed };
+    }
+    return null;
+  };
+
+  const photos = [];
+  for (const p of photoRows) {
+    const structured = [];
+    const skills = [];
+    for (const ab of p.abilities ?? []) {
+      const abilityId = String(ab.photoAbilityId ?? "");
+      const ability = abilityMap.get(abilityId);
+      const statInfo = abilityToStat(abilityId, ability);
+      if (statInfo && statInfo.skillId !== undefined) {
+        if (statInfo.skillId !== null) skills.push(statInfo.skillId);
+        continue;
+      }
+      if (statInfo === null) {
+        stats.photosUnsupportedAbility.add(abilityId);
+        continue;
+      }
+      const stat = statInfo.grant !== null
+        ? `grant_${statInfo.grant === "neighbors" ? "neighbors" : "center"}_${statInfo.stat}`
+        : statInfo.stat;
+      // add = 固定値（effectValue そのまま）/ multiply* = 割合（effectValue は初期品質での
+      // 値×10・実測検証済み → % 表記に変換）
+      structured.push({
+        stat,
+        type: statInfo.isFixed ? "fixed" : "pct",
+        value: statInfo.isFixed ? (ab.effectValue ?? 0) : (ab.effectValue ?? 0) / 10,
+      });
+    }
+    photos.push({
+      id: String(p.id),
+      name: String(p.name ?? p.id),
+      assetId: String(p.assetId ?? ""),
+      rarity: p.rarity ?? null,
+      placeName: p.placeName ?? "",
+      eventName: p.eventName ?? "",
+      /** 初期品質（フォト獲得時の品質。graceful: UI の初期値） */
+      initialQuality: p.level ?? null,
+      /** 撮影キャラ（char-xxx。そのキャラが写っているフォト・専用フォトとは別物） */
+      focusCharacterId: p.focusCharacterId ?? "",
+      focusCharacterName: p.focusCharacterId ? (charNames.get(String(p.focusCharacterId)) ?? "") : "",
+      structured,
+      skills,
+    });
+  }
+  return photos;
+}
+
 function buildCharacters(rows) {
   const map = {};
   for (const c of rows) {
@@ -929,6 +1054,175 @@ function buildCharacters(rows) {
 // ---------------------------------------------------------------------------
 // メイン
 // ---------------------------------------------------------------------------
+
+/**
+ * 【Phase 8-B3】カードレベル解放テーブル（data/unlocks.json）の生成。
+ *
+ * CardLevelRelease.json（全カードが card_level_release_1 を使用）から:
+ * - type1 = スキル枠（×1=Lv1, ×2=Lv20, ×3=Lv80）
+ * - type7 = フォト枠（×2=Lv1, ×3=Lv65, ×4=Lv105）
+ * - type4 = 補正枠（×1=Lv1, ×2=Lv35, ×3=Lv45）【Unknown: アクセサリ枠と推定するが未確定】
+ * - type2/type3 = Lv30 で解放（用途未確定・記録のみ）
+ *
+ * スキルLv要求カードレベル表（スキル枠 i の Lv2-6 に必要なカードレベル）は
+ * Skill.json の levels[].requiredCardLevel から集計する。全1482スキルで
+ * 枠別に完全一致することを検証済み（2026-08-31・T5 ゴールデンの実スキルレベル
+ * L1/L2/L4/L5=215→3枠目Lv5・L3=230→Lv6 とも整合）。
+ */
+function buildUnlocks(skillRows, cardRows, clrRows) {
+  const rows = clrRows.filter((r) => String(r.id) === "card_level_release_1");
+  if (rows.length === 0) throw new Error("CardLevelRelease: card_level_release_1 が見つかりません");
+  const byLevel = new Map(rows.map((r) => [r.level, r.targets]));
+  /**
+   * targets.number の解釈は type で異なる（実ゲームの解放仕様と突合済み）:
+   * - type1（スキル枠）/ type4（補正枠）: number = 解放する枠の通し番号
+   *   （type1 → [1, 20, 80]: スロット1=Lv1・2=Lv20・3=Lv80）
+   * - type7（フォト枠）: number = 追加枚数の累積
+   *   （type7 → [1, 1, 65, 105]: 初期2枚・3枚目=Lv65・4枚目=Lv105）
+   */
+  const collect = (type, ordinal) => {
+    const out = [];
+    for (const [lv, targets] of [...byLevel.entries()].sort((a, b) => a[0] - b[0])) {
+      for (const t of targets) {
+        if (t.type !== type) continue;
+        if (ordinal) out[t.number - 1] = lv;
+        else for (let k = 0; k < t.number; k++) out.push(lv);
+      }
+    }
+    for (let i = 0; i < out.length; i++) if (out[i] === undefined) out[i] = 1;
+    return out;
+  };
+  const skillSlotUnlockLevels = collect(1, true);
+  const photoSlotUnlockLevels = collect(7, false);
+  const accessorySlotUnlockLevels = collect(4, true);
+  const otherUnlocks = {};
+  for (const t of new Set([...byLevel.values()].flat().map((x) => x.type))) {
+    if (t === 1 || t === 4 || t === 7) continue;
+    const levels = [];
+    for (const [lv, targets] of [...byLevel.entries()].sort((a, b) => a[0] - b[0])) {
+      for (const tg of targets) if (tg.type === t) levels.push({ level: lv, number: tg.number });
+    }
+    otherUnlocks[`type${t}`] = levels;
+  }
+
+  // スキルLv要求カードレベル表（枠 1-4 × Lv 1-6）
+  const reqTables = [new Map(), new Map(), new Map(), new Map()];
+  for (const c of cardRows) {
+    const skillIds = [c.skillId1, c.skillId2, c.skillId3, c.skillId4].filter(
+      (x) => x != null && x !== "",
+    );
+    skillIds.forEach((sid, idx) => {
+      if (idx > 3) return;
+      const sk = skillRows.find((x) => x.id === sid);
+      if (sk === undefined) return;
+      for (const lv of sk.levels ?? []) {
+        const m = reqTables[idx];
+        const cur = m.get(lv.level);
+        if (cur === undefined) m.set(lv.level, lv.requiredCardLevel);
+        else if (cur !== lv.requiredCardLevel) {
+          throw new Error(
+            `buildUnlocks: スキルLv要求カードレベルが不整合（slot${idx + 1} Lv${lv.level}: ${cur} vs ${lv.requiredCardLevel} @${sid}）`,
+          );
+        }
+      }
+    });
+  }
+  const skillLevelRequirements = {};
+  for (let slot = 0; slot < 4; slot++) {
+    skillLevelRequirements[String(slot + 1)] = [1, 2, 3, 4, 5, 6].map(
+      (lv) => reqTables[slot].get(lv) ?? 0,
+    );
+  }
+  return {
+    skillSlotUnlockLevels,
+    photoSlotUnlockLevels,
+    accessorySlotUnlockLevels,
+    otherUnlocks,
+    skillLevelRequirements,
+  };
+}
+
+/**
+ * 【Phase 8-B3】レベル別スキル定義（data/skills_levels.json）の生成。
+ * 全カードスキル（1482種 × Lv1-6）を parseSkillLevel で解析し、
+ * 短キー + 型/対象/条件のテーブル参照でコンパクトに格納する
+ * （UI 埋め込み用。フル形式だと ~4MB になるため ~1MB に圧縮）。
+ */
+function buildSkillsLevels(skillRows, cardRows, stats) {
+  const types = [];
+  const targets = [];
+  const conditions = [];
+  const idxOf = (arr, v) => {
+    let i = arr.indexOf(v);
+    if (i < 0) {
+      arr.push(v);
+      i = arr.length - 1;
+    }
+    return i;
+  };
+  const packEffect = (e) => {
+    const row = {
+      t: idxOf(types, e.type),
+      tg: idxOf(targets, e.target),
+      c: idxOf(conditions, e.condition ?? "none"),
+    };
+    if (e.durationBeats != null) row.d = e.durationBeats;
+    if (e.stages !== undefined) row.st = e.stages;
+    if (e.powerPermil !== undefined) row.p = e.powerPermil;
+    if (e.value !== undefined) row.v = e.value;
+    if (e.limitRelease) row.lr = 1;
+    if (e.capExtend) row.ce = 1;
+    if (e.scaling !== undefined && e.scaling !== null) row.sc = e.scaling;
+    else if (e.scaling === null) row.sn = 1;
+    if (e.confidence) row.cf = e.confidence;
+    return row;
+  };
+  const cardSkillIds = [
+    ...new Set(
+      cardRows.flatMap((c) =>
+        [c.skillId1, c.skillId2, c.skillId3, c.skillId4].filter(
+          (x) => x != null && x !== "",
+        ),
+      ),
+    ),
+  ];
+  const skillMap = new Map(skillRows.map((x) => [String(x.id), x]));
+  const skills = [];
+  let parseFail = 0;
+  for (const sid of cardSkillIds) {
+    const sk = skillMap.get(sid);
+    if (sk === undefined) {
+      parseFail += 1;
+      continue;
+    }
+    const levels = [];
+    for (const lv of sk.levels ?? []) {
+      const parsed = parseSkillLevel(sk, stats, lv.level);
+      if (parsed === null) {
+        parseFail += 1;
+        continue;
+      }
+      const row = {
+        req: lv.requiredCardLevel ?? 0,
+        ct: parsed.ct,
+        cost: parsed.staminaCost,
+        eff: parsed.effects.map(packEffect),
+      };
+      if (parsed.probabilityPermil !== undefined && parsed.probabilityPermil !== 1000) {
+        row.pr = parsed.probabilityPermil;
+      }
+      if (parsed.limitPerLive != null) row.lim = parsed.limitPerLive;
+      levels.push(row);
+    }
+    skills.push({
+      id: String(sk.id),
+      kind: CATEGORY_TO_KIND[num(sk.categoryType, sk.id)],
+      name: String(sk.name ?? sk.id),
+      levels,
+    });
+  }
+  return { types, targets, conditions, skills, parseFail };
+}
 
 async function main() {
   await ensureVendor();
@@ -944,6 +1238,11 @@ async function main() {
   const liveBonusGroupRows = loadVendor("LiveBonusGroup");
   const liveBonusRows = loadVendor("LiveBonus");
   const liveAbilityRows = loadVendor("LiveAbility");
+  // 【Phase 8-B2】フォトマスタ
+  const photoRows = loadVendor("PhotoAllInOne");
+  const photoAbilityRows = loadVendor("PhotoAbility");
+  // 【Phase 8-B3】カードレベル解放
+  const cardLevelReleaseRows = loadVendor("CardLevelRelease");
   TARGET_IDS = new Set(skillTargetRows.map((r) => String(r.id)));
 
   const stats = {
@@ -952,6 +1251,8 @@ async function main() {
     missingSkills: new Set(),
     liveBonusMissing: new Set(),
     accessoriesNoParam: 0,
+    photosMissingSkill: new Set(),
+    photosUnsupportedAbility: new Set(),
   };
 
   const charts = buildCharts(chartRows);
@@ -967,6 +1268,18 @@ async function main() {
   );
   const accessories = buildAccessories(accessoryRows, stats);
   const characters = buildCharacters(characterRows);
+  const photosMaster = buildPhotosMaster(photoRows, photoAbilityRows, skillRows, characterRows, stats);
+  const unlocks = buildUnlocks(skillRows, cardRows, cardLevelReleaseRows);
+  const skillsLevels = buildSkillsLevels(skillRows, cardRows, stats);
+  // フォト能力が参照する passive スキル（sk-phot-*）を SkillDef 互換へ解析（kind:"photo"）
+  const photoSkillRows = new Map(skillRows.map((sk) => [String(sk.id), sk]));
+  const photoSkillsById = {};
+  for (const skillId of [...new Set(photosMaster.flatMap((p) => p.skills))]) {
+    const sk = photoSkillRows.get(skillId);
+    if (sk === undefined) continue;
+    const parsed = parseSkillLevel(sk, stats, null, "photo");
+    if (parsed !== null) photoSkillsById[skillId] = parsed;
+  }
 
   const writeJson = (file, obj) => {
     writeFileSync(path.join(DATA, file), JSON.stringify(obj) + "\n", "utf8");
@@ -981,6 +1294,9 @@ async function main() {
   writeJson("live_bonuses.json", { byQuest: liveBonusesByQuest });
   writeJson("accessories.json", { accessories });
   writeJson("characters.json", { characters });
+  writeJson("photos_master.json", { photos: photosMaster, skillsById: photoSkillsById });
+  writeJson("unlocks.json", unlocks);
+  writeJson("skills_levels.json", skillsLevels);
 
   console.log(`charts: ${Object.keys(charts).length} 譜面`);
   console.log(
@@ -998,6 +1314,11 @@ async function main() {
   );
   console.log(`accessories: ${accessories.length} 件（補正なし ${stats.accessoriesNoParam}）`);
   console.log(`characters: ${Object.keys(characters).length} 件`);
+  console.log(
+    `unlocks: スキル枠解放 [${unlocks.skillSlotUnlockLevels}]・フォト枠解放 [${unlocks.photoSlotUnlockLevels}]・スキルLv要求表 ${Object.keys(unlocks.skillLevelRequirements).length} 枠`,
+  );
+  console.log(`skills_levels: ${skillsLevels.skills.length} スキル × Lv1-6（型 ${skillsLevels.types.length}/対象 ${skillsLevels.targets.length}/条件 ${skillsLevels.conditions.length}・解析失敗 ${skillsLevels.parseFail}）`);
+  console.log(`photos: ${photosMaster.length} 枚（スキル付き ${photosMaster.filter((p) => p.skills.length > 0).length}・撮影キャラ付き ${photosMaster.filter((p) => p.focusCharacterId).length}）・フォトスキル ${Object.keys(photoSkillsById).length} 種`);
   console.log(`未対応効果名: ${stats.unsupportedEffects.size} 種`);
   console.log(`未対応ターゲット: ${stats.unsupportedTargets.size} 種`);
   if (stats.missingSkills.size > 0) {
@@ -1011,6 +1332,14 @@ async function main() {
   }
   if (stats.unsupportedTargets.size > 0) {
     console.error(`[info] 未対応ターゲット一覧: ${[...stats.unsupportedTargets].sort().join(", ")}`);
+  }
+  if (stats.photosUnsupportedAbility.size > 0) {
+    console.error(
+      `[info] フォトの未対応能力一覧 (${stats.photosUnsupportedAbility.size} 種): ${[...stats.photosUnsupportedAbility].sort().slice(0, 40).join(", ")}${stats.photosUnsupportedAbility.size > 40 ? " …" : ""}`,
+    );
+  }
+  if (stats.photosMissingSkill.size > 0) {
+    console.error(`[warn] フォト能力のスキル定義が見つからない ID: ${[...stats.photosMissingSkill].sort().join(", ")}`);
   }
 }
 

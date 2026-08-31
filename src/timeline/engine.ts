@@ -578,19 +578,26 @@ function activatePhaseSkills(
     const isUnconditional = skill.effects.every(
       (e) => e.condition === "none" || e.condition === "battle_only",
     );
+    // 条件を満たしたレーン（target="trigger" の解決用・Phase 8-B5）。
+    // 無条件スキルは条件評価がないため常に空（="trigger" は解決不能で発動しない）。
+    let triggerLanes: readonly LaneNumber[] = [];
     if (phase === "first") {
       if (!isUnconditional) {
         continue;
       }
     } else {
-      if (!isUnconditional && !conditionsHold(state, skill, states, ctx)) {
-        continue;
+      if (!isUnconditional) {
+        const evaluated = conditionsHold(state, skill, states, ctx);
+        if (!evaluated.ok) {
+          continue;
+        }
+        triggerLanes = evaluated.triggerLanes;
       }
     }
     if (!isReadyIgnoringStaminaAndProbability(state, skill)) {
       continue;
     }
-    const outcome = tryActivate(state, skill, phase, ctx, states, events, beat);
+    const outcome = tryActivate(state, skill, phase, ctx, states, events, beat, triggerLanes);
     activations.push(outcome.trace);
     if (outcome.activated) {
       state.usedThisBeat.add(kind);
@@ -739,19 +746,28 @@ function liveBonusConditionsHold(
 /**
  * 後半の条件付きスキル: 全効果行の条件がすべて成立するか（§4【Estimate】）。
  * battle_only は通常ライブで「除外して評価」（P3a 仕様）のため判定から除く。
+ * 戻り値の triggerLanes は条件を満たしたレーン（target="trigger" の解決用・Phase 8-B5）。
  */
 function conditionsHold(
   state: LaneState,
   skill: SkillDef,
   states: readonly LaneState[],
   ctx: EngineCtx,
-): boolean {
-  return skill.effects.every(
-    (e) =>
-      e.condition === "none" ||
-      e.condition === "battle_only" ||
-      evaluateCondition(e.condition, state.input.lane, states, ctx).ok,
-  );
+): { ok: boolean; triggerLanes: LaneNumber[] } {
+  const triggerLanes = new Set<LaneNumber>();
+  for (const e of skill.effects) {
+    if (e.condition === "none" || e.condition === "battle_only") {
+      continue;
+    }
+    const res = evaluateCondition(e.condition, state.input.lane, states, ctx);
+    if (!res.ok) {
+      return { ok: false, triggerLanes: [] };
+    }
+    for (const lane of res.triggerLanes) {
+      triggerLanes.add(lane);
+    }
+  }
+  return { ok: true, triggerLanes: [...triggerLanes] };
 }
 
 /**
@@ -795,11 +811,27 @@ function evaluateCondition(
       return { ok: lanes.length > 0, triggerLanes: lanes };
     }
     case "combo>=50":
+    case "combo>=70":
     case "combo>=80":
     case "combo>=90":
     case "combo>=100": {
       const n = Number(condition.slice("combo>=".length));
       return { ok: ctx.globalCombo.value >= n, triggerLanes: [] };
+    }
+    // 【Phase 8-B2】コンボ N 以下（tg-combo_less_equal-N）
+    case "combo<=20":
+    case "combo<=30":
+    case "combo<=40":
+    case "combo<=50":
+    case "combo<=60":
+    case "combo<=70":
+    case "combo<=80":
+    case "combo<=90":
+    case "combo<=100":
+    case "combo<=120":
+    case "combo<=150": {
+      const n = Number(condition.slice("combo<=".length));
+      return { ok: ctx.globalCombo.value <= n, triggerLanes: [] };
     }
     case "count_liz>=1":
     case "count_moon>=1":
@@ -859,6 +891,74 @@ function evaluateCondition(
       return someone("stamina_cost_down");
     case "someone_stealth":
       return someone("stealth");
+    // ---- 【Phase 8-B2】フォトスキルのマスタ準拠条件 ----
+    case "self_dance_lane":
+      return { ok: self()?.input.attribute === "dance", triggerLanes: [] };
+    case "self_center":
+      return { ok: self()?.input.lane === 3, triggerLanes: [] };
+    case "self_most_left":
+      return { ok: self()?.input.lane === 1, triggerLanes: [] };
+    case "self_most_right":
+      return { ok: self()?.input.lane === 5, triggerLanes: [] };
+    case "music_limited":
+    case "critical_timing":
+    case "someone_before_special":
+    case "fan_engage_higher":
+    case "mood_type":
+      // 【Estimate: 常時発動近似】楽曲/発動履歴/集目段数/テンションタイプの文脈を
+      // engine は保持しないため無条件で成立扱い（UI に近似表記）
+      return { ok: true, triggerLanes: [] };
+    default: {
+      // 動的パターン: status_<BuffKey>（自レーンが X 状態）/ stamina>=N / stamina<=N /
+      // someone_stamina<=N / combo<=N（テーブル外の数値）
+      const mStatus = /^status_([a-z_]+)$/.exec(condition);
+      if (mStatus) {
+        const lane = self();
+        if (lane === undefined) return { ok: false, triggerLanes: [] };
+        // 「自レーンが X 状態」= このレーンに該当 EffectType のアクティブ効果が付与中
+        //（lanesWith と同一規則・下限段数は問わない近似【Estimate】）
+        const ok = lane.effects.some((e) => e.type === (mStatus[1] as SkillEffect["type"]));
+        return { ok, triggerLanes: [lane.input.lane] };
+      }
+      const mStaminaGE = /^stamina>=(\d+)$/.exec(condition);
+      if (mStaminaGE) {
+        const lane = self();
+        if (lane === undefined) return { ok: false, triggerLanes: [] };
+        return {
+          ok: (lane.stamina / lane.maxStamina) * 100 >= Number(mStaminaGE[1]),
+          triggerLanes: [lane.input.lane],
+        };
+      }
+      const mStaminaLE = /^stamina<=(\d+)$/.exec(condition);
+      if (mStaminaLE) {
+        const lane = self();
+        if (lane === undefined) return { ok: false, triggerLanes: [] };
+        return {
+          ok: (lane.stamina / lane.maxStamina) * 100 <= Number(mStaminaLE[1]),
+          triggerLanes: [lane.input.lane],
+        };
+      }
+      const mSomeoneStaminaLE = /^someone_stamina<=(\d+)$/.exec(condition);
+      if (mSomeoneStaminaLE) {
+        const n = Number(mSomeoneStaminaLE[1]);
+        const lanes = states
+          .filter((s) => (s.stamina / s.maxStamina) * 100 <= n)
+          .map((s) => s.input.lane);
+        return { ok: lanes.length > 0, triggerLanes: lanes };
+      }
+      const mComboLE = /^combo<=(\d+)$/.exec(condition);
+      if (mComboLE) {
+        return { ok: ctx.globalCombo.value <= Number(mComboLE[1]), triggerLanes: [] };
+      }
+      // ビート時、N%の確率で（やる気士docs 専用フォト「ビート時、10%確率で」等）。
+      // 発動試行（後半ビート）ごとに抽選。確定値ランは NeutralRng.nextFloat()=0 で常に成立
+      //（既存の確率/成功率ゲートと同じ「全抽選成立」規約・T5 ゴールデンはこの条件を未使用で不変）
+      const mBeatChance = /^beat_chance=(\d+)$/.exec(condition);
+      if (mBeatChance) {
+        return { ok: ctx.input.rng.nextFloat() < Number(mBeatChance[1]) / 100, triggerLanes: [] };
+      }
+      return { ok: false, triggerLanes: [] };
+    }
   }
 }
 
@@ -874,6 +974,7 @@ function tryActivate(
   states: readonly LaneState[],
   events: LaneScoreEventTrace[],
   beat: number,
+  triggerLanes: readonly LaneNumber[] = [],
 ): { trace: ActivationTrace; activated: boolean } {
   const baseTrace = {
     beat,
@@ -930,7 +1031,7 @@ function tryActivate(
     if (effect.condition === "battle_only") {
       continue; // 効果行レベルでも通常ライブは除外（P3a 仕様）
     }
-    gained += applyEffect(state, effect, skill, ctx, states, events, beat);
+    gained += applyEffect(state, effect, skill, ctx, states, events, beat, false, triggerLanes);
   }
   return {
     trace: {
@@ -973,6 +1074,9 @@ function applyEffect(
         capExtend: effect.capExtend === true ? true : undefined,
         remainingBeats: effect.durationBeats == null ? PERMANENT_BEATS : effect.durationBeats,
         sourceSkillId: skill.id,
+        // 付与レーン（与・○○延長/増強の「自分が付与した効果」判定用）。
+        // ライブボーナスはレーン非所属のためセンター（3）を記録（activateLiveBonus のアンカー）
+        sourceLane: self.input.lane,
         skipFirstDecay,
       });
     }
@@ -1028,6 +1132,10 @@ function applyEffect(
     }
     case "effect_amplify": {
       const value = effect.value ?? 0;
+      if (effect.buffKey !== undefined || effect.scope === "given") {
+        applyScopedAmplify(self, effect, value, states);
+        return 0;
+      }
       for (const target of resolveTargets(effect.target, self, states, triggerLanes)) {
         // 【T5実測確定】増強は BuffKey 毎に最長残り 1 インスタンスへ加算。
         // vocal_up_extreme は対象外（b3/b38 の増強後も vue 段数は不変・amplifyLongestPerKey 参照）
@@ -1037,6 +1145,10 @@ function applyEffect(
     }
     case "effect_extension": {
       const value = effect.value ?? 0;
+      if (effect.buffKey !== undefined || effect.scope === "given") {
+        applyScopedExtension(self, effect, value, states);
+        return 0;
+      }
       // 【T5実測確定】延長は「延長可能（残り<永久）な全インスタンス」へ加算
       // （longest 単一インスタンス説は L3 ビート系列の破綻で棄却・research/12 §T5-2b）
       for (const target of resolveTargets(effect.target, self, states, triggerLanes)) {
@@ -1050,6 +1162,92 @@ function applyEffect(
     }
     default:
       throw new Error(`applyEffect: unsupported immediate effect type: ${effect.type as string}`);
+  }
+}
+
+/**
+ * 【Phase 8-B4】与・○○延長/増強レタッチ用の対象インスタンス収集。
+ * - buffKey 指定 → 該当 BuffKey のインスタンスのみ
+ * - scope="given" → 全レーンのうち自レーンが付与した（sourceLane === 自レーン）インスタンス
+ *   （「与・ボーカル延長」= 自分の Vo バフが付与先レーンで延長される）
+ * - 上記以外（scope="received" 相当）→ 対象レーン解決に従う（被・○○延長 = 自レーンの効果）
+ */
+function collectScopedInstances(
+  self: LaneState,
+  effect: SkillEffect,
+  states: readonly LaneState[],
+): ActiveEffect[] {
+  const out: ActiveEffect[] = [];
+  const matches = (active: ActiveEffect): boolean => {
+    if (effect.buffKey !== undefined) {
+      const mapped = mapEffectToBuffKey(active.type);
+      if (mapped === null || mapped.key !== effect.buffKey) return false;
+    }
+    return true;
+  };
+  if (effect.scope === "given") {
+    for (const lane of states) {
+      if (lane.input.lane === self.input.lane) {
+        // 自レーン自身への自己付与も「与えた」効果に含める【Estimate: 与系レタッチの
+        // 自バフ扱いは実機未確認。ゲーム内表記「自分が与える〜」の素直な解釈】
+        for (const active of lane.effects) {
+          if (matches(active)) out.push(active);
+        }
+      } else {
+        for (const active of lane.effects) {
+          if (active.sourceLane === self.input.lane && matches(active)) out.push(active);
+        }
+      }
+    }
+    return out;
+  }
+  for (const target of resolveTargets(effect.target, self, states, [])) {
+    for (const active of target.effects) {
+      if (matches(active)) out.push(active);
+    }
+  }
+  return out;
+}
+
+/** スコープ付き延長（与・○○延長 等）。延長可能（残り<永久）なインスタンスへ加算 */
+function applyScopedExtension(
+  self: LaneState,
+  effect: SkillEffect,
+  value: number,
+  states: readonly LaneState[],
+): void {
+  for (const active of collectScopedInstances(self, effect, states)) {
+    if (active.remainingBeats < PERMANENT_BEATS) {
+      active.remainingBeats += value;
+    }
+  }
+}
+
+/**
+ * スコープ付き増強（与・○○増強 等）。収集したインスタンスのうち BuffKey 毎に最長残りの
+ * 1 件へ段数加算（T5 実測確定の増強規則・amplifyLongestPerKey と同一。vocal_up_extreme は
+ * 対象外・上限解放変数型は段数を持たないため対象外）。
+ */
+function applyScopedAmplify(
+  self: LaneState,
+  effect: SkillEffect,
+  value: number,
+  states: readonly LaneState[],
+): void {
+  const best = new Map<BuffKey, ActiveEffect>();
+  for (const active of collectScopedInstances(self, effect, states)) {
+    const mapped = mapEffectToBuffKey(active.type);
+    if (mapped === null || mapped.key === "vocal_up_extreme" || mapped.limitRelease) {
+      continue;
+    }
+    const prev = best.get(mapped.key);
+    if (prev === undefined || active.remainingBeats > prev.remainingBeats) {
+      best.set(mapped.key, active);
+    }
+  }
+  for (const active of best.values()) {
+    // 増強の加算も上限で切り捨てない（ユーザー確定 2026-08-30・amplifyLongestPerKey と同一）
+    active.stages += value;
   }
 }
 

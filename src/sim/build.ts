@@ -14,6 +14,8 @@
  */
 import { computeDeckStatus } from "../formula/baseStatus.js";
 import { fanBonusPermil, type AudienceAdvantageRow } from "../formula/fan.js";
+import { parseGrantKey, grantValuePermil } from "../photos.js";
+import { decodeSkillLevel, buildSkillLevelIndex } from "../skillLevels.js";
 import { pctToPermil } from "../rounding.js";
 import { ATTRIBUTE_CODE_TO_NAME, POSITION_TO_LANE } from "../timeline/constants.js";
 import type {
@@ -32,6 +34,7 @@ import type {
   StatValues,
   YellBonus,
 } from "../types.js";
+import type { SkillLevelData } from "../skillLevels.js";
 
 // ---------------------------------------------------------------------------
 // 入力スキーマ（verification_data_v2.json と同一）
@@ -61,6 +64,13 @@ export interface DeckCharacter {
   };
   photos: PhotoOrAccessory[];
   accessories: PhotoOrAccessory[];
+  /**
+   * 【Phase 8-B3】スキルレベル上書き（skillId → Lv1-6）。
+   * 未指定のスキルは従来どおり golden / マスタ最大レベルの定義を使う。
+   * golden 較正済みスキルを最大レベル以外へ変更した場合はマスタ解析値に置き換わり
+   * （実測較正は最大レベルのみ）警告に出力する。
+   */
+  skill_levels?: Record<string, number>;
 }
 
 export interface DeckJsonV2 {
@@ -120,6 +130,11 @@ export interface SimSourceData {
   liveBonusesByQuest?: Record<string, readonly MasterSkillDef[]>;
   /** 【Phase 9】characterId → 名前（UI 表示用。CLI/テストでは省略可） */
   characterNames?: Record<string, string>;
+  /**
+   * 【Phase 8-B3】レベル別スキル定義（data/skills_levels.json・全カードスキル Lv1-6）。
+   * 指定時は characters[].skill_levels のレベル指定スキルをこのデータから復元する。
+   */
+  skillLevels?: SkillLevelData;
 }
 
 /** マスタ自動解析スキル（lane は構築時に選択レーンへ上書きされる） */
@@ -130,6 +145,73 @@ export type MasterSkillDef = Omit<SkillDef, "lane"> & {
   /** 楽曲限定等の未評価条件（Estimate タグの根拠） */
   conditionalNote?: string | null;
 };
+
+// ---------------------------------------------------------------------------
+// フォト付与（grant_* キー）の解決【Phase 8-B】
+// ---------------------------------------------------------------------------
+
+/**
+ * 付与structuredキー（grant_<target>_<stat>・常に pct）から対象レーンを解決する。
+ * - neighbors: 左右 1 レーンずつ（L1/L5 は 1 レーン。engine.ts の neighbors 解決と同一規則・Confirmed）
+ * - center: L3
+ * - scorer: role Scorer のレーン（編成 role 由来）
+ * 出典: Peing id=1187940162「センタークリティカルスコアや隣接ステータスは通常の
+ * クリティカルスコア%やステータスと同種類として取り扱われます」→ 対象レーンの
+ * 装備と同一の加算プールに入れる。
+ */
+function grantTargetLanes(
+  target: "neighbors" | "center" | "scorer",
+  fromLane: LaneNumber,
+  roles: ReadonlyArray<string>,
+): LaneNumber[] {
+  switch (target) {
+    case "neighbors": {
+      const out: LaneNumber[] = [];
+      if (fromLane - 1 >= 1) out.push((fromLane - 1) as LaneNumber);
+      if (fromLane + 1 <= 5) out.push((fromLane + 1) as LaneNumber);
+      return out;
+    }
+    case "center":
+      return [3];
+    case "scorer": {
+      const out: LaneNumber[] = [];
+      roles.forEach((role, i) => {
+        if (role === "Scorer") out.push((i + 1) as LaneNumber);
+      });
+      return out;
+    }
+  }
+}
+
+/** レーン毎に受領する付与を集計する（stat 系 permil / スコア系 permil の2種） */
+function collectPhotoGrants(
+  deck: DeckJsonV2,
+): {
+  statGrants: Map<LaneNumber, Partial<Record<string, number>>>;
+  scoreGrants: Map<LaneNumber, Partial<Record<string, number>>>;
+} {
+  const roles = deck.characters.map((c) => c.role);
+  const statGrants = new Map<LaneNumber, Partial<Record<string, number>>>();
+  const scoreGrants = new Map<LaneNumber, Partial<Record<string, number>>>();
+  const SCORE_KEYS = new Set(["beat_score", "a_score", "sp_score", "critical_score", "p_score"]);
+  for (const ch of deck.characters) {
+    const fromLane = ch.lane as LaneNumber;
+    for (const item of ch.photos) {
+      for (const s of item.structured) {
+        const grant = parseGrantKey(s.stat);
+        if (grant === null || s.type !== "pct") continue;
+        const permil = grantValuePermil(s.value);
+        for (const target of grantTargetLanes(grant.target, fromLane, roles)) {
+          const map = SCORE_KEYS.has(grant.stat) ? scoreGrants : statGrants;
+          const cur = map.get(target) ?? {};
+          cur[grant.stat] = (cur[grant.stat] ?? 0) + permil;
+          map.set(target, cur);
+        }
+      }
+    }
+  }
+  return { statGrants, scoreGrants };
+}
 
 // ---------------------------------------------------------------------------
 // ビルドオプション / 結果
@@ -159,6 +241,12 @@ export interface BuildSimOptions {
    * 指定時は動的クリティカル判定（min(0.50, base) + crit_rate_up×5%）を有効化する。
    */
   baseCritRate?: number;
+  /**
+   * 【Phase 8-B】マイフォト帳のユーザー定義フォトスキル（kind:"photo"・lane 設定済み）。
+   * data.skillsGolden の photo スキルにマージして LaneInput.photos へ入る
+   * （disabledSkillIds で個別無効化可）。
+   */
+  userPhotoSkills?: ReadonlyArray<SkillDef>;
 }
 
 /** rng / criticalProvider を除いた SimulateInput（呼び出し側で乱数源を設定して使用） */
@@ -277,6 +365,8 @@ export function buildSimulateInput(options: BuildSimOptions): BuildSimResult {
   const warnings: string[] = [];
   const Y = toYell(deck.yale_bonus);
   const disabled = new Set(options.disabledSkillIds ?? []);
+  // 【Phase 8-B】フォト付与（grant_* キー）の受領分をレーン毎に集計
+  const { statGrants, scoreGrants } = collectPhotoGrants(deck);
   const lanes: LaneInput[] = [];
 
   for (const ch of deck.characters) {
@@ -300,7 +390,14 @@ export function buildSimulateInput(options: BuildSimOptions): BuildSimResult {
         staff: deck.staff_bonus,
         yell: Y,
         equipment: {
-          photos: toStatBonus(ch.photos),
+          photos: [
+            ...toStatBonus(ch.photos),
+            // 【Phase 8-B】他レーンのフォト付与（隣接/センター/スコアラー）を受領分に加算。
+            // 通常の装備%と同一プール（Peing id=1187940162）
+            ...(statGrants.get(lane) !== undefined
+              ? [{ pct: statGrants.get(lane)!, fixed: {} }]
+              : []),
+          ],
           accessories: toStatBonus(ch.accessories),
         },
       },
@@ -333,13 +430,24 @@ export function buildSimulateInput(options: BuildSimOptions): BuildSimResult {
         !disabled.has(s.id) &&
         ownerCardIdOf(s) === ch.card_id,
     );
-    const lanePhotos = data.skillsGolden.filter(
-      (s) =>
-        s.lane === lane &&
-        s.kind === "photo" &&
-        (s.effects?.length ?? 0) > 0 &&
-        !disabled.has(s.id),
-    );
+    const lanePhotos = [
+      ...data.skillsGolden.filter(
+        (s) =>
+          s.lane === lane &&
+          s.kind === "photo" &&
+          (s.effects?.length ?? 0) > 0 &&
+          !disabled.has(s.id) &&
+          // 【Phase 8-B5】golden フォトスキル photoIndex=i は「i 番目に装着した実測/JSON
+          // フォト」に対応する。装備数を超える photoIndex のスキルは対応フォトが装備されて
+          // いないため注入しない（装備解除でステータスとスキルが同時に外れる連動）。
+          // T5 実測は photoIndex 1-4 ↔ photos 4 枚で全件該当（不変）。
+          (s.photoIndex == null || s.photoIndex <= ch.photos.length),
+      ),
+      // 【Phase 8-B】マイフォト帳のユーザー定義フォトスキルをマージ
+      ...(options.userPhotoSkills ?? []).filter(
+        (s) => s.lane === lane && s.kind === "photo" && !disabled.has(s.id),
+      ),
+    ];
     let laneSkills: SkillDef[];
     if (cardGoldenSkills.length > 0) {
       // 実測較正済みスキル（golden）を優先
@@ -383,6 +491,31 @@ export function buildSimulateInput(options: BuildSimOptions): BuildSimResult {
         }
       }
     }
+    // 【Phase 8-B3】スキルレベル上書き（skill_levels 指定がある場合）。
+    // data.skillLevels（data/skills_levels.json）から該当レベルの SkillDef を復元し、
+    // 同一 skillId の定義を差し替える。golden 較正スキルを別レベルへ変更した場合は
+    // マスタ解析値（未較正）に置き換わるため警告に出す。
+    const skillLevelOverrides = ch.skill_levels;
+    if (skillLevelOverrides !== undefined && data.skillLevels !== undefined) {
+      const index = buildSkillLevelIndex(data.skillLevels);
+      laneSkills = laneSkills.map((s) => {
+        const want = skillLevelOverrides[s.id];
+        if (want === undefined || want === s.level) return s;
+        const decoded = decodeSkillLevel(data.skillLevels!, s.id, want, index);
+        if (decoded === null) {
+          warnings.push(
+            `L${lane}: skill "${s.id}" level ${want} not found in skills_levels (keeping Lv${s.level})`,
+          );
+          return s;
+        }
+        if (cardGoldenSkills.some((g) => g.id === s.id)) {
+          warnings.push(
+            `L${lane}: skill "${s.id}" is golden-calibrated at Lv${s.level}; Lv${want} uses master values (uncalibrated)`,
+          );
+        }
+        return { ...decoded, lane };
+      });
+    }
     lanes.push({
       lane,
       attribute: laneAttributeOf(lane, laneAttributes),
@@ -391,12 +524,24 @@ export function buildSimulateInput(options: BuildSimOptions): BuildSimResult {
       skills: laneSkills,
       photos: lanePhotos,
       scoreBonusPct: {
-        beat: Y.scorePct.beat + sumScorePct(equipment, "beat_score"),
-        active: Y.scorePct.active + sumScorePct(equipment, "a_score"),
-        special: Y.scorePct.special + sumScorePct(equipment, "sp_score"),
-        passive: sumScorePct(equipment, "p_score"),
+        beat:
+          Y.scorePct.beat +
+          sumScorePct(equipment, "beat_score") +
+          (scoreGrants.get(lane)?.beat_score ?? 0),
+        active:
+          Y.scorePct.active +
+          sumScorePct(equipment, "a_score") +
+          (scoreGrants.get(lane)?.a_score ?? 0),
+        special:
+          Y.scorePct.special +
+          sumScorePct(equipment, "sp_score") +
+          (scoreGrants.get(lane)?.sp_score ?? 0),
+        passive: sumScorePct(equipment, "p_score") + (scoreGrants.get(lane)?.p_score ?? 0),
       },
-      critExtrasPermil: Y.scorePct.criticalScore + sumScorePct(equipment, "critical_score"),
+      critExtrasPermil:
+        Y.scorePct.criticalScore +
+        sumScorePct(equipment, "critical_score") +
+        (scoreGrants.get(lane)?.critical_score ?? 0),
     });
   }
   lanes.sort((a, b) => a.lane - b.lane);

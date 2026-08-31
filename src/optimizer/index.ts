@@ -20,8 +20,10 @@ import {
   laneAttributeOf,
   type DeckJsonV2,
   type MasterSkillDef,
+  type PhotoOrAccessory,
   type SimSourceData,
 } from "../sim/build.js";
+import { myPhotoToEquipEntry, myPhotoToSkillDef, validatePhotoEquip, type MyPhotoDef } from "../photos.js";
 import { ContinuousRng } from "../rng/random.js";
 import { NeutralRng } from "../rng/neutral.js";
 import { simulateTimeline } from "../timeline/engine.js";
@@ -65,6 +67,17 @@ export interface OptimizerOptions {
   lockedCardIds?: ReadonlyArray<string | null | undefined>;
   /** レーン毎の属性縛り（カードの得意属性。null は自由） */
   attrFilter?: ReadonlyArray<OptimizerAttr | null | undefined>;
+  /**
+   * 【Phase 8-C】必須採用カード（レーン自由）。編成のどこかに必ず含まれる。
+   * 自由枠が尽きた場合は最後の自由レーンに強制配置する。
+   */
+  requiredCardId?: string | null;
+  /**
+   * 【Phase 8-C】マイフォト帳のフォトプール（タグ絞り込み済み）。
+   * 指定時はカード探索後に各レーンへのフォト配分を貪欲探索する。
+   * ゲーム内ルール（レタッチ1枚・1人最大5枚）は validatePhotoEquip で厳守。
+   */
+  photoPool?: ReadonlyArray<MyPhotoDef>;
   onProgress?: (info: OptimizerProgress) => void;
 }
 
@@ -75,6 +88,11 @@ export interface OptimizerEntry {
   confirmed: number;
   /** レーン 1-5 のカードID */
   cardIds: string[];
+  /**
+   * 【Phase 8-C】レーン 1-5 に割り当てたフォト ID（photoPool 由来）。
+   * photoPool 未指定時はすべて null。
+   */
+  photoIds: Array<string | null>;
 }
 
 export interface OptimizerResult {
@@ -168,6 +186,8 @@ export async function optimizeLineup(options: OptimizerOptions): Promise<Optimiz
     timeBudgetMs = 20000,
     lockedCardIds = [],
     attrFilter = [],
+    requiredCardId = null,
+    photoPool = [],
     onProgress,
   } = options;
 
@@ -232,6 +252,10 @@ export async function optimizeLineup(options: OptimizerOptions): Promise<Optimiz
   for (const lock of locks) {
     if (lock !== null && data.cards.some((c) => c.id === lock)) poolSet.add(lock);
   }
+  // 【Phase 8-C】必須採用カードをプールに強制追加
+  if (requiredCardId !== null && requiredCardId !== undefined && data.cards.some((c) => c.id === requiredCardId)) {
+    poolSet.add(requiredCardId);
+  }
   const pool = [...poolSet];
 
   // ---- 評価器（CRN: 共通乱数で候補間の比較分散を低減） ----
@@ -239,7 +263,19 @@ export async function optimizeLineup(options: OptimizerOptions): Promise<Optimiz
   let truncated = false;
   const budgetLeft = (): boolean => Date.now() - startedAt < timeBudgetMs;
 
-  const deckFromLineup = (lineup: readonly string[]): DeckJsonV2 => ({
+  // ---- 【Phase 8-C】フォトプールの変換（装備エントリ + スキル生成器） ----
+  const photoDefs = photoPool.map((p) => ({
+    def: p,
+    entry: myPhotoToEquipEntry(p) as PhotoOrAccessory,
+  }));
+  const photoOf = (photoId: string): (typeof photoDefs)[number] | undefined =>
+    photoDefs.find((p) => p.def.id === photoId);
+
+  const deckFromLineup = (
+    lineup: readonly string[],
+    /** レーン 1-5 に割り当てたフォト ID（null = フォトなし。Phase 8-C） */
+    photoIds: ReadonlyArray<string | null | undefined> = [],
+  ): DeckJsonV2 => ({
     staff_bonus: { vocal: 0, dance: 0, visual: 0, stamina: 0, mental: 0, critical: 0 },
     yale_bonus: {
       vocal_pct: 0,
@@ -255,6 +291,8 @@ export async function optimizeLineup(options: OptimizerOptions): Promise<Optimiz
     },
     characters: lineup.map((cardId, i) => {
       const card = cardOf(cardId);
+      const photoId = photoIds[i];
+      const photo = photoId != null ? photoOf(photoId) : undefined;
       return {
         lane: i + 1,
         card_id: cardId,
@@ -266,7 +304,7 @@ export async function optimizeLineup(options: OptimizerOptions): Promise<Optimiz
           base: { vocal: 0, dance: 0, visual: 0, stamina: 0 },
           total_after_non_skill_modifiers: { vocal: 0, dance: 0, visual: 0, stamina: 0 },
         },
-        photos: [],
+        photos: photo !== undefined ? [photo.entry] : [],
         accessories: [],
       };
     }),
@@ -275,14 +313,20 @@ export async function optimizeLineup(options: OptimizerOptions): Promise<Optimiz
   const evalLineup = async (
     lineup: readonly string[],
     runs: number,
+    photoIds: ReadonlyArray<string | null | undefined> = [],
   ): Promise<number> => {
     if (!budgetLeft()) {
       truncated = true;
       return Number.NEGATIVE_INFINITY;
     }
     try {
+      const userPhotoSkills = photoIds
+        .map((pid, i) =>
+          pid != null ? myPhotoToSkillDef(photoOf(pid)!.def, (i + 1) as LaneNumber, 1) : null,
+        )
+        .filter((s): s is NonNullable<typeof s> => s !== null);
       const built = buildSimulateInput({
-        deck: deckFromLineup(lineup),
+        deck: deckFromLineup(lineup, photoIds),
         stageFile,
         chartFile,
         data,
@@ -291,6 +335,7 @@ export async function optimizeLineup(options: OptimizerOptions): Promise<Optimiz
         missedNotes: options.missedNotes as Array<{ beat: number; lane: number }> | undefined,
         mentalOverride: options.mentalOverride,
         baseCritRate: options.baseCritRate,
+        userPhotoSkills,
       });
       let sum = 0;
       for (let i = 0; i < runs; i++) {
@@ -309,10 +354,15 @@ export async function optimizeLineup(options: OptimizerOptions): Promise<Optimiz
     }
   };
 
-  const confirmedOf = (lineup: readonly string[]): number => {
+  const confirmedOf = (lineup: readonly string[], photoIds: ReadonlyArray<string | null | undefined> = []): number => {
     try {
+      const userPhotoSkills = photoIds
+        .map((pid, i) =>
+          pid != null ? myPhotoToSkillDef(photoOf(pid)!.def, (i + 1) as LaneNumber, 1) : null,
+        )
+        .filter((s): s is NonNullable<typeof s> => s !== null);
       const built = buildSimulateInput({
-        deck: deckFromLineup(lineup),
+        deck: deckFromLineup(lineup, photoIds),
         stageFile,
         chartFile,
         data,
@@ -320,6 +370,7 @@ export async function optimizeLineup(options: OptimizerOptions): Promise<Optimiz
         successBasePermil: options.successBasePermil,
         missedNotes: options.missedNotes as Array<{ beat: number; lane: number }> | undefined,
         mentalOverride: options.mentalOverride,
+        userPhotoSkills,
       });
       return simulateTimeline({
         ...built.base,
@@ -358,6 +409,23 @@ export async function optimizeLineup(options: OptimizerOptions): Promise<Optimiz
     .sort((a, b) => b.w - a.w);
   const current: Array<string | null> = [...locks];
   const used = new Set<string>();
+  // 【Phase 8-C】必須採用カードを「重み最小の自由レーン」に先に配置する
+  // （重み最小 = スコア貢献が最も小さいレーンで、火力カードを高重量レーンに残す）。
+  // 属性縛りに適合する自由レーンが無い場合は配置を諦め、局所探索に委ねる。
+  if (
+    requiredCardId !== null &&
+    requiredCardId !== undefined &&
+    !locks.includes(requiredCardId)
+  ) {
+    const freeLanes = laneOrder.filter(({ lane }) => current[lane - 1] === null);
+    const fitLane = [...freeLanes]
+      .reverse()
+      .find(({ lane }) => passesAttr(lane - 1, requiredCardId));
+    if (fitLane !== undefined) {
+      current[fitLane.lane - 1] = requiredCardId;
+      used.add(requiredCardId);
+    }
+  }
   for (const { lane } of laneOrder) {
     const laneIdx = lane - 1;
     if (current[laneIdx] !== null) {
@@ -397,9 +465,13 @@ export async function optimizeLineup(options: OptimizerOptions): Promise<Optimiz
     for (const { lane } of laneOrder) {
       const laneIdx = lane - 1;
       if (locks[laneIdx] !== null) continue;
-    const candidates = pool.filter(
-      (id) => !bestLineup.includes(id) && passesAttr(laneIdx, id),
-    );
+      const candidates = pool.filter(
+        (id) =>
+          !bestLineup.includes(id) &&
+          passesAttr(laneIdx, id) &&
+          // 【Phase 8-C】必須採用カードが入っているレーンは置き換えない
+          bestLineup[laneIdx] !== requiredCardId,
+      );
       for (const cand of candidates) {
         if (truncated || !budgetLeft()) break;
         const trial = [...bestLineup];
@@ -440,20 +512,79 @@ export async function optimizeLineup(options: OptimizerOptions): Promise<Optimiz
     if (!improved) break;
   }
 
+  // ---- 【Phase 8-C】フォト配分（タグ指定プールからの貪欲割り当て） ----
+  // カード探索で残った上位編成に対し、ゲーム内ルール（レタッチ1枚・1人最大5枚・
+  // 同一フォトは全体で1回）を守りながら「1枚追加で最も伸びる (フォト, レーン) 組」を
+  // 繰り返し採用する。時間予算内で打ち切り（打ち切り時点の割当が結果に残る）。
+  const assignPhotos = async (
+    lineup: readonly string[],
+    runs: number,
+  ): Promise<Array<string | null>> => {
+    const assignment: Array<string | null> = [null, null, null, null, null];
+    if (photoDefs.length === 0) return assignment;
+    let best = await evalLineup(lineup, runs, assignment);
+    if (!Number.isFinite(best)) return assignment;
+    let improved = true;
+    while (improved && !truncated && budgetLeft()) {
+      improved = false;
+      const usedIds = new Set(assignment.filter((x): x is string => x !== null));
+      let bestGain = 1e-9;
+      let bestPick: { photoId: string; laneIdx: number } | null = null;
+      for (const pd of photoDefs) {
+        if (usedIds.has(pd.def.id)) continue;
+        for (let laneIdx = 0; laneIdx < 5; laneIdx++) {
+          if (truncated || !budgetLeft()) break;
+          const trial = [...assignment];
+          trial[laneIdx] = pd.def.id;
+          // ゲーム内ルール厳守チェック（レタッチは1人1枚・1人最大5枚）
+          const conflicts = validatePhotoEquip(
+            assignment
+              .filter((pid, i) => pid !== null && i !== laneIdx)
+              .map((pid) => photoOf(pid as string)!.def),
+            pd.def,
+          );
+          if (conflicts.length > 0) continue;
+          const s = await evalLineup(lineup, runs, trial);
+          if (s > best + bestGain) {
+            bestGain = s - best;
+            bestPick = { photoId: pd.def.id, laneIdx };
+          }
+          if (truncated) break;
+        }
+        if (truncated) break;
+      }
+      if (bestPick !== null) {
+        assignment[bestPick.laneIdx] = bestPick.photoId;
+        best += bestGain;
+        improved = true;
+      }
+    }
+    return assignment;
+  };
+
   // ---- 最終再評価（finalRuns・確定値付き）でランキング確定 ----
   const finalists = top.slice(0, Math.max(topN, 1));
   const entries: OptimizerEntry[] = [];
   for (const f of finalists) {
+    // フォト配分は最終評価と同時に行う（配分済み状態の finalRuns 再評価を避けるため
+    // 配分探索は screenRuns で行い、確定値は配分結果に対して算出する）
+    const photoIds = await assignPhotos(f.lineup, screenRuns);
     if (truncated) {
       entries.push({
         score: f.score,
-        confirmed: confirmedOf(f.lineup),
+        confirmed: confirmedOf(f.lineup, photoIds),
         cardIds: f.lineup,
+        photoIds,
       });
       continue;
     }
-    const s = await evalLineup(f.lineup, finalRuns);
-    entries.push({ score: Number.isFinite(s) ? s : f.score, confirmed: confirmedOf(f.lineup), cardIds: f.lineup });
+    const s = await evalLineup(f.lineup, finalRuns, photoIds);
+    entries.push({
+      score: Number.isFinite(s) ? s : f.score,
+      confirmed: confirmedOf(f.lineup, photoIds),
+      cardIds: f.lineup,
+      photoIds,
+    });
   }
   entries.sort((a, b) => b.score - a.score);
   onProgress?.({ phase: "完了", evaluations, best: entries[0]?.score ?? bestScore });

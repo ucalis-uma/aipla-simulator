@@ -505,36 +505,86 @@ describe("単一HTML UI スモーク", () => {
     (document.querySelector("#btn-preset") as HTMLButtonElement).click();
   });
 
-  it("アクセサリピッカーに属性タブがあり、専用タブでキャラ専用のみ表示される", () => {
+  it("アクセサリピッカーはスロット役割でタブが絞られ、専用タブでキャラ専用のみ表示される", () => {
+    // pick-acc（L1 は装備2件 → スロット2 = Sta/Men/Cri 用）を開く
     (document.querySelector('[data-act="pick-acc"]') as HTMLButtonElement).click();
     const tabs = [...document.querySelectorAll("#ap-tabs button[data-cls]")];
+    // 【Phase 8-A】スロット2（Sta/Men/Cri 用）は Vo/Da/Vi タブが非表示になる
     expect(tabs.map((b) => b.getAttribute("data-cls"))).toEqual([
-      "", "vocal", "dance", "visual", "stamina", "mental", "technique", "personal",
+      "", "stamina", "mental", "technique", "personal",
     ]);
-    // 専用タブ: L1 のカードキャラ（鈴村優）の専用品のみ表示（他キャラの専用品は非表示）
+    // 見出しにスロット役割が表示される
+    expect(document.querySelector("#modal-box h3")!.textContent).toContain("スロット2（Sta/Men/Cri用）");
+    // 専用タブ: 優の専用品は全て visual 分類（スロット1 専用）のためスロット2 では 0 件
     (tabs.find((b) => b.getAttribute("data-cls") === "personal") as HTMLButtonElement).click();
-    const rows = [...document.querySelectorAll("#ap-list [data-acc]")];
-    expect(rows.length).toBeGreaterThan(0);
-    for (const row of rows) {
+    expect(document.querySelectorAll("#ap-list [data-acc]").length).toBe(0);
+    // 逆にスロット1 用ピッカーの専用タブでは優の専用品のみ表示される（他キャラは非表示）
+    document.querySelector("[data-close]")!.dispatchEvent(new Event("click"));
+    (document.querySelector("#btn-preset") as HTMLButtonElement).click();
+    const slot1 = document.querySelector<HTMLElement>(
+      '.lane-card[data-lane="1"] .acc-slot[data-slot="0"]',
+    )!;
+    slot1.click();
+    const tabs1 = [...document.querySelectorAll("#ap-tabs button[data-cls]")];
+    const personal1 = tabs1.find((b) => b.getAttribute("data-cls") === "personal") as HTMLButtonElement;
+    personal1.click();
+    const rows1 = [...document.querySelectorAll("#ap-list [data-acc]")];
+    expect(rows1.length).toBeGreaterThan(0);
+    for (const row of rows1) {
       expect(row.textContent).toContain("専用:");
       expect(row.textContent).toContain("優");
       expect(row.textContent).not.toContain("専用:千紗");
     }
-    // 属性タブ（vocal）: 全行に Vo チップ
-    (tabs.find((b) => b.getAttribute("data-cls") === "vocal") as HTMLButtonElement).click();
-    const rows2 = [...document.querySelectorAll("#ap-list .chip.acc-vocal")];
-    expect(rows2.length).toBeGreaterThan(0);
     document.querySelector("[data-close]")!.dispatchEvent(new Event("click"));
     (document.querySelector("#btn-preset") as HTMLButtonElement).click();
   });
 
-  it("オプティマイザ: 探索→ランキング表示→1クリックで編成反映", async () => {
-    // タブ切替
+  it("スロット1（Vo/Da/Vi用）のピッカーは基礎3ステ分類のみ選べ、役割外は自動振り分けされる", () => {
+    // L1 のスロット1を直接クリックしてスロット1 用ピッカーを開く
+    const slot1 = document.querySelector<HTMLElement>(
+      '.lane-card[data-lane="1"] .acc-slot[data-slot="0"]',
+    )!;
+    slot1.click();
+    const tabs = [...document.querySelectorAll("#ap-tabs button[data-cls]")];
+    expect(tabs.map((b) => b.getAttribute("data-cls"))).toEqual([
+      "", "vocal", "dance", "visual", "personal",
+    ]);
+    expect(document.querySelector("#modal-box h3")!.textContent).toContain("スロット1（Vo/Da/Vi用）");
+    // Sta/Men/Cri 分類（ミネラルウォーター等）はリストに出ない
+    const search = document.querySelector<HTMLInputElement>("#ap-search")!;
+    search.value = "ミネラルウォーター";
+    search.dispatchEvent(new Event("input"));
+    expect(document.querySelectorAll("#ap-list [data-acc]").length).toBe(0);
+    document.querySelector("[data-close]")!.dispatchEvent(new Event("click"));
+    (document.querySelector("#btn-preset") as HTMLButtonElement).click();
+
+    // スロット1 用ピッカーでは Vo 分類（汎用マイク）を選択でき、スロット1 に装備される
+    const slot1b = document.querySelector<HTMLElement>(
+      '.lane-card[data-lane="1"] .acc-slot[data-slot="0"]',
+    )!;
+    slot1b.click();
+    const search2 = document.querySelector<HTMLInputElement>("#ap-search")!;
+    search2.value = "汎用マイク";
+    search2.dispatchEvent(new Event("input"));
+    const vocalRow = document.querySelector<HTMLElement>("#ap-list [data-acc]")!;
+    expect(vocalRow).not.toBeNull();
+    vocalRow.click();
+    const slots = document.querySelectorAll('.lane-card[data-lane="1"] .acc-slot');
+    expect(slots[0]!.textContent).toContain("汎用マイク");
+    expect(
+      (document.querySelector("#status")!.textContent ?? "") + slots[0]!.textContent,
+    ).toContain("スロット1（Vo/Da/Vi用）");
+    (document.querySelector("#btn-preset") as HTMLButtonElement).click();
+  });
+
+  it("オプティマイザ: 探索→ランキング表示→1クリックで編成反映", async () => {    // タブ切替
     (document.querySelector("#tab-opt") as HTMLButtonElement).click();
     expect((document.querySelector("#view-sim") as HTMLElement).hidden).toBe(true);
     expect((document.querySelector("#view-opt") as HTMLElement).hidden).toBe(false);
-    // 制約パネルに現在の 5 レーンが表示される
-    expect(document.querySelectorAll("#opt-constraints .opt-lane-ctrl").length).toBe(5);
+    // 制約パネルに 5 レーン + 必須採用 + フォトプールの制御が表示される
+    expect(document.querySelectorAll("#opt-constraints .opt-lane-ctrl").length).toBe(7);
+    expect(document.querySelector("#opt-required")).not.toBeNull();
+    expect(document.querySelector("#opt-use-photos")).not.toBeNull();
     // 高速設定で探索（プール6・スクリーニング1回・最終2回）
     (document.querySelector<HTMLInputElement>("#opt-pool")!).value = "6";
     (document.querySelector<HTMLInputElement>("#opt-screen-runs")!).value = "1";
@@ -565,5 +615,595 @@ describe("単一HTML UI スモーク", () => {
       '.lane-card[data-lane="1"] input[data-act="card-id"]',
     )!;
     expect(l1.value).toBe(cards[0]);
+  });
+
+  // ---------------------------------------------------------------------------
+  // Phase 8-B: マイフォト帳・フォト5スロットエディタ
+  // ---------------------------------------------------------------------------
+
+  /** レーンの「マイフォト帳装備」行のみを数える（旧 JSON 行は除外） */
+  function userPhotoRows(lane = 1): Element[] {
+    return [...document.querySelectorAll(`.lane-card[data-lane="${lane}"] .photo-eq-row`)].filter(
+      (r) => r.querySelector("[data-photo-edit]") !== null,
+    );
+  }
+
+  /** フォトエディタを開いて基本項目を入力するヘルパー */
+  function createPhoto(
+    name: string,
+    tags: string,
+    opts: { retouch?: boolean; kind?: string; stat?: string; value?: number } = {},
+  ): void {
+    (document.querySelector('.lane-card[data-lane="1"] [data-act="photo-new"]') as HTMLButtonElement).click();
+    const box = () => document.querySelector("#modal-box")!;
+    const nameInput = box().querySelector<HTMLInputElement>('[data-p="name"]')!;
+    nameInput.value = name;
+    nameInput.dispatchEvent(new Event("input", { bubbles: true }));
+    const tagsInput = box().querySelector<HTMLInputElement>('[data-p="tags"]')!;
+    tagsInput.value = tags;
+    tagsInput.dispatchEvent(new Event("input", { bubbles: true }));
+    if (opts.retouch) {
+      const rt = box().querySelector<HTMLInputElement>('[data-p="retouch"]')!;
+      rt.checked = true;
+      rt.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+    if (opts.kind !== undefined) {
+      const kindSel = box().querySelector<HTMLSelectElement>('[data-frame-row="0"] [data-pf="kind"]')!;
+      kindSel.value = opts.kind;
+      kindSel.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+    if (opts.stat !== undefined) {
+      const statSel = box().querySelector<HTMLSelectElement>('[data-frame-row="0"] [data-pf="stat"]')!;
+      statSel.value = opts.stat;
+      statSel.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+    if (opts.value !== undefined) {
+      const valInput = box().querySelector<HTMLInputElement>('[data-frame-row="0"] [data-pf="value"]')!;
+      valInput.value = String(opts.value);
+      valInput.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+  }
+
+  it("マイフォト帳に T5 実測+理論値テンプレートが同梱され、検索・タグ絞り込みが動く", () => {
+    const albumBtn = document.querySelector<HTMLButtonElement>('.lane-card[data-lane="1"] [data-act="photo-album"]')!;
+    albumBtn.click();
+    // 同梱テンプレート（T5 実測フォト16枚 + 理論値/実用/レタッチ等）が一覧に出る
+    const rows = document.querySelectorAll("#ph-list .photo-row");
+    expect(rows.length).toBeGreaterThanOrEqual(16);
+    // 検索
+    const search = document.querySelector<HTMLInputElement>("#ph-search")!;
+    search.value = "理論値";
+    search.dispatchEvent(new Event("input"));
+    const filtered = document.querySelectorAll("#ph-list .photo-row");
+    expect(filtered.length).toBeGreaterThanOrEqual(1);
+    expect(filtered[0]!.textContent).toContain("理論値");
+    // タグ絞り込み（T5実測 タグ）
+    search.value = "";
+    search.dispatchEvent(new Event("input"));
+    const t5Tag = document.querySelector<HTMLButtonElement>('#ph-tags button[data-tag="T5実測"]')!;
+    t5Tag.click();
+    const t5Rows = document.querySelectorAll("#ph-list .photo-row");
+    expect(t5Rows.length).toBeGreaterThanOrEqual(10);
+    for (const r of t5Rows) {
+      expect(r.textContent).toContain("T5実測");
+    }
+    document.querySelector("[data-close]")!.dispatchEvent(new Event("click"));
+  });
+
+  it("フォトエディタで5スロット入力→マイフォト帳に保存→LocalStorage に永続化される", () => {
+    createPhoto("テストフォトX", "手持ち,テスト", { value: 44 });
+    (document.querySelector('#modal-box [data-photo-save="save"]') as HTMLButtonElement).click();
+    // モーダルが閉じ、LocalStorage に保存されている
+    expect((document.querySelector("#modal") as HTMLElement).hidden).toBe(true);
+    const saved = JSON.parse(localStorage.getItem("aipura-sim-myphotos-v1") ?? "[]") as Array<{ name: string; tags: string[] }>;
+    const found = saved.find((p) => p.name === "テストフォトX");
+    expect(found).toBeDefined();
+    expect(found!.tags).toContain("テスト");
+    expect(found!.tags).toContain("手持ち");
+    // レーンに装備はされていない（保存のみ・旧 JSON 行はカウントしない）
+    expect(userPhotoRows(1).length).toBe(0);
+  });
+
+  it("マイフォト帳から装備でき、レタッチ1枚制限のバリデーションが効く", () => {
+    // レタッチフォト（隣接Voレタッチ・retouch=true）を装備 → OK
+    //（L1 はオプティマイザテストの反映後に photosJson が空のため枠に余裕がある。
+    //  単独実行時は T5 プリセットの 4 枚で満杯のため、枠上限は「スキル持ちフォト」
+    //  テストおよび Phase 8-B5/8-B6 のテストで検証する）
+    (document.querySelector('.lane-card[data-lane="1"] [data-act="photo-album"]') as HTMLButtonElement).click();
+    const search = document.querySelector<HTMLInputElement>("#ph-search")!;
+    search.value = "隣接Vo";
+    search.dispatchEvent(new Event("input"));
+    (document.querySelector<HTMLButtonElement>('#ph-list [data-ph-equip]')!).click();
+    expect(userPhotoRows(1).length).toBe(1);
+    // 2枚目のレタッチフォト（センタークリスコ・retouch=true）はブロックされる
+    search.value = "センタークリスコ";
+    search.dispatchEvent(new Event("input"));
+    (document.querySelector<HTMLButtonElement>('#ph-list [data-ph-equip]')!).click();
+    expect((document.querySelector("#status")!.textContent ?? "")).toContain("レタッチフォトは1人1枚まで");
+    expect(userPhotoRows(1).length).toBe(1);
+    // 非レタッチフォト（T5 実測・retouch=false）は装備できる
+    search.value = "ふつつかもの";
+    search.dispatchEvent(new Event("input"));
+    (document.querySelector<HTMLButtonElement>('#ph-list [data-ph-equip]')!).click();
+    expect(userPhotoRows(1).length).toBe(2);
+    // ✕ で装備解除
+    document.querySelector('.lane-card[data-lane="1"] [data-photo-rm="0"]')!.dispatchEvent(new Event("click", { bubbles: true }));
+    expect(document.querySelectorAll('.lane-card[data-lane="1"] .photo-eq-row').length).toBe(1);
+    document.querySelector("[data-close]")!.dispatchEvent(new Event("click"));
+    (document.querySelector("#btn-preset") as HTMLButtonElement).click();
+  });
+
+  it("同じフォトは1編成に1枚まで: 編成中フォトはグレー表示・装備時は付け替え確認（Phase 8-B5）", () => {
+    // L1 は T5 プリセットでフォト 4 枚（Lv215 の上限）のため 1 枚外しておく
+    document.querySelector('.lane-card[data-lane="1"] [data-photo-json-rm="0"]')!.dispatchEvent(
+      new Event("click", { bubbles: true }),
+    );
+    // テストフォトを作成して L1 に装備
+    createPhoto("重複テスト", "テスト", { value: 10 });
+    (document.querySelector('#modal-box [data-photo-save="equip"]') as HTMLButtonElement).click();
+    expect(userPhotoRows(1).length).toBe(1);
+    // 帳を開く（L3）: L1 が装備中のフォトは「編成中:L1」チップ＋グレー表示
+    (document.querySelector('.lane-card[data-lane="3"] [data-act="photo-album"]') as HTMLButtonElement).click();
+    const search = document.querySelector<HTMLInputElement>("#ph-search")!;
+    search.value = "重複テスト";
+    search.dispatchEvent(new Event("input"));
+    const row = document.querySelector("#ph-list .photo-row")!;
+    expect(row.classList.contains("photo-used")).toBe(true);
+    expect(row.textContent).toContain("編成中:L1");
+    // 装備ボタン → 付け替え確認が出る
+    (row.querySelector("[data-ph-equip]") as HTMLButtonElement).click();
+    const confirmRow = document.querySelector("#ph-list .photo-swap-confirm")!;
+    expect(confirmRow.textContent).toContain("もうすでに編成されています");
+    // キャンセル → 確認が消える
+    (confirmRow.querySelector("[data-ph-cancel]") as HTMLButtonElement).click();
+    expect(document.querySelector("#ph-list .photo-swap-confirm")).toBeNull();
+    // 再度装備 → 確認 → 付け替える → L3 に移動し L1 からは消える
+    const row2 = document.querySelector("#ph-list .photo-row")!;
+    (row2.querySelector("[data-ph-equip]") as HTMLButtonElement).click();
+    const confirmRow2 = document.querySelector("#ph-list .photo-swap-confirm")!;
+    (confirmRow2.querySelector("[data-ph-swap]") as HTMLButtonElement).click();
+    expect((document.querySelector("#status")!.textContent ?? "")).toContain("付け替え");
+    expect(userPhotoRows(1).length).toBe(0);
+    expect(userPhotoRows(3).length).toBe(1);
+    document.querySelector("[data-close]")!.dispatchEvent(new Event("click"));
+    (document.querySelector("#btn-preset") as HTMLButtonElement).click();
+  });
+
+  it("スキル持ちフォトはステータス枠が4枠に減り、装備してシミュレーションが完走する", () => {
+    createPhoto("スキル持テスト", "テスト", {});
+    // 枠1をスキル持ちにする（既定: Voブースト4段28b）
+    const psAdd = document.querySelector("#modal-box [data-ps-add]") as HTMLButtonElement;
+    psAdd.click();
+    // スキル編集 UI（種別 select・条件 select）が現れる
+    expect(document.querySelector('#modal-box [data-ps="type"]')).not.toBeNull();
+    expect(document.querySelector('#modal-box [data-ps="condition"]')).not.toBeNull();
+    // ステータス枠は4枠分（枠2〜枠5 行は4行・枠5 追加ボタンは出ない）
+    expect(document.querySelectorAll("#modal-box [data-frame-row]").length).toBe(4);
+    expect(document.querySelector("#modal-box [data-pf-add4]")).toBeNull();
+    // 保存して装備 → 枠上限（Lv215 では 4 枚・T5 プリセットで満杯）のためブロックされる
+    (document.querySelector('#modal-box [data-photo-save="equip"]') as HTMLButtonElement).click();
+    expect((document.querySelector("#status")!.textContent ?? "")).toContain("フォト枠が上限");
+    // 実測フォトを 1 枚外してから装備（フォト枠数上限・Phase 8-B3 の検証も兼ねる）
+    document.querySelector('.lane-card[data-lane="1"] [data-photo-json-rm="0"]')!.dispatchEvent(
+      new Event("click", { bubbles: true }),
+    );
+    (document.querySelector('.lane-card[data-lane="1"] [data-act="photo-new"]') as HTMLButtonElement).click();
+    const psAdd2 = document.querySelector("#modal-box [data-ps-add]") as HTMLButtonElement;
+    psAdd2.click();
+    const nameInput2 = document.querySelector<HTMLInputElement>('[data-p="name"]')!;
+    nameInput2.value = "スキル持テスト2";
+    nameInput2.dispatchEvent(new Event("input", { bubbles: true }));
+    (document.querySelector('#modal-box [data-photo-save="equip"]') as HTMLButtonElement).click();
+    expect(userPhotoRows(1).length).toBe(1);
+    const runs = document.querySelector<HTMLInputElement>("#g-runs")!;
+    runs.value = "3";
+    (document.querySelector("#btn-run") as HTMLButtonElement).click();
+    expect((document.querySelector("#status")!.textContent ?? "").startsWith("完了")).toBe(true);
+    // スコアがブースト込みで変わる（フォト無しの 2,436,373,427 とは異なる）
+    expect(document.querySelector("#kpi-root")!.textContent ?? "").not.toContain("2,436,373,427");
+    (document.querySelector("#btn-preset") as HTMLButtonElement).click();
+  });
+
+  // ---------------------------------------------------------------------------
+  // Phase 8-B2: フォトマスタ（INFO PRIDE メモリアル一覧・初期品質）・T5 4枚/レーン表示
+  // ---------------------------------------------------------------------------
+
+  it("T5 実測プリセットは全レーンのフォトが4枚（スキルなしフォト含む）表示される", () => {
+    // 実測/JSON 行（通常チップ）がレーン毎に 4 枚・能力チップに初期値が表示される
+    for (let lane = 1; lane <= 5; lane++) {
+      const rows = [
+        ...document.querySelectorAll(`.lane-card[data-lane="${lane}"] .photo-eq-row`),
+      ].filter((r) => r.querySelector("[data-photo-json-rm]") !== null);
+      expect(rows.length).toBe(4);
+    }
+    // L1 の 1 枚目（私たちらしく・実測名は actual_title、JSON name は神崎莉央）が
+    // 能力チップ（Vo +59.4%）付きで表示される
+    const l1 = document.querySelector('.lane-card[data-lane="1"] .photo-eq-list')!.textContent ?? "";
+    expect(l1).toContain("神崎莉央");
+    expect(l1).toContain("+59.4%");
+    // スキルなしフォト（photo-L1-4 相当・Unidentified）も 4 枚目として表示される
+    expect(l1).toContain("Unidentified");
+  });
+
+  it("フォトマスタピッカーで INFO PRIDE のメモリアルフォトを初期品質の値で帳に追加できる", () => {
+    (document.querySelector('.lane-card[data-lane="1"] [data-act="photo-album"]') as HTMLButtonElement).click();
+    (document.querySelector("#ph-master") as HTMLButtonElement).click();
+    // マスタ 262 枚（初期レンダは先頭 150 件）
+    expect(document.querySelectorAll("#pm-list .photo-row").length).toBe(150);
+    // 実測検証済みの初期値フォトを検索（ふつつかものですが・品質35・Vo+20%）
+    const search = document.querySelector<HTMLInputElement>("#pm-search")!;
+    search.value = "ふつつかもの";
+    search.dispatchEvent(new Event("input"));
+    const row = document.querySelector("#pm-list .photo-row")!;
+    expect(row.textContent).toContain("ふつつかものですが");
+    expect(row.textContent).toContain("品質35");
+    expect(row.textContent).toContain("+20%");
+    // 帳に追加 → 帳（先のモーダルの裏で state が更新）に載る
+    (row.querySelector("[data-pm-add]") as HTMLButtonElement).click();
+    expect((document.querySelector("#status")!.textContent ?? "")).toContain("マイフォト帳に追加");
+    // 撮影キャラフィルタでキャラ指定のフォトだけに出れる（focusCharacterId は「撮影キャラ」
+    // 表記・専用フォトとは別物のため Phase 8-B4 から改称）
+    const kindSel = document.querySelector<HTMLSelectElement>("#pm-kind")!;
+    kindSel.value = "focused";
+    kindSel.dispatchEvent(new Event("change", { bubbles: true }));
+    search.value = "";
+    search.dispatchEvent(new Event("input"));
+    const focusedRows = [...document.querySelectorAll("#pm-list .photo-row")];
+    expect(focusedRows.length).toBeGreaterThan(0);
+    for (const r of focusedRows.slice(0, 20)) {
+      expect(r.textContent).toContain("撮影:");
+    }
+    // 帳に戻って追加済みフォトが見える
+    document.querySelectorAll("#modal-box [data-close]").forEach((b) => (b as HTMLElement).click());
+    (document.querySelector('.lane-card[data-lane="1"] [data-act="photo-album"]') as HTMLButtonElement).click();
+    const search2 = document.querySelector<HTMLInputElement>("#ph-search")!;
+    search2.value = "ふつつかもの";
+    search2.dispatchEvent(new Event("input"));
+    expect(document.querySelectorAll("#ph-list .photo-row").length).toBeGreaterThanOrEqual(2);
+    document.querySelector("[data-close]")!.dispatchEvent(new Event("click"));
+    (document.querySelector("#btn-preset") as HTMLButtonElement).click();
+  });
+
+  it("帳の複数選択で手持ちタグを一括付与/解除できる", () => {
+    (document.querySelector('.lane-card[data-lane="1"] [data-act="photo-album"]') as HTMLButtonElement).click();
+    // 2 行を選択して一括で手持ちタグを付ける
+    const checkboxes = [...document.querySelectorAll<HTMLInputElement>("#ph-list input[data-ph-sel]")];
+    expect(checkboxes.length).toBeGreaterThan(2);
+    const selectedIds = [checkboxes[0]!.getAttribute("data-ph-sel")!, checkboxes[1]!.getAttribute("data-ph-sel")!];
+    checkboxes[0]!.checked = true;
+    checkboxes[0]!.dispatchEvent(new Event("change", { bubbles: true }));
+    checkboxes[1]!.checked = true;
+    checkboxes[1]!.dispatchEvent(new Event("change", { bubbles: true }));
+    expect((document.querySelector("#ph-bulk-bar") as HTMLElement).hidden).toBe(false);
+    expect(document.querySelector("#ph-bulk-count")!.textContent).toContain("2 枚選択中");
+    // 一括付与 → 選択 2 枚とも手持ちタグ付きで永続化される
+    (document.querySelector("#ph-bulk-mochi-add") as HTMLButtonElement).click();
+    const saved = JSON.parse(localStorage.getItem("aipura-sim-myphotos-v1") ?? "[]") as Array<{ id: string; tags: string[] }>;
+    const bothMochi = saved.filter((p) => selectedIds.includes(p.id) && p.tags.includes("手持ち"));
+    expect(bothMochi.length).toBe(2);
+    // 一括解除 → 選択 2 枚の手持ちタグが外れる
+    (document.querySelector("#ph-bulk-mochi-del") as HTMLButtonElement).click();
+    const saved2 = JSON.parse(localStorage.getItem("aipura-sim-myphotos-v1") ?? "[]") as Array<{ id: string; tags: string[] }>;
+    const stillMochi = saved2.filter((p) => selectedIds.includes(p.id) && p.tags.includes("手持ち"));
+    expect(stillMochi.length).toBe(0);
+    document.querySelector("[data-close]")!.dispatchEvent(new Event("click"));
+    (document.querySelector("#btn-preset") as HTMLButtonElement).click();
+  });
+
+  it("効果とスキルが平文ではなくチップで表示される", () => {
+    // レーンのスキル一覧（A/SP/P）に fx チップが並ぶ
+    const fxRows = document.querySelectorAll('.lane-card[data-lane="1"] .fx-row .fx');
+    expect(fxRows.length).toBeGreaterThan(3);
+    // 帳の T5 実測フォト（スキル持ち）にもチップがある
+    (document.querySelector('.lane-card[data-lane="1"] [data-act="photo-album"]') as HTMLButtonElement).click();
+    const search = document.querySelector<HTMLInputElement>("#ph-search")!;
+    search.value = "屋外プール";
+    search.dispatchEvent(new Event("input"));
+    const row = document.querySelector("#ph-list .photo-row")!;
+    expect(row.querySelectorAll(".fx").length).toBeGreaterThan(0);
+    document.querySelector("[data-close]")!.dispatchEvent(new Event("click"));
+    (document.querySelector("#btn-preset") as HTMLButtonElement).click();
+  });
+
+  it("フォトエディタの条件セレクトにマスタ由来の全条件種がある", () => {
+    (document.querySelector('.lane-card[data-lane="1"] [data-act="photo-new"]') as HTMLButtonElement).click();
+    const psAdd = document.querySelector("#modal-box [data-ps-add]") as HTMLButtonElement;
+    psAdd.click();
+    const cond = document.querySelector<HTMLSelectElement>('#modal-box [data-ps="condition"]')!;
+    const opts = [...cond.options].map((o) => o.value);
+    // マスタの tg-* 由来の主要条件
+    for (const v of ["none", "combo>=50", "combo>=70", "combo>=100", "combo<=50", "self_dance_lane", "self_center",
+      "status_vocal_up", "status_critical_coeff_up", "someone_vocal_boost", "someone_recovered",
+      "stamina>=60", "stamina<=70", "someone_stamina<=50", "count_liz>=1",
+      "music_limited", "critical_timing", "someone_before_special",
+      // Phase 8-B4: やる気士docs 専用フォト由来
+      "beat_chance=10"]) {
+      expect(opts).toContain(v);
+    }
+    expect(opts.length).toBeGreaterThanOrEqual(60);
+    document.querySelector("[data-close]")!.dispatchEvent(new Event("click"));
+    (document.querySelector("#btn-preset") as HTMLButtonElement).click();
+  });
+
+  it("延長/増強レタッチで 与/被 スコープと絞り込みバフを選べる（Phase 8-B4）", () => {
+    (document.querySelector('.lane-card[data-lane="1"] [data-act="photo-new"]') as HTMLButtonElement).click();
+    const box = document.querySelector("#modal-box")!;
+    // 名前を入れてからスキル持ちにする → 種別を「与・クリティカル率延長」相当へ
+    const nameInput = box.querySelector<HTMLInputElement>('[data-p="name"]')!;
+    nameInput.value = "与クリ率延長テスト";
+    nameInput.dispatchEvent(new Event("input", { bubbles: true }));
+    (box.querySelector("[data-ps-add]") as HTMLButtonElement).click();
+    const typeSel = box.querySelector<HTMLSelectElement>('[data-ps="type"]')!;
+    typeSel.value = "effect_extension";
+    typeSel.dispatchEvent(new Event("change", { bubbles: true }));
+    // スコープ/バフセレクトが現れる
+    const scopeSel = box.querySelector<HTMLSelectElement>('[data-ps="scope"]')!;
+    const buffSel = box.querySelector<HTMLSelectElement>('[data-ps="buffkey"]')!;
+    expect(scopeSel).not.toBeNull();
+    expect(buffSel).not.toBeNull();
+    // 与・クリティカル率延長（やる気士docs の専用フォト・奥山すみれ等と同型）
+    scopeSel.value = "given";
+    scopeSel.dispatchEvent(new Event("change", { bubbles: true }));
+    buffSel.value = "critical_rate_up";
+    buffSel.dispatchEvent(new Event("change", { bubbles: true }));
+    const valInput = box.querySelector<HTMLInputElement>('[data-ps="value"]')!;
+    valInput.value = "4";
+    valInput.dispatchEvent(new Event("input", { bubbles: true }));
+    // 保存して帳へ → 要約に「与・」表記が出る
+    (box.querySelector('[data-photo-save="save"]') as HTMLButtonElement).click();
+    const saved = JSON.parse(localStorage.getItem("aipura-sim-myphotos-v1") ?? "[]") as Array<{ name: string; skill: { type: string; scope?: string; buffKey?: string } | null }>;
+    const found = saved.find((p) => p.name === "与クリ率延長テスト");
+    expect(found).toBeDefined();
+    expect(found!.skill!.scope).toBe("given");
+    expect(found!.skill!.buffKey).toBe("critical_rate_up");
+    (document.querySelector("#btn-preset") as HTMLButtonElement).click();
+  });
+
+  it("アクセサリピッカーに効果値の昇順/降順ソートがある（Phase 8-B7）", () => {
+    // スロット2（Sta/Men/Cri 用）のピッカーを開く
+    (document.querySelector('[data-act="pick-acc"]') as HTMLButtonElement).click();
+    const sortSel = document.querySelector<HTMLSelectElement>("#ap-sort")!;
+    expect(sortSel).not.toBeNull();
+    // Cri タブに絞って降順（既定）と昇順で先頭行が入れ替わる
+    //（technique 分類の効果行 stat は critical → 分類→stat 写像の検証も兼ねる）
+    const criTab = document.querySelector<HTMLButtonElement>('#ap-tabs button[data-cls="technique"]')!;
+    criTab.click();
+    const firstDesc = document.querySelector("#ap-list .pick-row")!;
+    expect(firstDesc.textContent).toContain("Cri");
+    sortSel.value = "asc";
+    sortSel.dispatchEvent(new Event("change", { bubbles: true }));
+    const firstAsc = document.querySelector("#ap-list .pick-row")!;
+    expect(firstAsc.getAttribute("data-acc")).not.toBe(firstDesc.getAttribute("data-acc"));
+    document.querySelector("[data-close]")!.dispatchEvent(new Event("click"));
+    (document.querySelector("#btn-preset") as HTMLButtonElement).click();
+  });
+
+  it("一括装備解除: レーン別のフォト/アクセサリ全外しと編成全体の解除（Phase 8-B7）", () => {
+    // L1 のフォト（4 枚）とアクセサリ（2 件）をレーン別ボタンで全外し
+    const l1 = (): Element => document.querySelector('.lane-card[data-lane="1"]')!;
+    expect(l1().querySelectorAll("[data-photo-json-rm]").length).toBe(4);
+    (l1().querySelector('[data-act="photo-clear"]') as HTMLButtonElement).click();
+    expect((document.querySelector("#status")!.textContent ?? "")).toContain("L1 のフォトを全て装備解除");
+    expect(l1().querySelectorAll("[data-photo-json-rm]").length).toBe(0);
+    (l1().querySelector('[data-act="acc-clear"]') as HTMLButtonElement).click();
+    expect((document.querySelector("#status")!.textContent ?? "")).toContain("L1 のアクセサリを全て装備解除");
+    // L2 はまだ装備がある → 編成全体の解除で消える
+    expect(
+      document.querySelectorAll('.lane-card[data-lane="2"] [data-photo-json-rm]').length,
+    ).toBe(4);
+    (document.querySelector("#btn-clear-all-equip") as HTMLButtonElement).click();
+    expect((document.querySelector("#status")!.textContent ?? "")).toContain("全レーンの装備を解除しました");
+    for (let lane = 1; lane <= 5; lane++) {
+      expect(
+        document.querySelectorAll(`.lane-card[data-lane="${lane}"] [data-photo-json-rm]`).length,
+      ).toBe(0);
+      expect(
+        document.querySelectorAll(`.lane-card[data-lane="${lane}"] .acc-slot .chip`).length,
+      ).toBe(0);
+    }
+    (document.querySelector("#btn-preset") as HTMLButtonElement).click();
+  });
+
+  it("フォトエディタのスキルなしに戻すボタンでスキル持ちを取り消せる（Phase 8-B7）", () => {
+    (document.querySelector('.lane-card[data-lane="1"] [data-act="photo-new"]') as HTMLButtonElement).click();
+    const box = document.querySelector("#modal-box")!;
+    (box.querySelector("[data-ps-add]") as HTMLButtonElement).click();
+    // スキル持ちになった（ステ枠4・戻すボタンが出る）
+    expect(box.querySelector('[data-ps="type"]')).not.toBeNull();
+    const removeBtn = box.querySelector("[data-ps-remove]") as HTMLButtonElement;
+    expect(removeBtn).not.toBeNull();
+    removeBtn.click();
+    // スキルなしに戻る（枠1が「スキル持ちにする」ボタンに戻り・枠5が復活:
+    // data-frame-row は 枠1(-1) + 枠2-5(0-4) の 6 行）
+    expect(box.querySelector('[data-ps="type"]')).toBeNull();
+    expect(box.querySelector("[data-ps-add]")).not.toBeNull();
+    expect(box.querySelectorAll("[data-frame-row]").length).toBe(6);
+    document.querySelector("[data-close]")!.dispatchEvent(new Event("click"));
+  });
+
+  // ---------------------------------------------------------------------------
+  // Phase 8-B3: スキルLv選択・フォト枠数上限（マスタ CardLevelRelease 準拠）
+  // ---------------------------------------------------------------------------
+
+  it("スキルLvセレクト: Lv1-6が選べ、要求カードレベル超過のLvは無効化・goldenレベルが初期選択される", () => {
+    // L1 birt-02 @Lv215・golden: slot1=6 / slot2=6 / slot3=5
+    const sel3 = document.querySelector<HTMLSelectElement>(
+      '.lane-card[data-lane="1"] select[data-skill-lv="sk-yu-05-birt-02-3"]',
+    );
+    expect(sel3).not.toBeNull();
+    expect(sel3!.options.length).toBe(6);
+    expect(sel3!.value).toBe("5");
+    // 枠3 の Lv6 はカード Lv230 必要 → Lv215 では無効化
+    const lv6 = [...sel3!.options].find((o) => o.value === "6")!;
+    expect(lv6.disabled).toBe(true);
+    expect(lv6.textContent).toContain("カードLv230が必要");
+    // 枠1 の Lv6 は要求 Lv180 ≤ 215 で選択可能・golden 通り選択済み
+    const sel1 = document.querySelector<HTMLSelectElement>(
+      '.lane-card[data-lane="1"] select[data-skill-lv="sk-yu-05-birt-02-1"]',
+    )!;
+    expect(sel1.value).toBe("6");
+    expect([...sel1.options].every((o) => !o.disabled)).toBe(true);
+    // L3 fest-03 @Lv230: 枠3 の golden Lv6（要求 230）が選択可能
+    const sel3l3 = document.querySelector<HTMLSelectElement>(
+      '.lane-card[data-lane="3"] select[data-skill-lv="sk-chs-05-fest-03-3"]',
+    )!;
+    expect(sel3l3.value).toBe("6");
+    expect([...sel3l3.options].every((o) => !o.disabled)).toBe(true);
+  });
+
+  it("カードレベルを下げると未解放スキル枠がロック表示になり、スキルLvが最大可能レベルへクランプされる", () => {
+    const laneSel = document.querySelector<HTMLSelectElement>(
+      '.lane-card[data-lane="1"] select[data-act="level"]',
+    )!;
+    laneSel.value = "15"; // slot2=Lv20・slot3=Lv80 解放 → 両方ロック
+    laneSel.dispatchEvent(new Event("change", { bubbles: true }));
+    const l1 = (): Element => document.querySelector('.lane-card[data-lane="1"]')!;
+    expect(l1().textContent).toContain("🔒 Lv20で解放");
+    expect(l1().textContent).toContain("🔒 Lv80で解放");
+    // 枠1 は解放済み・Lv2 はカードLv40 必要 → Lv15 では Lv1 にクランプ
+    const sel1 = l1().querySelector<HTMLSelectElement>('select[data-skill-lv="sk-yu-05-birt-02-1"]')!;
+    expect(sel1.value).toBe("1");
+    const lv2 = [...sel1.options].find((o) => o.value === "2")!;
+    expect(lv2.disabled).toBe(true);
+    expect(lv2.textContent).toContain("カードLv40が必要");
+    (document.querySelector("#btn-preset") as HTMLButtonElement).click();
+  });
+
+  it("フォト装備解除でスキルも同時に外れる（実測/JSON ↔ golden スキル連動・Phase 8-B5）", () => {
+    // T5 プリセット L1 の実測フォト行には対応する golden フォトスキル（photo-L1-1 等）が
+    // 装備リスト内にチェックボックス付きで表示される（photoIndex ↔ 装着位置の対応）
+    const l1 = (): Element => document.querySelector('.lane-card[data-lane="1"]')!;
+    expect(l1().querySelector('input[data-skill="photo-L1-1"]')).not.toBeNull();
+    expect(l1().querySelector('input[data-skill="photo-L1-3"]')).not.toBeNull();
+    // フォトを順に 3 枚外す（外すたびに後続が前に詰まり、スキルも対応位置に連動して外れる）
+    l1().querySelector('[data-photo-json-rm="0"]')!.dispatchEvent(new Event("click", { bubbles: true }));
+    l1().querySelector('[data-photo-json-rm="0"]')!.dispatchEvent(new Event("click", { bubbles: true }));
+    l1().querySelector('[data-photo-json-rm="0"]')!.dispatchEvent(new Event("click", { bubbles: true }));
+    // 1 枚のみ残存 → 対応するスキルは photo-L1-1 のみ
+    expect(l1().querySelector('input[data-skill="photo-L1-1"]')).not.toBeNull();
+    expect(l1().querySelector('input[data-skill="photo-L1-2"]')).toBeNull();
+    expect(l1().querySelector('input[data-skill="photo-L1-3"]')).toBeNull();
+    // 最後の 1 枚も外す → フォトスキルは全て無効化される
+    l1().querySelector('[data-photo-json-rm="0"]')!.dispatchEvent(new Event("click", { bubbles: true }));
+    expect(l1().querySelector('input[data-skill="photo-L1-1"]')).toBeNull();
+    // シミュレーションでも golden フォトスキルが効かない（スコアが確定値と変わる）
+    (document.querySelector<HTMLInputElement>("#g-runs")!).value = "10";
+    (document.querySelector("#btn-run") as HTMLButtonElement).click();
+    const kpi = document.querySelector("#kpi-root")!.textContent ?? "";
+    expect(kpi).not.toContain("2,436,373,427");
+    (document.querySelector("#btn-preset") as HTMLButtonElement).click();
+  });
+
+  it("マイフォトのスキルは装備行のチェックで個別無効化できる（Phase 8-B5）", () => {
+    // L1 は T5 プリセットでフォト 4 枚満杯のため 1 枚外す
+    document.querySelector('.lane-card[data-lane="1"] [data-photo-json-rm="0"]')!.dispatchEvent(
+      new Event("click", { bubbles: true }),
+    );
+    createPhoto("スキル解除テスト", "テスト", {});
+    const psAdd = document.querySelector("#modal-box [data-ps-add]") as HTMLButtonElement;
+    psAdd.click();
+    (document.querySelector('#modal-box [data-photo-save="equip"]') as HTMLButtonElement).click();
+    // 装備行にスキルチェックボックス（既定: 有効）が現れる
+    const skillCb = () =>
+      document.querySelector<HTMLInputElement>(
+        '.lane-card[data-lane="1"] input[data-user-photo-skill]',
+      )!;
+    expect(skillCb()).not.toBeNull();
+    expect(skillCb().checked).toBe(true);
+    // チェックを外す → 無効化 → シミュレーションでも発動しない
+    skillCb().checked = false;
+    skillCb().dispatchEvent(new Event("change", { bubbles: true }));
+    (document.querySelector<HTMLInputElement>("#g-runs")!).value = "10";
+    (document.querySelector("#btn-run") as HTMLButtonElement).click();
+    const kpiOff = document.querySelector("#kpi-root")!.textContent ?? "";
+    expect(kpiOff).not.toContain("2,436,373,427");
+    // チェックを戻す → 有効化
+    skillCb().checked = true;
+    skillCb().dispatchEvent(new Event("change", { bubbles: true }));
+    (document.querySelector("#btn-run") as HTMLButtonElement).click();
+    const kpiOn = document.querySelector("#kpi-root")!.textContent ?? "";
+    expect(kpiOn).not.toContain("2,436,373,427");
+    (document.querySelector("#btn-preset") as HTMLButtonElement).click();
+  });
+
+  it("スキルLvを下げて実行するとスコアが変化する（golden→マスタ解析値の置換がdeckに反映）", () => {
+    // L1 枠2（P スキル・常時発動）を Lv1 へ（Lv6: 6段44b → Lv1: 5段25b）
+    const sel2 = document.querySelector<HTMLSelectElement>(
+      '.lane-card[data-lane="1"] select[data-skill-lv="sk-yu-05-birt-02-2"]',
+    )!;
+    sel2.value = "1";
+    sel2.dispatchEvent(new Event("change", { bubbles: true }));
+    (document.querySelector<HTMLInputElement>("#g-runs")!).value = "10";
+    (document.querySelector("#btn-run") as HTMLButtonElement).click();
+    const kpi = document.querySelector("#kpi-root")!.textContent ?? "";
+    expect(kpi).not.toContain("2,436,373,427");
+    (document.querySelector("#btn-preset") as HTMLButtonElement).click();
+  });
+
+  it("フォト枠数上限: ヘッダに「上限 N 枚@LvM」が表示され、レベル低下で超過警告が出る", () => {
+    const head = (): string =>
+      document.querySelector('.lane-card[data-lane="1"] .photo-eq-head')!.textContent ?? "";
+    expect(head()).toContain("上限 4 枚@Lv215");
+    const laneSel = document.querySelector<HTMLSelectElement>(
+      '.lane-card[data-lane="1"] select[data-act="level"]',
+    )!;
+    laneSel.value = "64"; // 3枚目=Lv65 解放前 → 上限 2 枚
+    laneSel.dispatchEvent(new Event("change", { bubbles: true }));
+    expect(head()).toContain("上限 2 枚@Lv64");
+    const note = document.querySelector('.lane-card[data-lane="1"] .error-note')!.textContent ?? "";
+    expect(note).toContain("上限は 2 枚です");
+    (document.querySelector("#btn-preset") as HTMLButtonElement).click();
+  });
+
+  // ---------------------------------------------------------------------------
+  // Phase 8-C: 統合オプティマイザ（必須採用カード＋タグ指定フォト配分）
+  // ---------------------------------------------------------------------------
+
+  it("統合オプティマイザ: 必須採用カードが編成に含まれ、タグ指定フォトが配分される", async () => {
+    // 探索用フォトを2枚作成（タグ「探索用」）
+    createPhoto("探索A", "探索用", { value: 44 });
+    (document.querySelector('#modal-box [data-photo-save="save"]') as HTMLButtonElement).click();
+    createPhoto("探索B", "探索用", { kind: "grant_center", stat: "critical_score", value: 27 });
+    (document.querySelector('#modal-box [data-photo-save="save"]') as HTMLButtonElement).click();
+    // オプティマイザタブ
+    (document.querySelector("#tab-opt") as HTMLButtonElement).click();
+    (document.querySelector<HTMLInputElement>("#opt-use-photos")!).checked = true;
+    (document.querySelector<HTMLInputElement>("#opt-use-photos")!).dispatchEvent(new Event("change", { bubbles: true }));
+    // 既定で最初のタグ（テンプレート）がチェック → 外して探索用だけにする
+    for (const cb of document.querySelectorAll<HTMLInputElement>("#opt-photo-tags input[data-opt-tag]")) {
+      cb.checked = cb.dataset.optTag === "探索用";
+    }
+    (document.querySelector<HTMLSelectElement>("#opt-required")!).value = "card-yu-05-birt-02";
+    // 高速設定
+    (document.querySelector<HTMLInputElement>("#opt-pool")!).value = "6";
+    (document.querySelector<HTMLInputElement>("#opt-screen-runs")!).value = "1";
+    (document.querySelector<HTMLInputElement>("#opt-final-runs")!).value = "1";
+    (document.querySelector<HTMLInputElement>("#opt-topn")!).value = "2";
+    (document.querySelector<HTMLInputElement>("#opt-budget-sec")!).value = "30";
+    (document.querySelector("#btn-optimize") as HTMLButtonElement).click();
+    const start = Date.now();
+    while (document.querySelectorAll("#opt-results .opt-entry").length === 0) {
+      if (Date.now() - start > 60000) throw new Error("optimizer did not finish in time");
+      await new Promise((r) => setTimeout(r, 25));
+    }
+    const first = document.querySelector("#opt-results .opt-entry") as HTMLElement;
+    // 必須採用カードが含まれる
+    const cards = first.dataset.cards!.split(",");
+    expect(cards).toContain("card-yu-05-birt-02");
+    // フォトが配分されている（📷 チップ 2 枚）
+    const photoChips = first.querySelectorAll(".tag-chip");
+    expect(photoChips.length).toBeGreaterThanOrEqual(2);
+    expect(first.textContent).toContain("探索A");
+    // 反映 → レーンにフォト装備が付く
+    (first.querySelector("[data-apply-lineup]") as HTMLElement).click();
+    const totalPhotos = [1, 2, 3, 4, 5].reduce(
+      (s, lane) => s + document.querySelectorAll(`.lane-card[data-lane="${lane}"] .photo-eq-row`).length,
+      0,
+    );
+    expect(totalPhotos).toBeGreaterThanOrEqual(1);
+    // 探索用フォトのタグは帳に残る
+    const saved = JSON.parse(localStorage.getItem("aipura-sim-myphotos-v1") ?? "[]") as Array<{ name: string }>;
+    expect(saved.some((p) => p.name === "探索A")).toBe(true);
+    (document.querySelector("#btn-preset") as HTMLButtonElement).click();
   });
 });
