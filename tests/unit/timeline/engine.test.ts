@@ -392,8 +392,10 @@ describe("simulateTimeline: コンボとA/SPノートのレーン归属（§5.2�
     expect(result.beats[1]?.comboAfter).toEqual([2, 1, 1, 1, 1]);
     // b3 A(pos2→L2): L2 は no_skill だがコンボ継続で維持
     expect(result.beats[2]?.comboAfter).toEqual([2, 1, 1, 1, 1]);
-    // b4 A(pos3→L4): L4 は no_skill・コンボ継続なし → リセット
-    expect(result.beats[3]?.comboAfter).toEqual([2, 1, 1, 0, 1]);
+    // b4 A(pos3→L4): L4 は no_skill・コンボ継続なし → 全レーンの表示コンボがリセット
+    // （サンプル1実測確定 2026-09-01・b56 の COMBO 55→0。旧仕様「失敗レーンのみリセット」は T5 では
+    // 全レーンがコンボ継続を持つため検証機会がなく、サンプル1で棄却された）
+    expect(result.beats[3]?.comboAfter).toEqual([0, 0, 0, 0, 0]);
     // 挑戦しないレーンの FAIL は記録されない（L1/L2/L4 のみトレース存在）
     expect(result.activations.filter((a) => !a.success).map((a) => a.lane).sort()).toEqual([2, 4]);
   });
@@ -560,15 +562,50 @@ describe("simulateTimeline: 割合型・スケーリング（§5.2）", () => {
         ],
       }),
     ];
-    // b1 ビート（ファン1620）で 4×7058+8168 = 36400 積算 → b2 SP(pos1→L3):
-    // 基本スコア = floor(36400×120/1000) = 4368
+    // b1 ビートで L3 自身 4×7058+8168 = 36400、そのうち同レーンの累積は 8168
+    // （割合行の基準 = 自身レーンの累積。旧基準の全体累積 36400 ではない）
     const result = simulateTimeline(
       input([note(1, 1, 0), note(2, 3, 1)], lanes, { fanFactorPermil: 1620 }),
     );
     const ratioEvent = result.beats[1]?.events.find((e) => e.lane === 3);
-    expect(ratioEvent?.basicScore).toBe(4368);
-    // ファンが適用されるなら 4368×1.62=7076 になるため、4368 のまま = 不適用の証明
-    expect(ratioEvent?.gainedScore).toBe(4368);
+    expect(ratioEvent?.basicScore).toBe(980);
+    // ファンが適用されるなら 980×1.62=1588 になるため、980 のまま = 不適用の証明
+    expect(ratioEvent?.gainedScore).toBe(980);
+  });
+
+  it("SP は A と同様にマスタ順で処理され、スコアは自身バフ適用前のステータス（PRE）を参照する", () => {
+    const lanes = defaultLanes();
+    const l3 = lanes[2];
+    if (l3 === undefined) {
+      throw new Error("fixture broken");
+    }
+    l3.skills = [
+      skill({
+        id: "sp-order",
+        kind: "SP",
+        lane: 3,
+        ct: 50,
+        effects: [
+          {
+            type: "score_get",
+            powerPermil: 1000,
+            target: "self",
+            condition: "none",
+            durationBeats: null,
+          },
+          // 技能文の並び: スコア獲得 → 自身のステータスアップ（vb はスコア後に適用）
+          { type: "vocal_boost", stages: 3, durationBeats: 5, target: "self", condition: "none" },
+        ],
+      }),
+    ];
+    // b1 ビートで L3（vocal 120000）を発動させる; SP の基本スコアは vb 適用前の 120,000 のまま
+    const result = simulateTimeline(input([note(1, 3, 1), note(2, 1, 1)], lanes));
+    const spEvent = result.beats[0]?.events.find((e) => e.lane === 3);
+    expect(spEvent?.basicScore).toBe(120000);
+    expect(spEvent?.gainedScore).toBe(120000);
+    // その後、自身の vb3 が付与されている（次ビートのスナップに反映 = スコア行が先）
+    const snap = result.beats[1]?.buffSnapshots?.[2];
+    expect(snap?.vocal_boost ?? 0).toBe(3);
   });
 
   it("type36 scaling で SkillPower が段数に応じて増加する", () => {

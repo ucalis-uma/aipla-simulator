@@ -247,6 +247,15 @@ export interface BuildSimOptions {
    * （disabledSkillIds で個別無効化可）。
    */
   userPhotoSkills?: ReadonlyArray<SkillDef>;
+  /**
+   * 【Phase 8-B10 追補3】T5 実測サンプル（verification_data_v2.json）のレーン別フォト名。
+   * golden フォトスキル（photo-L*）は「装着位置のフォトが T5 実測フォトと同一名」の場合のみ
+   * 注入する（装着位置モデルの限定・汎用編成への T5 由来スキル混入の防止）。
+   * レーン内の T5 フォト名と一致すれば同位置でなくても適用する（8-B5 の装備解除による
+   * 詰め連動を維持）。マイフォト帳由来のフォトは【マイフォト】接頭辞のため一致しない。
+   * 省略時は従来どおり装着位置のみで判定（後方互換）。
+   */
+  goldenPhotoNames?: ReadonlyArray<ReadonlyArray<string>>;
 }
 
 /** rng / criticalProvider を除いた SimulateInput（呼び出し側で乱数源を設定して使用） */
@@ -278,12 +287,39 @@ function toStatBonus(items: PhotoOrAccessory[]): StatBonus[] {
   });
 }
 
+/**
+ * 【Phase 8-B10 追補3】golden フォトスキルの注入判定。
+ * goldenPhotoNames（T5 実測サンプルのレーン内フォト名一覧）が省略なら従来動作（true）。
+ * 指定時は装着位置のフォト名が T5 実測フォトのいずれかと一致する場合のみ true。
+ * 名前が無い/読めないフォト（"unreadable" 等）は同一名の T5 フォトが存在する場合のみ一致。
+ */
+function goldenPhotoSkillApplies(
+  goldenNames: ReadonlyArray<string> | undefined,
+  photoName: string | undefined,
+): boolean {
+  if (goldenNames === undefined) return true;
+  return photoName !== undefined && goldenNames.includes(photoName);
+}
+
 function sumScorePct(items: PhotoOrAccessory[], key: string): number {
   let sum = 0;
   for (const item of items) {
     for (const s of item.structured) {
       if (s.stat === key && s.type === "pct") {
         sum += pctToPermil(s.value);
+      }
+    }
+  }
+  return sum;
+}
+
+/** 写真のスキルステータス固定値合計（例: a_score 固定値 = Aスキルスコア追加の平坦加算） */
+function sumFixedPhotoScore(photos: PhotoOrAccessory[], key: string): number {
+  let sum = 0;
+  for (const p of photos) {
+    for (const s of p.structured) {
+      if (s.stat === key && s.type === "fixed") {
+        sum += s.value;
       }
     }
   }
@@ -330,6 +366,19 @@ export function laneAttributeOf(
 /** 現行のゲーム内レベルキャップ（2026-08 時点・将来的なキャップ解放時に更新する）。
  *  マスタ（CardParameter）は先行実装分のレベル行を含むため、UI 選択肢と既定値はこの上限で抑える。 */
 export const CURRENT_LEVEL_CAP = 230;
+
+/**
+ * メンバーのタイプ（装着カードの属性）を導出する。
+ * 【Estimate】カード属性 = ratiosPermil の vocal/dance/visual 最大
+ * （research/07_master_lookup.md §Card.type・確度 Medium。同率時は vocal > dance > visual 優先）。
+ * *_type_N（ボーカルタイプN人 等）の対象プールに使う（サンプル1実測確定の概念・2026-09-01）。
+ */
+export function cardTypeOf(card: CardDef): LaneInput["cardType"] {
+  const r = card.ratiosPermil;
+  if (r.visual > r.vocal && r.visual > r.dance) return "visual";
+  if (r.dance > r.vocal) return "dance";
+  return "vocal";
+}
 
 /** カードに存在するレベル行の列（UI のレベル選択用。昇順・現行キャップ 230 まで） */
 export function availableLevels(data: SimSourceData, cardId: string): number[] {
@@ -441,7 +490,10 @@ export function buildSimulateInput(options: BuildSimOptions): BuildSimResult {
           // フォト」に対応する。装備数を超える photoIndex のスキルは対応フォトが装備されて
           // いないため注入しない（装備解除でステータスとスキルが同時に外れる連動）。
           // T5 実測は photoIndex 1-4 ↔ photos 4 枚で全件該当（不変）。
-          (s.photoIndex == null || s.photoIndex <= ch.photos.length),
+          (s.photoIndex == null || s.photoIndex <= ch.photos.length) &&
+          // 【Phase 8-B10 追補3】T5 由来スキルの汎用編成への混入防止: 装着位置のフォトが
+          // T5 実測フォト（goldenPhotoNames・レーン内の名前一覧）と一致する場合のみ注入
+          goldenPhotoSkillApplies(options.goldenPhotoNames?.[lane - 1], ch.photos[(s.photoIndex ?? 1) - 1]?.name),
       ),
       // 【Phase 8-B】マイフォト帳のユーザー定義フォトスキルをマージ
       ...(options.userPhotoSkills ?? []).filter(
@@ -520,6 +572,7 @@ export function buildSimulateInput(options: BuildSimOptions): BuildSimResult {
       lane,
       attribute: laneAttributeOf(lane, laneAttributes),
       role: ch.role as LaneInput["role"],
+      cardType: cardTypeOf(card),
       deck: deckStatus,
       skills: laneSkills,
       photos: lanePhotos,
@@ -542,6 +595,9 @@ export function buildSimulateInput(options: BuildSimOptions): BuildSimResult {
         Y.scorePct.criticalScore +
         sumScorePct(equipment, "critical_score") +
         (scoreGrants.get(lane)?.critical_score ?? 0),
+      // 【2026-09-02 サンプル1確定】写真の「Aスコア（固定値）」は A スキルスコアに平坦加算
+      // （b123: +92,262+121,429。千紗ビーム b40/97/130 は +177,075。出典: S1 実測とユーザー計算式）
+      aScoreAdditionalFlat: sumFixedPhotoScore(ch.photos, "a_score"),
     });
   }
   lanes.sort((a, b) => a.lane - b.lane);
@@ -584,6 +640,7 @@ export function buildSimulateInput(options: BuildSimOptions): BuildSimResult {
     notes,
     stage,
     fanFactorPermil,
+    fanBaseCount: options.audience,
     successBasePermil: options.successBasePermil ?? 1000,
     baseCritRate: options.baseCritRate,
     roundingPolicy: "at-end",

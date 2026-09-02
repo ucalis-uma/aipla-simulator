@@ -1,0 +1,42 @@
+{
+  "$schema": "fan_bonus_segments",
+  "description": "やるキ士 docs「来場ファン数のボーナス」gid=969532646 の確認済み累積セグメント。1アイドルあたりの来場ファン数→スコアボーナス%を返す。0.1%×ファン数/セグメント密度の累積。確認値: 20人=0.2% / 200人=2.0% / 16,000人=62.0% / 20,000人=70.0% / 25,091人=75.0%",
+  "unit": {
+    "pctPer": 0.1,
+    "permilFactor": 10
+  },
+  "segments": [
+    {
+      "upToFans": 1000,
+      "fansPer0_1Pct": 10
+    },
+    {
+      "upToFans": 5000,
+      "fansPer0_1Pct": 20
+    },
+    {
+      "upToFans": 9800,
+      "fansPer0_1Pct": 40
+    },
+    {
+      "upToFans": 10000,
+      "fansPer0_1Pct": 2.5
+    },
+    {
+      "upToFans": 20000,
+      "fansPer0_1Pct": 50
+    },
+    {
+      "upToFans": null,
+      "fansPer0_1Pct": 100
+    }
+  ],
+  "checkpoints": {
+    "20": 0.2,
+    "200": 2.0,
+    "16000": 62.0,
+    "18400": 66.8,
+    "20000": 70.0,
+    "25091": 75.0
+  }
+}

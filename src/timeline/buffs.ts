@@ -95,11 +95,15 @@ export interface ActiveEffect {
    */
   skipFirstDecay?: boolean;
   /**
-   * 【Peing確定 2026-08-31】超化（capExtend）: このインスタンスの段数ぶん同種バフの
-   * 上限も拡張する（通常上限20 → 実効25。テンション10 → 15）。
+   * 【Peing確定 2026-08-31・2026-09-02 修正】超化（capExtend）による上限拡張量。
+   * 超化は独立インスタンスではなく同種バフ最長インスタンスへの増強型のため、
+   * 加算を受け取ったインスタンスの生存中は同種バフの上限をこの量ぶん拡張する
+   * （通常上限20 → 実効25。テンション10 → 15）。
    * aggregateBuffs が key ごとの最大拡張量を上限に加算する。
+   * engine は number（超化加算量）を設定する。true の場合は stages を
+   * 拡張量とみなす（テスト用・旧形式の互換）。
    */
-  capExtend?: boolean;
+  capExtend?: boolean | number;
 }
 
 /** 効果型 → 集計キーの写像結果 */
@@ -345,9 +349,13 @@ export function aggregateBuffs(active: readonly ActiveEffect[]): BuffSnapshot {
     const cap = isVarType ? baseStageCap(effect.type) : stageCap(effect.type, effect.limitRelease === true);
     const prevCap = caps.get(mapped.key);
     caps.set(mapped.key, prevCap === undefined ? cap : Math.max(prevCap, cap));
-    if (effect.capExtend === true) {
+    if (effect.capExtend) {
+      // 【2026-09-02 修正】超化は増強型: 加算を受けたインスタンスの capExtend =
+      // 超化による加算量（段数ではない）。engine 外で作られるテスト用インスタンス
+      // （capExtend=true + 段数=超化量 の旧形式）は stages フォールバックで同一動作。
+      const extAmount = typeof effect.capExtend === "number" ? effect.capExtend : effect.stages;
       const prevExt = extensions.get(mapped.key) ?? 0;
-      extensions.set(mapped.key, Math.max(prevExt, effect.stages));
+      extensions.set(mapped.key, Math.max(prevExt, extAmount));
     }
     if (mapped.key === "combo_continue") {
       snapshot.combo_continue += 1;
@@ -533,7 +541,76 @@ export function successRatePermil(snapshot: BuffSnapshot, successBasePermil: num
 }
 
 /**
- * 集目（focus）副効果のファンボーナス（permil）を返す。
+ * docs「来場ファン数のボーナス」gid=969532646 の累積セグメント
+ * （0.1% あたりファン数: 10→20→40→2.5→50→100。確認値と全一致:
+ *  20人=0.2% / 200=2.0% / 1000=10.0% / 16,000=62.0% / 20,000=70.0% / 25,091=75.0%）。
+ * data/stages/fan_bonus.json と同期（test で照合）。
+ */
+export const FAN_BONUS_SEGMENTS: readonly { upToFans: number | null; fansPer0_1Pct: number }[] = [
+  { upToFans: 1000, fansPer0_1Pct: 10 },
+  { upToFans: 5000, fansPer0_1Pct: 20 },
+  { upToFans: 9800, fansPer0_1Pct: 40 },
+  { upToFans: 10000, fansPer0_1Pct: 2.5 },
+  { upToFans: 20000, fansPer0_1Pct: 50 },
+  { upToFans: null, fansPer0_1Pct: 100 },
+];
+
+/** ファン数 → スコアボーナス ‰（1000 を含まない増分。docs 累積セグメントで検算済み） */
+export function fanBonusPermilFromCount(fans: number): number {
+  let prev = 0;
+  let pct = 0;
+  for (const s of FAN_BONUS_SEGMENTS) {
+    const end = s.upToFans ?? fans;
+    const span = Math.min(fans, end) - prev;
+    if (span > 0) {
+      // docs は 0.1% 刻み → セグメント内のステップ数を floor（例 25,091人 → +5.0% ちょうど）
+      pct += Math.floor(span / s.fansPer0_1Pct) * 0.1;
+    }
+    prev = end;
+    if (s.upToFans === null || fans <= s.upToFans) {
+      break;
+    }
+  }
+  return Math.round(pct * 10);
+}
+
+/**
+ * 引力度（‰）: 1000 + 50×集目 − 50×ステルス。
+ * docs（gid=969532646）:「集目効果とステルス効果で 1 段階あたり ±5% の変動。
+ * ファン数は「自分の引力度」と「全 5 人の引力度」の割合で分布」
+ */
+export function attractPermil(focusStages: number, stealthStages: number): number {
+  return 1000 + 50 * focusStages - 50 * stealthStages;
+}
+
+/**
+ * 【2026-09-01 docs 引力式】B3 ファンファクター（‰）。
+ *   自レーン来場数 = baseCount × 5 × 自引力度 / Σ引力度（全 5 レーン）
+ *   → fan_bonus 表（fanBonusPermilFromCount）→ +1000
+ *   → 集目固定加算（focusFanBonusPermil、Peing 0.7/0.3 テーブル）を加算。
+ * 検算: 16,000人・集目10段（150%, 他4人 100%）→ 21,818人 → 71.8% → 71.8+5.0 = 76.8%（T5 実測 1768 ✓）
+ *
+ * @param baseCount 1 アイドルあたりの基礎来場ファン数（容量/5）
+ * @param focus 自レーンの集目段数
+ * @param stealth 自レーンのステルス段数
+ * @param others 他 4 レーンの { focus, stealth }
+ */
+export function fanFactorPermilByAttraction(
+  baseCount: number,
+  focus: number,
+  stealth: number,
+  others: readonly { focus: number; stealth: number }[],
+): number {
+  const self = attractPermil(focus, stealth);
+  let sum = self;
+  for (const o of others) {
+    sum += attractPermil(o.focus, o.stealth);
+  }
+  const count = Math.max(0, Math.round((baseCount * 5 * self) / sum));
+  return 1000 + fanBonusPermilFromCount(count) + focusFanBonusPermil(focus);
+}
+
+/** 集目（focus）副効果のファンボーナス（permil）を返す。
  *
  * 【Peing確定 2026-08-31・research/16 §2】「1〜5段は +0.7%/段、6〜10段は +0.3%/段」
  * （最大+5.0%）。FOCUS_FAN_BONUS_PERMIL = [7,14,21,28,35,38,41,44,47,50] を

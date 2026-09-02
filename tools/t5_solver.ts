@@ -72,7 +72,7 @@ const t5 = readJson(path.join(repoRoot, "tests/golden/fixtures/t5_measured.json"
 const CALIBRATED_MENTAL: Record<string, number> = { 1: 8996, 2: 5880, 3: 8074, 4: 5890, 5: 5880 };
 
 function buildBase(): ReturnType<typeof buildSimulateInput>["base"] {
-  return buildSimulateInput({
+  const base = buildSimulateInput({
     deck: ver,
     stageFile: "qt-daily-003-19",
     chartFile: "chart-hsm-004-001",
@@ -80,6 +80,9 @@ function buildBase(): ReturnType<typeof buildSimulateInput>["base"] {
     missedNotes: [1, 2, 3, 4, 5].map((lane) => ({ beat: 1, lane })),
     mentalOverride: CALIBRATED_MENTAL,
   }).base;
+  // 【2026-09-01 docs 引力式】T5 ステージ cap=80,000 → 個人来場 16,000 人（fan_bonus 表・62.0%）
+  base.fanBaseCount = 16000;
+  return base;
 }
 
 function critProvider(): (beat: number, lane: number) => boolean {

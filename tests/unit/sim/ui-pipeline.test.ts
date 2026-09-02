@@ -57,7 +57,12 @@ describe("UI pipeline（build_ui.mjs と同一のデータ形状）", () => {
       rng: new NeutralRng(),
       criticalProvider: () => false,
     });
-    expect(res.totalScore).toBe(2436373427);
+    // 【2026-09-01】type36 係数改定（+6%/段・参照 vocal_up のみ）・B2（docs「コンボのボーナス」gid=0）・
+    // ファン引力度（docs 引力式・gid=969532646）実装に伴い、確定値は
+    // 2,436,373,427 → 2,362,191,666 → 4,219,776,723 → 2,604,945,234 → 2,580,038,995 に変化。
+    // （直近: 割合行の基準を自身レーン累積に・効果行の並び（ステータス→スコア→その他）・
+    //   期限切れバフへの延長除外の実装に伴う再計算）
+    expect(res.totalScore).toBe(2580038995);
     expect(laneBreakdown(res.beats)).toHaveLength(5);
   });
 

@@ -1,145 +1,45 @@
 /**
- * combo.ts 単体テスト。
+ * コンボファクター（B2）の単体テスト。
  *
- * 出典: research/07 §3（ComboAdvantage.json 全7行・Confirmed）、
- *       PLAN.md §3.3 / research/02 §1.7（コンボスコア上昇の乗算方式）、
- *       research/01 §3.4（表記揺れの対立記録）。
+ * 【2026-09-01 確定】やるキ士 docs「コンボのボーナス」gid=0（一次資料）:
+ *   B2 = 1000 + テーブル(‰) × (1000＋100×csu)/1000
+ *   テーブル: 0-9:+0% / 10-19:+5% / 20-29:+10% / 30-39:+15% / 40-49:+20% /
+ *             50-69:+25% / 70-99:+30% / 100+:+50%
+ *   （docs: 「コンボスコア上昇効果がある場合、このスコアボーナスが上昇します。
+ *     1段階で+10%増えて、最大20段階で3倍」＝ 増分へ乗算）
+ *
+ * 実測照合:
+ * - T5 A 星見プロ b69（combo 69→50-69 行 25%、csu 19→×2.9）: 250‰×2.9 = 725 → 1725‰
+ *   （IMG_1512 実測ノートと一致。実測 219M = 215,861,327×r ✓）
+ * - SP 成宮すず（CJPH5507・combo 124→100+ 行 50%、csu 19）: 500×2.9 = 1450 → 2450‰ ✓
+ * - 簡易検証（b115・combo 50/51→25%、csu 0）: 250‰ → 1250‰ ✓（r=0.9475）
  */
 import { describe, expect, it } from "vitest";
-import {
-  COMBO_ADVANTAGE_TABLE,
-  baseComboBonusPermil,
-  comboFactorPermil,
-} from "../../../src/formula/combo.js";
-import { mulPermil } from "../../../src/rounding.js";
-import { readUnitJson } from "../helpers.js";
+import { comboFactorPermil } from "../../../src/formula/combo.js";
 
-interface ComboRowJson {
-  combo: number;
-  advantagePermil: number;
-}
-
-describe("COMBO_ADVANTAGE_TABLE（既定テーブル）", () => {
-  it("data/stages/combo_advantage.json と完全一致する（同期担保）", () => {
-    const file = readUnitJson<ComboRowJson[]>("data/stages/combo_advantage.json");
-    expect(COMBO_ADVANTAGE_TABLE).toEqual(file);
+describe("comboFactorPermil（コンボファクター・2026-09-01 docs 確定式）", () => {
+  it("combo=69, csu=19 → 1725（T5 実測メモ・星見プロ b69）", () => {
+    expect(comboFactorPermil(69, 19)).toBe(1725);
   });
 
-  it("7行・閾値昇順・全行が合計係数（1000 + ボーナス）形式", () => {
-    expect(COMBO_ADVANTAGE_TABLE).toHaveLength(7);
-    for (let i = 0; i < COMBO_ADVANTAGE_TABLE.length; i++) {
-      const row = COMBO_ADVANTAGE_TABLE[i];
-      expect(row).toBeDefined();
-      expect(row?.advantagePermil).toBeGreaterThanOrEqual(1000);
-      if (i > 0) {
-        expect(row?.combo).toBeGreaterThan(COMBO_ADVANTAGE_TABLE[i - 1]?.combo ?? 0);
-      }
-    }
-  });
-});
-
-describe("baseComboBonusPermil（基本コンボボーナス・増分‰）", () => {
-  it.each([
-    [0, 0],
-    [1, 0],
-    [9, 0],
-    [10, 50],
-    [19, 50],
-    [20, 100],
-    [29, 100],
-    [30, 150],
-    [39, 150],
-    [40, 200],
-    [49, 200],
-    [50, 250],
-    [69, 250],
-    [70, 300],
-    [99, 300],
-    [100, 500],
-    [155, 500],
-    [999, 500],
-  ])("combo=%i → %i‰", (combo, expected) => {
-    expect(baseComboBonusPermil(combo)).toBe(expected);
+  it("combo=124, csu=19 → 2450（CJPH5507・SP 実測 245%＝2450‰）", () => {
+    expect(comboFactorPermil(124, 19)).toBe(2450);
   });
 
-  it("閾値は「コンボ数が行の値以上のとき適用」（research/07 §3・コンボ155→+50%実測確認）", () => {
-    expect(baseComboBonusPermil(99)).toBe(300);
-    expect(baseComboBonusPermil(100)).toBe(500);
+  it("combo=50, csu=0 → 1250（簡易検証・ハイスコア1 b115）", () => {
+    expect(comboFactorPermil(50, 0)).toBe(1250);
   });
 
-  it("テーブル注入が効く", () => {
-    const custom = [{ combo: 5, advantagePermil: 1100 }];
-    expect(baseComboBonusPermil(4, custom)).toBe(0);
-    expect(baseComboBonusPermil(5, custom)).toBe(100);
-    expect(baseComboBonusPermil(155, custom)).toBe(100);
-  });
-
-  it.each([-1, 1.5])("不正な combo=%j は throw", (combo) => {
-    expect(() => baseComboBonusPermil(combo)).toThrow();
-  });
-});
-
-describe("comboFactorPermil（コンボファクター）", () => {
-  // ============================================================
-  // 【乗算方式の記録 — research/02 との差異（ゴールデン段階で最終判定）】
-  //
-  // 実装したのは PLAN.md §3.3 の確定式:
-  //   factor = (1 + 基本ボーナス) × (1 + 10% × コンボスコア上昇段)
-  //          = mulPermil(1000 + baseComboBonusPermil, 1000 + 100×段)
-  //
-  // コンボ155（実測最終ビート156のAスキル検算, research/02 §3.3）での候補値:
-  //   (A) ×6.0 = mulPermil(1500, 4000) … 本実装（30段）。
-  //       research/02 §3.3 が採用した値で、実測 1,708,961,981 に対し
-  //       乱数 r = 97.7% と ±5% 内に収まる【有力】。
-  //   (B) ×3.0 = 1 + 0.5×(1+3.0) … research/01 §3.4 の例記述「+50%×3=+150%」
-  //       （ボーナス増分だけに乗算する読み）。この説だとビート156の乱数が
-  //       r≈0.49 となり ±5% を大きく外れるため非有力。
-  //   (C) ×10.0 = mulPermil(2500, 4000) = (1+1.5)×(1+3.0) … タスク指示に記載の
-  //       検証値。テーブルの合計係数 1500‰ を「ボーナス」と誤認して二重加算した
-  //       値であり、PLAN §3.3 の式と不整合のため本実装では採用しない。
-  //       ゴールデンテストで実測と突合し、もし (C) でしか合わない場合は
-  //       式の見直し（テーブル値の解釈変更）を要する。
-  //   (C') ×7.5 = mulPermil(2500, 3000) = (1+1.5)×(1+2.0) … 同じく二重加算
-  //       （20段版）。タスク指示文中の「(1+1.5)×(1+2.0) = 7.5」はこれ。
-  //   (A') ×4.5 = mulPermil(1500, 3000) … 本実装の 20段（基本上限）値。
-  //
-  // research/01 §3.4 内の対立（[T1]「20段で2.5倍」vs [S1]「20段=3倍係数」）は
-  // research/01 が「[S1] の数値表を正とする」と結論済み（§3.4・§5-7）。
-  // Phase 2 の完了条件（3点検算が乱数レンジ内）はゴールデン段階で (A) を支持する。
-  // ============================================================
-  it("combo=155, stages=30 → 6000（×6.0・PLAN §3.3 式。×10.0/×7.5 は二重加算の誤り・上記コメント参照）", () => {
-    expect(comboFactorPermil(155, 30)).toBe(mulPermil(1500, 4000));
-    expect(comboFactorPermil(155, 30)).toBe(6000);
-  });
-
-  it("combo=155, stages=20 → 4500（×4.5・基本上限）", () => {
-    expect(comboFactorPermil(155, 20)).toBe(4500);
-  });
-
-  it("combo=155, stages=0 → 1500（バフなし＝基本ボーナスのみ）", () => {
-    expect(comboFactorPermil(155, 0)).toBe(1500);
-  });
-
-  it("combo=0, stages=0 → 1000（ボーナスなし）", () => {
+  it("combo=0, csu=0 → 1000", () => {
     expect(comboFactorPermil(0, 0)).toBe(1000);
   });
 
-  it("combo=10, stages=1 → 1155（mulPermil(1050,1100)・整数演算）", () => {
-    expect(comboFactorPermil(10, 1)).toBe(mulPermil(1050, 1100));
-    expect(comboFactorPermil(10, 1)).toBe(1155);
+  it("combo=100+, csu=20 → 2500（docs 表の +20 段階行 = 100+150%）", () => {
+    expect(comboFactorPermil(150, 20)).toBe(2500);
   });
 
-  it("combo=100, stages=30 → 6000（上限解放30段）", () => {
-    expect(comboFactorPermil(100, 30)).toBe(6000);
-  });
-
-  it("テーブル注入が効く", () => {
-    const custom = [{ combo: 5, advantagePermil: 1100 }];
-    expect(comboFactorPermil(5, 2, custom)).toBe(mulPermil(1100, 1200));
-    expect(comboFactorPermil(5, 2, custom)).toBe(1320);
-  });
-
-  it.each([[-1], [1.5]])("不正な stages=%j は throw", (stages) => {
-    expect(() => comboFactorPermil(10, stages)).toThrow();
+  it.each([[-1], [1.5], [NaN]])("不正な combo=%j は throw", (combo) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    expect(() => comboFactorPermil(combo as any, 0)).toThrow();
   });
 });

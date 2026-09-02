@@ -78,6 +78,12 @@ export interface OptimizerOptions {
    * ゲーム内ルール（レタッチ1枚・1人最大5枚）は validatePhotoEquip で厳守。
    */
   photoPool?: ReadonlyArray<MyPhotoDef>;
+  /**
+   * 【Phase 8-B10 追補3】T5 実測サンプルのレーン別フォト名。
+   * golden フォトスキル（photo-L*）の適用判定に使う（T5 由来スキルの
+   * 汎用編成評価への混入防止）。UI は DATA.sampleDeck から渡す。
+   */
+  goldenPhotoNames?: ReadonlyArray<ReadonlyArray<string>>;
   onProgress?: (info: OptimizerProgress) => void;
 }
 
@@ -336,6 +342,7 @@ export async function optimizeLineup(options: OptimizerOptions): Promise<Optimiz
         mentalOverride: options.mentalOverride,
         baseCritRate: options.baseCritRate,
         userPhotoSkills,
+        goldenPhotoNames: options.goldenPhotoNames,
       });
       let sum = 0;
       for (let i = 0; i < runs; i++) {
@@ -371,6 +378,7 @@ export async function optimizeLineup(options: OptimizerOptions): Promise<Optimiz
         missedNotes: options.missedNotes as Array<{ beat: number; lane: number }> | undefined,
         mentalOverride: options.mentalOverride,
         userPhotoSkills,
+        goldenPhotoNames: options.goldenPhotoNames,
       });
       return simulateTimeline({
         ...built.base,

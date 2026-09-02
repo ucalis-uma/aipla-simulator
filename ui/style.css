@@ -349,3 +349,21 @@ footer { margin-top: 30px; color: var(--dim); font-size: 11px; }
 .deck-preview .stat-dance { color: #2a6f9e; }
 .deck-preview .stat-visual { color: #9a6d00; }
 .deck-preview .stat-stamina { color: #33406b; }
+
+/* 【2026-09-02】ビート別の計算式内訳（タイムライン表「式」ボタン） */
+.fml-cell { text-align: center; }
+.fml-btn {
+  background: #f2f4f8; border: 1px solid #d4dae4; border-radius: 4px;
+  padding: 1px 7px; font-size: 11px; cursor: pointer; color: #45506b;
+}
+.fml-btn:hover, .fml-btn:focus { background: #e4eaf4; }
+.fml-row td {
+  background: #f8fafc; border-left: 3px solid #9db4d8; padding: 8px 12px;
+}
+.fml-list { display: flex; flex-direction: column; gap: 8px; font-size: 12px; }
+.fml-event { border-bottom: 1px dashed #dde4ee; padding-bottom: 6px; }
+.fml-event:last-child { border-bottom: none; padding-bottom: 0; }
+.fml-h { font-weight: 700; color: #33406b; margin-bottom: 2px; }
+.fml-line { font-variant-numeric: tabular-nums; color: #3c4a63; line-height: 1.65; }
+.fml-num { font-weight: 700; color: #b03a60; }
+.fml-total { margin-top: 2px; border-top: 1px solid #e4e9f2; padding-top: 2px; }

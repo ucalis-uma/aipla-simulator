@@ -37,6 +37,10 @@ const KNOWN_CONDITIONS = new Set([
   "someone_vocal_boost", "someone_dance_boost", "someone_visual_boost",
   "someone_vocal_down", "someone_dance_down", "someone_visual_down",
   "someone_stamina_cost_down", "someone_stealth",
+  // 誰かがスタミナ N% 以下（tg-someone_stamina_lower-N・2026-09-02 効果行トリガー対応で写像）
+  "someone_stamina<=50",
+  // 誰かが低下効果状態の時（tg-someone_status_group-weekness・2026-09-02 サンプル2 確定）
+  "someone_down_group",
   "count_liz>=1", "count_moon>=1", "count_sun>=1", "count_pajm>=1",
   "count_leader>=1", "count_tri>=1", "count_thrx>=1",
 ]);

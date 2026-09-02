@@ -116,6 +116,22 @@ export type EffectTarget =
   | "stamina_low_1"
   | "stamina_low_2"
   | "stamina_low_3"
+  // ---- サンプル1実測（2026-09-01）: target-position_attribute_<attr>-<N> =
+  //「<属性>レーンN人」。レーン属性（stage laneAttributes）一致レーンをレーン番号順に
+  // N 個。実測: 麻奈も立った大舞台（vocal_lane_3）→ L1,L3,L4（ボーカルレーン4本の
+  // うち L5 は対象外=レーン番号順の先頭3つと一致）【Measured】
+  | "vocal_lane_1"
+  | "vocal_lane_2"
+  | "vocal_lane_3"
+  | "vocal_lane_5"
+  | "dance_lane_1"
+  | "dance_lane_2"
+  | "dance_lane_3"
+  | "dance_lane_5"
+  | "visual_lane_1"
+  | "visual_lane_2"
+  | "visual_lane_3"
+  | "visual_lane_5"
   /** 条件（トリガー）を満たしたレーン（例: 「X状態の時、その人に…」の X 状態のレーン） */
   | "trigger"
   /** 特定バフ状態を持つレーン N 人（target-status-<type>-<n>） */
@@ -161,6 +177,18 @@ export type EffectCondition =
   | "someone_stealth"
   /** 誰かがスタミナ回復効果を受けた時（tg-someone_recovered） */
   | "someone_recovered"
+  /**
+   * 誰かが 低下効果グループ（vocal/dance/visual_down）状態の時
+   * （tg-someone_status_group-weekness・サンプル2実測確定 2026-09-02:
+   * 低下効果なし編成では全編不発）。
+   */
+  | "someone_down_group"
+  /**
+   * 自身が 低下効果グループ（vocal/dance/visual_down）状態の時
+   * （tg-status_group-weekness・2026-09-02 確定:「一生懸命、金魚すくい」の
+   * 2 行目「自身が低下効果状態の時」。someone_down_group の主語違い）。
+   */
+  | "self_down_group"
   /** 編成にユニットメンバーが N 人以上（tg-more_than_character_count-<unit>-<N>） */
   | "count_liz>=1"
   | "count_moon>=1"
@@ -211,14 +239,57 @@ export type EffectCondition =
    */
   | `beat_chance=${number}`;
 
+/** type36（段階数が多い程）のスケーリング計算式 */
+export type ScalingFormula =
+  | "linear"
+  | "comboLessQuad"
+  | "comboMoreLinear"
+  | "effectCount"
+  | "staminaRatioQuad"
+  | "staminaConsumedLinear"
+  | "skillCountLinear";
+
 /** type36（段階数が多い程）のスケーリング指定 */
 export interface EffectScaling {
-  /** 参照する段数（例: "vocal_up_stages" = ボーカル上昇の実効段数合計） */
+  /** 参照する段数（例: "vocal_up_stages" = ボーカル上昇の実効段数合計。linear のみ必須） */
   ref: string;
   /** 1段あたりの SkillPower 加算率 permil。P3c フィッティング前は null（=スケーリングなしで計算） */
   perStagePermil: number | null;
   /** フィッティング済みか（data/skills_golden.json 由来のフラグをそのまま運搬） */
   fitted?: boolean;
+  /**
+   * 計算式の種類。省略時 "linear"。
+   * - comboLessQuad: パワー × = 1 + amplitude×((max(0,reference−コンボ)/reference)^exponent)
+   *   （やるキ士docs gid=806980235「コンボ数が少ない程」: 200%×((150−combo)/150)²）
+   * - comboMoreLinear: パワー × = 1 + perComboPermil×コンボ（「コンボ数が多い程」: +(10/11)%/コンボ）
+   * - effectCount: パワー × = 1 + perTypePermil×min(強化効果種類数, maxTypes)
+   *   （「強化効果が多い程」: +14%/種類。上限は docs では 2022-06-20 正午後 9 種類 → 二度変更歴あり・現行値未確認）
+   * - staminaRatioQuad: パワー × = 1 + maxPermil×(発動後スタミナ率)^2（remainingRatio=false は消費率）
+   * - staminaConsumedLinear: パワー × = 1 + perStaminaPermil×累積消費スタミナ
+   * - skillCountLinear: パワー × = 1 + perCountPermil×自身の発動スキル数
+   * 丸めは共通で「0.1% 切り捨て」（=permil の floor・docs 明記）。
+   */
+  formula?: ScalingFormula;
+  /** comboLessQuad: 最大加算率 permil（2000 = +200%） */
+  amplitudePermil?: number;
+  /** comboLessQuad: 基準コンボ（150 等） */
+  reference?: number;
+  /** comboLessQuad: 指数（2） */
+  exponent?: number;
+  /** comboMoreLinear: 1 コンボあたり permil（(10/11)% = 9.0909…‰） */
+  perComboPermil?: number;
+  /** effectCount: 1 種類あたり permil（14% = 140‰） */
+  perTypePermil?: number;
+  /** effectCount: 種類数上限（null = 上限なし。docs では 9 だが審査履歴あり要検証） */
+  maxTypes?: number | null;
+  /** staminaRatioQuad: 最大加算率 permil（80% = 800‰）。false 時は消費率² */
+  maxPermil?: number;
+  /** staminaRatioQuad: true=残率²（既定）/ false=消費率² */
+  remainingRatio?: boolean;
+  /** staminaConsumedLinear: 1 スタミナあたり permil（0.011% = 0.11‰） */
+  perStaminaPermil?: number;
+  /** skillCountLinear: 1 回あたり permil（9.7% = 97‰） */
+  perCountPermil?: number;
 }
 
 /** 1効果行（skills_golden.json の effects[] 要素と同型） */
@@ -248,13 +319,17 @@ export interface SkillEffect {
   /** 上限解放（同種バフの最大段数を30へ拡張。research/06 BF2） */
   limitRelease?: boolean;
   /**
-   * 【Peing確定 2026-08-31】超化効果（add_effect_value_*）: 段数表記はダミーで
-   * 効果は「元のバフの+5段階分（固定）」。true のときこのインスタンスの段数ぶん
-   * 同種バフの上限も拡張する（通常上限20 → 超化で実効25。テンション10 → 15）。
+   * 【Peing確定 2026-08-31・2026-09-02 修正】超化効果（add_effect_value_*）:
+   * 段数表記はダミーで効果は「元のバフの+5段階分（固定）」の**増強型**
+   * （同種バフのアクティブ・インスタンスが無いと不発・b100 実測で確定）。
+   * エンジンは同種バフ最長インスタンスへ段数を加算し、そのインスタンスの
+   * capExtend に超化量を記録する（生存中は同種バフの上限をその量ぶん拡張:
+   * 通常上限20 → 超化で実効25。テンション10 → 15）。
+   * SkillEffect では true（超化行の印）、ActiveEffect では加算量（number）。
    * 出典: 質問箱 id=1190010925「超化や上限解放は段階数は存在するものの効果は常に一定」/
    * id=1189874405「テンション超化はテンション5段相当。10段＋超化は上限解放15段と同価値」
    */
-  capExtend?: boolean;
+  capExtend?: boolean | number;
   target: EffectTarget;
   condition: EffectCondition;
   confidence?: string;
@@ -297,6 +372,14 @@ export interface LaneInput {
    * 省略時は発動レーン自身にフォールバック。
    */
   role?: "Scorer" | "Buffer" | "Supporter";
+  /**
+   * メンバーのタイプ（装着カードの属性）。*_type_N（ボーカルタイプN人 等）の対象プール。
+   * 【サンプル1実測確定 2026-09-01】殻をやぶる（ボーカルタイプ2人）→ L2,L3：ダンスレーンの
+   * メンバーがボーカルタイプ対象になるため、レーン属性（attribute）とは独立の概念。
+   * 【Estimate】カード属性 = ratiosPermil の vocal/dance/visual 最大（research/07・確度 Medium）。
+   * 省略時はレーン属性で代用（旧挙動）。
+   */
+  cardType?: LaneAttribute;
   /** デッキステータス（Phase 1 computeDeckStatus の deck 値。ライブ中バフ乗算の基準） */
   deck: StatValues<number>;
   /** カードスキル（A/SP/P） */
@@ -313,6 +396,8 @@ export interface LaneInput {
   };
   /** エール+フォトのクリスコ%合算 permil（criticalFactorPermil の extras。実測 255） */
   critExtrasPermil: number;
+  /** 【2026-09-02 サンプル1確定】写真の「Aスコア（固定値）」合計。A スキルのスコアに平坦加算 */
+  aScoreAdditionalFlat?: number;
 }
 
 /**
@@ -365,6 +450,12 @@ export interface SimulateInput {
   stage: StageInput;
   /** 来場ファンボーナス係数 permil（B3。全レーン共通既定。実測 1620） */
   fanFactorPermil: number;
+  /**
+   * 【2026-09-01 docs 引力式】1 アイドルの基礎来場ファン数（= min(容量/5, 50,000)）。
+   * 指定時はファンボーナスを「引力度配分→fan_bonus 表」で計算する（buffs.ts
+   * fanFactorPermilByAttraction）。未指定時は fanFactorPermil + 集目加算の従来方式。
+   */
+  fanBaseCount?: number;
   /** コンボテーブル（既定 data/stages/combo_advantage.json 同期の COMBO_ADVANTAGE_TABLE） */
   comboAdvantageTable?: readonly ComboAdvantageRow[];
   /** 成功率の基礎値 permil（min(1, 席埋率×メンタル/要求) の結果。既定 1000。本実測は全成立） */

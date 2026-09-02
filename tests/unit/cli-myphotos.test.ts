@@ -40,7 +40,9 @@ const baseDeck = () => ({
   },
   characters: [1, 2, 3, 4, 5].map((lane) => ({
     lane,
-    card_id: "card-yu-05-birt-02",
+    // L1 のみボーカルカード（*_type_N の対象プールはメンバータイプ＝カード属性基準。
+    // 全レーン visual カードだと vocal_type_1 のプールが空になるため・サンプル1確定仕様）
+    card_id: lane === 1 ? "card-rio-05-fest-01" : "card-yu-05-birt-02",
     level: 215,
     rarity: 10,
     role: "Scorer",
@@ -102,12 +104,73 @@ describe("CLI myPhotos/photoEquip 解決（Phase 8-B9）", () => {
     expect(r.stderr).not.toContain("[warn]");
   });
 
-  it("T5 サンプル（myPhotos なし）は確定値 2,436,373,427 のまま", () => {
+  it("T5 サンプル（myPhotos なし）は確定値 2,580,038,995 のまま（type36/B2/引力改定後）", () => {
     const out = execFileSync(
       "npx",
       ["tsx", path.join(repoRoot, "src/cli/simulate.ts"), "--input", "examples/t5-sample.json", "--n", "0", "--crit-rate", "0"],
       { encoding: "utf-8", cwd: repoRoot, shell: true },
     );
-    expect(JSON.parse(out).confirmed.totalScore).toBe(2436373427);
+    // 【2026-09-01】type36（+6%/段・voc_up のみ）・B2（docs gid=0）・ファン引力（docs 引力式）改定。
+    // 旧 2,436,373,427（3.0‰/11.0‰・vue 込み参照）→ … → 4,219,776,723 → 2,604,945,234。
+    // ★ t5_solver（乱数列再導出）完了後に再更新。
+    expect(JSON.parse(out).confirmed.totalScore).toBe(2580038995);
+  });
+
+  it("frames ステータスのみの myPhotos も photos 側へ統合されスコアに反映される（Phase 8-B10）", () => {
+    // 画像→JSON 生成フローの規約（prompts/deck-json-from-images.md）では myPhotos の
+    // ステータスは characters[].photos 側に書かれるため、frames だけのファイルでも
+    // CLI が UI と同一スコアになるよう photoEquip 装着分を photos へ統合する
+    const withoutStatus = runCli(baseCfg());
+    const withStatus = runCli({
+      ...baseCfg(),
+      myPhotos: [
+        {
+          id: "uph-test-st",
+          name: "ステータス盛り",
+          kindLabel: "メモリアルフォト",
+          tags: ["手持ち"],
+          retouch: false,
+          skill: null,
+          frames: [{ kind: "self", stat: "vocal", type: "pct", value: 100 }],
+        },
+      ],
+      photoEquip: [["uph-test-st"], [], [], [], []],
+    });
+    expect(withStatus.confirmed.totalScore).toBeGreaterThan(withoutStatus.confirmed.totalScore);
+  });
+
+  it("photos 側に同名エントリがある場合は統合せず二重計算にならない（Phase 8-B10）", () => {
+    // 画像→JSON 生成フローはステータスを photos 側にも書く。この場合 photoEquip 経由の
+    // 追加統合をスキップし、UI applyConfig の重複除去と同一のスコアになる
+    const cfg = baseCfg() as ReturnType<typeof baseCfg> & {
+      myPhotos?: unknown[];
+      photoEquip?: unknown[];
+    };
+    cfg.myPhotos = [
+      {
+        id: "uph-test-dup",
+        name: "重複チェック",
+        kindLabel: "メモリアルフォト",
+        tags: [],
+        retouch: false,
+        skill: null,
+        frames: [{ kind: "self", stat: "vocal", type: "pct", value: 100 }],
+      },
+    ];
+    cfg.photoEquip = [["uph-test-dup"], [], [], [], []];
+    const deduped = runCli(cfg);
+    // photos 側に同名で書いた場合も同一値になる
+    const withLegacy = runCli({
+      ...cfg,
+      deck: {
+        ...baseDeck(),
+        characters: baseDeck().characters.map((c, i) =>
+          i === 0
+            ? { ...c, photos: [{ name: "重複チェック", structured: [{ stat: "vocal", type: "pct", value: 100 }] }] }
+            : c,
+        ),
+      },
+    });
+    expect(deduped.confirmed.totalScore).toBe(withLegacy.confirmed.totalScore);
   });
 });

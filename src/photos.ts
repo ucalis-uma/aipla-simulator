@@ -109,6 +109,14 @@ scope?: "given" | "received" | null;
   staminaCost: number | null;
   /** ライブ中の発動回数上限（1 =「ライブ中1回のみ」） */
   limitPerLive?: number | null;
+  /**
+   * 【サンプル1実測確定 2026-09-01】装着制限（スキルテキストの <サポータータイプのみ> 等）。
+   * "supporter_only" / "buffer_only" / "scorer_only"。制約に合わないロールのレーンに
+   * 装着されたフォトスキルは常時不発（エンジン restrictionAllows でゲート）。
+   * 実測: L4=Buffer 装備の「小美山愛 輝く光を受けて」（supporter_only）は不発。
+   * null/未指定 = 制約なし。
+   */
+  restriction?: string | null;
 }
 
 /** マイフォト帳の1定義 */
@@ -251,9 +259,41 @@ export function myPhotoToStructured(photo: MyPhotoDef): Array<{ stat: string; ty
   }));
 }
 
-/** マイフォト1枚 → 装備エントリ（PhotoOrAccessory と同型・name に ID を埋め込む） */
+/** マイフォト装備エントリの name 接頭辞（photos 配列内での識別用） */
+export const USER_PHOTO_EQUIP_PREFIX = "【マイフォト】";
+
+/** マイフォト1枚 → 装備エントリ（PhotoOrAccessory と同型・name に接頭辞を付ける） */
 export function myPhotoToEquipEntry(photo: MyPhotoDef): { name: string; structured: Array<{ stat: string; type: "pct" | "fixed"; value: number }> } {
-  return { name: `【マイフォト】${photo.name}`, structured: myPhotoToStructured(photo) };
+  return { name: `${USER_PHOTO_EQUIP_PREFIX}${photo.name}`, structured: myPhotoToStructured(photo) };
+}
+
+/**
+ * 【Phase 8-B10】photos エントリが myPhoto の重複表現か（素の名前 or 接頭辞付き）。
+ * 画像→JSON 生成フロー（prompts/deck-json-from-images.md）は myPhotos ステータスを
+ * characters[].photos 側にも書く規約で、UI エクスポートは接頭辞付きで書く。
+ * 統合時の二重計算防止判定（mergePhotoEquipStatuses・UI applyConfig の重複除去と共通）。
+ */
+export function isPhotoEquipDuplicate(entryName: string, photoName: string): boolean {
+  return entryName === photoName || entryName === `${USER_PHOTO_EQUIP_PREFIX}${photoName}`;
+}
+
+/**
+ * 【Phase 8-B10】photoEquip に装着された myPhotos のステータスを photos 配列へ統合する
+ * （UI toDeck 相当の処理を CLI でも行う・8-B9 の「CLI/UI 同一スコア」契約の完全化）。
+ * legacy 側に同名のエントリが既にある場合は既存表現を優先して追加しない
+ * （二重計算の防止・isPhotoEquipDuplicate 判定）。
+ */
+export function mergePhotoEquipStatuses<T extends { name: string }>(
+  legacy: readonly T[],
+  equipped: readonly MyPhotoDef[],
+): T[] {
+  const out = [...legacy];
+  for (const p of equipped) {
+    if (out.some((e) => isPhotoEquipDuplicate(e.name, p.name))) continue;
+    // myPhotoToEquipEntry の戻り値は { name, structured } で T と構造的に一致する
+    out.push(myPhotoToEquipEntry(p) as unknown as T);
+  }
+  return out;
 }
 
 /** マイフォトのユーザースキル ID（レーン装備ごとに生成する SkillDef の id） */
@@ -306,7 +346,7 @@ export function myPhotoToSkillDef(photo: MyPhotoDef, lane: LaneNumber, photoInde
     lane,
     photoIndex,
     optionSkill: `マイフォト: ${photo.name}`,
-    restriction: null,
+    restriction: s.restriction ?? null,
     ct: s.ct,
     staminaCost: s.staminaCost,
     limitPerLive: s.limitPerLive ?? null,

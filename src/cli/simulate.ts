@@ -38,7 +38,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { simulateTimeline } from "../timeline/engine.js";
 import type { LaneNumber, TimelineResult } from "../timeline/types.js";
-import { myPhotoToSkillDef, type MyPhotoDef } from "../photos.js";
+import { mergePhotoEquipStatuses, myPhotoToSkillDef, type MyPhotoDef } from "../photos.js";
 import { EVENT_RAND_MIN_PERMIL, EVENT_RAND_MAX_PERMIL } from "../formula/scoreEvent.js";
 import { ContinuousRng } from "../rng/random.js";
 import { NeutralRng } from "../rng/neutral.js";
@@ -58,6 +58,9 @@ import type { CardDef, CardParameterRow } from "../types.js";
 import type { SkillDef } from "../timeline/types.js";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
+
+/** ステージ ID → 会場最大キャパシティ（stages_index の cap。loadSourceData が充填） */
+const stageCapacities: Record<string, number | undefined> = {};
 
 interface CliArgs {
   input: string;
@@ -110,8 +113,7 @@ interface SimConfigJson {
   photoEquip?: unknown[];
 }
 
-function loadSourceData(stageFile: string, chartFile: string): SimSourceData {
-  const read = (p: string): unknown => JSON.parse(readFileSync(p, "utf-8"));
+function loadSourceData(stageFile: string, chartFile: string): SimSourceData {  const read = (p: string): unknown => JSON.parse(readFileSync(p, "utf-8"));
   const cards = (read(path.join(repoRoot, "data/cards.json")) as { cards: CardDef[] }).cards;
   const cardParameters = (read(path.join(repoRoot, "data/card_parameters.json")) as { rows: CardParameterRow[] })
     .rows;
@@ -138,6 +140,10 @@ function loadSourceData(stageFile: string, chartFile: string): SimSourceData {
         a: number[];
         w: number[];
         aw: number[];
+        /** 要求メンタル（stages_index 収載・CLI では未使用） */
+        mt?: number;
+        /** 会場最大キャパシティ（/5 = 個人来場ファン数の上限）。audience 導出に使用 */
+        cap?: number;
       }>;
       charts: string[];
     };
@@ -151,6 +157,11 @@ function loadSourceData(stageFile: string, chartFile: string): SimSourceData {
       skillWeightsPermil: { active: cfg.aw[0]!, special: cfg.aw[1]! },
       laneAttributes: cfg.a,
     };
+    // 【2026-09-01】来場ファン数はステージの会場キャパから導出する（UI と同じ規則・
+    // research/02 §1.8）。stages_index には cap / mt が収載されているが、従来ここで
+    // 捨てていた（そのため CLI は deck の audience 値をそのまま信頼し、サンプル1 の
+    // 71,000（=クリアスコアと同値）がファン 2000‰ にクランプされる誤動作を起こした）。
+    stageCapacities[stageFile] = cfg.cap ?? undefined;
   }
   const charts: Record<string, ChartFile> = {};
   const chartPath = path.join(repoRoot, "data/charts", `${chartFile}.json`);
@@ -213,6 +224,23 @@ function loadSourceData(stageFile: string, chartFile: string): SimSourceData {
   };
 }
 
+/**
+ * 【Phase 8-B10 追補3】T5 実測サンプル（verification_data_v2.json）のレーン別フォト名。
+ * golden フォトスキル（photo-L*）は「装着位置のフォトが T5 実測フォトと同一名」の場合のみ
+ * 注入する（汎用編成への T5 由来スキル混入の防止）。サンプルが読めない環境では
+ * undefined = 従来どおり装着位置のみで判定（フォールバック）。
+ */
+function loadGoldenPhotoNames(): string[][] | undefined {
+  try {
+    const sample = JSON.parse(
+      readFileSync(path.join(repoRoot, "スコア分析サンプル/verification_data_v2.json"), "utf-8"),
+    ) as { characters: Array<{ photos: Array<{ name: string }> }> };
+    return sample.characters.map((c) => c.photos.map((p) => p.name ?? ""));
+  } catch {
+    return undefined;
+  }
+}
+
 /** 1シミュレーション実行（乱数源とクリティカル判定源を注入） */
 function run(
   base: SimulateInputBase,
@@ -230,6 +258,21 @@ function buildInput(cfg: SimConfigJson, inputPath: string, critRate: number): Si
     throw new Error("input must have `deck` (inline) or `deckFile` (path)");
   }
   const data = loadSourceData(cfg.stage.file, cfg.chart.file);
+  // 【2026-09-01】audience / fanFactorPermil が指定されない場合は、ステージの会場キャパから
+  // 個人来場ファン数（容量÷5・上限 50,000 人）を導出する（UI の applyStage と同一規則・
+  // research/02 §1.8「個人来場 = min(容量/5, 個人可能ファン数)」）。
+  // 【2026-09-02 サンプル2修正】入力 JSON に audience が明示されている場合は導出しない。
+  // 実測編成 JSON（fan.png 由来）は正しい個人来場ファン数を audience に持つため、
+  // cap/5 での上書きは実測値を捨てる誤りだった（S1 の 71,000 は「クリアスコアと同値の
+  // 誤値」問題で、正しい実測値の上書きは別問題。STAGE680: cap 70,000→14,000 が
+  // 実測 13,206 を上書きしていた）。
+  if (cfg.fanFactorPermil === undefined && cfg.audience === undefined) {
+    const cap = stageCapacities[cfg.stage.file];
+    if (cap !== undefined) {
+      cfg.audience = Math.max(0, Math.min(50000, Math.floor(cap / 5)));
+      console.error(`[stage] audience を会場キャパ ${cap} から導出: ${cfg.audience} 人`);
+    }
+  }
   // 【Phase 9】ステージのライブボーナスを表示（SimulateInput へは buildSimulateInput が注入）
   const liveBonusDefs = data.liveBonusesByQuest?.[cfg.stage.file];
   if (liveBonusDefs !== undefined && liveBonusDefs.length > 0) {
@@ -253,6 +296,18 @@ function buildInput(cfg: SimConfigJson, inputPath: string, critRate: number): Si
         }),
       )
     : undefined;
+  // 【Phase 8-B10】photoEquip 装着分の myPhotos ステータスを deck.photos へ統合
+  // （UI toDeck の装備マージと同一規則）。画像→JSON 生成フローや UI エクスポートは
+  // ステータスを characters[].photos 側にも書くため同名重複はスキップされ二重計算にならず、
+  // frames のみのファイルではここで初めて統合される
+  photoEquip.forEach((ids, i) => {
+    const ch = cfg.deck?.characters[i];
+    if (ch === undefined || !Array.isArray(ch.photos)) return;
+    const equipped = ids
+      .map((pid) => myPhotos.find((x) => x?.id === pid))
+      .filter((p): p is MyPhotoDef => p !== undefined);
+    ch.photos = mergePhotoEquipStatuses(ch.photos, equipped);
+  });
   const built = buildSimulateInput({
     deck: cfg.deck,
     stageFile: cfg.stage.file,
@@ -266,6 +321,7 @@ function buildInput(cfg: SimConfigJson, inputPath: string, critRate: number): Si
     disabledSkillIds: cfg.disabledSkillIds,
     baseCritRate: critRate,
     userPhotoSkills,
+    goldenPhotoNames: loadGoldenPhotoNames(),
   });
   for (const w of built.warnings) {
     console.error(`[warn] ${w}`);

@@ -354,6 +354,84 @@ const CONDITIONAL_SCORE_NAMES = new Set([
   "score_get_by_character_count",
   "score_get_by_trigger",
 ]);
+
+/**
+ * 条件参照型スコアの type36 既定式（docs: やるキ士スプレッドシート gid=806980235 の倍率から。
+ * 上限（強化効果種類数の 9 など）は審査履歴により現行値が未確定のため maxTypes: null で
+ * 実装し、要検証タグを付ける。管理・突合表: research/type36_coefficients.md）。
+ */
+const CONDITIONAL_SCALE_DEFAULTS = {
+  score_get_by_less_combo_count: {
+    scaling: { ref: "combo_prior", perStagePermil: null, formula: "comboLessQuad", amplitudePermil: 2000, reference: 150, exponent: 2 },
+    note: "『コンボ数が少ない程』docs式: 200% × ((150 − 発動前コンボ)/150)²",
+  },
+  score_get_by_more_combo_count: {
+    scaling: { ref: "combo_prior", perStagePermil: null, formula: "comboMoreLinear", perComboPermil: 9.090909 },
+    note: "『コンボ数が多い程』docs式: +(10/11)%/コンボ（110コンボ=+100%）",
+  },
+  score_get_by_strength_effect_count: {
+    scaling: { ref: "effect_count", perStagePermil: null, formula: "effectCount", perTypePermil: 140, maxTypes: 9 },
+    note: "『強化効果が多い程』docs式: +14%/種類。上限は現行 9 種類（2026-09-01 ユーザー確認。2022-06-20 正午後 9 種類が現行も維持されると判断。上限解放キャラが存在し、vendor の score_get_by_strength_effect_count_limit_increase 変種で挙動が変わる可能性→要検証）",
+  },
+  score_get_by_more_stamina: {
+    scaling: { ref: "stamina_remaining", perStagePermil: null, formula: "staminaRatioQuad", maxPermil: 800, remainingRatio: true },
+    note: "『残スタミナが多い程』docs式: 80% × (発動後スタミナ率)²",
+  },
+  score_get_by_less_stamina: {
+    scaling: { ref: "stamina_consumed", perStagePermil: null, formula: "staminaRatioQuad", maxPermil: 800, remainingRatio: false },
+    note: "『残スタミナが少ない程』docs式: 80% × (発動後スタミナ消費率)²",
+  },
+  score_get_by_more_stamina_use: {
+    scaling: { ref: "stamina_consumed_total", perStagePermil: null, formula: "staminaConsumedLinear", perStaminaPermil: 0.11 },
+    note: "『消費スタミナが多い程』docs式: 0.011%/スタミナ",
+  },
+  score_get_and_stamina_consumption_by_more_stamina_use: {
+    scaling: { ref: "stamina_consumed_total", perStagePermil: null, formula: "staminaConsumedLinear", perStaminaPermil: 0.11 },
+    note: "『消費スタミナが多い程（スタミナ消費付き）』docs式: 0.011%/スタミナ",
+  },
+  score_get_by_skill_activation_count: {
+    scaling: { ref: "skill_count", perStagePermil: null, formula: "skillCountLinear", perCountPermil: 97 },
+    note: "『発動スキル数が多い程』docs式: +9.7%/回（フォトのスキルを含む）",
+  },
+};
+
+/**
+ * type36（段階数参照・score_get_by_status_effect_type_grade）の 家族別 1 段あたり係数。
+ * 【2026-09-01 確定】docs gid=806980235 の値をそのまま採用（簡易検証 3 例 = 星見プロ/成宮すず/
+ * 瑠依の予感 がすべて +6%/段 で一致・参照段数は「アップ系のみ（超化非参照）」）。
+ * - Vo/Da/Vi UP・Boost: +6.0%/段（20 段 = +120%）
+ * - テンションUP: +16.0%/段（10 段 = +160%）
+ * - クリティカル率上昇: +6.7%/段（20 段 = +134%）
+ * docs に該当のない ref（focus/a/s/sp/score_up/combo_score_up/critical_coeff_up 等)は null
+ * （=スケーリングなし・Per-skill 上書きは data/type36_coefficients.json）。
+ */
+const TYPE36_FAMILY_PER_STAGE_PERMIL = {
+  vocal_up_stages: 60,
+  dance_up_stages: 60,
+  visual_up_stages: 60,
+  vocal_boost_stages: 60,
+  dance_boost_stages: 60,
+  visual_boost_stages: 60,
+  tension_up_stages: 160,
+  critical_rate_up_stages: 67,
+};
+
+/**
+ * data/type36_coefficients.json のスキル別上書き（research/type36_coefficients.md の
+ * 機械可読版）。familyDefaults より優先される（Peing/T5 フィット値の適用先）。
+ * ファイルが無い場合や読み込み失敗時は空（従来動作）。
+ */
+let type36SkillOverridesCache = null;
+function type36SkillOverrides() {
+  if (type36SkillOverridesCache !== null) return type36SkillOverridesCache;
+  try {
+    const t = JSON.parse(readFileSync(path.join(DATA, "type36_coefficients.json"), "utf-8"));
+    type36SkillOverridesCache = t.skillOverrides ?? {};
+  } catch {
+    type36SkillOverridesCache = {};
+  }
+  return type36SkillOverridesCache;
+}
 /** トリガー（tg-someone_status-<status>）の status 名 → engine EffectType（someone_<type> 条件） */
 const STATUS_TRIGGER_TO_TYPE = {
   vocal_up: "vocal_up",
@@ -504,9 +582,11 @@ function targetOf(skillTargetId, stats) {
   }
   m = /^target-position_attribute_(vocal|dance|visual)-(\d)$/.exec(skillTargetId);
   if (m) {
-    // 「position 属性が X のレーン N 人」→ deck 属性降順の *_type_N に近似【Estimate】
+    // 【サンプル1実測確定 2026-09-01】「<属性>レーンN人」（target-position_attribute_*
+    // のバナーテキスト実測: 麻奈も立った大舞台 =「ボーカルレーン3人」→ L1,L3,L4）。
+    // 「タイプN人」（target-vocal-N = *_type_N）とは別ファミリーのため *_lane_N に写像。
     const n = Number(m[2]);
-    if (n >= 1 && n <= 5) return { target: `${m[1]}_type_${n}` };
+    if (n >= 1 && n <= 5) return { target: `${m[1]}_lane_${n}` };
     stats.unsupportedTargets.add(skillTargetId);
     return null;
   }
@@ -588,7 +668,18 @@ function parseEfficacy(efficacyId, stats) {
     return { ...base, type: "score_get_by_score_ratio", powerPermil: nums[0] ?? 0 };
   }
   if (CONDITIONAL_SCORE_NAMES.has(name)) {
-    // 条件参照型スコア（コンボ数/スタミナ等で増減）→ 常時発動の score_get に近似
+    // 条件参照型スコア（コンボ数/スタミナ等で増減）→ score_get + docs 既定とみなす式（要検証）
+    const def = CONDITIONAL_SCALE_DEFAULTS[name];
+    if (def !== undefined) {
+      return {
+        ...base,
+        type: "score_get",
+        powerPermil: nums[0] ?? 0,
+        scaling: { ...def.scaling },
+        confidence: "Estimate(docs-806980235: " + def.note + ")",
+      };
+    }
+    // 既定式がないもの（core_fan / fan_amount / character_count / trigger 等）は従来どおり近似
     return {
       ...base,
       type: "score_get",
@@ -598,8 +689,9 @@ function parseEfficacy(efficacyId, stats) {
   }
   if (name === "score_get_by_status_effect_type_grade") {
     // params: <status>-<power>。status は「vocal-up」（ハイフン区切り）と
-    // 「vocal_up」（アンダースコア）の2形があるため texts を結合して正規化
-    const status = texts.join("_");
+    // 「vocal_up」（アンダースコア）の2形があるため texts を結合して正規化。
+    // 後置トークン "chart_dependence" は照合前に取り除く。
+    const status = texts.join("_").replace(/_chart_dependence$/, "");
     const power = nums[0] ?? 0;
     const ref = TYPE36_STATUS_TO_REF[status];
     if (ref === undefined) {
@@ -612,12 +704,25 @@ function parseEfficacy(efficacyId, stats) {
         confidence: "Unknown(type36 scaling未対応: status=" + status + ")",
       };
     }
+    const famPerStage = TYPE36_FAMILY_PER_STAGE_PERMIL[ref];
+    if (famPerStage === undefined) {
+      // docs に該当する家族係数がない（focus/a/s/sp/score_up/combo_score_up/ccuff 等）→ 無係数・要検証
+      return {
+        ...base,
+        type: "score_get",
+        powerPermil: power,
+        scaling: { ref, perStagePermil: null, fitted: false },
+        confidence: "Unknown(type36 perStagePermil 未確定: ref=" + ref + ")",
+      };
+    }
     return {
       ...base,
       type: "score_get",
       powerPermil: power,
-      scaling: { ref, perStagePermil: null, fitted: false },
-      confidence: "Estimate(type36 perStagePermil 未フィッティング)",
+      scaling: { ref, perStagePermil: famPerStage, fitted: false },
+      confidence:
+        "Estimate(docs-806980235: ref=" + ref + " は " + famPerStage + "‰/段（" +
+        (famPerStage / 10).toFixed(1) + "%/段）。超化は参照外（2026-09-01 確定）",
     };
   }
   if (name.startsWith("limit_break_")) {
@@ -711,6 +816,44 @@ function parseSkillLevel(skill, stats, level = null, kindOverride = null) {
       ? levels[levels.length - 1]
       : (levels.find((l) => num(l.level ?? 0, skill.id) === level) ??
         levels[levels.length - 1]);
+  /**
+   * triggerId → { condition, note }（condition は engine EffectCondition・未対応は null + note）。
+   * 【サンプル2効果行トリガー対応 2026-09-02】skillDetails[].triggerId（効果行単位）も
+   * スキル単位と同一の写像で condition 化する。似た者親子のメッセージ等は
+   * 「score_get 行は無条件・バフ行のみ tg-position_attribute_visual」の構成のため
+   * 効果行単位で読まないと条件が落ちる。
+   * 【2026-09-02 ユーザー確定】tg-position_attribute_* は**レーン属性説**で確定
+   * （S2 怜 A2 の「発動」は誤認。レーン属性が一致しない行は適用されない）。
+   */
+  const triggerConditionOf = (triggerId, stats) => {
+    if (triggerId === "") return { condition: null, note: null };
+    if (triggerId.startsWith("tg-position_attribute_vocal")) return { condition: "self_vocal_lane", note: null };
+    if (triggerId.startsWith("tg-position_attribute_visual")) return { condition: "self_visual_lane", note: null };
+    if (triggerId.startsWith("tg-position_attribute_dance")) return { condition: "self_dance_lane", note: null };
+    if (triggerId.startsWith("tg-someone_status_group-")) {
+      // 【サンプル2実測確定 2026-09-02】誰かが 低下効果グループ 状態の時（憧れていた青春）。
+      // 編成に低下効果（vocal/dance/visual_down・stealth 等）が無いと不発。実測: サンプル2 では
+      // 低下効果なし → 全編不発（P発動ログに憧れていた青春なし・L1 P 予算を本当は起きてたが独占）。
+      // 低下効果状態の判定には弱点型の無効バフが必要だが効果系が現データに無いため、
+      // someone_vocal_down / someone_dance_down / someone_visual_down の OR 相当を
+      // 個別効果行の condition として展開せず「someone_down_group」条件として engine で評価する。
+      return { condition: "someone_down_group", note: null };
+    }
+    {
+      // 誰かがスタミナ N% 以下（tg-someone_stamina_lower-N・engine の someone_stamina<=N と同一規約）
+      const m = /^tg-someone_stamina_lower-(\d+)$/.exec(triggerId);
+      if (m) return { condition: `someone_stamina<=${m[1]}`, note: null };
+    }
+    if (triggerId.startsWith("tg-status_group-")) {
+      // 【2026-09-02 確定】自身が低下効果状態の時（「一生懸命、金魚すくい」の 2 行目 =
+      // 説明文「自身が低下効果状態の時 全員に…」。tg-someone_status_group-* との差分は
+      // 主語のみ（自身 vs 誰か）で、低下効果グループの判定は同一
+      // （vocal/dance/visual_down のいずれかが有効）。
+      return { condition: "self_down_group", note: null };
+    }
+    return { condition: null, note: "trigger:" + triggerId };
+  };
+
   const effects = [];
   let unsupported = 0;
   for (const d of lv.skillDetails ?? []) {
@@ -732,54 +875,86 @@ function parseSkillLevel(skill, stats, level = null, kindOverride = null) {
     if (eff.capExtend) out.capExtend = true;
     if (eff.scaling !== undefined) out.scaling = eff.scaling;
     if (eff.confidence) out.confidence = eff.confidence;
+    // 【サンプル2実測確定 2026-09-02】効果行単位の triggerId（skillDetails[].triggerId）。
+    // 似た者親子のメッセージ等は「score_get 行は無条件・バフ行のみ tg-position_attribute_visual」
+    // の構成で、スキル単位 triggerId には入らない。効果行単位で写像する（skl は下の
+    // skillTriggerConditionOf と同一の写像を用いる）。
+    const effTrigger = String(d.triggerId ?? "");
+    if (effTrigger !== "") {
+      const effCond = triggerConditionOf(effTrigger, stats);
+      if (effCond.condition !== null) {
+        out.condition = effCond.condition;
+      } else if (effCond.note !== null) {
+        out.confidence = "Unknown(効果行トリガー未対応: " + effTrigger + ")";
+      }
+    }
     effects.push(out);
   }
   const triggerId = String(lv.triggerId ?? "");
   let condition = "none";
   let conditionalNote = null;
-  if (triggerId.startsWith("tg-position_attribute_vocal")) {
-    condition = "self_vocal_lane";
-  } else if (triggerId.startsWith("tg-position_attribute_visual")) {
-    condition = "self_visual_lane";
-  } else if (triggerId.startsWith("tg-position_attribute_dance")) {
-    // engine に self_dance_lane は無いため無条件扱い + 要検証タグ
-    conditionalNote = "trigger:" + triggerId;
-  } else if (triggerId.startsWith("tg-music-")) {
-    // 楽曲限定（発動条件をエンジンは評価できない・常に発動扱い）
-    conditionalNote = "music-limited:" + triggerId;
-  } else if (triggerId.startsWith("tg-opponent") || triggerId.startsWith("tg-battle")) {
-    condition = "battle_only";
-  } else if (triggerId.startsWith("tg-combo-")) {
-    // コンボ条件（グローバル成功ノート数・T5実測確定の判定基準）
-    const n = Number(triggerId.slice("tg-combo-".length));
-    condition = `combo>=${n}`;
-  } else if (triggerId === "tg-someone_recovered") {
-    // 誰かがスタミナ回復効果を受けた時（ライブボーナスのトリガー・Phase 9）
-    condition = "someone_recovered";
-  } else if (triggerId.startsWith("tg-someone_status-")) {
-    // 「誰かが X 状態の時」→ 後半発動の someone_<type> 条件（自レーン含む）
-    const status = triggerId.slice("tg-someone_status-".length);
-    const t = STATUS_TRIGGER_TO_TYPE[status];
-    condition = t === undefined ? "none" : `someone_${t}`;
-    if (t === undefined) conditionalNote = "trigger:" + triggerId;
-  } else if (triggerId.startsWith("tg-more_than_character_count-")) {
-    // 編成のユニット人数条件（静的成立: L3→L2→L4→L1→L5 以外のビート依存がないため前半発動）
-    const rest = triggerId.slice("tg-more_than_character_count-".length);
-    const m = /^([a-z_]+)-(\d+)$/.exec(rest);
-    if (m && KNOWN_UNIT_GROUPS.has(m[1])) {
-      condition = `count_${m[1]}>=${m[2]}`;
+  {
+    // スキル単位トリガー（従来の if 連鎖を triggerConditionOf へ統合・-opponent 等を維持）
+    if (triggerId.startsWith("tg-music-")) {
+      conditionalNote = "music-limited:" + triggerId;
+    } else if (triggerId.startsWith("tg-opponent") || triggerId.startsWith("tg-battle")) {
+      condition = "battle_only";
+    } else if (triggerId.startsWith("tg-combo-")) {
+      const n = Number(triggerId.slice("tg-combo-".length));
+      condition = `combo>=${n}`;
+    } else if (triggerId === "tg-someone_recovered") {
+      condition = "someone_recovered";
+    } else if (triggerId.startsWith("tg-someone_status-")) {
+      // 「誰かが X 状態の時」→ 後半発動の someone_<type> 条件（自レーン含む）
+      const status = triggerId.slice("tg-someone_status-".length);
+      const t = STATUS_TRIGGER_TO_TYPE[status];
+      condition = t === undefined ? "none" : `someone_${t}`;
+      if (t === undefined) conditionalNote = "trigger:" + triggerId;
+    } else if (triggerId.startsWith("tg-more_than_character_count-")) {
+      // 編成のユニット人数条件（静的成立: L3→L2→L4→L1→L5 以外のビート依存がないため前半発動）
+      const rest = triggerId.slice("tg-more_than_character_count-".length);
+      const m = /^([a-z_]+)-(\d+)$/.exec(rest);
+      if (m && KNOWN_UNIT_GROUPS.has(m[1])) {
+        condition = `count_${m[1]}>=${m[2]}`;
+      } else {
+        conditionalNote = "trigger:" + triggerId;
+      }
+    } else if (triggerId === "tg-before_special_skill_by_someone") {
+      // 【サンプル1実測確定 2026-09-01】誰かがSPスキル発動前（かっこいい宇宙人さん 等）。
+      // SP ノート到来ビートの前半（SP 精算前）に、SP ノートのレーンへ事前バフする。
+      // engine の someone_before_special 条件（SP ノートのレーンが SP スキル発動可の
+      // とき成立・target "trigger" で SP レーンを解決）で前半発動する。
+      condition = "someone_before_special";
     } else {
-      conditionalNote = "trigger:" + triggerId;
+      // 【サンプル2実測確定 2026-09-02】tg-position_attribute_* / tg-someone_status_group-*
+      // 等の共通写像（効果行単位と同一テーブル）。未対応は無条件扱い + 要検証タグ。
+      const common = triggerConditionOf(triggerId, stats);
+      if (common.condition !== null) {
+        condition = common.condition;
+      } else if (common.note !== null) {
+        conditionalNote = common.note;
+      }
     }
-  } else if (triggerId.startsWith("tg-")) {
-    // 未対応トリガー（誰かがSP発動前等）→ 無条件扱い + 要検証タグ
-    conditionalNote = "trigger:" + triggerId;
   }
   // スキル単位のトリガー条件を effect 行へ伝播する（engine は effect 行の condition で
   // 前半/後半と発動可否を判定するため。opponent 由来の battle_only は優先して保持）
   if (condition !== "none") {
     for (const e of effects) {
       if (e.condition === "none") e.condition = condition;
+    }
+  }
+  // 【type36 係数表のスキル別上書き】data/type36_coefficients.json の skillOverrides を、
+  // このスキルの score_get 行（type36 / 条件参照スコア）へ適用する（Peing・T5 フィット値）。
+  // golden（実測較正）スキルは「適用先レーンで skills_golden が優先される」ため、ここで入る
+  // 値はマスタ経路（非黄金デッキ）向けの基準値として機能する。
+  const override = type36SkillOverrides()[String(skill.id)];
+  if (override !== undefined) {
+    for (const e of effects) {
+      if (e.type !== "score_get") continue;
+      const conf = String(e.confidence ?? "");
+      if (e.scaling == null && !conf.includes("type36") && !conf.includes("条件参照スコア")) continue;
+      e.scaling = { ...(e.scaling ?? {}), ...override.scaling };
+      if (override.confidenceNote !== undefined) e.confidence = override.confidenceNote;
     }
   }
   return {

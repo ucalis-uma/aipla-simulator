@@ -23,6 +23,7 @@ import {
   b1Permil,
   consumptionMultiplierPermil,
   fanFactorPermil,
+  fanFactorPermilByAttraction,
   liveStatusMultiplierPermil,
   mapEffectToBuffKey,
   stealthFanBonusPermil,
@@ -67,6 +68,14 @@ interface LaneState {
   /** 最大スタミナ（=デッキスタミナ。回復はここでクランプ・実測 order9 で確認） */
   readonly maxStamina: number;
   stamina: number;
+  /** 累積消費スタミナ（type36 staminaConsumedLinear 用） */
+  staminaSpent: number;
+  /** 自身が成功発動したスキル/フォト数（type36 skillCountLinear 用） */
+  activated: number;
+  /** 【2026-09-01】自身の累積獲得スコア（ratio 型「自身の獲得スコア」の基準） */
+  scoreCum: number;
+  /** 【2026-09-01】スキル開始時点の scoreCum（ratio 型の基準。スキル処理中のみ有効） */
+  scoreCumAtSkillStart: number;
   combo: number;
   /** このレーンに付与されたアクティブ効果（付与先=このレーン） */
   effects: ActiveEffect[];
@@ -97,8 +106,21 @@ interface EngineCtx {
    * ビートノートで +1（全レーン成功扱い）、A/SP は成功時 +1。実測: L4-3(combo>=50)@b51・
    * L4-4/L1-3(combo>=80)@b81・L5-4(combo>=100)@b101 の発火ビートは
    * 「b49 SP FAIL を数えない全曲共通カウンタ」で完全一致（レーン別コンボは否定）。
+   * 【サンプル1実測確定 2026-09-01】コンボ継続なしの A/SP FAIL では 0 にリセットする:
+   * b56 L2 SP FAIL（スキル未習得）でリセット後、過去の私へ(combo>=80) が表示コンボ=80 の
+   * b136 で発火（リセットなしだと b81 発火になり実測と矛盾）。
    */
   readonly globalCombo: { value: number };
+  /**
+   * 【サンプル1実測確定 2026-09-01】表示コンボ（UI の COMBO 数字）。
+   * 成功ノートで +1、コンボ継続バフで保護された FAIL ノートも +1（T5 b49: 48→49 実測）、
+   * コンボ継続なしの FAIL で 0 にリセット（サンプル1 b56: 55→0）。
+   * ビート CB の基準コンボは T5 で「表示コンボ(=beat-1)」と確定済みのため、
+   * リセット付き譜面では本カウンタを基準に使う（T5 では beat-1 と完全一致し不変）。
+   */
+  readonly displayCombo: { value: number };
+  /** 処理中のノート（someone_before_special 条件＝「誰かがSPスキル発動前」の判定用） */
+  currentNote: ChartNote | null;
   /**
    * 【Phase 9】ライブボーナス（ステージ側）の CT（skillId → 残CT。0=使用可）。
    * ライブボーナスはステージ全体で1つづつの独立エンティティで、アイドルの
@@ -152,6 +174,8 @@ export function simulateTimeline(input: SimulateInput): TimelineResult {
     policy: input.roundingPolicy ?? "sequential",
     cumulative: { value: 0 },
     globalCombo: { value: 0 },
+    displayCombo: { value: 0 },
+    currentNote: null,
     liveBonusCt: new Map<string, number>(),
     liveBonusUsedThisBeat: new Set<string>(),
     recoveredLanes: new Set<LaneNumber>(),
@@ -161,6 +185,10 @@ export function simulateTimeline(input: SimulateInput): TimelineResult {
     input: laneInput,
     maxStamina: laneInput.deck.stamina,
     stamina: laneInput.deck.stamina,
+    staminaSpent: 0,
+    activated: 0,
+    scoreCum: 0,
+    scoreCumAtSkillStart: 0,
     combo: 0,
     effects: [],
     scheduledRecoveries: [],
@@ -196,6 +224,7 @@ function processBeat(
   const activations: ActivationTrace[] = [];
   const events: LaneScoreEventTrace[] = [];
   const beat = note.beat;
+  ctx.currentNote = note;
 
   // ビート開始: 前ビートのステップ10で remaining が 0 になった効果を除去（§2）
   for (const state of states) {
@@ -228,6 +257,7 @@ function processBeat(
   if (note.noteType === 1) {
     settleBeatNote(note, ctx, states, snapshotsAtScoring, events);
     ctx.globalCombo.value += 1; // ビートノートは常に成功（globalCombo 条件用）
+    ctx.displayCombo.value += 1; // 表示コンボも +1
     for (const state of states) {
       state.combo += 1; // ビートノートは常に成功【Estimate: research/13 §9-1】
     }
@@ -403,8 +433,24 @@ function resolveTargets(
     states
       .filter((s) => s.input.attribute === "vocal")
       .sort((a, b) => b.input.deck.vocal - a.input.deck.vocal);
-  /** 属性 N 人（vocal_type_N の対称拡張。デッキ属性ステータス降順） */
-  const attrTypeLanes = (
+  /**
+   * 【サンプル1実測確定 2026-09-01】「<属性>タイプN人」（*_type_N）の対象解決。
+   * プール = メンバーのタイプ（cardType=装着カードの属性。未指定時はレーン属性で代用）が
+   * 一致するレーン。順序 = レーン優先度 L3>L2>L4>L1>L5（IDOL_PRIORITY_ORDER）で先頭 N。
+   * 実測: 殻をやぶる（ボーカルタイプ2人）→ L3,L2。デッキステータス降順説は棄却
+   * （降順 L3,L1 は実測 {L2,L3} と不一致）。
+   * 【Estimate】cardType 未指定時の代用で旧来の「レーン属性フィルタ」挙動を維持するが、
+   * 順序は本実測どおりレーン優先度に統一（旧: デッキ属性ステータス降順）。
+   */
+  const memberTypeLanes = (attr: "vocal" | "dance" | "visual", n: number): LaneState[] =>
+    states
+      .filter((s) => (s.input.cardType ?? s.input.attribute) === attr)
+      .sort(
+        (a, b) => IDOL_PRIORITY_ORDER.indexOf(a.input.lane) - IDOL_PRIORITY_ORDER.indexOf(b.input.lane),
+      )
+      .slice(0, n);
+  /** <属性>が高いN人（*_higher_N）= メンバーのデッキ属性ステータス降順 */
+  const attrStatDescLanes = (
     attr: "vocal" | "dance" | "visual",
     n: number,
   ): LaneState[] =>
@@ -414,6 +460,9 @@ function resolveTargets(
       .slice(0, n);
   const staminaSorted = (desc: boolean): LaneState[] =>
     [...states].sort((a, b) => (desc ? b.stamina - a.stamina : a.stamina - b.stamina));
+  /** <属性>レーンN人（*_lane_N・サンプル1実測確定・レーン番号順。states はレーン順） */
+  const attrLaneLanes = (attr: "vocal" | "dance" | "visual", n: number): LaneState[] =>
+    states.filter((s) => s.input.attribute === attr).slice(0, n);
   switch (target) {
     case "self":
       return [self];
@@ -481,34 +530,37 @@ function resolveTargets(
     case "dance_high_2":
     case "dance_high_3": {
       const n = Number(target.slice("dance_high_".length));
-      return attrTypeLanes("dance", n);
+      return attrStatDescLanes("dance", n);
     }
     case "visual_high_1":
     case "visual_high_2":
     case "visual_high_3": {
       const n = Number(target.slice("visual_high_".length));
-      return attrTypeLanes("visual", n);
+      return attrStatDescLanes("visual", n);
     }
     case "vocal_type_1":
     case "vocal_type_2":
     case "vocal_type_3":
     case "vocal_type_5": {
+      // 【サンプル1実測確定 2026-09-01】メンバータイプ（cardType）プール × レーン優先度順
       const n = Number(target.slice("vocal_type_".length));
-      return vocalLanesByDeckVocalDesc().slice(0, n);
+      return memberTypeLanes("vocal", n);
     }
     case "dance_type_1":
     case "dance_type_2":
     case "dance_type_3":
     case "dance_type_5": {
+      // 【サンプル1実測確定 2026-09-01】メンバータイプ（cardType）プール × レーン優先度順
       const n = Number(target.slice("dance_type_".length));
-      return attrTypeLanes("dance", n);
+      return memberTypeLanes("dance", n);
     }
     case "visual_type_1":
     case "visual_type_2":
     case "visual_type_3":
     case "visual_type_5": {
+      // 【サンプル1実測確定 2026-09-01】メンバータイプ（cardType）プール × レーン優先度順
       const n = Number(target.slice("visual_type_".length));
-      return attrTypeLanes("visual", n);
+      return memberTypeLanes("visual", n);
     }
     case "buffer_type_1":
     case "buffer_type_2":
@@ -523,6 +575,30 @@ function resolveTargets(
     case "supporter_type_5": {
       const n = Number(target.slice("supporter_type_".length));
       return roleTypeLanes("Supporter", n);
+    }
+    // ---- 【サンプル1実測確定 2026-09-01】<属性>レーンN人（target-position_attribute_*
+    // を正規解像。レーン属性一致レーンをレーン番号順に N 個。実測: 麻奈も立った大舞台
+    // (vocal_lane_3) → L1,L3,L4（ボーカルレーン4本のうち L5 対象外=レーン番号順）】
+    case "vocal_lane_1":
+    case "vocal_lane_2":
+    case "vocal_lane_3":
+    case "vocal_lane_5": {
+      const n = Number(target.slice("vocal_lane_".length));
+      return attrLaneLanes("vocal", n);
+    }
+    case "dance_lane_1":
+    case "dance_lane_2":
+    case "dance_lane_3":
+    case "dance_lane_5": {
+      const n = Number(target.slice("dance_lane_".length));
+      return attrLaneLanes("dance", n);
+    }
+    case "visual_lane_1":
+    case "visual_lane_2":
+    case "visual_lane_3":
+    case "visual_lane_5": {
+      const n = Number(target.slice("visual_lane_".length));
+      return attrLaneLanes("visual", n);
     }
     case "same_lane_other":
       return [];
@@ -547,16 +623,45 @@ function attrTypeLanesLikeStatus(
 }
 
 /**
+ * 前半で評価できる条件（無条件 + SP前置きトリガー）。
+ * someone_before_special は「SPノート到来ビートの前半（スコア精算前）」でしか意味を
+ * 持たない（後半は SP 精算後のため事前バフにならない・サンプル1 b143 実測）。
+ */
+function isFirstPhaseCondition(condition: EffectCondition): boolean {
+  return (
+    condition === "none" ||
+    condition === "battle_only" ||
+    condition === "someone_before_special"
+  );
+}
+
+/** フォト装着制限（<サポータータイプのみ> 等）の判定。未知の制約文字列は制約なし扱い */
+export function restrictionAllows(restriction: string, role: LaneInput["role"]): boolean {
+  const want: LaneInput["role"] | undefined =
+    restriction === "supporter_only"
+      ? "Supporter"
+      : restriction === "buffer_only"
+        ? "Buffer"
+        : restriction === "scorer_only"
+          ? "Scorer"
+          : undefined;
+  return want === undefined || role === want;
+}
+
+/**
  * ステップ7/11 共通の Pスキル・フォト発動処理（§4）。
  * 各レーンにつき Pスキル1つ + フォト1つまで（**1ビート合算**・前後半で予算共有）。
  * 候補は配列先頭から【Estimate】。
- * - first（前半）: 無条件スキルのみ。
+ * - first（前半）: 無条件スキル + SP前置きトリガー（someone_before_special）のみ。
+ *   SP前置きは後半では SP 精算後になるため前半限定（サンプル1 b143 実測）。
  * - last（後半）: 条件付き（全条件成立時）+ 無条件（ステップ9でCTが0になり
  *   使用可になったもの。「2回目以降は後半発動」の機構的帰結）。
  *   同ビート内の二重発火は usedThisBeat（前後半予算共有）が担保する。
  *   【T5実測確定】旧実装の「前半使用可だった無条件を後半除外する永続集合」は
  *   b1 でフォト予算を取られた無条件フォト（photo-L1-2 等）が以後の後半発動で
  *   永久に block される誤りで、実測（photo-L1-2 の b51 後半発火）と矛盾したため削除。
+ * - フォトの装着制限（restriction: <サポータータイプのみ> 等）は候補段階で除外する
+ *   （サンプル1実測: L4=Buffer 装備の supporter_only フォトは不発）。
  */
 function activatePhaseSkills(
   state: LaneState,
@@ -575,19 +680,46 @@ function activatePhaseSkills(
     if (state.usedThisBeat.has(kind)) {
       continue;
     }
-    const isUnconditional = skill.effects.every(
+    if (skill.restriction != null && !restrictionAllows(skill.restriction, state.input.role)) {
+      continue; // 装着制限不一致（トレース省略・常時不発スキルのため毎ビート出ない）
+    }
+    // 【2026-09-02 ユーザー確定】無条件行（none/battle_only）を 1 つでも持つ P/フォトは
+    // 「前発動」タイプ: CT0 で自動発動する（祭り千紗 P3 = 1行目無条件+2行目条件式 が b1 発動）。
+    // 全行条件式のスキルは「後発動」（条件成立まで後半で待つ・優 P3 = 不発の根拠）。
+    const isUnconditional = skill.effects.some(
       (e) => e.condition === "none" || e.condition === "battle_only",
     );
+    const hasBeforeSpecial = skill.effects.some((e) => e.condition === "someone_before_special");
     // 条件を満たしたレーン（target="trigger" の解決用・Phase 8-B5）。
-    // 無条件スキルは条件評価がないため常に空（="trigger" は解決不能で発動しない）。
+    // 行ごとの条件は tryActivate 内で個別評価するため、ここでは
+    // 前半の someone_before_special ゲート用にのみ解決する。
     let triggerLanes: readonly LaneNumber[] = [];
     if (phase === "first") {
-      if (!isUnconditional) {
-        continue;
+      if (isUnconditional) {
+        // 前発動タイプ: CT0 で自動発動（条件付き行は適用時に個別評価）
+      } else {
+        if (!skill.effects.every((e) => isFirstPhaseCondition(e.condition))) {
+          continue; // 条件のみのスキルで前半評価不能条件を含む → 後半へ
+        }
+        // someone_before_special 等の前半評価可能条件（SP前置きバフ）
+        const evaluated = conditionsHold(state, skill, states, ctx);
+        if (!evaluated.ok) {
+          continue;
+        }
+        triggerLanes = evaluated.triggerLanes;
       }
     } else {
-      if (!isUnconditional) {
-        const evaluated = conditionsHold(state, skill, states, ctx);
+      if (hasBeforeSpecial) {
+        continue; // SP前置きは前半専用（後半 = SP精算後のため不発）
+      }
+      if (isUnconditional) {
+        // 前発動タイプの再発動: ステップ9で CT が 0 になった同ビート後半で発動可
+        // （無条件スキルと同一機構・usedThisBeat が同ビート二重発火を担保）
+      } else {
+        // 【2026-09-02 ユーザー確定】条件のみのスキル（後発動）は行ごと独立評価:
+        // **いずれか 1 行でも条件成立なら発動**し、成立した行のみ適用する
+        // （祭り千紗 P2 パターン = 2行目は 1行目のビジュアルレーン条件に非依存）。
+        const evaluated = rowsHoldAny(state, skill, states, ctx);
         if (!evaluated.ok) {
           continue;
         }
@@ -697,6 +829,7 @@ function activateLiveBonuses(
       }
       // 前半発動はステップ10の減算対象（実効=表記-1）・後半発動は減算対象外（表記どおり）。
       // どちらも skipFirstDecay=false（A/SP ステップ8付与の特例とは異なる）。
+      anchor.scoreCumAtSkillStart = anchor.scoreCum; // 【2026-09-01】ratio 基準
       gained += applyEffect(anchor, effect, skillDef, ctx, states, [], beat, false, triggerLanes);
     }
     activations.push({
@@ -771,6 +904,37 @@ function conditionsHold(
 }
 
 /**
+ * 【2026-09-02 ユーザー確定】条件のみのスキル（後発動）の行独立評価:
+ * いずれか 1 行でも条件成立なら ok（=発動可）。成立しなかった行は適用時に
+ * スキップされる（applyEffect 呼び出し側の行フィルタ参照）。
+ * 根拠: 祭り千紗 P2「一生懸命、金魚すくい」の 2 行目（スキル成功率上昇）は
+ * 1 行目（ビジュアルレーン条件）に**非依存**で発動する（ユーザー実測）。
+ * battle_only は通常ライブで除外（P3a 仕様）。
+ */
+function rowsHoldAny(
+  state: LaneState,
+  skill: SkillDef,
+  states: readonly LaneState[],
+  ctx: EngineCtx,
+): { ok: boolean; triggerLanes: LaneNumber[] } {
+  const triggerLanes = new Set<LaneNumber>();
+  let ok = false;
+  for (const e of skill.effects) {
+    if (e.condition === "none" || e.condition === "battle_only") {
+      continue;
+    }
+    const res = evaluateCondition(e.condition, state.input.lane, states, ctx);
+    if (res.ok) {
+      ok = true;
+    }
+    for (const lane of res.triggerLanes) {
+      triggerLanes.add(lane);
+    }
+  }
+  return { ok, triggerLanes: [...triggerLanes] };
+}
+
+/**
  * 条件評価（共通）。
  * - someone_* は「自レーンを含む」全レーンのいずれかに該当バフが有効なら成立
  *   （【T5実測確定】photo-L3-2 の b47 発火の実測による）。
@@ -802,9 +966,32 @@ function evaluateCondition(
     case "battle_only":
       return { ok: false, triggerLanes: [] }; // 通常ライブでは常に不発（P3a condition 拡張タグ仕様）
     case "self_vocal_lane":
+      // 【2026-09-02 ユーザー確定】tg-position_attribute_* はレーン属性比較で確定
+      // （S2 怜 A2 の「発動」は誤認。T5 実測 82/82 発動一致・優=不発 と整合）。
       return { ok: self()?.input.attribute === "vocal", triggerLanes: [] };
     case "self_visual_lane":
       return { ok: self()?.input.attribute === "visual", triggerLanes: [] };
+    case "self_dance_lane":
+      return { ok: self()?.input.attribute === "dance", triggerLanes: [] };
+    case "self_down_group": {
+      // 【2026-09-02 確定】自身が低下効果状態の時（tg-status_group-weekness・
+      // 「一生懸命、金魚すくい」2行目）。someone_down_group の主語違い（同一グループ判定）。
+      const s = self();
+      return (
+        s !== undefined &&
+        (snapshotOf(s).vocal_down > 0 || snapshotOf(s).dance_down > 0 || snapshotOf(s).visual_down > 0)
+          ? { ok: true, triggerLanes: [] }
+          : { ok: false, triggerLanes: [] }
+      );
+    }
+    case "someone_down_group":
+      // 【サンプル2実測確定 2026-09-02】誰かが低下効果状態の時（憧れていた青春 等）。
+      // 低下効果（vocal/dance/visual_down）のいずれかが編成の誰かに有効なとき成立。
+      return (
+        states.some((s) => snapshotOf(s).vocal_down > 0 || snapshotOf(s).dance_down > 0 || snapshotOf(s).visual_down > 0)
+          ? { ok: true, triggerLanes: [] }
+          : { ok: false, triggerLanes: [] }
+      );
     case "someone_recovered": {
       // 誰かがスタミナ回復効果を受けた時（このビート中・ライブボーナスの tg-someone_recovered）
       const lanes = [...ctx.recoveredLanes];
@@ -892,8 +1079,7 @@ function evaluateCondition(
     case "someone_stealth":
       return someone("stealth");
     // ---- 【Phase 8-B2】フォトスキルのマスタ準拠条件 ----
-    case "self_dance_lane":
-      return { ok: self()?.input.attribute === "dance", triggerLanes: [] };
+    // self_dance_lane は上で cardType 比較に統一（サンプル2実測確定 2026-09-02）
     case "self_center":
       return { ok: self()?.input.lane === 3, triggerLanes: [] };
     case "self_most_left":
@@ -902,13 +1088,36 @@ function evaluateCondition(
       return { ok: self()?.input.lane === 5, triggerLanes: [] };
     case "music_limited":
     case "critical_timing":
-    case "someone_before_special":
     case "fan_engage_higher":
     case "mood_type":
       // 【Estimate: 常時発動近似】楽曲/発動履歴/集目段数/テンションタイプの文脈を
       // engine は保持しないため無条件で成立扱い（UI に近似表記）
       return { ok: true, triggerLanes: [] };
-    default: {
+    case "someone_before_special": {
+      // 【サンプル1実測確定 2026-09-01】誰かがSPスキル発動前（スキルトリガー
+      // tg-before_special_skill_by_someone）。現在ビートのノートが SP ノートで、
+      // そのレーンが SP スキルを発動できる状態（所持・CT outside・スタミナ足りる）
+      // のとき成立。トリガー成立レーン = SP ノートのレーン。
+      // 実測: L4-3 かっこいい宇宙人さん が b143（L3 の SP ノート）で発動し
+      // SPレーン L3 へ事前バフ（クリティカル率上昇7段 = b143 の +7 と一致）。
+      // b56（SP ノートはあるが L2 は SP 未所持で FAIL）では不発が実測。
+      const note = ctx.currentNote;
+      if (note === null || note.noteType !== 3 || note.position < 1 || note.position > 5) {
+        return { ok: false, triggerLanes: [] };
+      }
+      const spLane: LaneNumber = POSITION_TO_LANE[note.position - 1]!;
+      const spState = states.find((s) => s.input.lane === spLane);
+      if (spState === undefined) {
+        return { ok: false, triggerLanes: [] };
+      }
+      const ready = spState.input.skills.some(
+        (s) =>
+          s.kind === "SP" &&
+          (s.ct == null || (spState.skillCt.get(s.id) ?? 0) === 0) &&
+          (s.staminaCost == null || spState.stamina >= s.staminaCost),
+      );
+      return { ok: ready, triggerLanes: ready ? [spLane] : [] };
+    }    default: {
       // 動的パターン: status_<BuffKey>（自レーンが X 状態）/ stamina>=N / stamina<=N /
       // someone_stamina<=N / combo<=N（テーブル外の数値）
       const mStatus = /^status_([a-z_]+)$/.exec(condition);
@@ -984,7 +1193,10 @@ function tryActivate(
     kind: skill.kind,
   };
 
-  if (skill.kind === "photo" && skill.limitPerLive != null) {
+  // スキル/フォト共通のリミット（limitPerLive: ライブ中発動回数上限）。
+  // 【2026-09-01 修正】photo 限定だったため P スキル（過去の私へ型・ライブ中1回のみ）が
+  // 毎ビート再発動していた。T5 は該当スキルなしで不検出（サンプル1 b136-176 のトレースで発覚）。
+  if (skill.limitPerLive != null) {
     if ((state.limitUsed.get(skill.id) ?? 0) >= skill.limitPerLive) {
       return { trace: { ...baseTrace, success: false, failReason: "limit" }, activated: false };
     }
@@ -1014,6 +1226,8 @@ function tryActivate(
 
   // 発動確定
   state.stamina -= cost;
+  state.staminaSpent += cost;
+  state.activated += 1;
   if (skill.ct != null) {
     // 【T5実測確定】CT は満タンでセットし、ステップ9の減算に委ねる。
     // 前半発動は同ビート内のステップ9で減算されるため実効 CT−1（CTが0になったビートの
@@ -1023,13 +1237,24 @@ function tryActivate(
     // （gap ≥ CT−1）に違反していたため修正。
     state.skillCt.set(skill.id, skill.ct);
   }
-  if (skill.kind === "photo" && skill.limitPerLive != null) {
+  if (skill.limitPerLive != null) {
     state.limitUsed.set(skill.id, (state.limitUsed.get(skill.id) ?? 0) + 1);
   }
   let gained = 0;
+  state.scoreCumAtSkillStart = state.scoreCum; // 【2026-09-01】ratio 基準（スキル開始時点）
   for (const effect of skill.effects) {
     if (effect.condition === "battle_only") {
       continue; // 効果行レベルでも通常ライブは除外（P3a 仕様）
+    }
+    // 【2026-09-02 ユーザー確定】行ごとの独立条件評価: 条件行は適用時に個別判定し、
+    // 不成立の行はスキップする（スキルは 1 行でも成立行があれば発動）。
+    // 根拠: T5 紗季 A2・S2 怜 A2 = 1 行目（無条件スコア）のみ発動で 2 行目以降は
+    // スキルウィンドウに表示されない／祭り千紗 P3 = 1 行目無条件で b1 前半発動。
+    if (
+      effect.condition !== "none" &&
+      !evaluateCondition(effect.condition, state.input.lane, states, ctx).ok
+    ) {
+      continue;
     }
     gained += applyEffect(state, effect, skill, ctx, states, events, beat, false, triggerLanes);
   }
@@ -1064,14 +1289,32 @@ function applyEffect(
   if (mapped !== null) {
     const targets = resolveTargets(effect.target, self, states, triggerLanes);
     for (const target of targets) {
+      // 【サンプル2実測確定 2026-09-02・ユーザー計算式】超化（add_effect_value_*・
+      // capExtend=true の効果行）は**増強型**: 対象レーンに同種バフのアクティブ・
+      // インスタンスが存在するときのみ、残りビート最大のインスタンスへ +stages 段
+      // （Peing確定: 表記段階数はダミーで一律+5段階分）を加算し、そのインスタンスの
+      // 生存中は同種バフの上限を capExtend（加算量）ぶん拡張する。
+      // **同種バフが存在しない場合は何もしない**。
+      // 実測根拠（S2 L3 の ccu・トレース検証済み。千紗P2 みんなで走った海岸通り =
+      // ccu8段[45b] を b1/b50/b100/b150 に付与、千紗A1 星見の海の波 超化(+5) は b14/b88/b148）:
+      //   b41 = 13 段（P2@b1 の 8 段へ A1@b14 が +5 → critF 2504 = ユーザー式どおり）
+      //   b100 = 0 段（P2@b50 分は b95 期限切れ・A1@b88 の +5 もそのインスタンスと共に消滅 → critF 1854）
+      //   b142 = 8 段（P2@b100 分のみ・A1@b148 は基底消滅後で不発 → critF 2254）
+      // 旧実装（独立 5 段インスタンス+capExtend）は b100 で ccu 5 を返し実測と矛盾した。
+      // T5 golden の vocal_up_extreme（fest-03-2・独立キー）は発動ビート（b2/b69/b156）の
+      // すべてで基底 vocal_up（逆襲）が有効なため加算値は同一・golden 不変。
+      if (effect.capExtend === true) {
+        amplifyLongestOfKey(target, mapped.key, effect.stages ?? 5);
+        continue;
+      }
       // 【ユーザー確定 2026-08-30】付与時に上限で切り捨てない（超過分は内部保持）。
       // 19段に+4段→内部23/表示20。期限切れ（インスタンス単位除去）後も内部段数が
       // 上限以上なら上限を維持する。クランプは aggregateBuffs（スナップショット時）のみ。
+      // capExtend=true の独立付与は存在しない（上で増強型へ分岐・types.ts の型は互換のため残置）。
       target.effects.push({
         type: effect.type,
         stages: effect.stages ?? 1,
         limitRelease: mapped.limitRelease || effect.limitRelease === true,
-        capExtend: effect.capExtend === true ? true : undefined,
         remainingBeats: effect.durationBeats == null ? PERMANENT_BEATS : effect.durationBeats,
         sourceSkillId: skill.id,
         // 付与レーン（与・○○延長/増強の「自分が付与した効果」判定用）。
@@ -1085,7 +1328,13 @@ function applyEffect(
   switch (effect.type) {
     case "score_get":
     case "score_get_by_score_ratio":
-      return settleScoreGet(self, effect, skill, ctx, states, events, beat);
+      // ratio の基準は self.scoreCumAtSkillStart（スキル開始時点・score_get 行の加算前）を参照
+      // 【2026-09-02】A スキルは写真の「Aスコア（固定値）」を平坦加算（b123: +92,262+121,429 等）。
+      return settleScoreGet(
+        self, effect, skill, ctx, states, events, beat,
+        undefined,
+        skill.kind === "A" ? self.input.aScoreAdditionalFlat ?? 0 : 0,
+      );
     case "stamina_recovery": {
       const value = effect.value ?? 0;
       for (const target of resolveTargets(effect.target, self, states, triggerLanes)) {
@@ -1151,9 +1400,12 @@ function applyEffect(
       }
       // 【T5実測確定】延長は「延長可能（残り<永久）な全インスタンス」へ加算
       // （longest 単一インスタンス説は L3 ビート系列の破綻で棄却・research/12 §T5-2b）
+      // 【2026-09-01 サンプル1 実測で修正】残り 0（期限切れ・処理順の端）は延長しない。
+      // サンプル1: b136 過去の私へ が rem=0 のテンションに +7 して b143 まで残存させる誤り
+      // （実測のテンションは b135 で終了・b136 以降は 0 = 二重延長にならない）。
       for (const target of resolveTargets(effect.target, self, states, triggerLanes)) {
         for (const active of target.effects) {
-          if (active.remainingBeats < PERMANENT_BEATS) {
+          if (active.remainingBeats > 0 && active.remainingBeats < PERMANENT_BEATS) {
             active.remainingBeats += value;
           }
         }
@@ -1289,6 +1541,34 @@ function amplifyLongestPerKey(state: LaneState, value: number, affectsExtreme: b
 }
 
 /**
+ * 指定キーの同種バフ・インスタンスのうち残りビート最大の 1 件へ段数を加算する。
+ * 【サンプル2実測確定 2026-09-02・ユーザー計算式】超化（add_effect_value_*）は
+ * この増強型であり、**同種バフのアクティブ・インスタンスが存在しない場合は不発**
+ * （独立インスタンスを新規付与しない。b100 の L3 ccu=0 実測が根拠・applyEffect 参照）。
+ * 上限解放変数型（limitRelease 実体）は段数を持たないため対象外（amplifyLongestPerKey と同一）。
+ * 加算時の上限切り捨てなし（超過分は内部保持・ユーザー確定 2026-08-30）。
+ */
+function amplifyLongestOfKey(target: LaneState, key: BuffKey, value: number): void {
+  let best: ActiveEffect | undefined;
+  for (const active of target.effects) {
+    const mapped = mapEffectToBuffKey(active.type);
+    if (mapped === null || mapped.key !== key || mapped.limitRelease) {
+      continue;
+    }
+    if (best === undefined || active.remainingBeats > best.remainingBeats) {
+      best = active;
+    }
+  }
+  if (best !== undefined) {
+    best.stages += value;
+    // 上限拡張量を受け取ったインスタンスに記録（生存中は同種バフの上限を拡張）。
+    // aggregateBuffs が capExtend の最大値を上限へ加算する（buffs.ts）。
+    const prevExt = typeof best.capExtend === "number" ? best.capExtend : 0;
+    best.capExtend = prevExt + value;
+  }
+}
+
+/**
  * 【Phase 9】ステルス（audience_amount_reduction）副効果のファンボーナス加算。
  * ステルス中のレーン**以外**の4レーンのファンボーナス（B3）に加算される
  * （research/01 §2.6「他4人のファンボーナス+（5段+1.8%…10段+3.7%）」）。
@@ -1308,6 +1588,22 @@ function stealthBonusOthers(selfLane: LaneNumber, states: readonly LaneState[]):
   return bonus;
 }
 
+/** 【2026-09-01 docs 引力式】他 4 レーンの {focus, stealth} スナップショット一覧 */
+function otherFocusStealth(
+  selfLane: LaneNumber,
+  states: readonly LaneState[],
+): ReadonlyArray<{ focus: number; stealth: number }> {
+  const out: Array<{ focus: number; stealth: number }> = [];
+  for (const s of states) {
+    if (s.input.lane === selfLane) {
+      continue;
+    }
+    const snap = snapshotOf(s);
+    out.push({ focus: snap.focus, stealth: snap.stealth });
+  }
+  return out;
+}
+
 /**
  * score_get / score_get_by_score_ratio の精算（§5.2・§5.3）。
  * スコアは発動者レーンのその時点のスナップショットで計算。
@@ -1320,19 +1616,25 @@ function settleScoreGet(
   states: readonly LaneState[],
   events: LaneScoreEventTrace[],
   beat: number,
+  ratioBasis?: number,
+  aScoreFlat?: number,
 ): number {
   const snap = snapshotOf(self);
   const isRatio = effect.type === "score_get_by_score_ratio";
   const powerPermil = effect.powerPermil ?? 1000;
+  // 【2026-09-01 たろう note 確定】「自身の獲得スコアは、この割合獲得より前の、自身の全獲得スコア」
+  // → 基準は RATIO 行の実行時点のレーン累積（同一 SP の score_get 行（前の行）を含む）。
+  const ratioBasisScoreCum = ratioBasis ?? self.scoreCum;
 
   let basicScore: number;
   let effectivePower: number;
   let basicScoreRaw: number | undefined;
   if (isRatio) {
-    // 割合型: 基本スコア = 累積総スコア × SkillPower（切捨て）、コンボ/ファン不適用
-    // 【T5実測確定: 基準はレーン累積+A行加算後（b103検算 basic=533,472,897=4,445,607,475×0.12）】
-    basicScoreRaw = ctx.cumulative.value;
-    basicScore = floorDiv(ctx.cumulative.value * powerPermil, 1000);
+    // 割合型: 基本スコア = 発動レーン自身の累積獲得スコア × SkillPower（切捨て）、コンボ/ファン不適用
+    // 【2026-09-01 確定】「自身の獲得スコアの◯%」= 発動者のレーン累積（「自身」）。
+    // T5 b103 検算 basic=533,472,897=4,445,607,475×0.12 もレーン累積（4,445,607,475 = L3 累積）。
+    basicScoreRaw = ratioBasisScoreCum;
+    basicScore = floorDiv(ratioBasisScoreCum * powerPermil, 1000);
     effectivePower = 1000;
   } else {
     const live = mulPermil(
@@ -1346,27 +1648,31 @@ function settleScoreGet(
           ? ctx.input.stage.skillWeightsPermil.active
           : 1000; // P/フォト: 重みデータがないため 1000（§5.3【Estimate】）
     basicScore = mulPermil(live, weight);
-    // type36 scaling（perStagePermil が null の間はスケーリングなし・P3c でフィッティング）
-    // perStagePermil は T5実測フィット値（2.5 等、小数になり得る）のため素の乗算で計算する
-    const scaling = effect.scaling;
-    if (scaling != null && scaling.perStagePermil != null) {
-      const refStages = scalingStages(scaling.ref, snap);
-      effectivePower = Math.floor((powerPermil * (1000 + scaling.perStagePermil * refStages)) / 1000);
-    } else {
-      effectivePower = powerPermil;
-    }
+    // type36 scaling（research/type36_coefficients.md の係数表 / golden フィット値で計算）
+    // perStagePermil は T5実測フィット値（2.5 等、小数になり得る）のため素の乗算で計算する。
+    // 丸めは「0.1%（=permil）切り捨て」= Math.floor（docs gid=806980235 明記と一致）。
+    effectivePower = scaledSkillPowerPermil(powerPermil, effect.scaling, snap, self, ctx);
   }
 
   const kind: B1Kind =
     skill.kind === "A" ? "active" : skill.kind === "SP" ? "special" : "passive";
   const b1 = b1Permil(snap, kind, self.input.scoreBonusPct);
-  const comboF = isRatio ? 1000 : comboFactorPermil(self.combo, snap.combo_score_up, ctx.comboTable);
+  const comboF = isRatio
+    ? 1000
+    : comboFactorPermil(ctx.displayCombo.value, snap.combo_score_up);
   // 【Phase 9】ステルス副効果: 他レーンのステルス段数ぶんファンボーナスに加算
   // （research/01 §2.6・peing id=1188720397。割合型はファン不適用のため 1000 のまま）
   const fanF = isRatio
     ? 1000
-    : fanFactorPermil(ctx.input.fanFactorPermil, snap.focus) +
-      stealthBonusOthers(self.input.lane, states);
+    : ctx.input.fanBaseCount !== undefined
+      ? fanFactorPermilByAttraction(
+          ctx.input.fanBaseCount,
+          snap.focus,
+          snap.stealth,
+          otherFocusStealth(self.input.lane, states),
+        )
+      : fanFactorPermil(ctx.input.fanFactorPermil, snap.focus) +
+        stealthBonusOthers(self.input.lane, states);
   const rand = ctx.input.rng.nextScoreRoll();
   // 【T5実測確定】フォト行はクリティカル判定の対象外（b47/b132/b125 のポップが
   // 全て非critの達成帯に成立。crit適用では r≈200-930 になり範囲外）。
@@ -1387,7 +1693,12 @@ function settleScoreGet(
     critFactorPermil: critF,
     roundingPolicy: ctx.policy,
   });
-  ctx.cumulative.value += score;
+  // 【2026-09-02 ユーザー計算式確定】写真の「Aスコア（固定値）」は A スキルのスコアに平坦加算
+  // （b123: +92,262+121,429 = 1,931,275、b66/b176/b40/97/130 も同様に整合。b40/97/130 の
+  //   千紗ビームも 177,075 で 98.3%/102.6%/101.7% に収束）
+  const finalScore = score + (isRatio ? 0 : aScoreFlat ?? 0);
+  ctx.cumulative.value += finalScore;
+  self.scoreCum += finalScore;
   events.push({
     lane: self.input.lane,
     sourceKind: skill.kind,
@@ -1400,9 +1711,9 @@ function settleScoreGet(
     ratioBaseCumScore: isRatio ? basicScoreRaw : undefined,
     randPermil: rand,
     critFactorPermil: critF,
-    gainedScore: score,
+    gainedScore: finalScore,
   });
-  return score;
+  return finalScore;
 }
 
 /**
@@ -1411,7 +1722,11 @@ function settleScoreGet(
  * 未対応の ref は throw（skills_master パーサーは未対応 ref を scaling=null で出力する）。
  */
 const SCALING_REF_KEYS: ReadonlyMap<string, readonly BuffKey[]> = new Map([
-  ["vocal_up_stages", ["vocal_up", "vocal_up_extreme"]],
+  // 【2026-09-01・簡易検証で確定】type36 の参照段数は「ボーカル上昇」のみ。
+  // ボーカル上昇超化（vue）は参照に含まれない（星見プロ A: b51 19段 で k=5.9%・
+  // 成宮すず SP: b143 7段（vue 10段 は無視）で k=6% と整合。T5 旧フィットの
+  // 「vue 込み 25/30 段」は誤りと判明）。超化自体はステータス +25%（vue=+250‰・別経路）。
+  ["vocal_up_stages", ["vocal_up"]],
   ["dance_up_stages", ["dance_up"]],
   ["visual_up_stages", ["visual_up"]],
   ["dance_boost_stages", ["dance_boost"]],
@@ -1434,6 +1749,81 @@ function scalingStages(ref: string, snap: BuffSnapshot): number {
     throw new Error(`settleScoreGet: unsupported scaling ref: ${ref}`);
   }
   return keys.reduce((sum, k) => sum + snap[k], 0);
+}
+
+/**
+ * type36 スケーリングを適用した SkillPower permil を返す。
+ *
+ * 式と係数の出典は research/type36_coefficients.md（やるキ士docs gid=806980235 / Peing /
+ * T5実測フィットの突合表）。丸めは「0.1%（=permil）切り捨て」= Math.floor。
+ * - linear（既定）: power × (1000 + perStagePermil × 参照段数) / 1000
+ * - comboLessQuad: power × (1000 + amplitude×((max(0, reference−combo)/reference)^exponent))/1000
+ *   参照コンボは「発動前のコンボ数」= このノート処理前の表示コンボ（A/SP は
+ *   displayCombo が当該ノートの前の値、P はビート内ノート処理後の値〔§9 の順序どおり〕）。
+ * - comboMoreLinear: power × (1000 + perComboPermil×コンボ) / 1000
+ * - effectCount: 自身の「強化効果の種類数」（スナップショットで段>0 のバフ種を計数。
+ *   combo_continue/stealth は継続・隠蔽効果のため除外【Estimate】）
+ * - staminaRatioQuad: 発動後のスタミナ率²（remainingRatio=false なら消費率²）
+ * - staminaConsumedLinear: 累積消費スタミナ（本エンジンはスキル/フォト消費のみ計上）
+ * - skillCountLinear: 自身の成功発動数（P/フォト/A/SP を計上）
+ */
+export function scaledSkillPowerPermil(
+  powerPermil: number,
+  scaling: SkillEffect["scaling"],
+  snap: BuffSnapshot,
+  self: LaneState,
+  ctx: EngineCtx,
+): number {
+  if (scaling == null) return powerPermil;
+  const formula = scaling.formula ?? "linear";
+  switch (formula) {
+    case "linear": {
+      if (scaling.ref == null || scaling.perStagePermil == null) return powerPermil;
+      const refStages = scalingStages(scaling.ref, snap);
+      return Math.floor((powerPermil * (1000 + scaling.perStagePermil * refStages)) / 1000);
+    }
+    case "comboLessQuad": {
+      const reference = scaling.reference ?? 150;
+      const amplitude = scaling.amplitudePermil ?? 0;
+      const exponent = scaling.exponent ?? 2;
+      const combo = ctx.displayCombo.value;
+      const t = Math.max(0, reference - combo) / reference;
+      return Math.floor((powerPermil * (1000 + amplitude * Math.pow(t, exponent))) / 1000);
+    }
+    case "comboMoreLinear": {
+      const per = scaling.perComboPermil ?? 0;
+      const combo = ctx.displayCombo.value;
+      return Math.floor((powerPermil * (1000 + per * combo)) / 1000);
+    }
+    case "effectCount": {
+      const per = scaling.perTypePermil ?? 0;
+      let count = 0;
+      for (const [key, value] of Object.entries(snap)) {
+        if (typeof value === "number" && value > 0 && key !== "combo_continue" && key !== "stealth") {
+          count += 1;
+        }
+      }
+      const cap = scaling.maxTypes ?? Number.POSITIVE_INFINITY;
+      count = Math.min(count, cap);
+      return Math.floor((powerPermil * (1000 + per * count)) / 1000);
+    }
+    case "staminaRatioQuad": {
+      const max = scaling.maxPermil ?? 0;
+      const remaining = self.stamina / Math.max(1, self.maxStamina);
+      const ratio = scaling.remainingRatio === false ? 1 - remaining : remaining;
+      return Math.floor((powerPermil * (1000 + max * ratio * ratio)) / 1000);
+    }
+    case "staminaConsumedLinear": {
+      const per = scaling.perStaminaPermil ?? 0;
+      return Math.floor((powerPermil * (1000 + per * self.staminaSpent)) / 1000);
+    }
+    case "skillCountLinear": {
+      const per = scaling.perCountPermil ?? 0;
+      return Math.floor((powerPermil * (1000 + per * self.activated)) / 1000);
+    }
+    default:
+      throw new Error(`settleScoreGet: unsupported scaling formula: ${formula}`);
+  }
 }
 
 /**
@@ -1487,22 +1877,22 @@ function settleBeatNote(
     const basic = Math.floor((basicSum * BEAT_LAMBDA_NUM) / BEAT_LAMBDA_DEN);
     // ビート B1: score_up は 25‰/段（SCORE_UP_PER_STAGE_PERMIL・T5確定）で乗る
     const b1 = b1Permil(snap, "beat", state.input.scoreBonusPct);
-    // 【T5実測確定】ビートCBの基準コンボは表示コンボ（=beat-1、A/SPビートも含む）。
-    // L1単独検証: 表示基準で 129/130 が r∈[945,1055] に収束（レーン別基準は 118/130）。
-    const comboCount = note.beat - 1;
-    const baseX = baseComboBonusPermil(comboCount, ctx.comboTable);
-    // 【T5実測フィット確定】csu はコンボボーナスXを強化し（X_eff = X×(1000+amp×csu)/1000）、
-    // 平係数 c を持つ（BEAT_CB_CSU_PERMIL / BEAT_CB_CSU_AMP_PERMIL 参照）。
-    const xEff = Math.floor(
-      (baseX * (1000 + BEAT_CB_CSU_AMP_PERMIL * snap.combo_score_up)) / 1000,
-    );
-    const comboF = Math.floor(
-      ((1000 + xEff) * (1000 + BEAT_CB_CSU_PERMIL * snap.combo_score_up)) / 1000,
-    );
+    // 【2026-09-01 実測メモ（IMG_1512）で修正】ビート CB も「1000 + 2.5×表示コンボ‰」。
+    // 旧式（閾値テーブル × csu 連成 BEAT_CB_CSU_*）は csu を B2 に二重乗算しており
+    // 実測（B2 = 1725‰ @cb 290・csu は B1 側のみ）と不一致 → 全種目 B2 は
+    // src/formula/combo.ts の comboFactorPermil（B1 が csu を 25‰/段 で持つ）+ csu なし。
+    const comboF = comboFactorPermil(ctx.displayCombo.value, snap.combo_score_up);
     // 【Phase 9】ステルス副効果（他レーンの stealth 段数 → ファンボーナス加算）
     const fanF =
-      fanFactorPermil(ctx.input.fanFactorPermil, snap.focus) +
-      stealthBonusOthers(state.input.lane, states);
+      ctx.input.fanBaseCount !== undefined
+        ? fanFactorPermilByAttraction(
+            ctx.input.fanBaseCount,
+            snap.focus,
+            snap.stealth,
+            otherFocusStealth(state.input.lane, states),
+          )
+        : fanFactorPermil(ctx.input.fanFactorPermil, snap.focus) +
+          stealthBonusOthers(state.input.lane, states);
     const rand = ctx.input.rng.nextScoreRoll();
     const crit = resolveCritical(ctx, snap, note.beat, state.input.lane);
     const critF = crit
@@ -1519,6 +1909,7 @@ function settleBeatNote(
       roundingPolicy: ctx.policy,
     });
     ctx.cumulative.value += score;
+    state.scoreCum += score;
     events.push({
       lane: state.input.lane,
       sourceKind: "beat",
@@ -1578,10 +1969,7 @@ function settleSkillNote(
       success: false,
       failReason: "no_skill",
     });
-    // MISS: コンボリセット（コンボ継続で免除・research/01 §2.2）
-    if (snapshotOf(state).combo_continue === 0) {
-      state.combo = 0;
-    }
+    applyComboFailOnNote(state, ctx, states);
     return;
   }
   const snap = snapshotOf(state);
@@ -1619,20 +2007,38 @@ function settleSkillNote(
       success: false,
       failReason: blockedStamina ? "stamina_short" : "in_ct",
     });
-    if (snapshotOf(state).combo_continue === 0) {
-      state.combo = 0;
-    }
+    applyComboFailOnNote(state, ctx, states);
     return;
   }
   // 発動: スタミナ消費 → CT設定 → 効果適用（research/13 §5.2・§6。上から順【Confirmed】）
   state.stamina -= costOfChosen;
+  state.staminaSpent += costOfChosen;
+  state.activated += 1;
   if (chosen.ct != null) {
     // 【T5実測確定】CT は満タンでセット（tryActivate のコメント参照。ステップ9減算に委ねる）
     state.skillCt.set(chosen.id, chosen.ct);
   }
   let gained = 0;
-  for (const effect of chosen.effects) {
+  state.scoreCumAtSkillStart = state.scoreCum; // 【2026-09-01】ratio 基準（A/SP/フォト/ライブボーナス開始時点）
+  // 【2026-09-02 サンプル1 ユーザー計算式で確定】A/SP の効果行はマスタ順のまま処理する。
+  // スキル説明どおり「スコア獲得」→「ステータスアップ」の順で、スコアの基本値は
+  // 自身のステータス系バフ（vb 等）の**適用前**のステータスを参照する（PRE）。
+  //   b123 の「夏を先取りお祭り騒ぎ」: ステータス 296,208（PRE、自身 vb4 適用前）でスコア
+  //   （→ 296,208×3.6×1.286×1.002×1.25+92,262+121,429 = 1,931,275、実測 1,843,767 は ×0.955 で ±5% 内）
+  //   b66/b176 も同様（PRE。以前の POST 仮説は誤りと撤回）
+  // また写真の「Aスコア（固定値）」は A スキルのスコアに**平坦加算**される（b123: +92,262+121,429）
+  const effectsOrdered = [...chosen.effects];
+  for (const effect of effectsOrdered) {
     if (effect.condition === "battle_only") {
+      continue;
+    }
+    // 【2026-09-02 ユーザー確定】行ごとの独立条件評価（tryActivate のループと同一規則）:
+    // T5 紗季 A2 / S2 怜 A2 = 1 行目（無条件スコア）のみ発動し、レーン属性不一致の
+    // 2 行目以降（超化・ccu）はスキルウィンドウに表示されない＝適用されない。
+    if (
+      effect.condition !== "none" &&
+      !evaluateCondition(effect.condition, laneNum, states, ctx).ok
+    ) {
       continue;
     }
     // A/SP（ステップ8）付与の段階型効果は付与ビートのステップ10減算をスキップする
@@ -1649,7 +2055,33 @@ function settleSkillNote(
     staminaCost: costOfChosen,
     gainedScore: gained > 0 ? gained : undefined,
   });
-  // 成功: コンボ+1（§5.2）
+  // 成功: コンボ+1（§5.2）。表示コンボ・条件用カウンタも +1
   state.combo += 1;
   ctx.globalCombo.value += 1;
+  ctx.displayCombo.value += 1;
+}
+
+/**
+ * A/SP ノート FAIL 時のコンボ処理（サンプル1実測確定 2026-09-01）。
+ * - コンボ継続バフなし: 全レーンのコンボ・条件用カウンタ（globalCombo）・表示コンボを
+ *   0 にリセット（サンプル1 b56: L2 SP FAIL で COMBO 55→0。以後 b-56。過去の私へ
+ *   (combo>=80) が b136 で発火＝リセット後の表示コンボ 80 と整合）。
+ * - コンボ継続バフあり（T5 b49 実測）: リセットされず、表示コンボは +1 して消化
+ *   （T5 b49: COMBO 48→49。レーン別コンボ自体は加算しないため T5 ゴールデンの
+ *   CB 係数は不変）。
+ */
+function applyComboFailOnNote(
+  failing: LaneState,
+  ctx: EngineCtx,
+  states: readonly LaneState[],
+): void {
+  if (snapshotOf(failing).combo_continue === 0) {
+    for (const s of states) {
+      s.combo = 0;
+    }
+    ctx.globalCombo.value = 0;
+    ctx.displayCombo.value = 0;
+  } else {
+    ctx.displayCombo.value += 1;
+  }
 }

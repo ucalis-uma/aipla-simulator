@@ -1,0 +1,64 @@
+{
+ "note": "type36（条件参照スコア）のスキル別係数上書き表。家族既定式（条件参照型の既定倍率）は tools/importers/build_data_phase6.mjs の CONDITIONAL_SCALE_DEFAULTS にあり、本表の skillOverrides がそれを上書きする（Peing / T5 フィット値）。管理・突合表: research/type36_coefficients.md",
+ "skillOverrides": {
+  "sk-ai-05-fest-00-1": {
+   "skillName": "それが勇気になるから",
+   "scaling": {
+    "ref": "focus_stages",
+    "perStagePermil": 70,
+    "formula": "linear",
+    "fitted": false
+   },
+   "confidenceNote": "Confirmed(docs-806980235 + peing-1187772111: Lv6 1130%×(1+0.07×10)=1921% → +7%/段 【2026-09-01 ユーザー確認】)。サンプル1 b143 の逆算（700% 相当）とは未解明の差が残る（Lv5 係数・逆算側の要因どちらかは未確定）",
+   "source": "peing-1187772111",
+   "confidence": "Confirmed"
+  },
+  "sk-ai-05-fest-00-2": {
+   "skillName": "新たな衣装と新たな決意",
+   "scaling": {
+    "ref": "combo_prior",
+    "perStagePermil": null,
+    "formula": "comboLessQuad",
+    "amplitudePermil": 2000,
+    "reference": 150,
+    "exponent": 2
+   },
+   "confidenceNote": "Confirmed(docs-806980235: 200%×((150−発動前コンボ)/150)²【基準値 150 は docs が正・2026-09-01 ユーザー確認】)。係数 200% についてサンプル1 の 3 点逆算(1.18/1.08/0.93 倍相当)は小さい値を示すが、逆算側の未解明要因（crit係数/fan）を踏まえると要較正扱いを維持",
+   "source": "sheet-806980235",
+   "confidence": "Confirmed"
+  },
+  "sk-chs-05-fest-03-2": {
+   "skillName": "星見プロ全国ツアーin愛知",
+   "scaling": {
+    "ref": "vocal_up_stages",
+    "perStagePermil": 60,
+    "formula": "linear",
+    "fitted": false
+   },
+   "confidenceNote": "Confirmed(docs-806980235 +6%/段 + 簡易検証 2026-09-01: 星見プロ A=0段/19段 の b51 イベント比から k=5.9%、成宮すず SP=b143(voc_up7段) から k=6%(r=1.041)。参照はボーカル上昇のみ（超化は含まない）。※ T5 ゴールデンの旧フィット(3.0‰/11.0‰・超化再エンコード込み ref 25/30)は誤りと判明 — T5 再検証が必要",
+   "source": "docs-806980235 + simple-sample-2026-09-01"
+  },
+  "sk-chs-05-fest-03-1": {
+   "skillName": "『成宮すず』なのですわ！",
+   "scaling": {
+    "ref": "vocal_up_stages",
+    "perStagePermil": 60,
+    "formula": "linear",
+    "fitted": false
+   },
+   "confidenceNote": "Confirmed(docs-806980235 +6%/段 + 簡易検証 2026-09-01: b143(voc_up7段) 22.5M = モデル21,608,759(r=1.041)。参照はボーカル上昇のみ（超化 10段 は非参照）。T5 旧フィット 11‰/段 は誤り",
+   "source": "docs-806980235 + simple-sample-2026-09-01"
+  },
+  "sk-rui-02-eve-01-2": {
+   "skillName": "瑠依の予感",
+   "scaling": {
+    "ref": "vocal_up_stages",
+    "perStagePermil": 60,
+    "formula": "linear",
+    "fitted": false
+   },
+   "confidenceNote": "Confirmed(docs-806980235 +6%/段 + 簡易検証 2026-09-01: 28%スコア(280%×1.0/×2.14/×2.2)が 0 段/19段/20段 の実測と整合（K表示の丸め精度内）。T5 の星見プロ(0.3%/段)とは別係数=スキル別係数であることを実証)",
+   "source": "docs-806980235 + simple-sample-2026-09-01"
+  }
+ }
+}

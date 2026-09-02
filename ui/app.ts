@@ -8,7 +8,8 @@
  *   マスタ解析スキル（data/skills_master.json）とレベル/レアリティを自動セット。
  * - 編成の名前付き保存/読込（LocalStorage）・JSON エクスポート/インポート。
  * - 出力: 確定値（乱数中立）/ Monte Carlo 統計 / レーン別内訳 / スコア推移グラフ /
- *   バフ推移ヒートマップ / ビート別タイムライン表 / 確度タグ。
+ *   バフ推移ヒートマップ / ビート別タイムライン表（各ビート「式」ボタン → 計算式内訳（JHTV5213 型）） /
+ *   確度タグ。
  */
 import {
   buildSimulateInput,
@@ -23,6 +24,7 @@ import {
   NeutralRng,
   defaultPhotoTemplates,
   grantStructuredKey,
+  isPhotoEquipDuplicate,
   myPhotoToEquipEntry,
   myPhotoToSkillDef,
   parseGrantKey,
@@ -38,6 +40,8 @@ import {
   type SkillEffect,
   type LaneNumber,
   type TimelineResult,
+  type BeatTrace,
+  type LaneScoreEventTrace,
   type BuffKey,
   type LaneBreakdownEntry,
   type StageWeights,
@@ -139,6 +143,21 @@ interface UiData {
 const DATA: UiData = JSON.parse(
   (document.getElementById("embedded-data") as HTMLScriptElement).textContent ?? "{}",
 );
+
+/**
+ * 【Phase 8-B10 追補3】T5 実測サンプル（verification_data_v2.json）のレーン別フォト名。
+ * golden フォトスキル（photo-L*）は「装着位置のフォトが T5 実測フォトと同一名」の場合のみ
+ * 表示・適用する（汎用計算機として T5 由来スキルが他編成に混入・表示されないように）。
+ * マイフォト帳由来のフォトは【マイフォト】接頭辞のため一致しない。
+ */
+const GOLDEN_PHOTO_NAMES: ReadonlyArray<ReadonlyArray<string>> = DATA.sampleDeck.characters.map(
+  (c) => c.photos.map((p) => p.name),
+);
+
+/** golden フォトスキルがこのレーンのフォトに適用されるか（T5 実測フォト名との一致判定） */
+function goldenPhotoSkillApplies(laneIdx: number, itemName: string | undefined): boolean {
+  return itemName !== undefined && (GOLDEN_PHOTO_NAMES[laneIdx] ?? []).includes(itemName);
+}
 
 // ---------------------------------------------------------------------------
 // ステージ/譜面の動的切替（Phase 6: 全ステージ・全譜面対応）
@@ -1189,8 +1208,25 @@ const PHOTO_SKILL_TARGETS: Array<{ v: string; label: string }> = [
   { v: "vocal_type_3", label: "ボーカルタイプ3人" },
   { v: "dance_type_1", label: "ダンスタイプ1人" },
   { v: "visual_type_1", label: "ビジュアルタイプ1人" },
+  // <属性>レーンN人（サンプル1実測で確定した *_lane_* ファミリー）
+  { v: "vocal_lane_3", label: "ボーカルレーン3人" },
+  { v: "vocal_lane_2", label: "ボーカルレーン2人" },
+  { v: "vocal_lane_1", label: "ボーカルレーン1人" },
+  { v: "dance_lane_3", label: "ダンスレーン3人" },
+  { v: "visual_lane_3", label: "ビジュアルレーン3人" },
   // 条件付きスキルの「条件を満たした対象」（例: 明るく君を照らしたい = 集目状態の1人へ延長）
   { v: "trigger", label: "条件を満たした対象（誰かが集目状態の時・その人 等）" },
+];
+
+/**
+ * フォトの装着制限（スキルテキストの <サポータータイプのみ> 等・サンプル1実測で確定）。
+ * 制約不一致のロールに装着すると常時不発になる（engine restrictionAllows）。
+ */
+const RESTRICTION_OPTIONS: Array<{ v: string; label: string }> = [
+  { v: "", label: "制限なし" },
+  { v: "supporter_only", label: "<サポータータイプのみ>" },
+  { v: "buffer_only", label: "<バッファータイプのみ>" },
+  { v: "scorer_only", label: "<スコアラータイプのみ>" },
 ];
 
 /**
@@ -1289,6 +1325,7 @@ const PHOTO_SKILL_CONDITIONS: Array<{ v: string; label: string }> = [
   { v: "someone_focus", label: "誰かが集目状態" },
   { v: "someone_stealth", label: "誰かがステルス状態" },
   { v: "someone_recovered", label: "誰かがスタミナ回復を受けた時" },
+  { v: "someone_before_special", label: "誰かがSPスキル発動前の時（前半発動・対象はSPレーン）" },
   { v: "someone_stamina<=30", label: "誰かがスタミナ30%以下" },
   { v: "someone_stamina<=50", label: "誰かがスタミナ50%以下" },
   { v: "someone_stamina<=70", label: "誰かがスタミナ70%以下" },
@@ -1428,6 +1465,9 @@ function photoSkillHtml(s: PhotoSkillDef): string {
       <label class="inline">CT（空欄=管理なし）</label><input type="number" data-ps="ct" step="1" value="${s.ct ?? ""}">
       <label class="inline">消費スタミナ（空欄=なし）</label><input type="number" data-ps="cost" step="1" value="${s.staminaCost ?? ""}">
       <label class="inline"><input type="checkbox" data-ps="limit"${(s.limitPerLive ?? 0) > 0 ? " checked" : ""}> ライブ中1回のみ</label>
+      <select data-ps="restriction" title="装着制限（制限不一致のロールでは発動しない）">${RESTRICTION_OPTIONS.map(
+        (o) => `<option value="${o.v}"${(s.restriction ?? "") === o.v ? " selected" : ""}>${o.label}</option>`,
+      ).join("")}</select>
       <button class="mini-btn" data-ps-remove title="スキルを外してステータス5枠のフォトに戻す（押し間違いの取り消し）">↩ スキルなしに戻す</button>
     </div>`;
 }
@@ -1641,6 +1681,10 @@ function bindPhotoEditorEvents(): void {
   });
   skillSel('[data-ps="buffkey"]', (v) => {
     if (photoDraft?.skill) photoDraft.skill.buffKey = v === "" ? null : v;
+  });
+  // 装着制限（<サポータータイプのみ> 等・サンプル1実測で確定）
+  skillSel('[data-ps="restriction"]', (v) => {
+    if (photoDraft?.skill) photoDraft.skill.restriction = v === "" ? null : v;
   });
   skillNum('[data-ps="ct"]', (_v, raw) => {
     if (photoDraft?.skill) photoDraft.skill.ct = raw === "" ? null : Math.round(Number(raw));
@@ -2834,13 +2878,17 @@ function photoEquipHtml(l: LaneUiState, laneIdx: number): string {
           return `<span class="fx ${cls}">${esc(label)} <b>${esc(String(s.type === "pct" ? "+" + s.value + "%" : "+" + s.value))}</b></span>`;
         })
         .join("");
-      // 装備されている i 番目のフォトに対応する実測（golden）フォトスキル
+      // 装備されている i 番目のフォトに対応する実測（golden）フォトスキル。
+      // 【Phase 8-B10 追補3】T5 実測フォト（同レーン内の名前一致）がある位置のみ表示。
+      // 汎用編成では T5 由来スキルの行自体が出ない
       const golden = goldenPhotos.find((s) => s.photoIndex === i + 1);
+      const goldenHtml =
+        golden !== undefined && goldenPhotoSkillApplies(laneIdx, item.name) ? goldenSkillHtml(golden) : "";
       return `<div class="photo-eq-row">
         <span class="chip">通常</span>
         <b class="photo-eq-name">${esc(item.name || `(フォト${i + 1})`)}</b>
         <span class="fx-row photo-eq-summary">${structuredChips || `<span class="dim">（効果なし）</span>`}</span>
-        ${golden ? goldenSkillHtml(golden) : ""}
+        ${goldenHtml}
         <span class="photo-row-ops">
           <button class="mini-btn" data-photo-json-rm="${i}" title="このフォトをJSONから削除">✕</button>
         </span>
@@ -3103,6 +3151,7 @@ function updateDeckPreviews(): void {
       mentalOverride: mentalOverride(),
       disabledSkillIds: collectDisabled(),
       userPhotoSkills: collectUserPhotoSkills(),
+      goldenPhotoNames: GOLDEN_PHOTO_NAMES,
     });
     built.base.lanes.forEach((laneInput) => {
       const preview = $(`#deck-preview-${laneInput.lane}`);
@@ -3647,6 +3696,7 @@ function runSimulation(): void {
       disabledSkillIds: collectDisabled(),
       baseCritRate: state.critRate,
       userPhotoSkills: collectUserPhotoSkills(),
+      goldenPhotoNames: GOLDEN_PHOTO_NAMES,
     });
     const base = built.base;
 
@@ -3914,12 +3964,149 @@ function renderTimelineTable(): void {
         })
         .join(" ");
       return `<tr><td>${bt.beat}</td><td><span class="kind kind-${bt.noteType === 1 ? "beat" : bt.noteType === 2 ? "A" : "SP"}">${TYPE_LABEL[bt.noteType]}</span></td>
-        ${cells}<td class="num">${fmtScore(gained)}</td><td class="num">${fmtScore(cum)}</td><td class="acts">${acts}</td></tr>`;
+        ${cells}<td class="num">${fmtScore(gained)}</td><td class="num">${fmtScore(cum)}</td><td class="acts">${acts}</td>
+        <td class="fml-cell"><button class="fml-btn" data-beat="${bt.beat}" title="計算式の内訳を展開">式</button></td></tr>
+        <tr class="fml-row" data-beat="${bt.beat}" hidden><td colspan="12">${renderBeatFormulas(bt)}</td></tr>`;
     })
     .join("");
   $("#timeline-table").innerHTML = `<thead><tr>
-    <th>beat</th><th>種別</th><th>L1</th><th>L2</th><th>L3</th><th>L4</th><th>L5</th><th>獲得</th><th>累積</th><th>発動</th>
+    <th>beat</th><th>種別</th><th>L1</th><th>L2</th><th>L3</th><th>L4</th><th>L5</th><th>獲得</th><th>累積</th><th>発動</th><th>式</th>
   </tr></thead><tbody>${rows}</tbody>`;
+}
+
+// ---------------------------------------------------------------------------
+// ビート別の計算式内訳（ユーザー手書き式（JHTV5213 型）を再現）
+// ---------------------------------------------------------------------------
+
+/** コンボスコアボーナスの表値（‰）。research/sheets/combo_bonus.csv（docs gid=0） */
+function comboTableBasePermil(combo: number): number {
+  if (combo >= 100) return 500;
+  if (combo >= 70) return 300;
+  if (combo >= 50) return 250;
+  if (combo >= 40) return 200;
+  if (combo >= 30) return 150;
+  if (combo >= 20) return 100;
+  if (combo >= 10) return 50;
+  return 0;
+}
+
+function comboRowLabel(combo: number): string {
+  if (combo >= 100) return "100+";
+  if (combo >= 70) return "70-99";
+  if (combo >= 50) return "50-69";
+  if (combo >= 40) return "40-49";
+  if (combo >= 30) return "30-39";
+  if (combo >= 20) return "20-29";
+  if (combo >= 10) return "10-19";
+  return "0-9";
+}
+
+/** A/SP イベントのスナップショット（スコア計算時点の実効段数） */
+function snapOf(bt: BeatTrace, lane: number): Record<BuffKey, number> | undefined {
+  return bt.buffSnapshots[lane - 1];
+}
+
+/** B1 の「フォト% + エール%」（＝エンジンの B1 − 1000 − Σ(段×段率)）。※残差で厳密値 */
+function b1PhotoYalePct(e: LaneScoreEventTrace, snap: Record<BuffKey, number> | undefined): number {
+  const aUp = (snap?.a_skill_score_up ?? 0) * 50;
+  const sUp = (snap?.score_up ?? 0) * 25;
+  const ten = (snap?.tension_up ?? 0) * 50;
+  const spUp = (snap?.sp_skill_score_up ?? 0) * 30;
+  const pUp = (snap?.p_skill_score_up ?? 0) * 100;
+  return (e.b1Permil - 1000 - aUp - sUp - ten - spUp - pUp) / 10;
+}
+
+/** クリティカル係数の「フォト% + エール%」残差 */
+function critPhotoYalePct(e: LaneScoreEventTrace, snap: Record<BuffKey, number> | undefined): number {
+  return (e.critFactorPermil - 1500 - (snap?.critical_coeff_up ?? 0) * 50) / 10;
+}
+
+function ratioPercentOf(bt: BeatTrace, e: LaneScoreEventTrace): number | undefined {
+  const act = bt.activations.find((a) => a.lane === e.lane && a.kind === e.sourceKind);
+  const skill =
+    (act &&
+      (DATA.data.skillsGolden.find((s) => s.id === act.skillId) ??
+        Object.values((DATA.data.skillsByCard as unknown as Record<string, SkillDef[]>) ?? {})
+          .flat()
+          .find((s) => s.id === act.skillId))) ||
+    undefined;
+  return (
+    skill?.effects.find((fx) => fx.type === "score_get_by_score_ratio")?.powerPermil ?? undefined
+  );
+}
+
+function skillNameOf(bt: BeatTrace, e: LaneScoreEventTrace): string {
+  const act = bt.activations.find((a) => a.lane === e.lane && a.kind === e.sourceKind);
+  if (!act) return e.sourceKind;
+  const skill =
+    DATA.data.skillsGolden.find((s) => s.id === act.skillId) ??
+    Object.values((DATA.data.skillsByCard as unknown as Record<string, SkillDef[]>) ?? {})
+      .flat()
+      .find((s) => s.id === act.skillId);
+  return skill ? skill.name : act.skillId;
+}
+
+/** 同一ビート全イベントの計算式一覧（HTML） */
+function renderBeatFormulas(bt: BeatTrace): string {
+  if (bt.events.length === 0) return `<span class="dim">スコアイベントなし</span>`;
+  return `<div class="fml-list">${bt.events
+    .map((e) => `<div class="fml-event">${renderEventFormula(bt, e)}</div>`)
+    .join("")}</div>`;
+}
+
+function renderEventFormula(bt: BeatTrace, e: LaneScoreEventTrace): string {
+  const snap = snapOf(bt, e.lane);
+  const crit = e.critFactorPermil > 1000;
+  const rand = e.randPermil / 1000;
+  const pFmt = (p: number): string => (p / 10).toFixed(1);
+  const critTxt = crit
+    ? `クリティカル ×${pFmt(e.critFactorPermil)}（(100+50+係数${snap?.critical_coeff_up ?? 0}×5+フォト+エール${critPhotoYalePct(e, snap).toFixed(1)}）`
+    : `クリティカルなし → ×1.0（クリ時は (100+50+係数${snap?.critical_coeff_up ?? 0}×5+フォト+エール) が係数に乗る）`;
+
+  switch (e.sourceKind) {
+    case "A":
+    case "SP": {
+      const kindLabel = e.sourceKind === "A" ? "A" : "SP";
+      const upStages = e.sourceKind === "A" ? (snap?.a_skill_score_up ?? 0) : (snap?.sp_skill_score_up ?? 0);
+      const powerPct = e.skillPowerPermil ? (e.skillPowerPermil / 10).toFixed(1) : "0";
+      const powerExpr = `(${powerPct}×(100+${upStages}×6))/100`;
+      const b1 = pFmt(e.b1Permil);
+      const comboPct = e.comboFactorPermil / 1000;
+      const fanPct = e.fanFactorPermil / 1000;
+      const csu = snap?.combo_score_up ?? 0;
+      // B2 の表値（‰）を逆算: B2 = 1000 + 表×(100+10×csu)/100 → 表 = (B2-1000)/(1+0.1×csu)
+      const b2Base = Math.round((e.comboFactorPermil - 1000) / (1 + 0.1 * csu));
+      const baseRow = comboRowLabel(b2Base / 10);
+      const comboExpr = `(100+${(b2Base / 10).toFixed(0)}×(100+10×${csu})/100)`;
+      if (e.isRatioScore) {
+        const ratioPct = (ratioPercentOf(bt, e) ?? e.skillPowerPermil) / 10;
+        return `<div class="fml-h">L${e.lane} ${skillNameOf(bt, e)}（SP 割合獲得）</div>
+<div class="fml-line">自身の獲得スコア（割合行時点レーン累積）= <span class="fml-num">${fmtInt(e.ratioBaseCumScore ?? 0)}</span></div>
+<div class="fml-line">割合 ${ratioPct.toFixed(0)}% × B1 ${pFmt(e.b1Permil)} × ステージ 100% × 乱数 ${rand.toFixed(3)} × ${critTxt}</div>
+<div class="fml-line">×1（コンボ）×1（ファン）</div>
+<div class="fml-line">= <span class="fml-num">${fmtInt(e.gainedScore)}</span></div>`;
+      }
+      const product =
+        e.basicScore * (e.skillPowerPermil / 1000) * (e.b1Permil / 1000) * (e.comboFactorPermil / 1000) *
+        (e.fanFactorPermil / 1000) * (e.critFactorPermil / 1000) * (e.randPermil / 1000);
+      const flat = e.gainedScore - Math.floor(product);
+      const name = skillNameOf(bt, e);
+      return `<div class="fml-h">L${e.lane} ${name}（${kindLabel}${crit ? "・クリティカル" : "・非クリ"}・乱数 ${rand.toFixed(3)}）</div>
+<div class="fml-line">ステータス（レーン色・ライブ中）= <span class="fml-num">${fmtInt(e.basicScore)}</span></div>
+<div class="fml-line">${kindLabel}パワー = ${powerExpr} = ${e.skillPowerPermil / 10}%</div>
+<div class="fml-line">${kindLabel}ボーナス = (100+スコア${snap?.score_up ?? 0}×2.5+${kindLabel === "A" ? `Aスコア${upStages}×5` : `SPスコア${upStages}×3`}+テンション${snap?.tension_up ?? 0}×5+フォト+エール${b1PhotoYalePct(e, snap).toFixed(1)}) = ${b1}</div>
+<div class="fml-line">${critTxt}</div>
+<div class="fml-line">来場ファン = ×${fanPct.toFixed(2)}（集目${snap?.focus ?? 0}段・基礎 100+0.2 系）</div>
+<div class="fml-line">コンボ数ボーナス = ${comboExpr} = ×${comboPct.toFixed(2)}（表 [${baseRow}] +${(b2Base / 10).toFixed(0)}%・csu ${csu}）</div>
+<div class="fml-line">ライブ特徴 100% × 乱数 ${rand.toFixed(3)}</div>
+<div class="fml-line">${fmtInt(e.basicScore)} × ${(e.skillPowerPermil / 1000).toFixed(2)} × ${(e.b1Permil / 1000).toFixed(3)} × ${(e.comboFactorPermil / 1000).toFixed(2)} × ${(e.fanFactorPermil / 1000).toFixed(2)} × ${(e.critFactorPermil / 1000).toFixed(2)} = <span class="fml-num">${fmtInt(Math.floor(product))}</span>${flat > 0 ? ` ＋ Aスコア追加（写真固定値）${fmtInt(flat)}` : ""}</div>
+<div class="fml-line fml-total">= <span class="fml-num">${fmtInt(e.gainedScore)}</span></div>`;
+    }
+    default: {
+      return `<div class="fml-h">L${e.lane} ${e.sourceKind === "beat" ? "ビートノート" : e.sourceKind === "photo" ? "フォト" : "Pピース"}</div>
+<div class="fml-line">${fmtInt(e.basicScore ?? 0)} × ${(e.skillPowerPermil / 1000).toFixed(2)} × ${(e.b1Permil / 1000).toFixed(3)} × コンボ${(e.comboFactorPermil / 1000).toFixed(2)} × ファン${(e.fanFactorPermil / 1000).toFixed(2)} × クリ${(e.critFactorPermil / 1000).toFixed(2)} × 乱数${(e.randPermil / 1000).toFixed(3)} = <span class="fml-num">${fmtInt(e.gainedScore)}</span></div>`;
+    }
+  }
 }
 
 function shortName(name: string): string {
@@ -3981,6 +4168,13 @@ function importConfig(ev: Event): void {
 
 function applyConfig(cfg: Record<string, unknown> & { characters?: unknown }): void {
   state = defaultLaneState();
+  // 【Phase 8-B10】ネスト形式（CLI / exportConfig 共通: { deck: {...} }）と
+  // フラット形式（レガシー: トップレベルに characters 等）の両方を受け付ける。
+  // deck 直下にステージ等を持つ形式は存在しないため、ネスト時はデッキ要素のみ差し替え
+  const d = (typeof cfg.deck === "object" && cfg.deck !== null ? cfg.deck : cfg) as Record<
+    string,
+    unknown
+  > & { characters?: unknown };
   // 【Phase 8-B】マイフォト帳の復元（エクスポートに含まれる場合）
   if (Array.isArray(cfg.myPhotos)) {
     myPhotos = (cfg.myPhotos as MyPhotoDef[]).filter((p) => p && typeof p.id === "string");
@@ -3993,10 +4187,10 @@ function applyConfig(cfg: Record<string, unknown> & { characters?: unknown }): v
     }
   }
   applyStage(state.stageId);
-  if (cfg.staff_bonus !== undefined) state.staff = cfg.staff_bonus as AppState["staff"];
-  if (cfg.yale_bonus !== undefined) state.yell = cfg.yale_bonus as AppState["yell"];
-  if (Array.isArray(cfg.characters)) {
-    for (const chRaw of cfg.characters) {
+  if (d.staff_bonus !== undefined) state.staff = d.staff_bonus as AppState["staff"];
+  if (d.yale_bonus !== undefined) state.yell = d.yale_bonus as AppState["yell"];
+  if (Array.isArray(d.characters)) {
+    for (const chRaw of d.characters) {
       const ch = chRaw as Record<string, unknown> & { lane: number };
       const l = state.lanes[ch.lane - 1];
       if (l === undefined) continue;
@@ -4041,6 +4235,11 @@ function applyConfig(cfg: Record<string, unknown> & { characters?: unknown }): v
       if (l !== undefined) l.mental = Number(v);
     }
   }
+  // 【8-B10 追補2】インポートは JSON を as-is で反映する（CLI と同一の解釈）。
+  // golden フォトスキル（photo-L*）は装着位置モデルにより T5 以外の編成にも
+  // 注入されるため、生成フロー（prompts/deck-json-from-images.md）は
+  // disabledSkillIds への全件列挙を指示しており、UI はこれを忠実に適用する。
+  // T5 サンプルや UI エクスポート（photo-L* を含まない）では ON のまま復元される
   const disabled = new Set<string>((cfg.disabledSkillIds as string[] | undefined) ?? []);
   if (disabled.size > 0) {
     state.lanes.forEach((l, i) => {
@@ -4059,9 +4258,51 @@ function applyConfig(cfg: Record<string, unknown> & { characters?: unknown }): v
     (cfg.photoEquip as unknown[]).forEach((ids, i) => {
       const l = state.lanes[i];
       if (l === undefined || !Array.isArray(ids)) return;
-      l.photoEquip = (ids as string[]).filter((id) => typeof id === "string" && photoById(id) !== undefined);
+      const equipped = (ids as unknown[])
+        .filter((id): id is string => typeof id === "string")
+        .map((id) => photoById(id))
+        .filter((p): p is MyPhotoDef => p !== undefined);
+      l.photoEquip = equipped.map((p) => p.id);
+      // 【8-B10 追補2】マイフォトスキルも disabledSkillIds を as-is で反映
+      // （build.ts の userPhotoSkills フィルタと同一規則。UI エクスポートは
+      // 個別無効化した uph-* を disabledSkillIds に出力するため往復で復元される）
+      for (const pid of l.photoEquip) {
+        const sid = userPhotoSkillId(pid);
+        if (disabled.has(sid)) l.disabledUserPhotoSkills.add(sid);
+      }
+      // 【Phase 8-B10】CLI 規約では myPhotos ステータスは deck.characters[].photos 側に
+      // 記載される（UI エクスポートは【マイフォト】接頭辞付き）ため、同名の重複エントリを
+      // photosJson から除去する。除去しないと toDeck の装備マージと二重計算になる
+      // （判定は mergePhotoEquipStatuses と同一の isPhotoEquipDuplicate）
+      if (equipped.length > 0) {
+        try {
+          const legacy = parseEquipment(l.photosJson, (i + 1) as LaneNumber, "フォト(JSON)");
+          const deduped = legacy.filter((e) => !equipped.some((p) => isPhotoEquipDuplicate(e.name, p.name)));
+          if (deduped.length !== legacy.length) {
+            l.photosJson = JSON.stringify(deduped, null, 1);
+          }
+        } catch {
+          /* 壊れた photosJson は実行時の通常エラーに任せる */
+        }
+      }
     });
   }
+  // 【8-B10 追補3】T5 由来 golden フォトスキル（photo-L*）は T5 実測フォト（名前一致）が
+  // ある位置のみ有効化する。汎用編成ではインポートの時点で T5 スキルを無効化し、
+  // 表示・計算に現れないようにする
+  state.lanes.forEach((l, i) => {
+    let items: DeckJsonV2["characters"][number]["photos"] = [];
+    try {
+      items = parseEquipment(l.photosJson, (i + 1) as LaneNumber, "フォト(JSON)");
+    } catch {
+      items = [];
+    }
+    for (const s of resolveLaneSkills((i + 1) as LaneNumber, l.cardId).photos) {
+      if (!goldenPhotoSkillApplies(i, items[(s.photoIndex ?? 1) - 1]?.name)) {
+        l.enabledPhotoIds.delete(s.id);
+      }
+    }
+  });
   renderConfig();
 }
 
@@ -4185,6 +4426,7 @@ async function runOptimizer(): Promise<void> {
       attrFilter,
       requiredCardId,
       photoPool,
+      goldenPhotoNames: GOLDEN_PHOTO_NAMES,
       onProgress: (p) => {
         $("#opt-progress").textContent = `${p.phase}：編成評価 ${p.evaluations} 回／現状最高 ${fmtScore(p.best)}`;
       },
@@ -4316,6 +4558,15 @@ function init(): void {
   // マイフォト帳の初期化（初回は T5 実測フォト + 理論値/実用テンプレートを同梱）
   myPhotos = loadMyPhotos();
   renderConfig();
+  // タイムラインの「式」ボタン（#timeline-table は実行のたびに再構築されるため document レベルで委任）
+  document.addEventListener("click", (ev) => {
+    const btn = (ev.target as HTMLElement).closest?.(".fml-btn");
+    if (btn === null || btn === undefined) return;
+    const beat = (btn as HTMLElement).getAttribute("data-beat");
+    if (beat === null) return;
+    const row = document.querySelector<HTMLTableRowElement>(`tr.fml-row[data-beat="${beat}"]`);
+    if (row !== null) row.hidden = !row.hidden;
+  });
   $("#confidence-body").innerHTML = confidenceHtml();
   $("#built-at").textContent = DATA.builtAt;
   // タブ切替

@@ -5,7 +5,7 @@
  * バンドル済みアプリ JS を実行して以下を検証する:
  *   1. 編成パネル（5レーン）・ステージ情報が描画される
  *   2. シミュレーション実行で結果（KPI・レーン別内訳・タイムライン）が描画され、
- *      確定値が CLI / テストと同一値（2,436,373,427）になる
+ *      確定値が CLI / テストと同一値（2,446,158,294）になる
  *   3. ステージ・曲ピッカーで別譜面へ切替できる（全111譜面・全ステージ統合）
  *   4. カードピッカーの検索・選択でレベル/スキルが自動セットされる
  *   5. アクセサリピッカーで装備を追加できる
@@ -86,11 +86,31 @@ describe("単一HTML UI スモーク", () => {
     expect((document.querySelector("#results") as HTMLElement).hidden).toBe(false);
     const kpi = document.querySelector("#kpi-root")!.textContent ?? "";
     expect(kpi).toContain("確定値");
-    expect(kpi).toContain("2,436,373,427");
+    expect(kpi).toContain("2,446,158,294");
     // レーン別内訳 5 行
     expect(document.querySelectorAll("#lane-table tbody tr").length).toBe(5);
-    // タイムライン 156 ビート
-    expect(document.querySelectorAll("#timeline-table tbody tr").length).toBe(156);
+    // タイムライン 156 ビート（計算式展開行を除く）
+    expect(document.querySelectorAll("#timeline-table tbody tr:not(.fml-row)").length).toBe(156);
+    // 「式」ボタンで計算式内訳（JHTV5213 型）が展開される（A/SP を含むビートを探して検証）
+    const buttons = document.querySelectorAll<HTMLButtonElement>(".fml-btn");
+    let opened: HTMLTableRowElement | null = null;
+    for (const btn of buttons) {
+      btn.click();
+      const row = document.querySelector<HTMLTableRowElement>(
+        `tr.fml-row[data-beat="${btn.dataset.beat}"]`,
+      );
+      if (row !== null && !row.hidden && (row.textContent ?? "").includes("パワー")) {
+        opened = row;
+        break;
+      }
+    }
+    expect(opened).not.toBeNull();
+    expect(opened!.textContent ?? "").toContain("パワー");
+    expect(opened!.textContent ?? "").toContain("コンボ数ボーナス");
+    expect(opened!.textContent ?? "").toContain("Aスコア");
+    // 再度クリックで折りたたみ
+    (opened!.previousElementSibling?.querySelector?.(".fml-btn") as HTMLButtonElement | null)?.click();
+    expect(opened!.hidden).toBe(true);
     // バフヒートマップに選択キー行が存在
     expect(document.querySelectorAll("#buff-heatmap tbody tr").length).toBeGreaterThan(3);
   });
@@ -108,7 +128,7 @@ describe("単一HTML UI スモーク", () => {
     runs.value = "10";
     (document.querySelector("#btn-run") as HTMLButtonElement).click();
     expect((document.querySelector("#status")!.textContent ?? "").startsWith("完了")).toBe(true);
-    expect(document.querySelector("#kpi-root")!.textContent ?? "").toContain("2,436,373,427");
+    expect(document.querySelector("#kpi-root")!.textContent ?? "").toContain("2,446,158,294");
     // ファンファクターを 1000‰（ボーナスなし）へ手打ちで変更
     const fan = document.querySelector<HTMLInputElement>("#g-fan")!;
     fan.value = "1000";
@@ -116,14 +136,14 @@ describe("単一HTML UI スモーク", () => {
     expect(document.querySelector("#g-fan-hint")!.textContent).toContain("+0.0%");
     (document.querySelector("#btn-run") as HTMLButtonElement).click();
     expect((document.querySelector("#status")!.textContent ?? "").startsWith("完了")).toBe(true);
-    // ファンボーナスを消すと確定値は必ず下がる（1620‰ 基準の 2,436,373,427 より低い）
+    // ファンボーナスを消すと確定値は必ず下がる（1620‰ 基準の 2,446,158,294 より低い）
     const confirmedText =
       document.querySelector("#kpi-root .kpi-value.confirmed")!.textContent ?? "";
     const m = /^([\d.]+)(億|万)$/.exec(confirmedText);
     expect(m).not.toBeNull();
     const val2 = Number(m![1]) * (m![2] === "億" ? 1e8 : 1e4);
     expect(val2).toBeLessThan(2_501_593_723);
-    expect(document.querySelector("#kpi-root")!.textContent ?? "").not.toContain("2,436,373,427");
+    expect(document.querySelector("#kpi-root")!.textContent ?? "").not.toContain("2,446,158,294");
     // 元に戻す
     fan.value = "1620";
     fan.dispatchEvent(new Event("change", { bubbles: true }));
@@ -217,7 +237,7 @@ describe("単一HTML UI スモーク", () => {
     const noteCount = Number(beatMatch![1]);
     (document.querySelector("#btn-run") as HTMLButtonElement).click();
     expect((document.querySelector("#status")!.textContent ?? "").startsWith("完了")).toBe(true);
-    expect(document.querySelectorAll("#timeline-table tbody tr").length).toBe(noteCount);
+    expect(document.querySelectorAll("#timeline-table tbody tr:not(.fml-row)").length).toBe(noteCount);
     // T5 ステージへ戻す
     (document.querySelector("#btn-preset") as HTMLButtonElement).click();
     expect((document.querySelector("#stage-info")!.textContent ?? "")).toContain("qt-daily-003-19");
@@ -799,8 +819,8 @@ describe("単一HTML UI スモーク", () => {
     runs.value = "3";
     (document.querySelector("#btn-run") as HTMLButtonElement).click();
     expect((document.querySelector("#status")!.textContent ?? "").startsWith("完了")).toBe(true);
-    // スコアがブースト込みで変わる（フォト無しの 2,436,373,427 とは異なる）
-    expect(document.querySelector("#kpi-root")!.textContent ?? "").not.toContain("2,436,373,427");
+    // スコアがブースト込みで変わる（フォト無しの 2,446,158,294 とは異なる）
+    expect(document.querySelector("#kpi-root")!.textContent ?? "").not.toContain("2,446,158,294");
     (document.querySelector("#btn-preset") as HTMLButtonElement).click();
   });
 
@@ -1090,7 +1110,7 @@ describe("単一HTML UI スモーク", () => {
     (document.querySelector<HTMLInputElement>("#g-runs")!).value = "10";
     (document.querySelector("#btn-run") as HTMLButtonElement).click();
     const kpi = document.querySelector("#kpi-root")!.textContent ?? "";
-    expect(kpi).not.toContain("2,436,373,427");
+    expect(kpi).not.toContain("2,446,158,294");
     (document.querySelector("#btn-preset") as HTMLButtonElement).click();
   });
 
@@ -1116,13 +1136,13 @@ describe("単一HTML UI スモーク", () => {
     (document.querySelector<HTMLInputElement>("#g-runs")!).value = "10";
     (document.querySelector("#btn-run") as HTMLButtonElement).click();
     const kpiOff = document.querySelector("#kpi-root")!.textContent ?? "";
-    expect(kpiOff).not.toContain("2,436,373,427");
+    expect(kpiOff).not.toContain("2,446,158,294");
     // チェックを戻す → 有効化
     skillCb().checked = true;
     skillCb().dispatchEvent(new Event("change", { bubbles: true }));
     (document.querySelector("#btn-run") as HTMLButtonElement).click();
     const kpiOn = document.querySelector("#kpi-root")!.textContent ?? "";
-    expect(kpiOn).not.toContain("2,436,373,427");
+    expect(kpiOn).not.toContain("2,446,158,294");
     (document.querySelector("#btn-preset") as HTMLButtonElement).click();
   });
 
@@ -1136,7 +1156,7 @@ describe("単一HTML UI スモーク", () => {
     (document.querySelector<HTMLInputElement>("#g-runs")!).value = "10";
     (document.querySelector("#btn-run") as HTMLButtonElement).click();
     const kpi = document.querySelector("#kpi-root")!.textContent ?? "";
-    expect(kpi).not.toContain("2,436,373,427");
+    expect(kpi).not.toContain("2,446,158,294");
     (document.querySelector("#btn-preset") as HTMLButtonElement).click();
   });
 
@@ -1205,5 +1225,72 @@ describe("単一HTML UI スモーク", () => {
     const saved = JSON.parse(localStorage.getItem("aipura-sim-myphotos-v1") ?? "[]") as Array<{ name: string }>;
     expect(saved.some((p) => p.name === "探索A")).toBe(true);
     (document.querySelector("#btn-preset") as HTMLButtonElement).click();
+  });
+
+  // ---------------------------------------------------------------------------
+  // Phase 8-B10: 編成JSON インポート（ネスト形式・CLI スキーマ）
+  // ---------------------------------------------------------------------------
+
+  it("編成JSONインポート: ネスト形式（CLI / exportConfig と同一 { deck: {...} }）を取り込み CLI と同一スコアになる", async () => {
+    const config = JSON.parse(
+      readFileSync(path.join(repoRoot, "examples/nested-sample.json"), "utf-8"),
+    ) as Record<string, unknown>;
+    // ファイル入力経路（importConfig → FileReader → applyConfig）を jsdom で再現
+    const input = document.querySelector<HTMLInputElement>("#file-import")!;
+    const file = new File([JSON.stringify(config)], "nested-sample.json", { type: "application/json" });
+    Object.defineProperty(input, "files", { value: [file], configurable: true });
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+    // FileReader.onload は非同期
+    const start = Date.now();
+    while (!(document.querySelector("#status")!.textContent ?? "").startsWith("インポート完了")) {
+      if (Date.now() - start > 10000) {
+        throw new Error(`import did not finish: ${document.querySelector("#status")!.textContent}`);
+      }
+      await new Promise((r) => setTimeout(r, 10));
+    }
+    // デッキ内容の復元（T5 既定と異なる値で検証）
+    const cardOf = (lane: number): string =>
+      document.querySelector<HTMLInputElement>(`.lane-card[data-lane="${lane}"] input[data-act="card-id"]`)!.value;
+    expect(cardOf(1)).toBe("card-kkr-05-mizg-02");
+    expect(cardOf(2)).toBe("card-rio-05-fest-01");
+    expect(cardOf(5)).toBe("card-ski-05-waso-00");
+    expect(document.querySelector<HTMLInputElement>('input[data-staff="vocal"]')!.value).toBe("5520");
+    expect(document.querySelector<HTMLInputElement>('input[data-yell="sp_skill_score_pct"]')!.value).toBe("12");
+    expect(document.querySelector<HTMLInputElement>("#g-audience")!.value).toBe("71000");
+    expect(document.querySelector("#stage-info")!.textContent).toContain("qt-area-1-001");
+    expect(
+      document.querySelector<HTMLInputElement>('.lane-card[data-lane="1"] input[data-act="kouryu"]')!.value,
+    ).toBe("19");
+    // マイフォト帳の復元と装備（photoEquip[0] = uph-l1-4）
+    const saved = JSON.parse(localStorage.getItem("aipura-sim-myphotos-v1") ?? "[]") as Array<{ id: string }>;
+    expect(saved.map((p) => p.id)).toContain("uph-l1-4");
+    const l1Names = [...document.querySelectorAll('.lane-card[data-lane="1"] .photo-eq-name')].map(
+      (e) => e.textContent ?? "",
+    );
+    expect(l1Names.some((n) => n.includes("伊吹渚 6/22"))).toBe(true);
+    // 【8-B10 追補3】T5 由来 golden フォトスキル（photo-L*）は装着位置のフォト名が
+    // T5 実測フォトと一致しないため、行自体が表示されない（汎用計算機として不適切なため）。
+    // マイフォトスキル（uph-*）は装備行にチェック付きで表示される
+    for (const [lane, id] of [
+      [1, "photo-L1-1"],
+      [2, "photo-L2-4"],
+      [3, "photo-L3-2"],
+      [4, "photo-L4-3"],
+    ] as const) {
+      expect(document.querySelector(`.lane-card[data-lane="${lane}"] input[data-skill="${id}"]`)).toBeNull();
+    }
+    expect(
+      document.querySelector<HTMLInputElement>('.lane-card[data-lane="1"] input[data-user-photo-skill]')!.checked,
+    ).toBe(true);
+    // 【8-B10】photos 側に同名で重複記載されていたステータスは除去され、
+    // toDeck の装備マージで二重計算にならない（実測/JSON 3 + マイフォト帳 1 = 4 枚）
+    const head = document.querySelector('.lane-card[data-lane="1"] .photo-eq-head')!.textContent ?? "";
+    expect(head).toContain("実測/JSON 3 + マイフォト帳 1");
+    // シミュレーション実行 → 確定値が表示される（UI は audience テーブル引き 1002‰ 系。
+    // CLI 直読みでは audience 71,000 が 2000‰ にクランプされるため値が異なる — research/19 の S1 audience トラップ）
+    (document.querySelector<HTMLInputElement>("#g-runs")!).value = "10";
+    (document.querySelector("#btn-run") as HTMLButtonElement).click();
+    const kpi = document.querySelector("#kpi-root")!.textContent ?? "";
+    expect(kpi).toMatch(/114,102,\d{3}/); // S1 UI 確定値（2026-09-02 データ修正後: L4 hruh-00-3 の someone_before_special がマスタ側で正しく条件化され発動ビートが変化）
   });
 });
