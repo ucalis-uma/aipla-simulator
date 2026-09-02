@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>アイプラ作業環境マップ</title>
+<style>
+  :root{
+    --bg:#0e1014; --bg2:#151922; --card:#1a1f2b; --card2:#202636; --line:#2a3142;
+    --tx:#e8ecf4; --tx2:#9aa4b8; --tx3:#6b7488;
+    --accent:#f5c518;
+    --oc:#f59e0b;   /* opencode  */
+    --cl:#14b8a6;   /* cline     */
+    --zc:#a78bfa;   /* zcode     */
+    --he:#fb7185;   /* hermes    */
+    --ag:#60a5fa;   /* antigravity */
+    --nox:#60a5fa; --center:#f5c518; --repo:#34d399;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--tx);font-family:"Yu Gothic UI","Meiryo","Hiragino Sans",system-ui,sans-serif;font-size:14px;line-height:1.6}
+  header{padding:18px 24px 0;background:linear-gradient(180deg,#141824,#0e1014);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+  h1{margin:0;font-size:20px;display:flex;align-items:center;gap:10px}
+  h1 .sub{font-size:12px;color:var(--tx2);font-weight:normal}
+  .stats{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:4px 12px;font-size:12px;color:var(--tx2)}
+  .stat b{color:var(--accent);font-size:13px;margin-right:4px}
+  .tabs{display:flex;gap:4px;margin-top:4px}
+  .tabs button{background:transparent;border:none;border-bottom:3px solid transparent;color:var(--tx2);padding:8px 16px;font-size:14px;cursor:pointer;font-family:inherit}
+  .tabs button:hover{color:var(--tx)}
+  .tabs button.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:bold}
+  main{padding:16px 24px 60px}
+  section.tab{display:none}
+  section.tab.active{display:block}
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 12px;font-size:12px;color:var(--tx2)}
+  .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:middle}
+
+  /* ---------- map ---------- */
+  #mapWrap{position:relative;width:1660px;height:1226px;margin:0 auto}
+  #mapSvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  #mapSvg path{fill:none;stroke-width:1.6;opacity:.55;transition:opacity .15s, stroke-width .15s}
+  #mapSvg path.hl{opacity:1;stroke-width:2.6}
+  #mapSvg path.dim{opacity:.08}
+  #mapSvg text{font-size:11px;fill:#c7cede;paint-order:stroke;stroke:#0e1014;stroke-width:3px;opacity:0;transition:opacity .15s}
+  #mapSvg text.hl{opacity:1}
+  #mapSvg text.dim{opacity:0}
+  .zone{position:absolute;top:0;font-size:12.5px;font-weight:bold;letter-spacing:.08em;color:var(--tx2);border-top:1px dashed #3a4257;padding-top:8px}
+  .node{position:absolute;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;transition:transform .1s, box-shadow .1s, border-color .1s;overflow:hidden}
+  .node:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.45);border-color:var(--accent)}
+  .node.z-nox{border-left:4px solid var(--nox)}
+  .node.z-center{border-left:4px solid var(--center)}
+  .node.z-repo{border-left:4px solid var(--repo)}
+  .node .t{font-weight:bold;font-size:13.5px;display:flex;align-items:center;gap:6px}
+  .node .s{font-size:11.5px;color:var(--tx2);margin-top:3px;line-height:1.45}
+  .node .new{background:#7f1d1d;color:#fecaca;font-size:10px;border-radius:4px;padding:0 5px;font-weight:normal}
+  .adots{position:absolute;right:8px;top:8px;display:flex;gap:3px}
+  .adot{width:14px;height:14px;border-radius:50%;font-size:9px;font-weight:bold;color:#0e1014;display:flex;align-items:center;justify-content:center}
+  #nodeDetail{max-width:1560px;margin:14px auto 0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px;min-height:70px}
+  #nodeDetail h3{margin:0 0 6px;font-size:15px;color:var(--accent)}
+  #nodeDetail .hint{color:var(--tx3);font-size:13px}
+  .fileRef{font-family:Consolas,monospace;font-size:12px;background:#10131a;border:1px solid var(--line);border-radius:5px;padding:1px 6px;display:inline-block;margin:2px 3px 2px 0}
+
+  /* ---------- timeline ---------- */
+  #tlWrap{overflow-x:auto;padding-bottom:10px;scrollbar-color:#4a5470 #151922;scrollbar-width:auto}
+  #tlWrap::-webkit-scrollbar{height:14px}
+  #tlWrap::-webkit-scrollbar-track{background:#151922;border-radius:7px}
+  #tlWrap::-webkit-scrollbar-thumb{background:#4a5470;border-radius:7px;border:2px solid #151922}
+  #tlWrap::-webkit-scrollbar-thumb:hover{background:#5d6a8c}
+  #tlCanvas{position:relative;margin-left:150px}
+  #tlLabels{position:absolute;left:0;top:0;width:140px}
+  .tlRowLabel{position:absolute;left:0;width:130px;height:52px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:bold}
+  .tlRowBg{position:absolute;left:150px;right:0;height:52px;border-top:1px solid var(--line)}
+  .tlGrid{position:absolute;top:0;bottom:0;width:1px;background:var(--line)}
+  .tlGrid.day{background:#3a4257}
+  .tlDayLabel{position:absolute;font-size:12px;color:var(--tx2);transform:translateX(-50%)}
+  .tlSess{position:absolute;height:26px;border-radius:6px;padding:0 7px;font-size:10.5px;line-height:22px;cursor:pointer;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:#10131a;font-weight:bold;border:2px solid transparent}
+  .tlSess:hover{border-color:#fff;z-index:5}
+  .tlSess.dir-nox{box-shadow:inset 0 -4px 0 rgba(96,165,250,.85)}
+  .tlSess.dir-repo{box-shadow:inset 0 -4px 0 rgba(52,211,153,.85)}
+  .tlSess.dir-other{box-shadow:inset 0 -4px 0 rgba(120,128,145,.85)}
+  .tlSess.approx{background-image:repeating-linear-gradient(45deg,transparent,transparent 6px,rgba(255,255,255,.10) 6px,rgba(255,255,255,.10) 12px)}
+  .tlSess.now{animation:pulse 1.6s infinite}
+  @keyframes pulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.35)}}
+  #tlDetail{margin-top:12px}
+  .handoffCard{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-bottom:10px}
+  .handoffCard .route{font-weight:bold;margin-bottom:4px}
+  .chip{display:inline-block;border-radius:20px;padding:1px 10px;font-size:11px;color:#10131a;font-weight:bold;margin-right:6px}
+
+  /* ---------- phases ---------- */
+  .phaseGroup{margin-bottom:26px}
+  .phaseGroup h2{font-size:15px;color:var(--tx2);border-left:4px solid var(--accent);padding-left:10px;margin:18px 0 10px}
+  .phaseCard{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-bottom:8px;display:flex;gap:14px;align-items:flex-start}
+  .phaseCard .pid{min-width:64px;font-weight:bold;color:var(--accent);font-size:14px}
+  .phaseCard .body{flex:1}
+  .phaseCard .done{color:#34d399;font-size:12px;font-weight:bold}
+  .phaseCard .content{font-size:12.5px;color:var(--tx2);margin-top:3px}
+  .phaseCard .crit{font-size:12px;color:var(--tx3);margin-top:3px}
+  .tbadge{background:#123a2e;color:#34d399;border:1px solid #1e5c48;border-radius:6px;font-size:11px;padding:2px 8px;white-space:nowrap}
+  .ipCard{border-color:#7f1d1d;background:#1f1518}
+  .ipCard .pid{color:#fb7185}
+
+  /* ---------- trees ---------- */
+  #treesGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:1200px){#treesGrid{grid-template-columns:1fr}}
+  .treePanel{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:14px}
+  .treePanel h2{margin:0 0 8px;font-size:15px}
+  .treePanel h2 small{color:var(--tx3);font-weight:normal}
+  ul.tree{list-style:none;padding-left:0;margin:0;font-size:13px}
+  ul.tree ul{list-style:none;padding-left:18px;border-left:1px dotted #333c50;margin-left:6px}
+  ul.tree li{margin:1px 0}
+  .tNode{cursor:pointer;padding:1px 6px;border-radius:5px;display:inline-flex;align-items:center;gap:6px;max-width:100%}
+  .tNode:hover{background:#242b3d}
+  .tNode.sel{background:#2b3550;outline:1px solid var(--accent)}
+  .tNode .ico{width:16px;text-align:center;flex-shrink:0}
+  .tNode .meta{color:var(--tx3);font-size:11px}
+  .tNode .tagNew{color:#fca5a5;font-size:10px;border:1px solid #7f1d1d;border-radius:4px;padding:0 4px}
+  .dirToggle{color:var(--tx3);font-size:10px;width:12px;display:inline-block}
+  #treeDetail{position:sticky;top:110px;margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-height:90px}
+  #treeDetail h3{margin:0 0 6px;font-size:14px;color:var(--accent);font-family:Consolas,monospace}
+  #treeDetail p{margin:4px 0;font-size:12.5px;color:var(--tx2)}
+
+  footer{color:var(--tx3);font-size:11.5px;padding:20px 24px;border-top:1px solid var(--line);margin-top:30px}
+  footer code{color:var(--tx2)}
+  h2.sectionTitle{font-size:16px;margin:6px 0 12px;color:var(--tx)}
+  .note{background:#241d0b;border:1px solid #6b5510;border-radius:8px;padding:8px 14px;font-size:12.5px;color:#e7cf8a;margin-bottom:14px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🗺️ アイプラ作業環境マップ <span class="sub">IDOLY PRIDE ライブスコア計算機 × 実測データ収集 — 2ディレクトリ・5エージェントの全体像 (〜2026-09-01)</span></h1>
+  <div class="stats">
+    <span class="stat"><b>2</b>作業ディレクトリ</span>
+    <span class="stat"><b>3,675+</b>ファイル (≈3.7GB)</span>
+    <span class="stat"><b>5</b>AIエージェント</span>
+    <span class="stat"><b>40+</b>セッション</span>
+    <span class="stat"><b>431</b>テスト全緑</span>
+    <span class="stat"><b>T5確定値 2,436,373,427</b>不変条件</span>
+    <span class="stat"><b>PLAN.md</b>が大元</span>
+  </div>
+  <nav class="tabs" id="tabs">
+    <button data-tab="map" class="active">① 全体マップ</button>
+    <button data-tab="agents">② エージェント×作業履歴</button>
+    <button data-tab="phases">③ PLAN.md フェーズ進捗</button>
+    <button data-tab="trees">④ ディレクトリ詳細</button>
+  </nav>
+</header>
+<main>
+
+<!-- ============ ① MAP ============ -->
+<section class="tab active" id="tab-map">
+  <div class="legend">
+    <span><span class="dot" style="background:var(--oc)"></span>opencode</span>
+    <span><span class="dot" style="background:var(--cl)"></span>cline</span>
+    <span><span class="dot" style="background:var(--zc)"></span>zcode</span>
+    <span><span class="dot" style="background:var(--he)"></span>hermes agent</span>
+    <span><span class="dot" style="background:var(--ag)"></span>antigravity</span>
+    <span style="margin-left:16px;color:var(--tx3)">— 枠の色: <span style="color:var(--nox)">青=aipura_nox (実測収集)</span> / <span style="color:var(--center)">黄=橋渡し</span> / <span style="color:var(--repo)">緑=アイプラrepo (シミュレータ)</span> ／ <span class="new" style="background:#7f1d1d;color:#fecaca;border-radius:4px;padding:0 5px;font-size:10px">未コミット</span> = 現在進行中の成果物</span>
+  </div>
+  <div id="mapWrap">
+    <svg id="mapSvg">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#8b93a7"/>
+        </marker>
+      </defs>
+    </svg>
+    <!-- nodes are rendered by JS -->
+  </div>
+  <div id="nodeDetail"><span class="hint">ノードにマウスを乗べると関係線と関係ラベルがハイライトされます。クリックで詳細を表示。</span></div>
+</section>
+
+<!-- ============ ② AGENTS ============ -->
+<section class="tab" id="tab-agents">
+  <h2 class="sectionTitle">⏱ エージェント別セッション年表 (2026-08-27 → 09-02)</h2>
+  <div class="note">作業の核心は「<b>opencode が計算機を建設 → cline がT5を仕上げ → antigravity がNoxPlayerから実測を収集 → zcode が解析と改良 → hermes が乖離を診断</b>」。ブロックの下線 = 対象ディレクトリ (<span style="color:#60a5fa">青=aipura_nox</span> / <span style="color:#34d399">緑=アイプラrepo</span> / 灰=別案件)、斜め縞 = 時刻推定、点滅 = 継続中。クリックで詳細。</div>
+  <div id="tlWrap"><div id="tlCanvas"></div></div>
+  <div id="tlDetail"><span class="hint">セッションをクリックすると詳細が表示されます。</span></div>
+  <h2 class="sectionTitle" style="margin-top:26px">🤝 エージェント間のハンドオフ (この作業の鍵)</h2>
+  <div id="handoffs"></div>
+  <h2 class="sectionTitle" style="margin-top:26px">📂 各エージェントの履歴保存場所 (読み出し元)</h2>
+  <div id="agentHomes" style="font-size:12.5px;color:var(--tx2)"></div>
+</section>
+
+<!-- ============ ③ PHASES ============ -->
+<section class="tab" id="tab-phases">
+  <h2 class="sectionTitle">📋 PLAN.md §14 フェーズ別実装計画 — 全ステップ完了 (Phase 0 → 8-B10)</h2>
+  <div class="note">PLAN.md がこの作業全体の大元。§14のフェーズ表が git コミット履歴 (17コミット) とほぼ 1:1 で対応。テストは 41 → 431 へ増加し、T5 確定値 <b>2,436,373,427</b> を破らずに機能追加が続けられています。</div>
+  <div id="phaseList"></div>
+  <h2 class="sectionTitle" style="margin-top:26px">🔧 現在進行中 (未コミット: 19修正 + 12未追跡)</h2>
+  <div id="wipList"></div>
+</section>
+
+<!-- ============ ④ TREES ============ -->
+<section class="tab" id="tab-trees">
+  <h2 class="sectionTitle">📁 ディレクトリ詳細 — クリックで役割を表示</h2>
+  <div class="note">2,000枚超のスクリーンショット等は 1 ノードに集約しています (「beat 880枚」等)。実体は各ディレクトリを参照。</div>
+  <div id="treesGrid">
+    <div class="treePanel">
+      <h2>🟢 C:\Users\umaro\Documents\アイプラ <small>— git repo・シミュレータ開発 (17コミット)</small></h2>
+      <div id="treeA"></div>
+    </div>
+    <div class="treePanel">
+      <h2>🔵 C:\Users\umaro\Documents\aipura_nox <small>— git管理外・NoxPlayer実測収集 (2,224ファイル・1.9GB)</small></h2>
+      <div id="treeB"></div>
+    </div>
+  </div>
+  <div id="treeDetail"><span class="hint">ファイル/フォルダをクリックすると詳細が表示されます。</span></div>
+</section>
+
+</main>
+<footer>
+  生成日 2026-09-01 ・ このファイルは単体HTML (オフライン動作) ・ 配置: <code>C:\Users\umaro\Documents\アイプラ\workspace_map.html</code><br>
+  情報源: PLAN.md / git log / 各エージェント履歴 (opencode: <code>~\.local\share\opencode\opencode.db</code> 67セッション / cline: <code>~\.cline\data\sessions\</code> / zcode: <code>~\.zcode\cli\db\db.sqlite</code> / hermes: <code>~\AppData\Local\hermes\state.db</code> / antigravity: <code>~\.gemini\antigravity\conversations\*.db</code> 381件) ・ 時刻は履歴タイムスタンプ由来のため±数時間の誤差あり
+</footer>
+
+<script>
+"use strict";
+/* ================= データ ================= */
+const AGENTS = {
+  oc:{name:"opencode",   color:"var(--oc)", initial:"O"},
+  cl:{name:"cline",      color:"var(--cl)", initial:"C"},
+  zc:{name:"zcode",      color:"var(--zc)", initial:"Z"},
+  he:{name:"hermes",     color:"var(--he)", initial:"H"},
+  ag:{name:"antigravity",color:"var(--ag)", initial:"A"},
+};
+
+/* ---------- ① マップ: ノード & エッジ ---------- */
+const NODES = [
+ // 左: aipura_nox
+ {id:"nox",  x:24,y:24,w:400,h:84, zone:"nox", title:"NoxPlayer + ADB", agents:[],
+  sub:"Androidエミュ 1080×1920 / adb 127.0.0.1:62001 / CPython 3.13 + OpenCV",
+  desc:"実機（エミュ）環境。antigravity が Android MCP + ADB 経由でアイプラのライブ分析画面を自動操作。ライブチケット消費防止の暴走防止ルールあり（create_sample.md 最重要節）。",refs:[]},
+ {id:"spec", x:24,y:132,w:400,h:84, zone:"nox", title:"create_sample.md", agents:["ag"],
+  sub:"撮影プロンプト仕様書（サンプル2キャプチャ中に antigravity が随時改訂）",
+  desc:"§0環境／§1交流レベル／§2編成ステータス／§3フォト&アクセサリ／§4リザルト／§5分析画面（Step B スキル発動順・Step C 全レーン全ビート・Step D 効果欄スクロール撮影）。ノーツ吸着スタック対策（安全レーン X=108/972 でスワイプ）などのノウハウが蓄積された、収集作業の『作業手順書』。",refs:["aipura_nox\\create_sample.md"]},
+ {id:"core", x:24,y:240,w:400,h:108, zone:"nox", title:"capture_lane_generic.py ＋ capture_all_lanes.py", agents:["ag"],
+  sub:"中核エンジン（25本のpyのうち現行2本）： BEAT数字テンプレ認識・レーン撮影・欠損検証・リペア",
+  desc:"recognize_beat() が ROI img[820:885, 900:1070] を OpenCV TM_CCOEFF_NORMED で templates/0-9.png と照合。capture_lane() がレーン選択→1ビートずつ進めながら撮影。capture_all_lanes が lane1〜5 を順次実行し欠損ビート番号を検証する。",refs:["aipura_nox\\capture_lane_generic.py","aipura_nox\\capture_all_lanes.py"]},
+ {id:"lanes", x:24,y:372,w:400,h:96, zone:"nox", title:"撮影スクリプト群（進化の痕跡）", agents:["ag"],
+  sub:"lane1系×4 (EasyOCR→テンプレ移行) → lane3系×9 (scroll/resume) → skill_order×2・lane2補助×2・repair×1(破損)",
+  desc:"EasyOCR → OpenCV テンプレートマッチングへの移行、レジューム機能付き resume_lane3_*、青丸7個以上のビート帯のみ追加撮影する capture_lane3_scroll_effects_* など、試行錯誤の積み重ね。repair_missing_beats.py は文字化けで破損（旧世代・digits/ 参照）。",refs:[]},
+ {id:"tmpl", x:24,y:492,w:190,h:72, zone:"nox", title:"templates/", agents:[],
+  sub:"BEAT数字 0-9 テンプレート (55png)", desc:"crop_N_M.png 55枚＋数字 0-9。BEAT認識の土台。",refs:["aipura_nox\\templates\\"]},
+ {id:"dbg",  x:230,y:492,w:194,h:72, zone:"nox", title:"debug/screen系 png", agents:[],
+  sub:"デバッグ用 ≈28枚 (ルート)", desc:"debug_skill_order_swipe1-4、debug_b14* 等の作業痕跡。",refs:[]},
+ {id:"s1",   x:24,y:588,w:400,h:150, zone:"nox", title:"サンプル1/（完結）", agents:["ag","zc"],
+  sub:"beat PNG 880枚 (lane1-5)・skill_order 34枚・deck.json・measured_data(.json/_v2.json)・measured_data_summary.md・issues.md",
+  desc:"楽曲「Shine Purity～輝きの純度～」Lv15 / 177ビート / 実測スコア <b>116,537,513</b> (S+67)。measured_data_v2.json が自己検証済みの確定版実測データ。issues.md には <サポータータイプのみ> 制約・SPノートFAIL時のコンボリセット・効果延長=残り+7ビート 等の仕様確定記録。",refs:["aipura_nox\\サンプル1\\measured_data_v2.json","aipura_nox\\サンプル1\\deck.json"]},
+ {id:"ana",  x:24,y:762,w:400,h:96, zone:"nox", title:"サンプル1/analysis/", agents:["zc"],
+  sub:"OCR解析パイプライン: ocr→build_templates→extract→build_outputs→build_summary",
+  desc:"連番PNGから stat/stam/dots を抽出 (extracted.json 167KB) → measured_data*.json 構築 → レポート生成。build_outputs.py が最大 (33.7KB)。preview 149枚。",refs:["aipura_nox\\サンプル1\\analysis\\build_outputs.py"]},
+ {id:"s2",   x:24,y:882,w:400,h:126, zone:"nox", title:"サンプル2/（進行中）", agents:["ag"],
+  sub:"beat 840枚＋scroll 64枚・order 44枚・result なし・別編成",
+  desc:"佐伯遙子/川咲さくら/一ノ瀬怜/白石千紗/長瀬琴乃 編成。lane3 に効果欄スクロール2枚目 (beat_NNN_2.PNG) 64枚。lane2/5 に欠損の可能性（issues.md 言及はサンプル1）。result_*.PNG 未取得。",refs:["aipura_nox\\サンプル2\\"]},
+ {id:"noxdata", x:24,y:1032,w:400,h:88, zone:"nox", title:"data/ ＋ 失敗run記録", agents:[],
+  sub:"communication_levels.json（全アイドル交流Lv）・idoly_pride/json (MCPツール不足で失敗した自動化の構造化記録)",
+  desc:"home_20260831T000342Z.json は status:\"failed\"・human_intervention_required:true の厳格スキーマ。失敗も記録として残す運用の痕跡。",refs:[]},
+ // 中央: 橋渡し
+ {id:"plan", x:480,y:24,w:440,h:96, zone:"center", title:"PLAN.md ＝ 大元（45KB・§1〜19＋附録）", agents:["oc","cl","zc","ag"],
+  sub:"式・確度区分・矛盾一覧・フェーズ表(§14)・テスト計画(T0-T6)・サブエージェント割当(§15) — 全エージェントの共通根拠",
+  desc:"最初の依頼 prompt_plan.md から opencode が「PM兼レビュアー」として作成。以降すべてのエージェントがこの計画書を根拠に作業する。フェーズ0→8-B10 がここに定義され、gitコミットとほぼ1:1対応。",refs:["アイプラ\\PLAN.md","アイプラ\\prompt_plan.md"]},
+ {id:"prompts", x:480,y:144,w:440,h:132, zone:"center", title:"prompts/（エージェント共通言語・7本）", agents:["oc","zc","ag"],
+  sub:"deck-json-from-images / measure-new-sample＋improve-from-sample / analyze-sample1-gap / measure-sample1-antigravity / continue-session / readme",
+  desc:"『画像→編成JSON』『実測→計算機改良』『乖離診断』『セッション引継ぎ』の手順をプロンプト化。antigravity・zcode・hermes が同じプロンプトを読んで同一手順で作業する、マルチエージェント運用の要。measure-sample1-antigravity.md は antigravity→zcode へのタスク移管用に作成。",refs:["アイプラ\\prompts\\deck-json-from-images.md","アイプラ\\prompts\\measure-sample1-antigravity.md","アイプラ\\prompts\\analyze-sample1-gap.md"]},
+ {id:"ex", x:480,y:288,w:440,h:84, zone:"center", title:"examples/（編成JSONサンプル・5本）", agents:["ag","zc"],
+  sub:"t5-sample.json / nested-sample.json(未コミット) / area1-stage / main-live / t5-sample-deck",
+  desc:"antigravity が画像分析で作った deck.json が、zcode の GUI インポート不具合修正 (8-B10) を経て nested-sample.json として同梱された。",refs:["アイプラ\\examples\\nested-sample.json"]},
+ {id:"pplan", x:480,y:396,w:440,h:60, zone:"center", title:"prompt_plan.md（最初の依頼）", agents:["oc"],
+  sub:"「PM兼レビュアーとして行動し、サブエージェントへ割り振れ」— 全ての起点",
+  desc:"2026-08-28、opencode がこのプロンプトから調査を開始し、その成果が PLAN.md として結実。",refs:["アイプラ\\prompt_plan.md"]},
+ // 右: アイプラ repo
+ {id:"vendor", x:1020,y:24,w:240,h:72, zone:"repo", title:"vendor/ (31MB・gitignore)", agents:["oc"],
+  sub:"公式マスタJSON 26本 (MalitsPlus/ipr-master-diff 出典)", desc:"Card/Skill/SkillEfficacy/ComboAdvantage/PhotoAllInOne 等の一式。計算の唯一のデータ源。",refs:[]},
+ {id:"importers", x:1280,y:24,w:256,h:72, zone:"repo", title:"tools/importers/", agents:["oc","zc"],
+  sub:"build_data.mjs / build_data_phase6.mjs",
+  desc:"vendor → data/ 変換パイプライン。validate_skills_*.mjs による検証、t5_solver.ts (仮説グリッドフィッタ) も tools/ に。",refs:["アイプラ\\tools\\importers\\build_data_phase6.mjs"]},
+ {id:"data", x:1020,y:120,w:500,h:104, zone:"repo", title:"data/（生成済みマスタ・20本）", agents:["oc","zc"],
+  sub:"cards / skills_master / skills_levels(1.2MB) / skills_golden(実測較正) / stages+charts(111曲) / accessories / photos_master / yell / staff / live_bonuses / unlocks / type36_coefficients(未コミット)",
+  desc:"計算コアが参照する唯一の実行時データ。skills_golden は T5 実測から較正した35スキル/57効果。type36_coefficients.json は現在逆算中の未コミット成果。",refs:["アイプラ\\data\\skills_golden.json","アイプラ\\data\\type36_coefficients.json"]},
+ {id:"src", x:1020,y:240,w:500,h:132, zone:"repo", title:"src/（TS純関数計算コア・24本）", agents:["oc","cl","zc"],
+  sub:"formula/(baseStatus・combo・critical・fan・scoreEvent) / rng/(replay等6) / timeline/(engine・buffs) / sim/build / cli/simulate / optimizer / photos・kouryu・skillLevels・rounding",
+  desc:"千分率整数演算を強制（rounding.ts に一元）。timeline/engine.ts が11段階ビートループ。ReplayRng で実測値を注入しゴールデン照合。ランタイム依存ゼロ。",refs:["アイプラ\\src\\timeline\\engine.ts","アイプラ\\src\\formula\\scoreEvent.ts"]},
+ {id:"ui", x:1020,y:396,w:500,h:84, zone:"repo", title:"ui/ → dist/（単一HTML・黄色テーマ）", agents:["oc","zc"],
+  sub:"app.ts(233KB) → build_ui.mjs → dist/aipura_simulator.html (15MB・画像同梱)",
+  desc:"編成入力・マイフォト帳 (LocalStorage)・オプティマイザ・ネストJSONインポート (8-B10修正) を備えた単体HTML。Tauri がこれを梱包。",refs:["アイプラ\\ui\\app.ts","アイプラ\\dist\\aipura_simulator.html"]},
+ {id:"tauri", x:1020,y:504,w:500,h:60, zone:"repo", title:"src-tauri/（Tauri デスクトップ）", agents:["oc"],
+  sub:"Windows ビルド・NSIS・起動確認済み", desc:"Phase 5 でダブルクリック起動を実現。個人利用向け ZIP 配布。",refs:[]},
+ {id:"tests", x:1020,y:588,w:500,h:84, zone:"repo", title:"tests/（39本・431テスト全緑）", agents:["oc","zc"],
+  sub:"data-integrity(T0: I-01〜16) / unit / golden(T4発動ログ15/15一致・T5スコア17.53B完全一致) / ui smoke",
+  desc:"ゴールデンテストが一切のリグレッションを防ぐ。「T5 確定値 2,436,373,427 不変」が全フェーズの完了条件に据えられている。",refs:["アイプラ\\tests\\golden\\"]},
+ {id:"res", x:1020,y:696,w:500,h:132, zone:"repo", title:"research/（調査ログ 01〜18）", agents:["oc","zc","he"],
+  sub:"01仕様〜15最終報告 / 16 Peing確定仕様 / 17 サンプル1乖離分析(未コミット) / 18 type36係数(未コミット) / fixes/・peing_*.txt・sheets/",
+  desc:"すべての仕様決定のエビデンス。17_sample1_gap_analysis は hermes の診断タスク (analyze-sample1-gap.md) から派生。18 はスプレッドシート (sheet_fetch.py) で取得した type36 係数の逆算記録。",refs:["アイプラ\\research\\17_sample1_gap_analysis.md","アイプラ\\research\\18_type36_coefficients.md"]},
+ {id:"ss", x:1020,y:852,w:500,h:96, zone:"repo", title:"スコア分析サンプル/（1365ファイル・1.8GB）", agents:["oc"],
+  sub:"T4/T5 の実測データ（measured_data・verification・レーン別スクショ・動画・scratch/OCR）",
+  desc:"ゴールデンテストの参照実測。156ビート全実測がシミュレータの精度を「1の位まで」規定している。サンプル1/2 の先駆け。",refs:["アイプラ\\スコア分析サンプル\\measured_data_summary.md"]},
+ {id:"git", x:1020,y:972,w:500,h:84, zone:"repo", title:"git（17コミット・直線履歴）", agents:["oc","cl","zc"],
+  sub:"Phase 0→8-B10 がほぼ1:1対応 ／ 現在 19修正＋12未追跡",
+  desc:"最近のコミット: d544731 Phase 8 → d798d05 Phase 5-6 → cf81137 Phase 4 → 3cbb963 T5完全一致 → 758b182 発動順82/82 → … 最初は 818e9f3 Phase 0-1。",refs:[]},
+];
+const EDGES = [
+ {f:"pplan",t:"plan",label:"起点"},
+ {f:"plan",t:"prompts",label:"作業手順をプロンプト化"},
+ {f:"plan",t:"src",label:"§3式・§14フェーズが実装根拠"},
+ {f:"spec",t:"core",label:"撮影指示"},
+ {f:"core",t:"s1",label:"922枚撮影 (antigravity)", side:"rr", bulge:40},
+ {f:"core",t:"s2",label:"900+枚撮影 (antigravity)", side:"rr", bulge:40},
+ {f:"s1",t:"ana",label:"連番PNGを入力"},
+ {f:"ana",t:"s1",label:"measured_data_v2 生成",back:true},
+ {f:"prompts",t:"ana",label:"measure-sample1-antigravity.md を zcode 実行", d:"M760,264 C760,500 560,810 424,810", lp:[596,580]},
+ {f:"s1",t:"ex",label:"deck.json → nested-sample.json*"},
+ {f:"ex",t:"ui",label:"GUIインポート (8-B10で修正)"},
+ {f:"s1",t:"src",label:"実測→式改良 (improve-from-sample)"},
+ {f:"s1",t:"res",label:"乖離分析 (hermes診断)"},
+ {f:"vendor",t:"importers",label:"公式マスタ", lp:[1245,101]},
+ {f:"importers",t:"data",label:"変換"},
+ {f:"data",t:"src",label:"マスタ参照"},
+ {f:"src",t:"ui",label:"計算コア"},
+ {f:"src",t:"tauri",label:"同コアを梱包", side:"rr", bulge:60},
+ {f:"src",t:"tests",label:"単体+ゴールデン", side:"rr", bulge:85},
+ {f:"data",t:"tests",label:"T0整合", side:"rr", bulge:105},
+ {f:"ss",t:"tests",label:"T4/T5ゴールデン実測", side:"rr", bulge:70},
+ {f:"res",t:"data",label:"type36_coefficients.json*", side:"rr", bulge:125},
+ {f:"res",t:"src",label:"仕様反映", side:"rr", bulge:145},
+];
+
+/* ---------- ② タイムライン ---------- */
+const SESSIONS = [
+ // cline
+ {ag:"cl", t:"mediadedup開発（別案件）", s:"08-27 20:23", e:"08-28 00:48", dir:"other",
+  d:"E:\\mediadedup のメディア重複削除アプリ開発（161メッセージ）。アイプラとは無関係だが、clineの利用履歴として最初の1本。"},
+ {ag:"cl", t:"T5仕上げ: L3バフ延長・type36・メンタル順序（opencodeから引継ぎ）", s:"08-29 20:54", e:"08-30 00:03", dir:"repo",
+  d:"冒頭「opencodeでの前セッションからの引継ぎです」。plan→act でユーザーと対話しながら、レーン処理順（メンタル降順 L1>L3>L4>L2>L5）の確認とバフ20段上限超過の内部保持仕様を確定させ T5 を仕上げた。この成果が翌0:43のopencodeセッションへ戻る。"},
+ // opencode
+ {ag:"oc", t:"プロジェクト起動: subagent5本で調査 (prompt_plan.md)", s:"08-28 17:52", e:"08-28 22:00", dir:"repo", approx:true,
+  d:"prompt_plan.md に基づきPM兼レビュアーとして起動。日本版仕様調査・スコア式/端数処理・データソース・アーキ配布方式・テスト計画を5サブエージェントへ割当 → PLAN.md へ結実。"},
+ {ag:"oc", t:"マスタ照合・STAGE19特定・画像再分析群", s:"08-29 00:17", e:"08-29 12:00", dir:"repo", approx:true,
+  d:"マスタ照合/STAGE19特定、スタミナ・CT画像再分析、バフ・クリティカル画像分析、装備画像再分析 L4/L5解決 など複数セッション。"},
+ {ag:"oc", t:"Phase 2 スコア式実装", s:"08-29 12:00", e:"08-29 14:56", dir:"repo", approx:true,
+  d:"beat/A/SP/P スコア、コンボ/ファン/クリティカル/乱数、丸め位置テスト。コミット 6868c2a。"},
+ {ag:"oc", t:"Phase 3 タイムラインエンジン実装 (P3a/P3b/P3c-T4)", s:"08-29 14:56", e:"08-30 00:30", dir:"repo", approx:true,
+  d:"skills golden データ → 11段階ビートループエンジン → T4 発動ログ15/15一致。コミット 1390b4d / 90a73fa / b89f854。"},
+ {ag:"oc", t:"バフ上限超過内部保持実装（clineから仕様を回収）", s:"08-30 00:43", e:"08-30 03:00", dir:"repo", approx:true,
+  d:"冒頭「前回のOpenCodeおよびClineセッションからの引き継ぎ」。cline夜間セッションで確定した仕様（バフ20段上限を超える内部保持）を実装し T5 残タスクへ。"},
+ {ag:"oc", t:"自律完走: T5完全一致・CLI構築（就寝中）", s:"08-30 03:49", e:"08-30 12:00", dir:"repo", approx:true,
+  d:"就寝中の自律完走を指示。T5 発動順82/82・スコア17.53B完全一致（3cbb963）と Phase 4 CLI を達成。"},
+ {ag:"oc", t:"Phase 4 CLI/Web UI構築", s:"08-30 14:54", e:"08-30 16:30", dir:"repo", approx:true,
+  d:"T5完全一致を受けたスタンドアロンWeb UI＋Monte Carlo CLI。コミット cf81137。"},
+ {ag:"oc", t:"Phase 5-6: Peing・Tauri・マスタ統合", s:"08-30 16:41", e:"08-31 02:00", dir:"repo", approx:true,
+  d:"質問箱(Peing)アーカイブによる未解明仕様の解明、クリティカル動的バフ連動、カード/ステージDB統合、Tauri デスクトップ化。途中「ポップアップが出て入力できない」不具合報告あり。"},
+ {ag:"oc", t:"UI改修・ハイスコアライブ対応", s:"08-31 02:54", e:"08-31 05:00", dir:"repo", approx:true,
+  d:"stages_index.json（楽曲マスタ）更新を含むUI改修。モデル baijp/glm-5.3-flash。以降 opencode は別プロジェクト (Distributional_RL) へ移行。"},
+ // antigravity
+ {ag:"ag", t:"aipura調査参加（複数セッション）", s:"08-28 12:00", e:"08-28 23:00", dir:"repo", approx:true,
+  d:"8/28からaipura関連セッションが多数（4799af87 等）。"},
+ {ag:"ag", t:"cline進捗確認", s:"08-29 21:51", e:"08-29 22:30", dir:"repo", approx:true,
+  d:"「今clineで同じディレクトリで動かしてるんだけど、どういう状況？」— マルチエージェント運用の状況確認。"},
+ {ag:"ag", t:"opencodeリミット確認", s:"08-30 00:26", e:"08-30 01:00", dir:"repo", approx:true,
+  d:"「同じディレクトリでopencodeに最初に作業させてて、リミット来たか」。"},
+ {ag:"ag", t:"info-pride リポジトリ調査", s:"08-30 23:58", e:"08-31 01:30", dir:"repo", approx:true,
+  d:"GitHub info-pride（アクセサリ等データ）を webfetch で調査。"},
+ {ag:"ag", t:"opencodeへの指示出し", s:"08-31 02:25", e:"08-31 03:30", dir:"repo", approx:true,
+  d:"「同ディレクトリで今opencodeに作業してもらっている。ひと段落ついたら…」。"},
+ {ag:"ag", t:"仕様確定・実装プロンプト作成", s:"08-31 04:24", e:"08-31 06:00", dir:"repo", approx:true,
+  d:"「ライブスコア計算機 実装や開発」— 既に仕様がわかっているものを実装するプロンプトの作成を指示 → prompts/ の整備につながる。"},
+ {ag:"ag", t:"opencode effort設定質問", s:"08-31 06:33", e:"08-31 07:00", dir:"repo", approx:true,
+  d:"「opencodeでb.aiのAPIで…effortって…」。この前後 8/29 20時台に opencode 側で New session が8本連発（接続試行の痕跡）。"},
+ {ag:"ag", t:"Android MCP+ADB ミッション設計", s:"08-31 09:04", e:"08-31 11:30", dir:"nox", approx:true,
+  d:"「Androidゲーム情報収集・構造化Agent」— Nox Player の IDOLY PRIDE を ADB で操作するミッションを設計。"},
+ {ag:"ag", t:"サンプル1 実機キャプチャ 922枚 (409ef64c・869steps)", s:"08-31 12:00", e:"09-01 03:50", dir:"nox", approx:true,
+  d:"adb で Nox(127.0.0.1:62001) 接続→アイプラ起動→分析画面確定→サンプル1 に lane1-5 / beat_*.PNG 880枚・skill_order・photo_skill 等を収集。aipura_nox 実作業の主体。"},
+ {ag:"ag", t:"サンプル1 deck.json 生成 (c06ee7f6)", s:"09-01 00:59", e:"09-01 02:00", dir:"nox", approx:true,
+  d:"prompts/deck-json-from-images.md に基づきフォト等を画像分析 → 編成 deck.json を作成（Nox_share/Screenshots にも言及）。"},
+ {ag:"ag", t:"サンプル2 キャプチャ (d4ef2d88・1875steps)", s:"09-01 04:00", e:"09-01 19:07", dir:"nox", approx:true,
+  d:"「create_sample.md を読み 0,2,3 を実行」。ライブ実行・レーン2/5フォト入れ替え・order命名統一・create_sample.md 自体の改訂（詰まりポイント反映）まで実施。"},
+ {ag:"ag", t:"サンプル2 deck.json 生成 (9f24c75e)", s:"09-01 20:18", e:"09-01 21:30", dir:"nox", approx:true,
+  d:"deck-json-from-images.md でサンプル2のフォトを画像分析→編成JSON（fan.png の来場ファン数を反映）。"},
+ // zcode
+ {ag:"zc", t:"ライブボーナス実装・スキルパーサー拡張", s:"08-31 05:38", e:"08-31 08:39", dir:"repo",
+  d:"PLAN.md / research/16_peing_verified_specs.md に基づくライブボーナス実装（zcode 参入初日）。"},
+ {ag:"zc", t:"compact機能の質問", s:"08-31 08:05", e:"08-31 08:15", dir:"repo",
+  d:"「zcodeのコンテキスト自動compact機能の有無」— 長時間セッション前の環境確認。"},
+ {ag:"zc", t:"フォトUI改善（マイフォト帳・オプティマイザ）", s:"08-31 08:53", e:"09-01 00:15", dir:"repo",
+  d:"15時間超の長時間セッション。Phase 8-B〜8-B9 のフォト/アクセサリ/スキルLv/UI一連を実装。"},
+ {ag:"zc", t:"ネストdeck.jsonインポート修正", s:"09-01 01:03", e:"09-01 01:40", dir:"repo",
+  d:"antigravity が作った aipura_nox\\サンプル1\\deck.json をGUIにインポートしたら失敗 → applyConfig のネストJSON対応を修正 (8-B10)。"},
+ {ag:"zc", t:"measure-sample1-antigravity.md 作成", s:"09-01 03:04", e:"09-01 03:40", dir:"repo",
+  d:"「aipura_nox\\サンプル1 に新しいサンプルを用意した」→ 画像解析プロンプトを作成（antigravity からトークン制限で移管されたタスク用）。"},
+ {ag:"zc", t:"サンプル1 実測データ生成（922枚解析・/compact実施）", s:"09-01 03:48", e:"09-01 18:43", dir:"nox",
+  d:"measure-sample1-antigravity.md の作業実行（コード変更禁止・実測データ生成のみ）。トークン制限で antigravity から移管されたもの。15時間。"},
+ {ag:"zc", t:"antigravity監視 → サンプル2分析", s:"09-01 13:00", e:"09-01 17:03", dir:"nox",
+  d:"「antigravityのセッションID：d4ef2d88…が正常終了し、zcodeの作業実行も終わったら、aipura_nox\\サンプル2 を同じ要領で画像分析・検証・修正せよ。終わるまで待機」＝マルチエージェント連携制御。"},
+ {ag:"zc", t:"fork: 一次資料精査（Info Pride・延長+7ビート訂正）", s:"09-01 18:34", e:"09-01 19:28", dir:"repo",
+  d:"実測データの一次資料精査。「bwiki は不適切では？」「強化効果延長=+7ビートという式は嘘で、キャラ・スキルレベル別の延長ビート数が Info Pride にある」等のデータ源検証と修正。"},
+ {ag:"zc", t:"本セッション: 作業環境の可視化", s:"09-01 20:05", e:"09-01 23:59", dir:"repo", now:true,
+  d:"このマップを生成しているセッション（あなたが今読んでいるもの）。"},
+ // hermes
+ {ag:"he", t:"hello（動作確認）", s:"09-01 18:22", e:"09-01 18:30", dir:"other",
+  d:"hermes agent インストール直後の動作確認（3メッセージ）。"},
+ {ag:"he", t:"サンプル1乖離分析（analyze-sample1-gap.md・継続中）", s:"09-01 18:46", e:"09-01 21:00", dir:"nox", now:true,
+  d:"「prompts/analyze-sample1-gap.md を読んで作業開始」。コード変更禁止の診断専用タスク: シミュ確定値 195,077,552 に対し実測 116,537,513（約1.67倍乖離）の要因分解。ユーザー指摘（ファンファクター0.2%・会場キャパ100なら個人来場ファン上限20人／効果種類数バフの上限仕様は2度変更済みでdocsの倍率は当てにならない）を実装。最後に「次サンプルではどのようなものが良いか一覧化」へ。342メッセージ。"},
+];
+const HANDOFFS = [
+ {route:"opencode → cline（08-29 夜）", html:"「T5の次の作業（L3バフ延長セマンティクス逆算・type36確定・T5本テスト）」をセッション跨ぎで引継ぎ。continue-session 的な運用。"},
+ {route:"cline → opencode（08-30 00:43）", html:"ユーザー補足（メンタル降順 L1>L3>L4>L2>L5・バフ20段上限の内部保持）を持ち帰り、opencode が T5 を完走。"},
+ {route:"antigravity → zcode（09-01 03:04）", html:"トークン制限のため 922枚画像解析を <code>prompts/measure-sample1-antigravity.md</code> として zcode へ移管。プロンプト化が移管の手順書として機能。"},
+ {route:"zcode ⇄ antigravity（09-01 13:00-17:03）", html:"zcode が antigravity セッション <code>d4ef2d88</code> の正常終了を監視し、完了後に <code>aipura_nox\\サンプル2</code> の分析を開始する二段構え。"},
+ {route:"PLAN.md ＋ prompts/ → 全員（常時）", html:"大元の計画書 PLAN.md と手順書 prompts/ が全エージェントの共通言語。どのエージェントに渡っても同一手順で動く設計。"},
+];
+const AGENT_HOMES = [
+ {ag:"oc", path:"~\\.local\\share\\opencode\\opencode.db", n:"SQLite (67セッション: アイプラ38・他プロジェクト29)"},
+ {ag:"cl", path:"~\\.cline\\data\\sessions\\", n:"npm CLI版 v3.0.60 (2セッション・VS Code拡張は未導入)"},
+ {ag:"zc", path:"~\\.zcode\\cli\\db\\db.sqlite", n:"SQLite 64MB (13セッション)"},
+ {ag:"he", path:"~\\AppData\\Local\\hermes\\state.db", n:"SQLite (2セッション)"},
+ {ag:"ag", path:"~\\.gemini\\antigravity\\conversations\\*.db", n:"SQLite 381ファイル (aipura関連は 8/28以降 約20本)"},
+];
+
+/* ---------- ③ フェーズ ---------- */
+const PHASES = [
+ {g:"基盤・計算コア (08-28〜29)", items:[
+  {id:"Phase 0", st:"✅ 08-29", t:"基盤: git init・マスタ→data/ 変換パイプライン・T0健全性テスト", c:"I-01〜I-16 不変条件", tests:"41テスト"},
+  {id:"Phase 1", st:"✅ 08-29", t:"ステータス計算 (§3.1 式・整数演算) + T3ゴールデン", c:"5レーン×4ステータス 1の位一致（40項目完全一致）"},
+  {id:"Phase 2", st:"✅ 08-29", t:"スコア式（段階A）: beat/A/SP/P・コンボ/ファン/クリティカル/乱数", c:"3点検算が乱数レンジ内", commit:"6868c2a"},
+  {id:"Phase 3", st:"✅ 08-30", t:"タイムラインエンジン（段階B）: 11段階ビートループ・発動順・バフ/CT/スタミナ", c:"T4発動ログ15/15一致＋T5 156ビート ReplayRng 累積完全一致", commit:"90a73fa, b89f854, 758b182, 3cbb963"},
+  {id:"Phase 4", st:"✅ 08-30", t:"UI（単一HTML）・CLI (Monte Carlo)", c:"手動操作でMVP利用可能", commit:"cf81137"},
+ ]},
+ {g:"配布・拡張 (08-30)", items:[
+  {id:"Phase 5", st:"✅ 08-30", t:"Tauri 配布: Windows ビルド・NSIS", c:"ダブルクリック起動達成 (exe 12.6MB)"},
+  {id:"Phase 6", st:"✅ 08-30", t:"段階C拡張: カードDB検索・全データ対応・パーサ拡張", c:"全491カード・全5916ステージ・624アクセ・Optimizer", commit:"d798d05"},
+  {id:"Phase 7", st:"✅ 08-30", t:"検証強化: 第2実測取り込み・クリティカル率推定・MC/CRN", c:"Peing確定クリティカル式の実装"},
+ ]},
+ {g:"ライブボーナス・Peing較正 (08-31, zcode 主導)", items:[
+  {id:"Phase 8", st:"✅ 08-31", t:"ライブボーナス連携・集目テーブル較正・超化統一仕様・質問箱調査", c:"unsupportedEffects 335→99枚", tests:"359テスト"},
+  {id:"8-A", st:"✅ 08-31", t:"アクセサリスロット役割分離（スロット1=基礎3ステータス / 2=Sta/Men/Cri）"},
+  {id:"8-B", st:"✅ 08-31", t:"フォト5スロットUI＆マイフォト帳・レタッチ1枚制限・隣接/センター/スコアラー付与 (grant_*) 実装", tests:"+20 → 379"},
+  {id:"8-C", st:"✅ 08-31", t:"統合オプティマイザ（必須カード制約・フォト貪欲配分）"},
+  {id:"8-B2", st:"✅ 08-31", t:"フォトマスタ統合（262枚）・フォトスキル条件72種・チップ化表示", tests:"394"},
+  {id:"8-B3", st:"✅ 08-31", t:"スキルLv1-6選択・カードレベル制約・skills_levels.json (1.2MB)", tests:"407"},
+  {id:"8-B4", st:"✅ 08-31", t:"与/被レタッチ・条件追加（70コンボ以上時・beat_chance）", tests:"415"},
+  {id:"8-B5", st:"✅ 08-31", t:"対象型延長/増強・trigger 対象・同フォト1枚ルール", tests:"418"},
+  {id:"8-B6", st:"✅ 08-31", t:"フォト ステータス/スキル統合・装備連動", tests:"422"},
+  {id:"8-B7", st:"✅ 08-31", t:"アクセサリソート・一括解除・テンプレ訂正", tests:"425"},
+  {id:"8-B8", st:"✅ 08-31", t:"UI テーマ黄色化・ステータス/ロール色（表示のみ・計算不変）", tests:"425"},
+  {id:"8-B9", st:"✅ 08-31", t:"画像→編成JSON 生成プロンプト (deck-json-from-images.md) 新設", tests:"428"},
+ ]},
+ {g:"現在地 (09-01)", items:[
+  {id:"8-B10", st:"✅ 09-01", t:"ネスト形式インポート対応・myPhotos ステータス統合・golden フォトスキルの名前一致モデル化", c:"UI確定値 = CLI確定値 (304,238,070)・examples/nested-sample.json 同梱", tests:"431"},
+ ]},
+];
+const WIP = [
+ {t:"サンプル1 残余乖離分析（195,077,552 vs 116,537,513 ≈ 1.674倍）", d:"hermes が prompts/analyze-sample1-gap.md に基づき診断中。ファンファクター0.2%・会場キャパ100による個人来場ファン数上限20人の実装、効果種類数バフの上限仕様変更履歴の反映など。→ research/17_sample1_gap_analysis*"},
+ {t:"type36 スキル係数の逆算", d:"スプレッドシート (tools/sheet_fetch.py・research/sheets/) から取得し data/type36_coefficients.json として確定中 → research/18_type36_coefficients.md。"},
+ {t:"一次資料精査の成果を反映", d:"zcode fork セッション: 「効果延長=残り+7ビート は嘘。キャラ・スキルレベル別の延長ビート数が Info Pride にある」→ prompts/ 3本・research/16 改訂済み。"},
+ {t:"未コミットファイル (抜粋)", d:"data/type36_coefficients.json・examples/nested-sample.json・prompts/ 4本・research/17,18・tests/unit/timeline/sample1-specs.test.ts・type36-scaling.test.ts・tools/sheet_fetch.py ほか、src/timeline/engine.ts・photos.ts 等の修正 19本。"},
+];
+
+/* ---------- ④ ツリー ---------- */
+const TREE_A = {n:"アイプラ/", d:"git リポジトリ (17コミット・直線履歴)・IDOLY PRIDE ライブスコア計算機 aipura-score-calc v0.1.0", c:[
+ {n:"PLAN.md", d:"大元の計画書 45KB (§1〜19＋附録)。式・確度区分・フェーズ表・テスト計画・サブエージェント割当。全エージェントの共通根拠。"},
+ {n:"prompt_plan.md", d:"最初の依頼プロンプト。「PM兼レビュアーとして行動しサブエージェントへ割り振れ」。"},
+ {n:"opencode.json", d:"opencode 設定: プロバイダ baijp・モデル glm-5.3-flash・reasoningEffort 4段階。"},
+ {n:"package.json", d:"ランタイム依存ゼロ。devDeps: tauri-cli/typescript/vitest/jsdom。scripts: test・simulate・build:data・build:ui・tauri 等。"},
+ {n:"src/", c:[
+   {n:"formula/", d:"baseStatus(カード外ステータス式)・combo・critical(150%+加算)・fan(来場者表)・scoreEvent(イベントスコア本体)"},
+   {n:"rng/", d:"replay(実測値注入ReplayRng)・random(±5%離散一様)・bounds・fixed・neutral"},
+   {n:"timeline/", d:"engine(11段階ビートループ)・buffs(バフ/上限解放)・constants・types"},
+   {n:"sim/build.ts", d:"編成JSON→シミュレーション状態構築 (UI/CLI共通)"},
+   {n:"cli/simulate.ts", d:"CLIランナー (Monte Carlo対応)"},
+   {n:"optimizer/index.ts", d:"編成最適化 (必須カード制約＋フォト貪欲配分)"},
+   {n:"photos.ts / skillLevels.ts / kouryu.ts / rounding.ts / types.ts / index.ts", d:"フォト帳処理・スキルLv1-6・交流Lv表・千分率整数丸めの一元化"},
+ ]},
+ {n:"ui/", d:"app.ts (233KB本体)・index.template.html・style.css (黄色テーマ)。build_ui.mjs で dist/aipura_simulator.html (15MB) に。"},
+ {n:"dist/", d:"aipura_simulator.html ＋ images/ (gitignore)"},
+ {n:"src-tauri/", d:"Tauri デスクトップラッパ (tauri.conf.json・main.rs・lib.rs・icons)"},
+ {n:"data/", d:"生成済みマスタ 20本・4.1MB。cards / card_parameters / characters / skills_master / skills_levels(1.2MB) / skills_golden(実測較正35スキル57効果) / stages_index / stages/ / charts_all(111曲) / accessories / photos_master / yell / staff / live_bonuses / unlocks / meta", c:[
+   {n:"type36_coefficients.json", tag:"NEW", d:"未コミット。type36 スキル係数の逆算結果 (research/18 対応)。"},
+ ]},
+ {n:"vendor/", d:"公式マスタJSON 26本・31MB (gitignore・出典 MalitsPlus/ipr-master-diff)"},
+ {n:"tools/", d:"build_data.mjs / build_data_phase6.mjs (変換)・build_ui.mjs・t5_solver.ts (T5仮説グリッドフィッタ)・validate_skills_*.mjs・download_card_icons.mjs・peing_search.py・generate_icon.py", c:[
+   {n:"sheet_fetch.py", tag:"NEW", d:"未コミット。スプレッドシート取得 (type36係数用)。"},
+ ]},
+ {n:"tests/", d:"39本・431テスト全緑。data-integrity(T0: I-01〜16)・unit (formula/rng/timeline/sim/optimizer/photo)・golden (T4 15/15一致・T5 17.53B完全一致＋fixtures実測JSON3本)・ui smoke", c:[
+   {n:"unit/timeline/sample1-specs.test.ts", tag:"NEW", d:"未コミット。サンプル1実測スペックのテスト。"},
+   {n:"unit/timeline/type36-scaling.test.ts", tag:"NEW", d:"未コミット。type36係数スケーリングのテスト。"},
+ ]},
+ {n:"research/", d:"調査ログ 39本。01_jp_spec〜06_test_plan・07_master_lookup・08_stamina_ct・09_buffs_criticals・10_equipment・12_implementation_log・13_engine_spec・14_visual_verified_golden_data・15_final_report・16_peing_verified_specs", c:[
+   {n:"17_sample1_gap_analysis.md + /", tag:"NEW", d:"未コミット。サンプル1の乖離 (195M vs 116.5M) 分析。hermes 診断タスクから派生。"},
+   {n:"18_type36_coefficients.md", tag:"NEW", d:"未コミット。type36 係数の逆算記録。"},
+   {n:"fixes/ / peing_*.txt / sheets/", d:"OCR誤読修正JSON 4本・質問箱回答の一次記録・スプレッドシートCSV"},
+ ]},
+ {n:"prompts/", d:"エージェント運用プロンプト 7本: deck-json-from-images・measure-new-sample＋improve-from-sample (セット運用)・analyze-sample1-gap・measure-sample1-antigravity(NEW)・continue-session・readme.txt"},
+ {n:"examples/", d:"t5-sample.json・t5-sample-deck.json・area1-stage-sample.json・main-live-sample.json", c:[
+   {n:"nested-sample.json", tag:"NEW", d:"未コミット。ネスト形式編成JSON (サンプル1の deck.json 由来・8-B10 の検証用)。"},
+ ]},
+ {n:"スコア分析サンプル/", d:"1365ファイル・1.8GB。T4/T5 の実測 (measured_data v1/v2・verification_data・156ビート全実測・レーン別スクショ・skill_order・動画・scratch/OCR解析)。ゴールデンテストの参照元。"},
+]};
+const TREE_B = {n:"aipura_nox/", d:"git管理外・NoxPlayer ADB撮影ワークスペース。2,224ファイル・1.92GB (PNG 2,181枚 ≈99.9%)・CPython 3.13", c:[
+  {n:"AGENTS.md", tag:"NEW", d:"本ディレクトリ用エージェント指示（アイプラ/AGENTS.md へのポインタ＋撮影規律・現行スクリプト2本・既存ファイル保護）。"},
+ {n:"create_sample.md", d:"撮影プロンプト仕様書。暴走防止ルール（クラッシュ/BEAT None 3回で即停止・勝手な再挑戦禁止＝ライブチケット保護）が最上位に置かれている。§0環境〜§5分析画面撮影。antigravity がサンプル2作業中に随時改訂。"},
+ {n:"capture_lane_generic.py", d:"中核エンジン。recognize_beat() (ROI 820:885,900:1070 をテンプレ照合)・capture_lane()・repair_lane()・auto_repair_all()。LANE_X={1:108,2:324,3:540,4:756,5:972}"},
+ {n:"capture_all_lanes.py", d:"オーケストレータ。lane1→5 を順次実行し欠損ビート番号を検証。"},
+ {n:"lane1系 (4本)", d:"capture_lane1.py (EasyOCR) → _strict → _tmpl (cv2テンプレ) → _final。認識方式の移行過程。"},
+ {n:"lane3系 (9本)", d:"capture_lane3_scroll_effects{,_v2,_robust,_proven}＋resume_lane3_{scroll_effects,pure_swipe,safe_swipe,super_unstick,adaptive_x}。青丸7個以上のビート帯 (14-33・101-127・151-167) の効果欄スクロール撮影。既撮影スキップのレジューム機能。"},
+ {n:"skill_order系＋lane2補助 (4本)", d:"capture_skill_order_proper・run_proper_skill_order・reset_lane2・fill_lane2_and_prep_lane3。"},
+ {n:"repair_missing_beats.py", d:"⚠ 破損（文字化け・旧世代の digits/ 参照）。意図は欠損ビートの再認識。"},
+ {n:"templates/", d:"BEAT数字 0-9.png ＋ crop_N_M.png 55枚。TM_CCOEFF_NORMED ≥0.65 で採用。"},
+ {n:"debug/screen系 png (28枚)", d:"debug_skill_order_swipe1-4・debug_b14*・screen_p1-5 等の作業痕跡。"},
+ {n:"data/", c:[
+   {n:"communication_levels.json", d:"全アイドルの交流レベル (manager_lv 180 等)。"},
+   {n:"idoly_pride/json+logs", d:"08-31 の自動エージェント実行が MCPツール不足で失敗した構造化記録 (status:failed・human_intervention_required:true)。"},
+ ]},
+ {n:"サンプル1/", d:"完結。「Shine Purity～輝きの純度～」Lv15・177ビート・実測 116,537,513 (S+67)。lane1=177/lane2=176/lane3=177/lane4=177/lane5=173 (欠損5)・skill_order 34", c:[
+   {n:"measured_data.json / measured_data_v2.json", d:"468/472KB。ビート単位の実測。v2 が自己検証済み確定版。"},
+   {n:"measured_data_summary.md", d:"31KBの実測検証レポート。"},
+   {n:"deck.json", d:"編成データ (スタッフ/エール・キャラ・フォト・アクセサリ)。antigravity が画像分析で作成 → UIネストインポート問題 (8-B10) のきっかけ。"},
+   {n:"issues.md", d:"13KB。仕様疑問点リスト: <サポータータイプのみ>制約・SPノートFAIL時のコンボリセット・効果延長=残り+7ビート 等、シミュレータ仕様の確定記録。"},
+   {n:"analysis/", d:"OCR解析パイプライン (ocr→build_templates→extract→build_outputs→build_summary)・extracted.json 167KB・effect_states.json・preview 149枚・sheets 8枚"},
+   {n:"lane1-5/ + skill_order/", d:"beat_NNN.PNG 連番 880枚＋order_NN.PNG 34枚"},
+   {n:"photo_skill_lane3_3.PNG 等", d:"フォトスキル詳細の長押し撮影・laneM_photos_and_accessories1/2・result_total/charactor"},
+ ]},
+ {n:"サンプル2/", d:"進行中。別編成 (佐伯遙子/川咲さくら/一ノ瀬怜/白石千紗/長瀬琴乃)。lane1-5 各168枚＋lane3 scroll 64枚 (beat_NNN_2.PNG)・order 44枚。result 未取得。", c:[
+   {n:"communication_levels.json", d:"サンプル2用の交流レベル。"},
+ ]},
+ {n:"__pycache__", d:"cpython-313 の .pyc 3本。"},
+]};
+
+/* ================= 共通 ================= */
+const $ = s => document.querySelector(s);
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+function agentDots(ids){ return ids.map(a=>`<span class="adot" style="background:${AGENTS[a].color}" title="${AGENTS[a].name}">${AGENTS[a].initial}</span>`).join(""); }
+// タブ
+$("#tabs").addEventListener("click", e=>{
+  const b = e.target.closest("button"); if(!b) return;
+  document.querySelectorAll("#tabs button").forEach(x=>x.classList.toggle("active", x===b));
+  document.querySelectorAll("section.tab").forEach(s=>s.classList.toggle("active", s.id==="tab-"+b.dataset.tab));
+});
+
+/* ================= ① マップ ================= */
+const wrap = $("#mapWrap");
+const MAP_TOP = 42; // ゾーン見出し帯（ノード開始Y）
+NODES.forEach(n=>{ n.y += MAP_TOP; });
+// ゾーン見出し（ノードより上の帯に配置）
+[["aipura_nox — 実測データ収集 (git管理外)",24],["橋渡し — PLAN.md と prompts/",480],["アイプラ repo — シミュレータ開発 (git)",1020]].forEach(([txt,x])=>{
+  const z=document.createElement("div"); z.className="zone"; z.style.left=x+"px"; z.style.width="520px"; z.textContent=txt; wrap.appendChild(z);
+});
+NODES.forEach(n=>{
+  const el=document.createElement("div");
+  el.className=`node z-${n.zone}`; el.id="nd-"+n.id;
+  el.style.cssText=`left:${n.x}px;top:${n.y}px;width:${n.w}px;height:${n.h}px`;
+  el.innerHTML=`<div class="adots">${agentDots(n.agents||[])}</div><div class="t">${n.title}</div><div class="s">${n.sub}</div>`;
+  el.addEventListener("mouseenter",()=>hl(n.id,true));
+  el.addEventListener("mouseleave",()=>hl(n.id,false));
+  el.addEventListener("click",()=>showNode(n));
+  wrap.appendChild(el);
+});
+const svg=$("#mapSvg");
+function anchor(n, side){
+  switch(side){case "r":return[n.x+n.w,n.y+n.h/2];case "l":return[n.x,n.y+n.h/2];
+   case "t":return[n.x+n.w/2,n.y];case "b":return[n.x+n.w/2,n.y+n.h];}
+}
+EDGES.forEach(e=>{
+  const a=NODES.find(n=>n.id===e.f), b=NODES.find(n=>n.id===e.t);
+  const dx=b.x+b.w/2-(a.x+a.w/2), dy=b.y+b.h/2-(a.y+a.h/2);
+  let d;
+  if(e.d){ d=e.d; } // 手動指定経路
+  else if(e.side==="rr"){ // 右ゾーン縦スタック: 右側に膨らませてノード列を迂回
+    const bx=Math.max(a.x+a.w,b.x+b.w)+ (e.bulge||60);
+    const y1=a.y+a.h*0.35, y2=b.y+b.h*0.35;
+    d=`M${a.x+a.w},${y1} C${bx},${y1} ${bx},${y2} ${b.x+b.w},${y2}`;
+  }
+  else{
+    let p1,p2;
+    const overlapX=Math.min(a.x+a.w,b.x+b.w)-Math.max(a.x,b.x);
+    if(overlapX>40){ p1=anchor(a, dy>0?"b":"t"); p2=anchor(b, dy>0?"t":"b"); } // 縦に積まれたノードは上下接続
+    else if(Math.abs(dx)>Math.abs(dy)){ p1=anchor(a, dx>0?"r":"l"); p2=anchor(b, dx>0?"l":"r"); }
+    else { p1=anchor(a, dy>0?"b":"t"); p2=anchor(b, dy>0?"t":"b"); }
+    const [x1,y1]=p1,[x2,y2]=p2;
+    if(Math.abs(dx)>Math.abs(dy)){ const mx=(x1+x2)/2; d=`M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`; }
+    else { const my=(y1+y2)/2; d=`M${x1},${y1} C${x1},${my} ${x2},${my} ${x2},${y2}`; }
+    if(e.back){ d=`M${x1},${y1} C${x1-40},${y1} ${x2+40},${y2} ${x2},${y2}`; }
+  }
+  const path=document.createElementNS("http://www.w3.org/2000/svg","path");
+  path.setAttribute("d",d); path.setAttribute("stroke","#8b93a7");
+  path.setAttribute("marker-end","url(#arrow)");
+  path.dataset.f=e.f; path.dataset.t=e.t;
+  svg.appendChild(path);
+  if(e.label){
+    let lx,ly;
+    if(e.lp){ [lx,ly]=e.lp; }
+    else{
+      const bboxes=e.d?null:path.getBBox();
+      if(bboxes){ lx=bboxes.x+bboxes.width*0.32; ly=bboxes.y+bboxes.height*0.30; }
+      else { const p=path.getPointAtLength(path.getTotalLength()*0.4); lx=p.x; ly=p.y-6; }
+    }
+    const tx=document.createElementNS("http://www.w3.org/2000/svg","text");
+    tx.setAttribute("x",lx); tx.setAttribute("y",ly);
+    tx.textContent=e.label; tx.dataset.f=e.f; tx.dataset.t=e.t;
+    svg.appendChild(tx);
+  }
+});
+function hl(id, on){
+  document.querySelectorAll("#mapSvg path, #mapSvg text").forEach(p=>{
+    p.classList.remove("hl","dim");
+  });
+  if(!on) return;
+  document.querySelectorAll("#mapSvg path, #mapSvg text").forEach(p=>{
+    if(p.dataset.f===id||p.dataset.t===id) p.classList.add("hl"); else p.classList.add("dim");
+  });
+}
+function showNode(n){
+  const refs=(n.refs||[]).map(r=>`<span class="fileRef">${esc(r)}</span>`).join("");
+  $("#nodeDetail").innerHTML=`<h3>${n.title}</h3>
+   <div style="margin-bottom:6px">${(n.agents||[]).map(a=>`<span class="chip" style="background:${AGENTS[a].color}">${AGENTS[a].name}</span>`).join("")}</div>
+   <div style="font-size:13px;color:var(--tx2)">${n.desc}</div>
+   ${refs?`<div style="margin-top:8px">${refs}</div>`:""}`;
+}
+showNode(NODES.find(n=>n.id==="plan"));
+
+/* ================= ② タイムライン ================= */
+function parseT(s){ // "08-29 20:54" → minutes from 08-27 12:00
+  const [md,hm]=s.split(" "), [M,D]=md.split("-").map(Number), [h,m]=hm.split(":").map(Number);
+  const dayIdx=(M-8)*31+(D-27); // 8/27=0 … 9/1=5 … 9/2=6
+  return (dayIdx*24 + h-12)*60 + m;
+}
+const PXH = 13/60; // px per minute（幅を抑え、右端まで読めるように）
+const TL_END = parseT("09-02 02:00");
+const cv=$("#tlCanvas");
+cv.style.width=(TL_END*PXH+120)+"px";
+// 行（同一エージェントで時間帯が重なるセッションは副レーンに振り分けて重なり防止）
+const AGENT_ORDER=["cl","oc","ag","zc","he"];
+const laneEnds={}; AGENT_ORDER.forEach(a=>laneEnds[a]=[]);
+[...SESSIONS].sort((x,y)=>parseT(x.s)-parseT(y.s)).forEach(s=>{
+  const st=parseT(s.s), en=parseT(s.e);
+  const ends=laneEnds[s.ag];
+  let li=ends.findIndex(e=>e<=st);
+  if(li<0){ li=ends.length; ends.push(0); }
+  ends[li]=en; s._lane=li;
+});
+const LANES={}; AGENT_ORDER.forEach(a=>LANES[a]=laneEnds[a].length);
+const PITCH=32, BH=26, rowTop={};
+let cy=8;
+AGENT_ORDER.forEach(a=>{ rowTop[a]=cy; cy+=LANES[a]*PITCH+14; });
+const TL_H=cy+8;
+cv.style.height=TL_H+"px";
+AGENT_ORDER.forEach(a=>{
+  const lbl=document.createElement("div"); lbl.className="tlRowLabel"; lbl.style.top=(rowTop[a]+LANES[a]*PITCH/2-11)+"px";
+  lbl.innerHTML=`<span class="dot" style="background:${AGENTS[a].color}"></span>${AGENTS[a].name}`;
+  cv.appendChild(lbl);
+  const bg=document.createElement("div"); bg.className="tlRowBg"; bg.style.top=(rowTop[a]-6)+"px"; bg.style.height=(LANES[a]*PITCH+12)+"px";
+  cv.appendChild(bg);
+});
+// グリッド（6h毎・日付ラベルは深夜0時）
+{ // 開始日ラベル（基準 08-27 12:00 は深夜0時のグリッド線が無いため手動で付ける）
+  const d=document.createElement("div"); d.className="tlDayLabel"; d.style.left="2px"; d.style.transform="none"; d.style.top=(TL_H-16)+"px";
+  d.textContent="08-27"; cv.appendChild(d);
+}
+for(let m=0;m<=TL_END;m+=360){
+  const g=document.createElement("div"); g.className="tlGrid"; g.style.left=(m*PXH)+"px";
+  const isMidnight=((m+720)%1440)===0; // 基準が08-27 12:00 なので00:00 は +720 の倍数
+  if(isMidnight){
+    g.classList.add("day");
+    const dayIdx=(m+720)/1440; // 08-28 = 1
+    const d=document.createElement("div"); d.className="tlDayLabel"; d.style.left=(m*PXH)+"px"; d.style.top=(TL_H-16)+"px";
+    d.textContent=dayIdx<=4 ? "08-"+(27+dayIdx) : "09-0"+(dayIdx-4);
+    cv.appendChild(d);
+  }
+  cv.appendChild(g);
+}
+SESSIONS.forEach(s=>{
+  const x1=parseT(s.s)*PXH, x2=parseT(s.e)*PXH;
+  const el=document.createElement("div");
+  el.className=`tlSess dir-${s.dir==="nox"?"nox":s.dir==="repo"?"repo":"other"}${s.approx?" approx":""}${s.now?" now":""}`;
+  el.style.cssText=`left:${x1}px;width:${Math.max(x2-x1-2,34)}px;top:${rowTop[s.ag]+s._lane*PITCH+3}px;height:${BH}px;background:${AGENTS[s.ag].color}`;
+  el.textContent=s.t; el.title=`${s.t} ／ ${s.s} → ${s.e}${s.approx?"（時刻推定）":""}［${AGENTS[s.ag].name}］`;
+  el.addEventListener("click",()=>showSess(s));
+  cv.appendChild(el);
+});
+function showSess(s){
+  const dirLabel={repo:"🟢 アイプラ repo",nox:"🔵 aipura_nox",other:"⚪️ その他"}[s.dir];
+  $("#tlDetail").innerHTML=`<div class="handoffCard">
+    <div class="route"><span class="chip" style="background:${AGENTS[s.ag].color}">${AGENTS[s.ag].name}</span>${s.t}</div>
+    <div style="font-size:12px;color:var(--tx2);margin-bottom:6px">⏱ ${s.s} → ${s.e}${s.approx?"（時刻推定・斜め縞）":""} ／ ${dirLabel}${s.now?" ／ <b style='color:#fb7185'>継続中</b>":""}</div>
+    <div style="font-size:13px">${s.d}</div>
+  </div>`;
+}
+showSess(SESSIONS.find(s=>s.now));
+$("#handoffs").innerHTML=HANDOFFS.map(h=>`<div class="handoffCard"><div class="route">🔗 ${h.route}</div><div style="font-size:13px">${h.html}</div></div>`).join("");
+$("#agentHomes").innerHTML=AGENT_HOMES.map(h=>`<div style="margin-bottom:6px"><span class="chip" style="background:${AGENTS[h.ag].color}">${AGENTS[h.ag].name}</span><span class="fileRef">${h.path}</span> ${h.n}</div>`).join("");
+
+/* ================= ③ フェーズ ================= */
+$("#phaseList").innerHTML=PHASES.map(g=>`<div class="phaseGroup"><h2>${g.g}</h2>${
+  g.items.map(p=>`<div class="phaseCard"><div class="pid">${p.id}</div><div class="body">
+    <div><span class="done">${p.st}</span> ${p.t} ${p.commit?`<span style="color:var(--tx3);font-size:11px">· ${p.commit}</span>`:""}</div>
+    <div class="content">${p.c||""}</div>${p.crit?`<div class="crit">完了条件: ${p.crit}</div>`:""}
+  </div>${p.tests?`<div class="tbadge">${p.tests}</div>`:""}</div>`).join("")
+}</div>`).join("");
+$("#wipList").innerHTML=WIP.map(w=>`<div class="phaseCard ipCard"><div class="pid">WIP</div><div class="body"><div><b>${w.t}</b></div><div class="content">${w.d}</div></div></div>`).join("");
+
+/* ================= ④ ツリー ================= */
+function renderTree(root, mount){
+  const ul=document.createElement("ul"); ul.className="tree";
+  ul.appendChild(nodeLi(root,true));
+  mount.appendChild(ul);
+}
+function nodeLi(node,isRoot){
+  const li=document.createElement("li");
+  const hasKids=node.c&&node.c.length;
+  const row=document.createElement("span");
+  row.className="tNode";
+  row.innerHTML=`${hasKids?'<span class="dirToggle">▾</span>':''}<span class="ico">${hasKids?"📁":"📄"}</span><span class="nm">${esc(node.n)}</span>${node.tag?'<span class="tagNew">NEW</span>':""}${node.d?`<span class="meta">— ${esc(node.d.length>60?node.d.slice(0,60)+"…":node.d)}</span>`:""}`;
+  const activate=()=>{
+    document.querySelectorAll(".tNode.sel").forEach(x=>x.classList.remove("sel")); row.classList.add("sel");
+    showTreeNode(node);
+    if(hasKids){ ul2.style.display = ul2.style.display==="none"?"":"none"; row.querySelector(".dirToggle").textContent=ul2.style.display==="none"?"▸":"▾"; }
+  };
+  row.addEventListener("click",e=>{ e.stopPropagation(); activate(); });
+  li.addEventListener("click",e=>{ e.stopPropagation(); activate(); }); // 行全体をクリック可能（判定器指摘の頑健化）
+  li.appendChild(row);
+  if(hasKids){
+    const ul2=document.createElement("ul");
+    node.c.forEach(k=>ul2.appendChild(nodeLi(k)));
+    li.appendChild(ul2);
+  }
+  return li;
+}
+function showTreeNode(n){
+  $("#treeDetail").innerHTML=`<h3>${esc(n.n)}</h3><p>${n.d?n.d:"（詳細なし）"}</p>${n.c?`<p style="color:var(--tx3)">子: ${n.c.length}項目</p>`:""}`;
+}
+renderTree(TREE_A,$("#treeA"));
+renderTree(TREE_B,$("#treeB"));
+</script>
+</body>
+</html>

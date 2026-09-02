@@ -1,0 +1,549 @@
+[
+ {
+  "lane": 1,
+  "attribute": "vocal",
+  "role": "Buffer",
+  "cardType": "visual",
+  "deck": {
+   "vocal": 95327,
+   "dance": 117828,
+   "visual": 154199,
+   "stamina": 8833,
+   "mental": 5596,
+   "critical": 0
+  },
+  "scoreBonusPct": {
+   "beat": 267,
+   "active": 202,
+   "special": 120,
+   "passive": 0
+  },
+  "critExtrasPermil": 570,
+  "skills": [
+   {
+    "id": "sk-hrk-05-sail-00-1",
+    "name": "恋をしているような表情",
+    "kind": "A",
+    "level": 4,
+    "lane": 1,
+    "ct": 30,
+    "staminaCost": 138,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "score_get",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": null,
+      "powerPermil": 4100
+     },
+     {
+      "type": "visual_up",
+      "target": "score_type_2",
+      "condition": "none",
+      "durationBeats": 45,
+      "stages": 4
+     }
+    ]
+   },
+   {
+    "id": "sk-hrk-05-sail-00-2",
+    "name": "憧れていた青春",
+    "kind": "P",
+    "level": 3,
+    "lane": 1,
+    "ct": 60,
+    "staminaCost": 496,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "visual_boost",
+      "target": "trigger",
+      "condition": "someone_down_group",
+      "durationBeats": 41,
+      "stages": 10
+     }
+    ]
+   },
+   {
+    "id": "sk-hrk-05-sail-00-3",
+    "name": "本当は起きてた？",
+    "kind": "P",
+    "level": 2,
+    "lane": 1,
+    "ct": 55,
+    "staminaCost": 184,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "visual_up",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": 45,
+      "stages": 5
+     }
+    ]
+   }
+  ],
+  "photos": []
+ },
+ {
+  "lane": 2,
+  "attribute": "vocal",
+  "role": "Buffer",
+  "cardType": "visual",
+  "deck": {
+   "vocal": 60351,
+   "dance": 93070,
+   "visual": 187383,
+   "stamina": 9126,
+   "mental": 3974,
+   "critical": 0
+  },
+  "scoreBonusPct": {
+   "beat": 237,
+   "active": 70,
+   "special": 199,
+   "passive": 0
+  },
+  "critExtrasPermil": 533,
+  "skills": [
+   {
+    "id": "sk-skr-05-fest-00-1",
+    "name": "私の歌でみんなに元気を！",
+    "kind": "A",
+    "level": 4,
+    "lane": 2,
+    "ct": 50,
+    "staminaCost": 163,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "score_get",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": null,
+      "powerPermil": 5000
+     },
+     {
+      "type": "critical_rate_up",
+      "target": "score_type_2",
+      "condition": "none",
+      "durationBeats": 43,
+      "stages": 7
+     }
+    ]
+   },
+   {
+    "id": "sk-skr-05-fest-00-2",
+    "name": "重圧を乗り越えて",
+    "kind": "A",
+    "level": 3,
+    "lane": 2,
+    "ct": 50,
+    "staminaCost": 153,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "score_get",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": null,
+      "powerPermil": 4400
+     },
+     {
+      "type": "visual_up",
+      "target": "score_type_2",
+      "condition": "none",
+      "durationBeats": 46,
+      "stages": 5
+     }
+    ]
+   },
+   {
+    "id": "sk-skr-05-fest-00-3",
+    "name": "胸いっぱいの勇気",
+    "kind": "P",
+    "level": 2,
+    "lane": 2,
+    "ct": 70,
+    "staminaCost": 262,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "sp_skill_score_up",
+      "target": "trigger",
+      "condition": "someone_before_special",
+      "durationBeats": 5,
+      "stages": 6
+     }
+    ]
+   }
+  ],
+  "photos": []
+ },
+ {
+  "lane": 3,
+  "attribute": "vocal",
+  "role": "Scorer",
+  "cardType": "visual",
+  "deck": {
+   "vocal": 118235,
+   "dance": 134408,
+   "visual": 281705,
+   "stamina": 8656,
+   "mental": 5927,
+   "critical": 0
+  },
+  "scoreBonusPct": {
+   "beat": 253,
+   "active": 70,
+   "special": 217,
+   "passive": 0
+  },
+  "critExtrasPermil": 354,
+  "skills": [
+   {
+    "id": "sk-rei-05-fest-01-1",
+    "name": "歌に乗せて、届けたい",
+    "kind": "SP",
+    "level": 6,
+    "lane": 3,
+    "ct": 0,
+    "staminaCost": 1635,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "score_get",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": null,
+      "powerPermil": 14100,
+      "scaling": {
+       "ref": "visual_up_stages",
+       "perStagePermil": 60,
+       "fitted": false
+      },
+      "confidence": "Estimate(docs-806980235: ref=visual_up_stages は 60‰/段（6.0%/段）。超化は参照外（2026-09-01 確定）"
+     },
+     {
+      "type": "score_get_by_score_ratio",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": null,
+      "powerPermil": 130
+     }
+    ]
+   },
+   {
+    "id": "sk-rei-05-fest-01-2",
+    "name": "似た者親子のメッセージ",
+    "kind": "A",
+    "level": 5,
+    "lane": 3,
+    "ct": 30,
+    "staminaCost": 424,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "score_get",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": null,
+      "powerPermil": 5700
+     },
+     {
+      "type": "visual_up",
+      "target": "self",
+      "condition": "self_visual_lane",
+      "durationBeats": 31,
+      "stages": 5,
+      "capExtend": true,
+      "confidence": "Peing確定(超化: 表記段階数はダミー・一律+5段階分)"
+     },
+     {
+      "type": "critical_coeff_up",
+      "target": "visual_type_2",
+      "condition": "self_visual_lane",
+      "durationBeats": 31,
+      "stages": 6
+     }
+    ]
+   },
+   {
+    "id": "sk-rei-05-fest-01-3",
+    "name": "頑固じゃありません！",
+    "kind": "P",
+    "level": 4,
+    "lane": 3,
+    "ct": 50,
+    "staminaCost": 610,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "skill_success_up",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": 37,
+      "stages": 3
+     },
+     {
+      "type": "visual_up",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": 37,
+      "stages": 4
+     }
+    ]
+   }
+  ],
+  "photos": [
+   {
+    "id": "uph-uph-lane3-3",
+    "name": "ありがとう (Quality 150)",
+    "kind": "photo",
+    "level": 1,
+    "ct": null,
+    "staminaCost": 552,
+    "effects": [
+     {
+      "type": "score_up",
+      "stages": 3,
+      "durationBeats": 40,
+      "target": "self",
+      "condition": "someone_critical_coeff_up"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "lane": 4,
+  "attribute": "dance",
+  "role": "Supporter",
+  "cardType": "dance",
+  "deck": {
+   "vocal": 97666,
+   "dance": 214094,
+   "visual": 100838,
+   "stamina": 9232,
+   "mental": 5864,
+   "critical": 0
+  },
+  "scoreBonusPct": {
+   "beat": 441,
+   "active": 70,
+   "special": 120,
+   "passive": 0
+  },
+  "critExtrasPermil": 347,
+  "skills": [
+   {
+    "id": "sk-chs-05-fest-00-1",
+    "name": "星見の海の波",
+    "kind": "A",
+    "level": 4,
+    "lane": 4,
+    "ct": 30,
+    "staminaCost": 387,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "score_get",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": null,
+      "powerPermil": 5700
+     },
+     {
+      "type": "critical_coeff_up",
+      "target": "score_type_1",
+      "condition": "none",
+      "durationBeats": 31,
+      "stages": 5,
+      "capExtend": true,
+      "confidence": "Peing確定(超化: 表記段階数はダミー・一律+5段階分)"
+     }
+    ]
+   },
+   {
+    "id": "sk-chs-05-fest-00-2",
+    "name": "みんなで走った海岸通り",
+    "kind": "P",
+    "level": 4,
+    "lane": 4,
+    "ct": 50,
+    "staminaCost": 562,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "critical_rate_up",
+      "target": "center",
+      "condition": "none",
+      "durationBeats": 35,
+      "stages": 8
+     },
+     {
+      "type": "critical_coeff_up",
+      "target": "score_type_1",
+      "condition": "none",
+      "durationBeats": 35,
+      "stages": 8
+     }
+    ]
+   },
+   {
+    "id": "sk-chs-05-fest-00-3",
+    "name": "必殺！ゾンビフィッシュ",
+    "kind": "P",
+    "level": 2,
+    "lane": 4,
+    "ct": 50,
+    "staminaCost": 418,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "a_skill_score_up",
+      "target": "dance_type_2",
+      "condition": "none",
+      "durationBeats": 35,
+      "stages": 4
+     },
+     {
+      "type": "score_up",
+      "target": "dance_type_2",
+      "condition": "none",
+      "durationBeats": 35,
+      "stages": 4
+     }
+    ]
+   }
+  ],
+  "photos": []
+ },
+ {
+  "lane": 5,
+  "attribute": "vocal",
+  "role": "Buffer",
+  "cardType": "visual",
+  "deck": {
+   "vocal": 119535,
+   "dance": 91551,
+   "visual": 191884,
+   "stamina": 6581,
+   "mental": 3506,
+   "critical": 0
+  },
+  "scoreBonusPct": {
+   "beat": 216,
+   "active": 70,
+   "special": 120,
+   "passive": 0
+  },
+  "critExtrasPermil": 120,
+  "skills": [
+   {
+    "id": "sk-ktn-05-fest-02-1",
+    "name": "手を伸ばすのは輝く夢",
+    "kind": "A",
+    "level": 4,
+    "lane": 5,
+    "ct": 30,
+    "staminaCost": 368,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "score_get",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": null,
+      "powerPermil": 3800
+     },
+     {
+      "type": "visual_up",
+      "target": "visual_type_2",
+      "condition": "self_visual_lane",
+      "durationBeats": 40,
+      "stages": 10,
+      "limitRelease": true
+     },
+     {
+      "type": "visual_up",
+      "target": "visual_type_2",
+      "condition": "self_visual_lane",
+      "durationBeats": 40,
+      "stages": 4
+     }
+    ]
+   },
+   {
+    "id": "sk-ktn-05-fest-02-2",
+    "name": "暗闇を照らす月",
+    "kind": "P",
+    "level": 4,
+    "lane": 5,
+    "ct": 50,
+    "staminaCost": 424,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "effect_extension",
+      "target": "center",
+      "condition": "none",
+      "durationBeats": null,
+      "value": 10
+     },
+     {
+      "type": "focus",
+      "target": "center",
+      "condition": "none",
+      "durationBeats": 34,
+      "stages": 6
+     }
+    ]
+   },
+   {
+    "id": "sk-ktn-05-fest-02-3",
+    "name": "五人で起こした奇跡",
+    "kind": "P",
+    "level": 3,
+    "lane": 5,
+    "ct": 50,
+    "staminaCost": 460,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "visual_up",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": 34,
+      "stages": 4
+     },
+     {
+      "type": "visual_up",
+      "target": "score_type_1",
+      "condition": "none",
+      "durationBeats": 34,
+      "stages": 3
+     }
+    ]
+   }
+  ],
+  "photos": []
+ }
+]

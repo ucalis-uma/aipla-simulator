@@ -1,0 +1,22 @@
+Combo,コンボ,,,
+ビート前のコンボによるスコアが伸びます。コンボが途切れたらスコアのボーナスもリセットされます。,,,,
+Score is increased based on the value of the combo counter before a beat. The bonus resets when combo is broken.,,,,
+,,,,
+コンボのボーナスは他のボーナスと乗算します。,,,,
+Combo score bonus stacks multiplicatively with all other score bonuses.,,,,
+,,,,
+コンボスコア上昇効果がある場合、このスコアボーナスが上昇されています。1段階で+10%増えて、最大20段階で3倍になります。,,,,
+"When the buff ""Combo Score UP"" is in effect, it increases the combo score bonus listed below. Each step increases the score bonus by +10% (multiplicatively), so the maximum 20 steps yield triple the usual score bonus.",,,,
+,,,,
+Combo,Score Bonus,(With Combo Score UP +1 step),(With Combo Score UP +10 steps),(With Combo Score UP +20 steps)
+コンボ,スコアのボーナス,← コンボスコア上昇効果、1段,← コンボスコア上昇効果、10段,← コンボスコア上昇効果、20段
+0 ~ 9,0%,0.0%,0%,0%
+10 ~ 19,5%,5.5%,10%,15%
+20 ~ 29,10%,11.0%,20%,30%
+30 ~ 39,15%,16.5%,30%,45%
+40 ~ 49,20%,22.0%,40%,60%
+50 ~ 69,25%,27.5%,50%,75%
+70 ~ 99,30%,33.0%,60%,90%
+100+,50%,55.0%,100%,150%
+Back to: IDOLY PRIDE Resource Portal,,,,
+アイドリープライドの攻略情報へ戻る,,,,

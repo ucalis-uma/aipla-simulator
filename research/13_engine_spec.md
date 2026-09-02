@@ -116,9 +116,11 @@ export function simulateTimeline(input: SimulateInput): TimelineResult
   - スタミナ/CT/確率チェック合格で発動（§3-4, §3-5）。成功 → コンボ+1、失敗 → リセット
 - 発動レーンのスコアイベント:
   - 基本スコア = `mulPermil(liveStatus[attribute], skillWeightsPermil.active|special)`（切捨て）
-  - `skillPowerPermil`: 効果行 `score_get` の `powerPermil`。`scaling` ありで `perStagePermil != null` のとき `mulPermil(power, 1000 + perStage × scaling.ref の実効段数)`（`ref: "vocal_up_stages"` は `snapshot.vocal_up + snapshot.vocal_up_extreme`【Estimate】）。`perStagePermil: null` ならスケーリングなし（P3cフィッティング待ち）。
+  - `skillPowerPermil`: 効果行 `score_get` の `powerPermil`。`scaling` ありで `perStagePermil != null` のとき `mulPermil(power, 1000 + perStage × scaling.ref の実効段数)`（`ref: "vocal_up_stages"` は `snapshot.vocal_up` のみ。**超化（vocal_up_extreme）は非参照**【2026-09-01 確定・SCALING_REF_KEYS】。星見プロ 19 段=×2.2・成宮すず SP も +6%/段）。`perStagePermil: null` ならスケーリングなし（P3cフィッティング待ち）。
+  - A/SP スコアの基本値は**自身のステータスバフ適用前（PRE）**: 効果行は技能文の文順（スコア獲得→ステータスアップ）に処理する（ソート禁止・マスタ順のまま）。自身 vb 等はスコア行の**後**（b123 では基本値 296,208=a vb4 適用前【2026-09-02 確定・旧 POST 仮説撤回】）。
+  - A スキルには**写真の Aスコア固定値の平坦加算**（`LaneInput.aScoreAdditionalFlat` = photos の `a_score` type=fixed 合計。b123: +92,262+121,429【2026-09-02 確定】）。割合行・P/フォト行には適用しない。
   - B1 kind: A→"active"、SP→"special"。
-  - ratio 型（`score_get_by_score_ratio`）: 基本スコア = `floorDiv(その時点の累積総スコア × powerPermil, 1000)`、`skillPowerPermil=1000`、**コンボ・ファン不適用**（`comboFactorPermil=1000`/`fanFactorPermil=1000`。research/02 §1.4【Confirmed】）。累積総スコアの厳密な定義（全体かレーン別か等）は【Unknown】→ T5 の b103 検算で判定。
+  - ratio 型（`score_get_by_score_ratio`）: 基本スコア = `floorDiv(割合行実行時点のレーン自身の累積獲得スコア × powerPermil, 1000)`、`skillPowerPermil=1000`、**コンボ・ファン不適用**（`comboFactorPermil=1000`/`fanFactorPermil=1000`。research/02 §1.4【Confirmed】）。**基準は割合行時点の `self.scoreCum`（同一 SP の score_get 行（前の行）を含む）。全体累積は誤り・クリティカル係数は適用される**【2026-09-02 確定: たろう note nd9513654416f・S1 b143 / T5 b103 両立】。
   - 1スキルに複数のスコア効果行がある場合（例: SP 1570% + 割合12%）は**行ごとに独立のスコアイベント**として計算し合算する（表示ポップは1つでも内部は行単位【Estimate】）。トレースは行ごとに記録し `skillId` を共有。
 - コンボ更新: 発動成功レーン +1。未発動/FAIL レーンはコンボリセット（コンボ継続有効なら維持）。
 
@@ -128,7 +130,7 @@ export function simulateTimeline(input: SimulateInput): TimelineResult
 
 ## 6. 効果適用（発動時・ステップ7/8/11）
 
-効果行ごとに処理（上から順。research/01 §2.5「上から順に処理され、スコア獲得行→バフ付与行の順」【Confirmed】）:
+効果行ごとに処理（上から順。research/01 §2.5「上から順に処理され、スコア獲得行→バフ付与行の順」【Confirmed】。**A/SP も同順でソートしない**【2026-09-02 確定・旧「ステータス系→スコア行」ソートは撤回】）:
 
 | type | 処理 |
 |---|---|
@@ -151,11 +153,16 @@ export function simulateTimeline(input: SimulateInput): TimelineResult
 | `center` | `[3]` | 【Estimate】 |
 | `all` | `[1,2,3,4,5]` | 【Confirmed: テキスト「味方全員」】 |
 | `neighbors` | `[A−1, A+1]`（範囲内のみ。A=1なら[2]、A=5なら[4]） | 【Estimate: 隣接=左右1レーンずつ】 |
-| `vocal_high_1` | デッキ vocal が最大のレーン（同値は IDOL_PRIORITY_ORDER 順） | 【Estimate】 |
-| `vocal_type_1/2/3` | 属性 vocal のレーンを IDOL_PRIORITY_ORDER 順に N 個 | 【Estimate: 「ボーカルタイプn人」解釈】 |
+| `vocal_high_1`、`*_higher_N` | レーン属性が <attr> のレーンをデッキ属性ステータス降順で N 個（「ボーカル高い1人」等） | 【Estimate】 |
+| `vocal_type_1/2/3`、`dance_type_*`、`visual_type_*` | **メンバーのタイプ**（cardType=装着カードの属性【Estimate: ratiosPermil 最大。research/07 確度 Medium】）が一致するレーンをレーン優先度順（L3>L2>L4>L1>L5）で先頭 N 個。レーン属性（stage laneAttributes）とは独立 | 【Confirmed 2026-09-01: サンプル1 殻をやぶる（ボーカルタイプ2人）→ L3,L2。デッキ vocal 降順説は棄却】 |
 | `same_lane_other` | `[]`（非バトルでは対象なし・不発） | 【Estimate: ライブバトル用と解釈】 |
 
 条件の someone_* 系（`someone_focus` 等）は「他レーンに該当BuffKeyのアクティブ効果があるか」を真偽判定に使う（付与先解決には使わない）。
+
+【サンプル1確定 2026-09-01】`target-position_attribute_<attr>-N`（「ボーカル**レーン**N人」）は
+`*_lane_N`: レーン属性一致レーンを**レーン番号順**に N 個（麻奈も立った大舞台 vocal_lane_3 → L1,L3,L4。
+4番目のボーカルレーン L5 は対象外）。タイプ（cardType）とは明確に区別する。
+**レーン優先度 L3>L2>L4>L1>L5** は P前半発動順のタイブレーク以外に、*_type_N の対象選択順としても使われる（ユーザー確認 2026-09-01）。
 
 ## 8. トレース要件（T4/T5 の突合に必須）
 
@@ -269,7 +276,28 @@ research/16_peing_verified_specs.md §1 の実装仕様。データ源は `data/
   STEALTH_FAN_BONUS_PERMIL・5段=18‰/6段=21‰/10段=37‰・1-4段 Unknown=0 近似）／`stamina_cost_up`
   （消費増加・+50‰/段・最大2倍）。
 - 超化（add_effect_value_*）: **表記段階数はダミーで一律「元バフ+5段階分（固定）」**。
-  capExtend=true のインスタンスは同種バフの上限をその段数ぶん拡張（20→25・テンション 10→15）。
+  【2026-09-02 修正】capExtend=true の効果行は独立インスタンスを作らず**増強型**として処理
+  （同種バフの残り最大インスタンスへ +5 段・基底なしで不発。§11 の表参照）。
+  加算を受けたインスタンスの生存中は同種バフの上限を加算量ぶん拡張（20→25・テンション 10→15）。
   vocal_up_extreme の1段値は 50‰（STATUS_UP_EXTREME_PER_STAGE_PERMIL。golden fest-03-2 は
   stages 10→5 に修正・合計 +250‰ 不変・type36 perStage は 2.5→3.0 に再較正）。
 - 集目副効果テーブル確定値: FOCUS_FAN_BONUS_PERMIL = [7,14,21,28,35,38,41,44,47,50]。
+
+---
+
+## §11 サンプル2 確定仕様（2026-09-02）
+
+出典: `research/20_sample2_gap_analysis/README.md`・`サンプル2/issues.md`。実測 STAGE680（168 ビート）。
+
+| 項目 | 仕様 | 確度 |
+|---|---|---|
+| 誰かが低下効果状態の時 | `tg-someone_status_group-weekness` → `someone_down_group`（vocal/dance/visual_down のいずれかが編成の誰かに有効）。低下効果なし編成では**全編不発**（憧れていた青春。発動間隔 b1→b55→b110→b165 = CT55 前半発動モデルと一致） | 【Confirmed: S2 発動ログ】 |
+| 効果行単位トリガー | `skillDetails[].triggerId` を効果行ごとに写像（score_get 行は無条件・バフ行のみ <属性>レーン条件の混合スキルが存在） | 【Confirmed: マスタ構造】 |
+| 入力 audience | 入力 JSON の `audience` 明示時は会場キャパ cap/5 で上書きしない。fan.png 実測値（個人来場ファン数）× `fanBonusPermilFromCount` テーブルが実測スコアボーナス%（53.9-57.4%）と 1 の位まで一致 | 【Confirmed: fan.png 全 5 レーン検算】 |
+| tg-position_attribute_* の意味 | **レーン属性説で確定（2026-09-02 ユーザー確定）**: S2 怜 A2 の「発動」は誤認。効果行ごとの独立条件評価（下記行独立行参照）により 怜 A2 は無条件スコア行のみ発動。両サンプルが同一規則で整合（T5 82/82・S2 L3 ×0.976） | 【Confirmed: ユーザー確定】 |
+| 効果行の行独立条件評価 | 効果行は**行ごと**に条件評価し不成立行のみスキップ（1 行でも成立すればスキルは発動）。P の後半ゲートも `rowsHoldAny`（1 行成立で発動可・全行 AND から変更）。根拠: T5 紗季 A2・S2 怜 A2 = 無条件スコア行のみ発動（スキルウィンドウに 2 行目以降が表示されない）／祭り千紗 P2 = 2 行目が 1 行目のレーン条件に非依存 | 【Confirmed: ユーザー確定】 |
+| 前発動/後発動の判定 | **無条件行（none/battle_only）を 1 つでも持つ P/フォト = 前発動**（CT0 で前半自動発動。祭り千紗 P3 型・`some` 判定に変更）。全行条件式 = 後発動（後半評価） | 【Confirmed: ユーザー確定】 |
+| 超化の方式 | **増強型で確定（2026-09-02）**: 同種バフの残りビート最大インスタンスへ +5 段（実効加算値 5 段・ユーザー確定）。**基底インスタンスが無いと不発**（独立インスタンスを作らない）。上限拡張量はインスタンスの `capExtend`（加算量）に記録し aggregateBuffs が上限へ加算。S2 実測: b41 ccu=13（P2 8段+超化5）→ critF 2504・b100 ccu=0（基底消滅で超化不発）→ 1854・b142 ccu=8 → 2254 がユーザー式と完全一致 | 【Confirmed: S2 3 ビート完全一致】 |
+| ビート crit と ccu | A/SP と同一式（critF = 1500 + 50×ccu + extras）。第一段階で「傾きなし」に見えたのは旧 ccu 系列の誤り（行独立未実装で ccu が過大）が原因。修正後の ccu 系列で L3 全体 ×0.976（±5% 内） | 【Confirmed: 全体整合】 |
+| フォトスキルのスタミナ | **消費される（訂正）**: S2 の「減っていない」観測はスクショが P 消費後・フォト消費前の中間フレームだった誤認 + measured_data の 7→2 OCR 誤読（計 236 行・修正表を measured_data_v2_ocr7to2_fix.json に追記）。L3 b1 = 8046（P 610 消費後）→ b2 = 7494（フォト 552 消費後）で確定 | 【Confirmed: 元画像目視】 |
+| 自身が低下効果状態の時 | `tg-status_group-weekness` → `self_down_group`（自身に vocal/dance/visual_down のいずれかが有効。誰か版 `someone_down_group` の主語違い）。「一生懸命、金魚すくい」2 行目 | 【Confirmed: マスタ構造・実測は次サンプル】 |

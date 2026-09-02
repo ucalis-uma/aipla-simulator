@@ -25,6 +25,21 @@
 | `data/cards.json` | **card_id 検索用**（カード名 → `card-id-...`・`role`） |
 | `data/stages_index.json` | ステージ名 → quest id（`stage.file`）検索用 |
 | `src/photos.ts` の `PhotoSkillDef` / `MyPhotoDef` / stat キー一覧 | マイフォト（ユーザー定義フォトスキル）の形式 |
+| **AGENTS.md（リポジトリルート）** | **ゲームデータの参照規則（大元）**。スキル効果はマスタから確定する |
+
+## 手順 0.5: スキル内容はマスタから確定する（画像の読み飛ばし防止）
+
+カードのスキル（スキル名・枠種別 A/P/SP・レベル別効果テキスト・CT・スタミナ消費）は
+**ゲーム内マスタで確定できる**。`lane{N}_charactor.PNG` から card_id が分かった時点で、
+そのカードの全スキルが機械的に確定できる（`card-<id>` → `sk-<id>-1/-2/-3`）:
+
+- ローカル: `vendor/Skill.json`（`levels[].description` に Lv1-6 の効果テキスト全文・
+  延長/増強値を含む）または `data/skills_levels.json`
+- Web: `https://idoly-backend.outv.im/api/Skill?ids=<スキルID>`（Info Pride vendor API）
+
+画像に写ったスキル名・Lv・効果断片と突き合わせてレベル（= `skill_levels`）を確定し、
+不一致があればマスタを優先してユーザーに報告する。**スキルテキストのスクショが撮られて
+いなくてもこの手順で完結する**（スクショが必要なのはフォトスキルのみ）。
 
 ## 手順 1: 画像から情報を抽出する
 
@@ -107,8 +122,11 @@
 ### フォトスキルは 2 経路ある（重要・最も誤りやすい箇所）
 
 1. **T5 実測プリセットのスキル**: `data/skills_golden.json` の photo スキル
-   （`photo-L{レーン}-{枠}`）は**レーンの i 番目に装着したフォトへ自動対応**して注入される。
-   画像から読んだスキルが golden 定義と同一内容なら JSON に何も書かなくてよい。
+   （`photo-L{レーン}-{枠}`）は **T5 実測フォト固有のスキル**で、装着位置のフォト名が
+   T5 実測サンプル（`verification_data_v2.json`）のフォト名と一致する場合のみ注入される
+   （Phase 8-B10・汎用編成への T5 由来スキル混入の防止）。
+   T5 実測編成を再現する場合はサンプルと同一のフォト名を使うこと。
+   それ以外の編成では注入されないため、実スキルは myPhotos/photoEquip で与える。
 2. **それ以外のフォトスキル**（自分で作ったフォト・golden に無いスキル）:
    `myPhotos` にユーザー定義フォトを置き、`photoEquip` でレーンに装着する:
 
@@ -149,10 +167,9 @@
 
 ### 落とし穴（必読）
 
-- **golden フォトスキルの混入**: レーン 1-5 には T5 実測の golden フォトスキルが
-  （フォト枠数の範囲で）自動注入される。T5 以外のフォト構成で画像から読んだスキルが
-  golden と**異なる**場合は、`disabledSkillIds` に該当する `photo-L{レーン}-*` を列挙して
-  golden 側を無効化し、実スキルを myPhotos/photoEquip で与える。
+- **golden フォトスキルの混入は不要**: レーン 1-5 の T5 実測 golden フォトスキルは
+  フォト名一致モデルのため、T5 以外の構成では自動的に注入されない
+  （`disabledSkillIds` への photo-L\* 全件列挙は**不要**になった。列挙しても害はない）。
 - **role は data/cards.json 準拠**: JSON の role がカード本来のロールと違うと
   対象解決（スコアラー等）が崩れる。必ず cards.json で確認。
 - 単位: `yale_bonus.*_pct` と structured の `pct` は **% の数値**（45 = 45%）。
@@ -194,7 +211,7 @@ npx tsx src/cli/simulate.ts --input {{OUTPUT_PATH}} --n 1000 --seed 1 --crit-rat
 - 推測実装にはコメントに【Estimate】（根拠ありの推定）または【Unknown】（未解明）を明記する。
 - 演算は千分率整数演算（`src/rounding.ts` 経由。`Math.floor` 直書き禁止）。
 - 変更後に必ず `npx vitest run`（全テスト）・`npm run typecheck`・T5 確定値
-  **2,436,373,427** が不変であることを確認する（`npx tsx src/cli/simulate.ts --input examples/t5-sample.json --n 0 --crit-rate 0`）。
+  **2,580,038,995**（ゴールデン 17,521,461,739）が不変であることを確認する（`npx tsx src/cli/simulate.ts --input examples/t5-sample.json --n 0 --crit-rate 0`）。
 - UI を触ったら `npm run build:ui`。
 
 ## 出力のまとめ方

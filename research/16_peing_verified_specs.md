@@ -90,3 +90,35 @@ python tools/peing_search.py キーワード1 キーワード2
 # OR検索
 python tools/peing_search.py キーワード1 キーワード2 --any
 `
+
+---
+
+## 3. 段階数参照スコア（type36・「段階数が多い程効果上昇」）の Peing アンカー（2026-09-01 追記）
+
+type36 の段階あたり係数はマスタに存在しない（ゲーム内部定数・research/07 §280）。
+エンジン関数形は `SkillPower × (1000 + perStagePermil × 参照段数) / 1000`（線形乗算・T5 較正済み）。
+**Peing の実数値回答から、未較正スキルの係数を逆算できる**:
+
+1. **フェス愛「それが勇気になるから」（sk-ai-05-fest-00-1・ref=focus_stages）**:
+   質問箱 id=1187772111「愛の集目依存部分のSPパワー（**集目10時1921%**）」。
+   Lv6 基礎 1130% と組み合わせると 1130 × (1 + 0.07 × 10) = **1921.0 に完全一致**
+   → **perStagePermil = 70（+7%/段）**【Estimate: Lv6 前提の逆算】。
+   ※ raw efficacy: `ef-score_get_by_status_effect_type_grade-audience_amount_increase-<base>-chart_dependence`。
+   サンプル1 ではこのスキルに `sn=1`（スケーリング未適用マーカー）が付き b143 +51.5M が
+   過小評価中 → 実測 b143 の検算で裏取り可能
+2. **ビジュアル段階参照スコアラー（別カード）**: 質問箱 id=1189536146
+   「SPパワーを**2.2倍（vi20段時）**にします…**30段では2.8倍**」。
+   2.2 = 1 + 0.06×20、2.8 = 1 + 0.06×30 と両方整合 → **perStagePermil = 60（+6%/段）**【Estimate】
+
+既知の perStagePermil（スキルごとに異なる・共通定数ではない）:
+
+| スキル | ref | perStagePermil | 出典 |
+|---|---|---|---|
+| SP『成宮すず』なのですわ！ | vocal_up_stages | 11（+1.1%/段） | T5 ゴールデン較正【Confirmed】 |
+| A 星見プロ全国ツアーin愛知 | vocal_up_stages | 3（+0.3%/段） | T5 ゴールデン較正【Confirmed】 |
+| フェス愛 それが勇気になるから | focus_stages | 70（+7%/段） | Peing id=1187772111 逆算【Estimate】 |
+| （ビジュアル段参照のSP） | visual_up_stages | 60（+6%/段） | Peing id=1189536146 逆算【Estimate】 |
+
+※ 2026-09-01 以降、係数は `data/type36_coefficients.json`（スキル別）と
+`research/18_type36_coefficients.md`（突合表・docs 年代別/上限の留意点含む）で一元管理する。
+本表はそのうち Peing 由来分を再掲する（新規スキルの係数登録は research/18 の規則に従う）。

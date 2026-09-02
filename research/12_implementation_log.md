@@ -90,8 +90,11 @@ research/08 §1.4-2）で一致。
 2. **score_type_1/score_type_2/single はスコアラーレーンに解決**:
    発動ログの target_idol が全て白石千紗（Scorer）。LaneInput.role を追加。
    score_type を発動者扱いした旧実装は L2 にテンションが乗りゲート失敗する形で矛盾が顕在化
-3. **vocal_type_N は「ボーカル属性レーンのデッキvocal降順」**: vocal_type_3 → [L3,L2,L5]
-   （626,223 > 401,055 > 339,715。L1 334,153 は4位、ダンスレーン L4 は対象外）【Confirmed】
+3. ~~vocal_type_N は「ボーカル属性レーンのデッキvocal降順」~~ → **訂正（2026-09-01・サンプル1）**:
+   vocal_type_N は「**メンバーのタイプ**（cardType=装着カードの属性）が一致するレーンを
+   **レーン優先度順（L3>L2>L4>L1>L5）**で N 個」。サンプル1 殻をやぶる（ボーカルタイプ2人）→ L3,L2
+   （ダンスレーン L2 のメンバーが対象=レーン属性とは独立・デッキvocal降順 L3,L1 は実測と不一致で棄却）。
+   T5 の vocal_type_3 → [L3,L2,L5] は cardType 基準でも同一順序のため矛盾なし【Confirmed】
 4. **battle_only 行を含むスキルは無条件扱いで前半発動**（order3 結婚への願望）
 5. **P/フォトの発動予算は「1ビートにつき各1回」（前後半合算）**:
    b2 で L5 が前半にフォト発動済み→条件付きフォト L5-3 は b3 発火（order 11/15）。
@@ -503,6 +506,11 @@ tests/golden/t5-l3fit.test.ts（一時ハーネス）で L3 各ビートの実�
   **スコア推移グラフ**（canvas・確定値累積）・**バフ推移ヒートマップ**（レーン×14キー選択・
   157ビート）・**タイムライン表**（レーン別ポップ・★crit・発動明細）・**確度タグ凡例**
   （Confirmed/Estimate/Unknown + スキル単位のバッジ）
+- **計算式内訳（2026-09-02 追加）**: タイムライン表の各ビートに「式」ボタン → JHTV5213 型の
+  ユーザー手書き式を再現した内訳を展開（ステータス・A/SPパワー・B1（スコア/Aスコア/テンション段数×
+  段率+フォト+エール=残差）・クリ係数・ファン・コンボボーナス（docs 表+ csu 逆算）・
+  ライブ特徴×乱数・**写真の Aスコア固定値の平坦加算**・割合行はレーン累積×割合%。A/SP の基本値は
+  PRE（自身バフ適用前）。`ui/app.ts` renderEventFormula + `tests/ui/smoke.test.ts` の式展開検証）。
 - 編成 JSON エクスポート（**CLI の --input と同一スキーマで CLI/UI 相互運用**）・インポート・
   localStorage 保存/復元・T5実測プリセット復元
 - テスト: `tests/unit/sim/ui-pipeline.test.ts`（build_ui と同一のデータ組み立てで確定値一致。
@@ -1727,3 +1735,246 @@ AI エージェント（画像分析＋ファイル操作＋シェル実行）�
 - **428 tests（427 passed / 1 skipped）**・typecheck ゼロエラー。
 - ユーザー作成の `aipura-sim-config.json`（myPhotos 24 枚・photoEquip 空込み）を CLI で
   実行し **2,436,373,427**（T5 確定値と一致）を確認。
+
+## Phase 8-B10（2026-09-01 完了）— 編成JSON インポートのネスト形式対応 & myPhotos ステータスの CLI/UI 統合
+
+### 背景・目的
+画像→編成JSON 生成フロー（8-B9 のプロンプト）で作成したネスト形式
+（`{ deck: { staff_bonus, yale_bonus, characters }, stage, chart, ... }`・CLI スキーマ）
+を UI にインポートしても、`applyConfig` がトップレベル直下の
+`cfg.characters` / `cfg.staff_bonus` / `cfg.yale_bonus` を読む旧フラット形式前提の実装のため、
+キャラクター・ボーナスが一切反映されない不具合。
+調査の結果、この不整合は **Phase 4 MVP から存在**（exportConfig は当初から
+`deck: toDeck()` のネスト形式で出力していたため、**UI 自身のエクスポート→再インポートの
+往復も最初から壊れていた**）。
+
+さらにインポート経路で第 2 の問題を発見: myPhotos ステータスの二重/欠損計算。
+- CLI（8-B9）: `myPhotos` は**スキルのみ**解決。ステータスは
+  `characters[].photos` 側に書く規約（生成プロンプト・UI エクスポートともこの形式）。
+- UI: `toDeck()` が photoEquip 装着分の myPhotos ステータスを photos へ**無条件マージ**。
+  → photos 側に同名エントリがある JSON を UI でインポートすると
+  **ステータスが二重計算**（実サンプル: L1 がフォト 5 枚で上限超過・スコア大）。
+  逆に frames のみのファイルでは CLI がステータスを数えられない。
+
+### 実装
+1. **UI `applyConfig` のネスト形式対応**（ui/app.ts）:
+   - `const d = (typeof cfg.deck === "object" && cfg.deck !== null ? cfg.deck : cfg)` で
+     ネスト形式（CLI / exportConfig 共通）と旧フラット形式の両方を受け付ける。
+     ネスト時は `d.staff_bonus` / `d.yale_bonus` / `d.characters` を読む。
+   - ステージ等のトップレベル要素は従来どおり cfg 直下（ネスト時に deck 側へ入る形式は存在しない）。
+2. **myPhotos ステータス統合の共通規則**（src/photos.ts 新設関数）:
+   - `USER_PHOTO_EQUIP_PREFIX`（`【マイフォト】`・myPhotoToEquipEntry から抽出）を export。
+   - `isPhotoEquipDuplicate(entryName, photoName)`: 素の名前 or 接頭辞付きの一致判定。
+   - `mergePhotoEquipStatuses(legacy, equipped)`: 装着 myPhotos のステータスを photos 配列へ
+     統合。**同名エントリが既にある場合は既存表現を優先して追加しない**（二重計算の防止）。
+3. **CLI へ統合を追加**（src/cli/simulate.ts）: photoEquip 装着分を
+   `mergePhotoEquipStatuses` で `deck.characters[].photos` へ統合してから buildSimulateInput。
+   frames のみのファイルでも CLI が正しく数える。同名重複（生成プロンプト/UI エクスポート
+   形式）はスキップされるため既存ファイルのスコアは不変。
+4. **UI インポート時の重複除去**（ui/app.ts applyConfig）: photoEquip 復元時に、
+   photosJson 側の同名（or 接頭辞付き）エントリを除去。UI では photoEquip 側が
+   唯一の情報源になり、toDeck のマージと二重計算にならない
+   （フォト枠数上限表示も正しく「実測/JSON 3 + マイフォト帳 1」になる）。
+5. **テストフィクスチャ**: 生成フロー実サンプルを `examples/nested-sample.json` として同梱
+   （ネスト形式・myPhotos 3 枚・photoEquip・disabledSkillIds 20 件の実戦形式）。
+
+### テスト・検証
+- `tests/unit/cli-myphotos.test.ts` +2 本: frames のみの myPhotos が photos 側へ統合され
+  スコアに反映される・photos 側に同名エントリがある場合は統合せず二重計算にならない
+  （同名書きの場合と同一スコア）。
+- `tests/ui/smoke.test.ts` +1 本: ネスト形式 JSON をファイル入力経路
+  （importConfig → FileReader → applyConfig）でインポートし、カード/スタッフ/エール/
+  来場者数/ステージ/交流Lv/マイフォト帳/装備が復元されること・重複除去されること・
+  **シミュレーション確定値が CLI（304,238,070）と一致**すること（8-B9 契約の完全化）。
+- **431 tests（430 passed / 1 skipped）**・typecheck（core/UI）ゼロエラー。
+- T5 不変: `examples/t5-sample.json` → **2,436,373,427** のまま。
+- 実サンプル（`aipura_nox/サンプル1/deck.json`）: CLI **304,238,070**（修正前後で不変＝
+  dedup が正しく働き二重計算しない）・UI インポート後の実行も同値。
+
+### 設計メモ
+- 譜面（`cfg.chart`）は UI ではステージから自動導出（`injectStage`）する設計のため
+  インポートしても読まない。実サンプル（qt-area-1-001 → chart-hsm-006-001）では
+  導出結果が chart.file と一致する。独立した譜面選択 UI が無い限り現行仕様。
+- `deckFile`（外部 JSON 参照）は単一 HTML の制約上 UI では対応しない（CLI のみ）。
+- 同名判定による除去は「装着されている myPhotos と同名の JSON エントリ」のみ対象。
+  未装着の myPhotos と同名の JSON フォトは除去されない。
+
+### 8-B10 追補（2026-09-01・インポート時のフォトスキル既定 ON）
+ユーザー報告: ネスト形式 JSON をインポートするとフォトスキルのチェックが一律 OFF になる。
+原因は JSON の `disabledSkillIds` に生成フローが列挙した `photo-L*` 20 件が含まれ、
+インポートがそれを忠実に反映していたこと（myPhoto スキル・カードスキルは既定 ON）。
+
+**変更**: `applyConfig` の disabledSkillIds 適用から golden フォトスキル
+（`enabledPhotoIds` への削除）を除外。インポート時は golden フォトスキルを一律有効化する。
+- `disabledSkillIds` はカードスキル（A/SP/P）に対しては従来どおり適用（CLI も同様）。
+- photoIndex が JSON フォト数（photosJson 除重後の legacyCount）を超える golden スキルは
+  `collectDisabled` が自動無効化するため、装備されていないフォトへの過剰注入は起きない。
+- CLI は `disabledSkillIds` を従来どおり解釈するため、photo-L* を含むファイルでは
+  UI インポート直後の状態と CLI の確定値が一致しなくなる点に注意
+  （UI 状態に対応する CLI 等価実行 = disabledSkillIds から photo-L* を除いたもの。
+  実サンプルでは photoIndex > legacyCount の photo-L4-4 が自動無効化のため
+  `["photo-L4-4"]` のみ残り、確定値 173,210,419 が UI と一致することを smoke で検証）。
+
+**テスト**: smoke のインポートテストにチェックボックス状態の検証を追加
+（photo-L1-1 / photo-L2-4 / photo-L3-2 / photo-L4-3 / マイフォトスキルが ON）し、
+期待スコアを 173,210,419 に更新。**431 tests（430 passed / 1 skipped）**・
+T5 不変 2,436,373,427・typecheck ゼロエラー。
+
+### 8-B10 追補2（2026-09-01・インポート仕様の確定 = JSON as-is）
+追補（一律 ON 化）を撤回し、インポート仕様を「JSON の内容を CLI と同一の解釈で
+as-is 反映」と確定した。ユーザーの意図「インポートしたフォトがそのままの構成で
+使える」では、JSON が golden フォトスキルの無効化（photo-L* 全件列挙）を意図している
+場合にそれを反映することが正しいため。
+- `applyConfig` の disabledSkillIds 適用を追補前の元実装へ戻した
+  （golden フォトスキル `enabledPhotoIds` への削除を含む）。
+- 加えてマイフォトスキル（uph-*）も disabledSkillIds から反映するようにした
+  （build.ts の userPhotoSkills フィルタと同一規則。UI エクスポートは個別無効化した
+  uph-* を disabledSkillIds に出力するため、往復で復元される）。
+- チェックの既定値を変えたい場合（T5 由来スキルを UI で ON にしたい場合等）は
+  JSON 側の disabledSkillIds を編集するのが正規の手順。
+- smoke のインポートテストは as-is 版の期待値へ戻した
+  （photo-L* チェック OFF・確定値 304,238,070 = CLI と一致）。
+- **431 tests（430 passed / 1 skipped）**・T5 不変 2,436,373,427・typecheck ゼロエラー。
+
+### 8-B10 追補3（2026-09-01・golden フォトスキルの名前一致モデル化・T5 由来スキルの非表示）
+ユーザーの設計指摘: 本計算機の目的は「様々な編成・様々なステージでスコア計算できる
+汎用計算機」であり、T5 の一致は必要条件に過ぎない。T5 由来スキル（photo-L*）が
+インポート後の編成パネルに表示されるのは汎用計算機として不適切。
+
+**設計変更（装着位置モデルの限定）**: golden フォトスキル photo-L{L}-{i} の適用条件に
+「装着位置 i のフォト名が T5 実測サンプル（verification_data_v2.json）の
+レーン L のフォト名のいずれかと一致」を追加。不一致なら UI に表示されず、計算にも乗らない。
+- T5 実測フォト名は実測固有（"神崎莉央 (Quality 165)"・"unreadable" 等）で、
+  画像→JSON 生成フローの命名（"XXX フォト1 (Quality NNN)"・実際のフォト名）とは
+  実質一致しない。T5 実測編成の再現時はサンプルと同一フォト名を使うことで golden が効く。
+- レーン内の名前一覧との一致にした理由: 8-B5 の「装備解除→後続が詰まり photoIndex が
+  変化する」連動を壊さないため（photoIndex の直接比較は装備変更で壊れる）。
+  マイフォト帳由来は【マイフォト】接頭辞により一致しない。
+
+### 実装
+1. **build.ts**: `BuildSimOptions.goldenPhotoNames?: ReadonlyArray<ReadonlyArray<string>>`
+   （レーン 1-5 の T5 フォト名）を追加し、`lanePhotos` の filter に
+   `goldenPhotoSkillApplies(goldenPhotoNames[lane-1], photos[photoIndex-1]?.name)` を追加
+   （省略時は従来どおり＝後方互換）。
+2. **CLI**: `loadGoldenPhotoNames()` が verification_data_v2.json からフォト名を読み
+   buildSimulateInput へ渡す（読めない環境では undefined = 従来動作のフォールバック）。
+3. **optimizer**: `OptimizerOptions.goldenPhotoNames` を追加し 2 箇所の buildSimulateInput
+   呼び出しへ伝播（オプティマイザ評価に photo-L* が混入しなくなる）。
+4. **UI**: `GOLDEN_PHOTO_NAMES`（DATA.sampleDeck から）を共通化し、
+   - フォト装備行の golden スキル表示を名前一致のときのみレンダリング
+   - updateDeckPreviews / runSimulation へ goldenPhotoNames を渡す
+   - applyConfig でインポート後に名前不一致の photo-L* を enabledPhotoIds から削除
+     （プレビュー・実行・表示の三者が常に同じ規則になる）
+   - オプティマイザへ goldenPhotoNames を渡す
+5. **prompts/deck-json-from-images.md**: フォトスキル 2 経路の記述を名前一致モデルに更新し、
+   「photo-L* の disabledSkillIds 全件列挙は不要になった」ことを明記（列挙しても害なし）。
+
+### 挙動の変化
+- 汎用編成（実サンプル等）: photo-L* の行がレーンパネルから消え、スコアは
+  JSON の内容のみで決まる（CLI と完全一致・304,238,070）。
+  従来は disabledSkillIds による回避が必須だったが、指定なしでも T5 スキルが乗らない。
+- T5 実測プリセット / T5 サンプル: フォト名が全一致するため golden が適用され、
+  確定値 2,436,373,427 は不変（examples/t5-sample-deck.json と verification_data_v2.json
+  のフォト名が全レーン一致することを確認済み）。
+- UI エクスポート→インポートの往復: photosJson の名前が T5 フォト名のときのみ
+  golden チェックが復元される（as-is・追補2の仕様維持）。
+
+### テスト・検証
+- **431 tests（430 passed / 1 skipped）**・typecheck（core/UI）ゼロエラー。
+- T5 不変: **2,436,373,427**（名前一致モデルでも golden が全件適用されることを確認）。
+- 実サンプル: **304,238,070**（CLI と一致・photo-L* の混入なし）。
+- smoke のインポートテスト: photo-L* の行が DOM に存在しないこと・マイフォトスキルは
+  ON・確定値 304,238,070 を検証するよう更新。
+
+## Phase 10（2026-09-02 完了）— サンプル2 取り込み・weakness トリガ条件化・CLI audience 修正
+
+サンプル2（VENUSタワー STAGE680 / サマー♡ホリデイ Lv241・実測 77,732,383・168 ビート）を
+`examples/sample2.json` として取り込み、乖離分析と仕様修正を実施。
+分析の全記録は `research/20_sample2_gap_analysis/README.md`。
+
+### 確定・修正した仕様
+1. **誰かが低下効果状態の時（`someone_down_group`・S2 確定）**:
+   `tg-someone_status_group-weekness`（憧れていた青春 等）は低下効果なし編成で全編不発。
+   旧実装は無条件扱いで L1 の P 予算を b2/b60/b120 に余分消費していた。
+   importer で condition 化 + engine に `someone_down_group`（vocal/dance/visual_down の OR）を追加。
+   【Confirmed: S2 発動ログ 44 件・L1 P の発動間隔 b1→b55→b110→b165 が CT55 前半発動モデルと一致】
+2. **効果行単位の triggerId（importer）**: `skillDetails[].triggerId` を効果行ごとに写像
+   （似た者親子のメッセージ: score_get 無条件・バフ行のみ tg-position_attribute_visual）。
+   スキル単位 triggerId との共通写像 `triggerConditionOf` に統合。
+3. **CLI の audience 上書き修正**: 入力 JSON の `audience` 明示時は会場キャパ cap/5 で上書きしない
+   （S2 実測 13,206 人が 14,000 に上書きされていた。未指定時のみ cap/5 フォールバック）。
+4. **fan.png の独立検証**: 実測スコアボーナス%（53.9-57.4%）= 個人来場ファン数 ×
+   fan_bonus テーブル引きが 1 の位まで一致 → `fanBonusPermilFromCount` テーブルの実機一致を確認。
+
+### 検証結果
+- **450 tests（450 passed / 1 skipped）**・typecheck（core/UI）ゼロエラー。
+- T5 不変: `examples/t5-sample.json` → **2,580,038,995**。
+- S1 CLI: **130,698,595**（audience 修正の影響なし・nested-sample は audience 未指定のため従来導出）。
+- S2 before → after: **49,449,877 → 48,956,341**（crit なし確定値）。
+- crit フラグ再現ラン（measured critical_flags で再現）: 93,301,742 vs 実測 77,732,383。
+  レーン別は **L1 ×1.008 / L2 ×0.973 / L4 ×1.040 / L5 ×1.050（全て ±5% 内）**、L3 のみ ×0.755
+  （b90 SP の critF 過大 + 割合 basis の循環膨張・A crit b41/b100 の ccu 過大保持）。
+
+### 設計メモ / 【Unknown】
+- `tg-position_attribute_*`（<属性>レーンの時）の意味は T5（優=不発→レーン属性説）と
+  S2（怜=発動→メンバータイプ説）で**矛盾**。エンジンは T5 優先のレーン属性説を維持
+  （engine.ts の self_*_lane コメント・research/20 §4）。次サンプルで判定する。
+- ビートノートの crit に ccu が乗っていない可能性（S2 の単一 crit ビート 73 件の必要 critF は
+  ccu 依存の傾きなし・A/SP では ccu が乗る S1 b103 実測と矛盾）→ 次サンプルで判定。
+- フォトスキルは実測でスタミナを消費していない観測（S2・ありがとう 552 が減らない）。
+  S1/T5 はエンジン（消費あり）と整合済みのため現状維持・要検証。
+- S2 の b2 L3 スタミナ -5,552 は発動なしで説明不能（実測側の OCR/未解明消費源の可能性・報告済み）。
+
+### 効果行トリガー対応の波及修正（data 再生成に伴う）
+- **`data/skills_master.json`**: 447 スキルの効果行 condition が更新（skillDetails[].triggerId の
+  効果行単位写像により「score_get 無条件 + バフ行のみ <属性>レーン条件」等の混合構成が正しく
+  条件化。`card-chs-05-hruh-00-3` の SP前置き（`someone_before_special`）も conditionalNote から
+  正式条件化 = S1 で確定済み仕様のデータ側適正化）。
+- **`data/live_bonuses.json`**: `tg-someone_stamina_lower-50`（5 クエストのダンスダウン ライボ）が
+  無条件 → `someone_stamina<=50` に修正（旧実装の無条件発動は潜在バグ）。
+- **S1 UI 確定値の更新**: 114,082,925 → 114,102,xxx（smoke テストは正規表現で照合）。
+  理由: 上記データ修正（someone_before_special の正式条件化）で L4 hruh-00-3 の発動ビートが
+  S1 確定仕様どおり SP ノート到来ビートに変わったため。仕様変更ではなく**データ側の適正化**。
+  CLI 確定値 130,698,595 は不変（CLI は L4 の SP前置きが元々 golden 側にないため影響外…ではなく
+  nested-sample はマスタ経路のため CLI も同じく 130,698,595 のまま = 発動ビート変化はスコアに
+  ほぼ影響しない値だったが UI 側で +2 万点の差として検出された）。
+- `tests/data-integrity/live-bonuses.test.ts` の KNOWN_CONDITIONS に
+  `someone_stamina<=50` / `someone_down_group` を追加。
+
+---
+
+## Phase 11（2026-09-02 第二段階）: ユーザー確定仕様の実装 → S2 L3 残差解消
+
+ユーザー回答で 4 規則が確定し実装。詳細は research/20_sample2_gap_analysis/CONCLUSION_2026-09-02.md
+第二段階節・README 更新分を参照。
+
+### 実装
+- **超化 = 増強型**（engine.ts `applyEffect` + `amplifyLongestOfKey`）: capExtend 行は同種バフの
+  残り最大インスタンスへ +5 段（表記段数はダミー）。基底なしで不発。上限拡張量はインスタンスの
+  `capExtend`（number・加算量）に記録し `aggregateBuffs` が key ごと最大値を上限へ加算
+  （旧「独立 5 段インスタンス」実装は b100 で ccu 5 を返し実測矛盾のため廃止）。
+- **行ごと独立条件評価**: `tryActivate`（P/フォト）と `settleSkillNote`（A/SP）の効果行ループで
+  `evaluateCondition` を行単位に評価し不成立行のみスキップ。P の後半ゲートは新規
+  `rowsHoldAny`（1 行でも成立で発動可・従来は全行 AND）。前半の someone_before_special
+  経路は従来どおり `conditionsHold`。
+- **前発動判定 some 化**: `activatePhaseSkills` の `isUnconditional` を `every` → `some`
+  （無条件行 1 つでも持つ P/フォトは CT0 前半自動発動 = 祭り千紗 P3 型）。
+- **importer**: `tg-status_group-weekness` → 新条件 `self_down_group`（自身が低下効果状態）。
+  types.ts `EffectCondition` に追加。`data/skills_master.json` 再生成。
+- テスト 8 本追加（sample2-specs.test.ts: 超化 3 / 行独立 4 / 前発動 1）。
+
+### 検証
+- 全テスト **458 passed / 1 skipped**・T5 ゴールデン 2 値不変・typecheck / build:ui OK。
+- S2（crit フラグ再現ラン）: 75,656,769 vs 実測 77,732,383 = ×0.973。
+  レーン別 **L1 ×0.992 / L2 ×0.969 / L3 ×0.976 / L4 ×0.962 / L5 ×0.952 = 全レーン ±5% 内**
+  （第一段階の L3 ×0.755 を解消）。
+- L3 A crit がユーザー式と完全一致: b41 critF=2504（ccu13）/ b100=1854（ccu0）/ b142=2254（ccu8）。
+  b90 SP ×0.978（旧 ×0.68 を解消）。
+
+### 観測の訂正（実測データ側）
+- measured_data_v2.json の current_stamina に **7→2 の OCR 誤読が全レーン 236 行**。
+  b2 L3 の「-5,552」は 8046→7494（フォトありがとう 552 消費）の誤読で実在せず。
+  修正表を `aipura_nox/サンプル2/measured_data_v2_ocr7to2_fix.json` に追記（元ファイル不変・
+  元画像 5 枚目視で確認）。
+- **フォトのスタミナ無消費説は撤回**: フォトは消費される（b1 スクショは P 消費後・
+  フォト消費前の中間フレームだった）。エンジンのフォト消費あり実装が正しかった。
