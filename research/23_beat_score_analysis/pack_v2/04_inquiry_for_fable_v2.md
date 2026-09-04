@@ -2,7 +2,7 @@
 
 > **使い方**:
 > LMarena の新規セッション（初見LLM）の入力欄に、以下のコードブロック内のテキストをそのままコピー＆ペーストして投入してください。
-> （会話履歴や過去セッションへの言及を一切排除し、アイプラの計算アーキテクチャ・検証データ・観察事実を客観的・網羅的に提示した独立プロンプトです）
+> （会話履歴や過去セッションへの言及を一切排除し、アイプラの計算アーキテクチャ・検証データ・観察事実・GitHubリポジトリURLを客観的・網羅的に提示した独立プロンプトです）
 
 ---
 
@@ -16,7 +16,26 @@
 
 しかし、**「通常ビート（白ノーツ）の基本スコア計算式」** および **「フォトスキルのビートスコア上昇%の重複仕様」** において、検証するステージ環境によって実測値との適合傾向が異なっており、統一的な計算式の確定に至っていません。
 
-以下のゲーム仕様・確定計算アーキテクチャ・実機実測データを踏まえ、すべてのステージを矛盾なく説明できる真の計算モデルを導出してください。
+以下のGitHub公開リソース、ゲーム仕様、確定計算アーキテクチャ、実機実測データを踏まえ、すべてのステージを矛盾なく説明できる真の計算モデルを導出してください。
+
+---
+
+## 0. 参考GitHubリポジトリ・参照URL（生データ・ソースコード）
+
+本シミュレータのコードベースおよび詳細な実測検証データはGitHub上で公開されています。
+Webアクセス／外部参照機能がある場合は、以下のURLを直接参照して詳細な生データや実装を確認してください：
+
+- **GitHubリポジトリ**: `https://github.com/ucalis-uma/aipla-simulator`
+- **詳細実測データ集 (S4全67白ノーツ実測値・S3・T5比較表)**:
+  `https://github.com/ucalis-uma/aipla-simulator/blob/main/research/23_beat_score_analysis/pack_v2/02_clean_data_by_sample.md`
+- **通常ビート計算実装 (`settleBeatNote`, `BEAT_LAMBDA`)**:
+  `https://github.com/ucalis-uma/aipla-simulator/blob/main/src/timeline/engine.ts#L1960-L2020`
+- **フォトスキル集計ロジック (`scoreBonusPct.beat`)**:
+  `https://github.com/ucalis-uma/aipla-simulator/blob/main/src/sim/build.ts#L676-L691`
+- **ステージマスタデータ (`beatWeightsPermil`)**:
+  `https://github.com/ucalis-uma/aipla-simulator/blob/main/vendor/Quest.json`
+- **譜面ノーツパターンデータ (`charts_all.json`)**:
+  `https://github.com/ucalis-uma/aipla-simulator/blob/main/data/charts_all.json`
 
 ---
 
@@ -139,6 +158,10 @@ $$\text{basic} = \left\lfloor basicSum \times \frac{8}{140} \right\rfloor \quad 
    - マスタの属性重み（$W_{vo}, W_{da}, W_{vi}$）の内部演算処理（正規化、除数、端数処理の順序など）
    - ステータス参照における何らかの補正項や未考慮の定数
    - ゲーム開発（QualiArts）の実装アーキテクチャとして、最も自然で一貫性のある設計はどのようなものか
-2. **フォトスキルの「ビートスコア上昇%」の重複仕様（合算 sum か、最大値 max か、あるいは別の枠組みか）**
+2. **フォトスキルの「ビートスコア上昇%」の正しい重複仕様（合算 sum か、最大値 max か、あるいは別の枠組みか）**
 3. **T5、S3、S4 の実測値（白ノーツ・スキルノーツ双方）を矛盾なく統一的に説明できる「通常ビートスコア計算式」の具体的な数式モデルの提案**
+4. **実装パッチ（Unified Diff 形式）**:
+   - `src/timeline/engine.ts`（`settleBeatNote` 周辺のビートスコア計算）
+   - `src/sim/build.ts`（`scoreBonusPct.beat` のフォト集計ロジック）
+   に対する具体的な修正パッチを提示してください。
 ```
