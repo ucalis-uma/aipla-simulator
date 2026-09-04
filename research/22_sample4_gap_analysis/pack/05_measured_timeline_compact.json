@@ -1,0 +1,1550 @@
+[
+ {
+  "beat": 1,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "P",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   },
+   {
+    "lane": 1,
+    "kind": "P",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   },
+   {
+    "lane": 5,
+    "kind": "P",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   },
+   {
+    "lane": 3,
+    "kind": "P",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 1,
+    "gained": 12950
+   },
+   {
+    "lane": 2,
+    "gained": 16337
+   },
+   {
+    "lane": 3,
+    "gained": 16488
+   },
+   {
+    "lane": 4,
+    "gained": 14309
+   },
+   {
+    "lane": 5,
+    "gained": 14164
+   },
+   {
+    "lane": 3,
+    "gained": 568656
+   }
+  ]
+ },
+ {
+  "beat": 2,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   },
+   {
+    "lane": 1,
+    "kind": "P",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   },
+   {
+    "lane": 5,
+    "kind": "P",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "photo",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 1,
+    "gained": 15907
+   },
+   {
+    "lane": 2,
+    "gained": 22443
+   },
+   {
+    "lane": 3,
+    "gained": 54711
+   },
+   {
+    "lane": 4,
+    "gained": 14309
+   },
+   {
+    "lane": 5,
+    "gained": 14164
+   }
+  ]
+ },
+ {
+  "beat": 7,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 5,
+    "kind": "A",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 5,
+    "gained": 1132661
+   }
+  ]
+ },
+ {
+  "beat": 10,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 1,
+    "gained": 15907
+   },
+   {
+    "lane": 2,
+    "gained": 46526
+   },
+   {
+    "lane": 3,
+    "gained": 26741
+   },
+   {
+    "lane": 4,
+    "gained": 14309
+   },
+   {
+    "lane": 5,
+    "gained": 14164
+   }
+  ]
+ },
+ {
+  "beat": 18,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 3,
+    "kind": "A",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 3,
+    "gained": 6314106
+   }
+  ]
+ },
+ {
+  "beat": 20,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 1,
+    "gained": 16702
+   },
+   {
+    "lane": 2,
+    "gained": 32550
+   },
+   {
+    "lane": 3,
+    "gained": 93108
+   },
+   {
+    "lane": 4,
+    "gained": 15025
+   },
+   {
+    "lane": 5,
+    "gained": 14873
+   }
+  ]
+ },
+ {
+  "beat": 25,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 1,
+    "kind": "A",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 1,
+    "gained": 1616247
+   }
+  ]
+ },
+ {
+  "beat": 30,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 1,
+    "gained": 17498
+   },
+   {
+    "lane": 2,
+    "gained": 34100
+   },
+   {
+    "lane": 3,
+    "gained": 106491
+   },
+   {
+    "lane": 4,
+    "gained": 15740
+   },
+   {
+    "lane": 5,
+    "gained": 15581
+   }
+  ]
+ },
+ {
+  "beat": 32,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "A",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 2,
+    "gained": 4760648
+   }
+  ]
+ },
+ {
+  "beat": 40,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 1,
+    "gained": 14893
+   },
+   {
+    "lane": 2,
+    "gained": 22384
+   },
+   {
+    "lane": 3,
+    "gained": 28864
+   },
+   {
+    "lane": 4,
+    "gained": 16456
+   },
+   {
+    "lane": 5,
+    "gained": 16289
+   }
+  ]
+ },
+ {
+  "beat": 45,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 3,
+    "kind": "A",
+    "success": false,
+    "failReason": "in_ct",
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   }
+  ],
+  "events": []
+ },
+ {
+  "beat": 46,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 3,
+    "kind": "P",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 1,
+    "gained": 12950
+   },
+   {
+    "lane": 2,
+    "gained": 19464
+   },
+   {
+    "lane": 3,
+    "gained": 25099
+   },
+   {
+    "lane": 4,
+    "gained": 14309
+   },
+   {
+    "lane": 5,
+    "gained": 14164
+   },
+   {
+    "lane": 3,
+    "gained": 938283
+   }
+  ]
+ },
+ {
+  "beat": 50,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "P",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   },
+   {
+    "lane": 1,
+    "kind": "P",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   },
+   {
+    "lane": 5,
+    "kind": "P",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 1,
+    "gained": 12950
+   },
+   {
+    "lane": 2,
+    "gained": 15295
+   },
+   {
+    "lane": 3,
+    "gained": 23113
+   },
+   {
+    "lane": 4,
+    "gained": 14309
+   },
+   {
+    "lane": 5,
+    "gained": 14164
+   }
+  ]
+ },
+ {
+  "beat": 51,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 1,
+    "kind": "P",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   },
+   {
+    "lane": 5,
+    "kind": "P",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 1,
+    "gained": 12950
+   },
+   {
+    "lane": 2,
+    "gained": 18944
+   },
+   {
+    "lane": 3,
+    "gained": 24436
+   },
+   {
+    "lane": 4,
+    "gained": 14309
+   },
+   {
+    "lane": 5,
+    "gained": 14164
+   }
+  ]
+ },
+ {
+  "beat": 53,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 5,
+    "kind": "A",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 5,
+    "gained": 1132661
+   }
+  ]
+ },
+ {
+  "beat": 60,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 1,
+    "gained": 16702
+   },
+   {
+    "lane": 2,
+    "gained": 27757
+   },
+   {
+    "lane": 3,
+    "gained": 74743
+   },
+   {
+    "lane": 4,
+    "gained": 15025
+   },
+   {
+    "lane": 5,
+    "gained": 14873
+   }
+  ]
+ },
+ {
+  "beat": 70,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 1,
+    "gained": 17498
+   },
+   {
+    "lane": 2,
+    "gained": 51179
+   },
+   {
+    "lane": 3,
+    "gained": 86054
+   },
+   {
+    "lane": 4,
+    "gained": 15740
+   },
+   {
+    "lane": 5,
+    "gained": 15581
+   }
+  ]
+ },
+ {
+  "beat": 77,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "SP",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 2,
+    "gained": 13471506
+   }
+  ]
+ },
+ {
+  "beat": 80,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 1,
+    "gained": 18293
+   },
+   {
+    "lane": 2,
+    "gained": 30400
+   },
+   {
+    "lane": 3,
+    "gained": 137927
+   },
+   {
+    "lane": 4,
+    "gained": 16456
+   },
+   {
+    "lane": 5,
+    "gained": 16289
+   }
+  ]
+ },
+ {
+  "beat": 88,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 3,
+    "kind": "A",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 3,
+    "gained": 21633992
+   }
+  ]
+ },
+ {
+  "beat": 90,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 1,
+    "gained": 15541
+   },
+   {
+    "lane": 2,
+    "gained": 20230
+   },
+   {
+    "lane": 3,
+    "gained": 143924
+   },
+   {
+    "lane": 4,
+    "gained": 17171
+   },
+   {
+    "lane": 5,
+    "gained": 16997
+   }
+  ]
+ },
+ {
+  "beat": 100,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 1,
+    "kind": "P",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   },
+   {
+    "lane": 5,
+    "kind": "P",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 1,
+    "gained": 16188
+   },
+   {
+    "lane": 2,
+    "gained": 24331
+   },
+   {
+    "lane": 3,
+    "gained": 54025
+   },
+   {
+    "lane": 4,
+    "gained": 17887
+   },
+   {
+    "lane": 5,
+    "gained": 17706
+   }
+  ]
+ },
+ {
+  "beat": 110,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 1,
+    "gained": 19884
+   },
+   {
+    "lane": 2,
+    "gained": 37323
+   },
+   {
+    "lane": 3,
+    "gained": 118721
+   },
+   {
+    "lane": 4,
+    "gained": 17887
+   },
+   {
+    "lane": 5,
+    "gained": 17706
+   }
+  ]
+ },
+ {
+  "beat": 117,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "SP",
+    "success": false,
+    "failReason": "no_skill",
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   }
+  ],
+  "events": []
+ },
+ {
+  "beat": 120,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 1,
+    "gained": 15907
+   },
+   {
+    "lane": 2,
+    "gained": 25295
+   },
+   {
+    "lane": 3,
+    "gained": 80338
+   },
+   {
+    "lane": 4,
+    "gained": 14309
+   },
+   {
+    "lane": 5,
+    "gained": 14164
+   }
+  ]
+ },
+ {
+  "beat": 124,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 1,
+    "gained": 15907
+   },
+   {
+    "lane": 2,
+    "gained": 22443
+   },
+   {
+    "lane": 3,
+    "gained": 23117
+   },
+   {
+    "lane": 4,
+    "gained": 14309
+   },
+   {
+    "lane": 5,
+    "gained": 14164
+   }
+  ]
+ },
+ {
+  "beat": 130,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "A",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 4,
+    "gained": 663904
+   }
+  ]
+ },
+ {
+  "beat": 131,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 1,
+    "gained": 16702
+   },
+   {
+    "lane": 2,
+    "gained": 23565
+   },
+   {
+    "lane": 3,
+    "gained": 24273
+   },
+   {
+    "lane": 4,
+    "gained": 15025
+   },
+   {
+    "lane": 5,
+    "gained": 14873
+   }
+  ]
+ },
+ {
+  "beat": 140,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 1,
+    "gained": 14245
+   },
+   {
+    "lane": 2,
+    "gained": 17970
+   },
+   {
+    "lane": 3,
+    "gained": 26880
+   },
+   {
+    "lane": 4,
+    "gained": 15740
+   },
+   {
+    "lane": 5,
+    "gained": 15581
+   }
+  ]
+ },
+ {
+  "beat": 142,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 3,
+    "kind": "A",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 3,
+    "gained": 2965517
+   }
+  ]
+ },
+ {
+  "beat": 150,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 1,
+    "kind": "P",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   },
+   {
+    "lane": 5,
+    "kind": "P",
+    "success": false,
+    "failReason": "stamina_short",
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 1,
+    "gained": 14893
+   },
+   {
+    "lane": 2,
+    "gained": 19387
+   },
+   {
+    "lane": 3,
+    "gained": 28864
+   },
+   {
+    "lane": 4,
+    "gained": 16456
+   },
+   {
+    "lane": 5,
+    "gained": 16289
+   }
+  ]
+ },
+ {
+  "beat": 160,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 5,
+    "kind": "P",
+    "success": false,
+    "failReason": "stamina_short",
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 5,
+    "kind": "P",
+    "success": false,
+    "failReason": "stamina_short",
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 1,
+    "gained": 19088
+   },
+   {
+    "lane": 2,
+    "gained": 27615
+   },
+   {
+    "lane": 3,
+    "gained": 32960
+   },
+   {
+    "lane": 4,
+    "gained": 17171
+   },
+   {
+    "lane": 5,
+    "gained": 16997
+   }
+  ]
+ },
+ {
+  "beat": 166,
+  "acts": [
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 5,
+    "kind": "P",
+    "success": false,
+    "failReason": "stamina_short",
+    "gained": 0
+   },
+   {
+    "lane": 3,
+    "kind": "SP",
+    "success": true,
+    "failReason": null,
+    "gained": 0
+   },
+   {
+    "lane": 4,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 2,
+    "kind": "P",
+    "success": false,
+    "failReason": "limit",
+    "gained": 0
+   },
+   {
+    "lane": 5,
+    "kind": "P",
+    "success": false,
+    "failReason": "stamina_short",
+    "gained": 0
+   }
+  ],
+  "events": [
+   {
+    "lane": 3,
+    "gained": 22099857
+   },
+   {
+    "lane": 3,
+    "gained": 10559919
+   }
+  ]
+ }
+]

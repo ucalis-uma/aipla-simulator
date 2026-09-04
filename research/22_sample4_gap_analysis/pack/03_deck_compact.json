@@ -1,0 +1,730 @@
+{
+  "staff_bonus": {
+    "vocal": 5520,
+    "dance": 5868,
+    "visual": 5520,
+    "stamina": 1610,
+    "mental": 2554,
+    "critical": 689
+  },
+  "yale_bonus": {
+    "vocal_pct": 5,
+    "dance_pct": 4,
+    "visual_pct": 6,
+    "stamina": 140,
+    "mental": 400,
+    "critical": 600,
+    "beat_score_pct": 6,
+    "a_skill_score_pct": 7,
+    "sp_skill_score_pct": 12,
+    "critical_score_pct": 12
+  },
+  "audience": 8000,
+  "characters": [
+    {
+      "lane": 1,
+      "card_id": "card-chs-05-fest-00",
+      "role": "Supporter",
+      "skill_levels": {
+        "sk-chs-05-fest-00-1": 4,
+        "sk-chs-05-fest-00-2": 4,
+        "sk-chs-05-fest-00-3": 2
+      },
+      "stats_base": {
+        "vocal": 50009,
+        "dance": 71354,
+        "visual": 57152,
+        "stamina": 6389,
+        "mental": 8429,
+        "critical": 1399
+      },
+      "stats_after_non_skill_modifiers": {
+        "vocal": 91293,
+        "dance": 125149,
+        "visual": 171086,
+        "stamina": 7929,
+        "mental": 8429,
+        "critical": 1399
+      },
+      "photos": [
+        {
+          "name": "フォト1 (Quality 150)",
+          "structured": [
+            {
+              "stat": "dance",
+              "type": "fixed",
+              "value": 10986
+            },
+            {
+              "stat": "visual",
+              "type": "pct",
+              "value": 46.3
+            },
+            {
+              "stat": "stamina",
+              "type": "pct",
+              "value": 36.2
+            },
+            {
+              "stat": "mental",
+              "type": "fixed",
+              "value": 1574
+            },
+            {
+              "stat": "sp_score",
+              "type": "fixed",
+              "value": 203433
+            }
+          ]
+        },
+        {
+          "name": "フォト2 (Quality 140)",
+          "structured": [
+            {
+              "stat": "vocal",
+              "type": "pct",
+              "value": 44.4
+            },
+            {
+              "stat": "dance",
+              "type": "pct",
+              "value": 37.4
+            },
+            {
+              "stat": "visual",
+              "type": "pct",
+              "value": 45.8
+            },
+            {
+              "stat": "beat_score",
+              "type": "pct",
+              "value": 19.3
+            },
+            {
+              "stat": "critical_score",
+              "type": "pct",
+              "value": 23.4
+            }
+          ]
+        },
+        {
+          "name": "フォト3 (Quality 150)",
+          "structured": [
+            {
+              "stat": "vocal",
+              "type": "pct",
+              "value": 25.4
+            },
+            {
+              "stat": "visual",
+              "type": "pct",
+              "value": 35.5
+            },
+            {
+              "stat": "mental",
+              "type": "fixed",
+              "value": 929
+            },
+            {
+              "stat": "beat_score",
+              "type": "fixed",
+              "value": 713
+            }
+          ]
+        },
+        {
+          "name": "フォト4 (Quality 85)",
+          "structured": [
+            {
+              "stat": "vocal",
+              "type": "pct",
+              "value": 33.2
+            },
+            {
+              "stat": "dance",
+              "type": "pct",
+              "value": 33.2
+            },
+            {
+              "stat": "visual",
+              "type": "pct",
+              "value": 36.4
+            },
+            {
+              "stat": "mental",
+              "type": "fixed",
+              "value": 442
+            },
+            {
+              "stat": "beat_score",
+              "type": "fixed",
+              "value": 230
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "lane": 2,
+      "card_id": "card-rei-05-fest-00",
+      "role": "Buffer",
+      "skill_levels": {
+        "sk-rei-05-fest-00-1": 5,
+        "sk-rei-05-fest-00-2": 4,
+        "sk-rei-05-fest-00-3": 3
+      },
+      "stats_base": {
+        "vocal": 53222,
+        "dance": 79178,
+        "visual": 61484,
+        "stamina": 6218,
+        "mental": 8655,
+        "critical": 3271
+      },
+      "stats_after_non_skill_modifiers": {
+        "vocal": 78670,
+        "dance": 208641,
+        "visual": 61484,
+        "stamina": 7391,
+        "mental": 8655,
+        "critical": 3271
+      },
+      "photos": [
+        {
+          "name": "フォト1 (Quality 150)",
+          "structured": [
+            {
+              "stat": "vocal",
+              "type": "fixed",
+              "value": 7442
+            },
+            {
+              "stat": "dance",
+              "type": "pct",
+              "value": 33.5
+            },
+            {
+              "stat": "mental",
+              "type": "fixed",
+              "value": 1205
+            },
+            {
+              "stat": "sp_score",
+              "type": "pct",
+              "value": 8.5
+            }
+          ]
+        },
+        {
+          "name": "フォト2 (Quality 150)",
+          "structured": [
+            {
+              "stat": "dance",
+              "type": "pct",
+              "value": 30.4
+            },
+            {
+              "stat": "critical",
+              "type": "fixed",
+              "value": 1067
+            },
+            {
+              "stat": "mental",
+              "type": "fixed",
+              "value": 1033
+            },
+            {
+              "stat": "a_score",
+              "type": "pct",
+              "value": 7.3
+            }
+          ]
+        },
+        {
+          "name": "フォト3 (Quality 135)",
+          "structured": [
+            {
+              "stat": "dance",
+              "type": "pct",
+              "value": 33.1
+            },
+            {
+              "stat": "critical",
+              "type": "fixed",
+              "value": 800
+            },
+            {
+              "stat": "mental",
+              "type": "fixed",
+              "value": 933
+            },
+            {
+              "stat": "critical_score",
+              "type": "pct",
+              "value": 14
+            }
+          ]
+        },
+        {
+          "name": "フォト4 (Quality 150)",
+          "structured": [
+            {
+              "stat": "vocal",
+              "type": "pct",
+              "value": 41.9
+            },
+            {
+              "stat": "dance",
+              "type": "pct",
+              "value": 46.3
+            },
+            {
+              "stat": "stamina",
+              "type": "pct",
+              "value": 29.4
+            },
+            {
+              "stat": "sp_score",
+              "type": "fixed",
+              "value": 224478
+            },
+            {
+              "stat": "beat_score",
+              "type": "fixed",
+              "value": 1150
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "lane": 3,
+      "card_id": "card-ngs-05-fest-02",
+      "role": "Scorer",
+      "skill_levels": {
+        "sk-ngs-05-fest-02-1": 6,
+        "sk-ngs-05-fest-02-2": 5,
+        "sk-ngs-05-fest-02-3": 4
+      },
+      "stats_base": {
+        "vocal": 60658,
+        "dance": 91703,
+        "visual": 68704,
+        "stamina": 6794,
+        "mental": 8360,
+        "critical": 2941
+      },
+      "stats_after_non_skill_modifiers": {
+        "vocal": 96137,
+        "dance": 265108,
+        "visual": 97992,
+        "stamina": 13037,
+        "mental": 8360,
+        "critical": 2941
+      },
+      "photos": [
+        {
+          "name": "フォト1 (Quality 155)",
+          "structured": [
+            {
+              "stat": "vocal",
+              "type": "fixed",
+              "value": 13623
+            },
+            {
+              "stat": "dance",
+              "type": "pct",
+              "value": 39.9
+            },
+            {
+              "stat": "stamina",
+              "type": "pct",
+              "value": 31.2
+            },
+            {
+              "stat": "critical",
+              "type": "fixed",
+              "value": 1542
+            },
+            {
+              "stat": "critical_score",
+              "type": "pct",
+              "value": 21.6
+            }
+          ]
+        },
+        {
+          "name": "フォト2 (Quality 145)",
+          "structured": [
+            {
+              "stat": "vocal",
+              "type": "pct",
+              "value": 44
+            },
+            {
+              "stat": "dance",
+              "type": "pct",
+              "value": 39.7
+            },
+            {
+              "stat": "stamina",
+              "type": "pct",
+              "value": 35.2
+            },
+            {
+              "stat": "mental",
+              "type": "fixed",
+              "value": 1586
+            },
+            {
+              "stat": "a_score",
+              "type": "pct",
+              "value": 13.4
+            }
+          ]
+        },
+        {
+          "name": "フォト3 (Quality 140)",
+          "structured": [
+            {
+              "stat": "dance",
+              "type": "pct",
+              "value": 40.2
+            },
+            {
+              "stat": "visual",
+              "type": "fixed",
+              "value": 9881
+            },
+            {
+              "stat": "stamina",
+              "type": "pct",
+              "value": 34
+            },
+            {
+              "stat": "a_score",
+              "type": "fixed",
+              "value": 62833
+            },
+            {
+              "stat": "beat_score",
+              "type": "fixed",
+              "value": 639
+            }
+          ]
+        },
+        {
+          "name": "フォト4 (Quality 130)",
+          "structured": [
+            {
+              "stat": "dance",
+              "type": "pct",
+              "value": 33.1
+            },
+            {
+              "stat": "visual",
+              "type": "pct",
+              "value": 34.4
+            },
+            {
+              "stat": "stamina",
+              "type": "pct",
+              "value": 34.5
+            },
+            {
+              "stat": "mental",
+              "type": "fixed",
+              "value": 910
+            },
+            {
+              "stat": "critical_score",
+              "type": "pct",
+              "value": 18.9
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "lane": 4,
+      "card_id": "card-szk-05-sail-00",
+      "role": "Supporter",
+      "skill_levels": {
+        "sk-szk-05-sail-00-1": 3,
+        "sk-szk-05-sail-00-2": 5,
+        "sk-szk-05-sail-00-3": 2
+      },
+      "stats_base": {
+        "vocal": 72092,
+        "dance": 55498,
+        "visual": 50081,
+        "stamina": 6389,
+        "mental": 9495,
+        "critical": 2642
+      },
+      "stats_after_non_skill_modifiers": {
+        "vocal": 107637,
+        "dance": 170895,
+        "visual": 100292,
+        "stamina": 6389,
+        "mental": 9495,
+        "critical": 2642
+      },
+      "photos": [
+        {
+          "name": "フォト1 (Quality 140)",
+          "structured": [
+            {
+              "stat": "dance",
+              "type": "pct",
+              "value": 44.4
+            },
+            {
+              "stat": "visual",
+              "type": "pct",
+              "value": 43
+            },
+            {
+              "stat": "critical",
+              "type": "fixed",
+              "value": 1248
+            },
+            {
+              "stat": "mental",
+              "type": "fixed",
+              "value": 1289
+            },
+            {
+              "stat": "a_score",
+              "type": "fixed",
+              "value": 66641
+            }
+          ]
+        },
+        {
+          "name": "フォト2 (Quality 140)",
+          "structured": [
+            {
+              "stat": "dance",
+              "type": "pct",
+              "value": 37.4
+            },
+            {
+              "stat": "visual",
+              "type": "pct",
+              "value": 40.2
+            },
+            {
+              "stat": "mental",
+              "type": "fixed",
+              "value": 1456
+            },
+            {
+              "stat": "a_score",
+              "type": "pct",
+              "value": 13.2
+            },
+            {
+              "stat": "beat_score",
+              "type": "pct",
+              "value": 20.7
+            }
+          ]
+        },
+        {
+          "name": "小美山愛 (Quality 150)",
+          "structured": [
+            {
+              "stat": "vocal",
+              "type": "pct",
+              "value": 43
+            },
+            {
+              "stat": "dance",
+              "type": "pct",
+              "value": 43
+            },
+            {
+              "stat": "visual",
+              "type": "pct",
+              "value": 43
+            },
+            {
+              "stat": "a_score",
+              "type": "pct",
+              "value": 10.7
+            }
+          ]
+        },
+        {
+          "name": "フォト4 (Quality 140)",
+          "structured": [
+            {
+              "stat": "vocal",
+              "type": "fixed",
+              "value": 9282
+            },
+            {
+              "stat": "dance",
+              "type": "pct",
+              "value": 43
+            },
+            {
+              "stat": "mental",
+              "type": "fixed",
+              "value": 1081
+            },
+            {
+              "stat": "a_score",
+              "type": "fixed",
+              "value": 47601
+            },
+            {
+              "stat": "critical_score",
+              "type": "pct",
+              "value": 23.4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "lane": 5,
+      "card_id": "card-suz-05-fest-02",
+      "role": "Buffer",
+      "skill_levels": {
+        "sk-suz-05-fest-02-1": 4,
+        "sk-suz-05-fest-02-2": 4,
+        "sk-suz-05-fest-02-3": 3
+      },
+      "stats_base": {
+        "vocal": 52373,
+        "dance": 75411,
+        "visual": 60961,
+        "stamina": 6581,
+        "mental": 8359,
+        "critical": 3122
+      },
+      "stats_after_non_skill_modifiers": {
+        "vocal": 76095,
+        "dance": 193126,
+        "visual": 82481,
+        "stamina": 6581,
+        "mental": 8359,
+        "critical": 3122
+      },
+      "photos": [
+        {
+          "name": "フォト1 (Quality 125)",
+          "structured": [
+            {
+              "stat": "vocal",
+              "type": "pct",
+              "value": 40
+            },
+            {
+              "stat": "dance",
+              "type": "pct",
+              "value": 38.7
+            },
+            {
+              "stat": "visual",
+              "type": "fixed",
+              "value": 7562
+            },
+            {
+              "stat": "critical",
+              "type": "fixed",
+              "value": 828
+            },
+            {
+              "stat": "a_score",
+              "type": "fixed",
+              "value": 44437
+            }
+          ]
+        },
+        {
+          "name": "フォト2 (Quality 150)",
+          "structured": [
+            {
+              "stat": "dance",
+              "type": "pct",
+              "value": 31.4
+            },
+            {
+              "stat": "critical",
+              "type": "fixed",
+              "value": 895
+            },
+            {
+              "stat": "mental",
+              "type": "fixed",
+              "value": 929
+            },
+            {
+              "stat": "critical_score",
+              "type": "pct",
+              "value": 19.1
+            }
+          ]
+        },
+        {
+          "name": "フォト3 (Quality 145)",
+          "structured": [
+            {
+              "stat": "dance",
+              "type": "pct",
+              "value": 30.7
+            },
+            {
+              "stat": "visual",
+              "type": "pct",
+              "value": 28.7
+            },
+            {
+              "stat": "mental",
+              "type": "fixed",
+              "value": 1110
+            },
+            {
+              "stat": "sp_score",
+              "type": "pct",
+              "value": 6.2
+            }
+          ]
+        },
+        {
+          "name": "フォト4 (Quality 120)",
+          "structured": [
+            {
+              "stat": "vocal",
+              "type": "fixed",
+              "value": 6838
+            },
+            {
+              "stat": "dance",
+              "type": "pct",
+              "value": 32.7
+            },
+            {
+              "stat": "mental",
+              "type": "fixed",
+              "value": 836
+            },
+            {
+              "stat": "a_score",
+              "type": "fixed",
+              "value": 36919
+            },
+            {
+              "stat": "beat_score",
+              "type": "pct",
+              "value": 15.9
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
