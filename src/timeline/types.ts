@@ -28,6 +28,9 @@ export type SkillKind = "A" | "SP" | "P" | "photo" | "live_bonus";
  * - p_skill_score_up: P スキルスコア上昇バフ（1段 +10%・b1 passive に加算）
  * - stealth: ステルス（audience_amount_reduction。副効果で他4レーンのファンボーナス+）
  * - live_bonus_ct_reduction: ライブボーナス（ステージ側）の CT を短縮する即時効果
+ * - effect_passing: 【サンプル4実測 2026-09-04】強化効果譲渡
+ *   （strength_effect_assignment_all。スキル保持レーンの有効な強化バフ・インスタンスを
+ *   対象レーンへコピー。同一種は既存インスタンスと別枠で保持→集計は cap でクランプ）
  * dance_up/dance_boost/visual_up/visual_boost/beat_score_up はマスタ頻出のため追加
  * （【Estimate】実測ゴールデンには出現しない。vocal 系との対称で実装）。
  */
@@ -39,8 +42,10 @@ export type EffectType =
   | "vocal_up_extreme"
   | "dance_up"
   | "dance_boost"
+  | "dance_up_extreme"
   | "visual_up"
   | "visual_boost"
+  | "visual_up_extreme"
   | "beat_score_up"
   | "vocal_down"
   | "dance_down"
@@ -63,6 +68,7 @@ export type EffectType =
   | "ct_increase"
   | "effect_extension"
   | "effect_amplify"
+  | "effect_passing"
   | "score_up"
   | "skill_success_up"
   | "focus"
@@ -398,6 +404,12 @@ export interface LaneInput {
   critExtrasPermil: number;
   /** 【2026-09-02 サンプル1確定】写真の「Aスコア（固定値）」合計。A スキルのスコアに平坦加算 */
   aScoreAdditionalFlat?: number;
+  /**
+   * 【サンプル3・2026-09-04】キャラ優位の全スコア倍率 permil
+   * （QuestCharacterAdvantage.advantagePermil。STAGE045 の ⅢX メンバーは 2250。
+   * 省略時は 1000 扱い。ユーザー確定「全スコア」）
+   */
+  characterAdvantagePermil?: number;
 }
 
 /**
@@ -415,6 +427,16 @@ export interface StageInput {
   beatWeightsPermil: { vocal: number; dance: number; visual: number };
   /** A/SP 重み permil（標準 1000。research/07 §2） */
   skillWeightsPermil: { active: number; special: number };
+  /**
+   * 【サンプル3・2026-09-03】スタミナ消費倍率 permil（Quest.skillStaminaWeightPermil。
+   * 標準 1000・STAGE045(EXタワー)は 3000。省略時は 1000 扱い）
+   */
+  skillStaminaWeightPermil?: number;
+  /**
+   * 【サンプル3・2026-09-03】スタミナ回復倍率 permil（Quest.staminaRecoveryWeightPermil。
+   * 標準 1000。0 は「特徴なし」= 1000 扱い。継続回復の tick に乗る。省略時は 1000 扱い）
+   */
+  staminaRecoveryWeightPermil?: number;
   /** ステージ特徴（スコア倍率）permil。本実測はスコア倍率特徴なし=1000 */
   stageFactorPermil: number;
 }
@@ -582,9 +604,11 @@ export type BuffKey =
   | "vocal_down"
   | "dance_up"
   | "dance_boost"
+  | "dance_up_extreme"
   | "dance_down"
   | "visual_up"
   | "visual_boost"
+  | "visual_up_extreme"
   | "visual_down"
   | "beat_score_up"
   | "tension_up"

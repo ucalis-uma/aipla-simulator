@@ -51,6 +51,8 @@ const REQUIRED = [
   "PhotoAbility",
   // 【Phase 8-B3】カードレベル解放（スキル枠/フォト枠の解放レベル・CardLevelRelease）
   "CardLevelRelease",
+  // 【サンプル3・2026-09-04】キャラ優位（QuestCharacterAdvantage）
+  "QuestCharacterAdvantage",
 ];
 
 // vendor に無いテーブル（Character/Accessory/SkillTarget 等）は取得して補う
@@ -185,6 +187,12 @@ function buildStagesIndex(questRows, musicRows, charts, areaRows) {
         num(q.activeSkillWeightPermil ?? 0, q.id),
         num(q.specialSkillWeightPermil ?? 0, q.id),
       ],
+      // 【サンプル3・2026-09-03】スタミナ消費倍率（Quest.skillStaminaWeightPermil。
+      // 標準1000・EXタワー等で3000等。vendor/Quest.json 由来・消費計算に乗る）
+      num(q.skillStaminaWeightPermil ?? 1000, q.id),
+      // 【サンプル3・2026-09-03】スタミナ回復倍率（Quest.staminaRecoveryWeightPermil。
+      // 標準1000・0のステージあり（0は「特徴なし」=1000扱い）。継続回復に乗る）
+      num(q.staminaRecoveryWeightPermil ?? 0, q.id),
       num(q.mentalThreshold ?? 0, q.id),
       num(q.maxCapacity ?? 0, q.id),
     ]);
@@ -197,8 +205,10 @@ function buildStagesIndex(questRows, musicRows, charts, areaRows) {
       a: value[0],
       w: value[1],
       aw: value[2],
-      mt: value[3],
-      cap: value[4],
+      st: value[3],
+      rw: value[4],
+      mt: value[5],
+      cap: value[6],
     });
     configIdx.set(key, idx);
     return idx;
@@ -285,6 +295,8 @@ const EFF_NAME_TO_TYPE = {
   live_ability_cool_time_reduction: "live_bonus_ct_reduction", // 【Phase 9】ライブボーナスの CT 短縮
   strength_effect_count_increase: "effect_extension",
   strength_effect_value_increase: "effect_amplify",
+  // 【サンプル4・2026-09-04】強化効果譲渡（全バフを対象へコピー。怜 SP「アイドルの私で踊ります」等）
+  strength_effect_assignment_all: "effect_passing",
   stamina_consumption: "stamina_recovery_negative",
   // スコア取得系
   score_get: "score_get",
@@ -297,8 +309,8 @@ const EXTREME_GRANT_STAGES = 5;
 /** 超化（add_effect_value_*) の基底名 → EffectType（vocal_up のみ独立キー vocal_up_extreme） */
 const EXTREME_BASE_NAME_TO_TYPE = {
   vocal_up: "vocal_up_extreme",
-  dance_up: "dance_up",
-  visual_up: "visual_up",
+  dance_up: "dance_up_extreme",
+  visual_up: "visual_up_extreme",
   dance_down: "dance_down",
   score_up: "score_up",
   critical_bonus_permil_up: "critical_coeff_up",
@@ -746,7 +758,11 @@ function parseEfficacy(efficacyId, stats) {
       stats.unsupportedEffects.add(efficacyId);
       return null;
     }
-    if (extremeType === "vocal_up_extreme") {
+    if (
+      extremeType === "vocal_up_extreme" ||
+      extremeType === "dance_up_extreme" ||
+      extremeType === "visual_up_extreme"
+    ) {
       return {
         ...base,
         type: extremeType,
@@ -795,6 +811,10 @@ function parseEfficacy(efficacyId, stats) {
   }
   if (type === "effect_extension" || type === "effect_amplify") {
     return { ...base, type, value: nums[0] ?? 0 };
+  }
+  if (type === "effect_passing") {
+    // 【サンプル4・2026-09-04】譲渡に段数パラメータは無い（全強化効果のコピー）
+    return { ...base, type };
   }
   // 段階型バフ
   return { ...base, type, stages: nums[0] ?? 0 };
@@ -993,6 +1013,28 @@ function buildSkillsMaster(cardRows, skillRows, stats) {
     if (defs.length > 0) byCard[String(c.id)] = defs;
   }
   return byCard;
+}
+
+/**
+ * 【サンプル3・2026-09-04】キャラ優位（QuestCharacterAdvantage → questId 別定義）。
+ * Quest.questCharacterAdvantageId で参照される優位をクエストごとに解決する。
+ * vendor/QuestCharacterAdvantage.json は ipmaster と同一版（!version.txt 照合済み）。
+ * 出力: data/character_advantage.json { byQuest: { questId: { characterIds, advantagePermil } } }
+ */
+function buildCharacterAdvantage(questRows, advantageRows) {
+  const advById = new Map(advantageRows.map((r) => [String(r.id), r]));
+  const byQuest = {};
+  for (const q of questRows) {
+    const advId = String(q.questCharacterAdvantageId ?? "");
+    if (advId === "") continue;
+    const adv = advById.get(advId);
+    if (adv === undefined) continue;
+    byQuest[String(q.id)] = {
+      characterIds: (adv.characterIds ?? []).map(String),
+      advantagePermil: num(adv.advantagePermil ?? 1000, advId),
+    };
+  }
+  return byQuest;
 }
 
 // ---------------------------------------------------------------------------
@@ -1413,6 +1455,8 @@ async function main() {
   const liveBonusGroupRows = loadVendor("LiveBonusGroup");
   const liveBonusRows = loadVendor("LiveBonus");
   const liveAbilityRows = loadVendor("LiveAbility");
+  // 【サンプル3・2026-09-04】キャラ優位（QuestCharacterAdvantage）
+  const characterAdvantageRows = loadVendor("QuestCharacterAdvantage");
   // 【Phase 8-B2】フォトマスタ
   const photoRows = loadVendor("PhotoAllInOne");
   const photoAbilityRows = loadVendor("PhotoAbility");
@@ -1441,6 +1485,8 @@ async function main() {
     skillRows,
     stats,
   );
+  // 【サンプル3・2026-09-04】キャラ優位（STAGE045 の ⅢX メンバー等）
+  const characterAdvantageByQuest = buildCharacterAdvantage(questRows, characterAdvantageRows);
   const accessories = buildAccessories(accessoryRows, stats);
   const characters = buildCharacters(characterRows);
   const photosMaster = buildPhotosMaster(photoRows, photoAbilityRows, skillRows, characterRows, stats);
@@ -1467,6 +1513,10 @@ async function main() {
   writeJson("stages_index.json", stagesIndex);
   writeJson("skills_master.json", { byCard: skillsMaster });
   writeJson("live_bonuses.json", { byQuest: liveBonusesByQuest });
+  writeJson("character_advantage.json", { byQuest: characterAdvantageByQuest });
+  console.log(
+    `character advantage: ${Object.keys(characterAdvantageByQuest).length} クエストに付与`,
+  );
   writeJson("accessories.json", { accessories });
   writeJson("characters.json", { characters });
   writeJson("photos_master.json", { photos: photosMaster, skillsById: photoSkillsById });

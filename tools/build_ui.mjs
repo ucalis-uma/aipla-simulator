@@ -28,6 +28,8 @@ const uiData = {
     audienceAdvantage: read("data/stages/audience_advantage.json"),
     // 【Phase 9】ステージのライブボーナス（questId → Pスキル定義。buildSimulateInput が注入）
     liveBonusesByQuest: read("data/live_bonuses.json").byQuest,
+    // 【サンプル3・2026-09-04】キャラ優位（questId → { characterIds, advantagePermil }）
+    characterAdvantageByQuest: read("data/character_advantage.json").byQuest,
     // 【Phase 8-B3】レベル別スキル定義（skill_levels 上書き解決用・SimSourceData の一部）
     skillLevels: read("data/skills_levels.json"),
   },

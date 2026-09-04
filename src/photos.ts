@@ -110,6 +110,14 @@ scope?: "given" | "received" | null;
   /** ライブ中の発動回数上限（1 =「ライブ中1回のみ」） */
   limitPerLive?: number | null;
   /**
+   * 【サンプル3・2026-09-04】残スタミナ参照のスコア変動（フォト技能文「残スタミナが多い程」等）。
+   * "more_stamina"（残率²）/ "less_stamina"（消費率²）。docs 既定式
+   * （80% × 率²・importer の CONDITIONAL_SCALE_DEFAULTS と同一）で解決する。
+   * S3 佐伯遙子「獲得スキル-スタミナ多」（b2 +429.8K / b63 +335.8K）の再現に必要。
+   * null/未指定 = 変動なし。
+   */
+  staminaScaling?: "more_stamina" | "less_stamina" | null;
+  /**
    * 【サンプル1実測確定 2026-09-01】装着制限（スキルテキストの <サポータータイプのみ> 等）。
    * "supporter_only" / "buffer_only" / "scorer_only"。制約に合わないロールのレーンに
    * 装着されたフォトスキルは常時不発（エンジン restrictionAllows でゲート）。
@@ -317,6 +325,30 @@ export function myPhotoToSkillDef(photo: MyPhotoDef, lane: LaneNumber, photoInde
       durationBeats: null,
       target: s.target,
       condition: s.condition,
+      // 【サンプル3・2026-09-04】残スタミナ参照（佐伯遙子「獲得スキル-スタミナ多」）。
+      // docs 既定式（80% × 率²・importer の CONDITIONAL_SCALE_DEFAULTS と同一）に解決
+      ...(s.staminaScaling === "more_stamina"
+        ? {
+            scaling: {
+              ref: "stamina_remaining",
+              perStagePermil: null,
+              formula: "staminaRatioQuad",
+              maxPermil: 800,
+              remainingRatio: true,
+            } as const,
+          }
+        : {}),
+      ...(s.staminaScaling === "less_stamina"
+        ? {
+            scaling: {
+              ref: "stamina_remaining",
+              perStagePermil: null,
+              formula: "staminaRatioQuad",
+              maxPermil: 800,
+              remainingRatio: false,
+            } as const,
+          }
+        : {}),
     });
   } else if (s.type === "ct_reduction" || s.type === "effect_extension" || s.type === "effect_amplify" || s.type === "stamina_recovery") {
     effects.push({

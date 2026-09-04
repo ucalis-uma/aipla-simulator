@@ -32,9 +32,11 @@ function snapshotOf(overrides: Partial<BuffSnapshot> = {}): BuffSnapshot {
     vocal_down: 0,
     dance_up: 0,
     dance_boost: 0,
+    dance_up_extreme: 0,
     dance_down: 0,
     visual_up: 0,
     visual_boost: 0,
+    visual_up_extreme: 0,
     visual_down: 0,
     beat_score_up: 0,
     tension_up: 0,
@@ -73,9 +75,11 @@ const ALL_BUFF_KEYS: readonly BuffKey[] = [
   "vocal_down",
   "dance_up",
   "dance_boost",
+  "dance_up_extreme",
   "dance_down",
   "visual_up",
   "visual_boost",
+  "visual_up_extreme",
   "visual_down",
   "beat_score_up",
   "tension_up",
@@ -277,6 +281,9 @@ describe("aggregateBuffs", () => {
 
   it("over-cap 保持は limitRelease なしの内部23段にも適用され、解放時に露出する", () => {
     // 内部24段（12+12）を保持。limitRelease 到着で cap30 になると保持分の 24 が表示される。
+    // 【サンプル3・2026-09-03 修正】limit_break 行（基底型+limitRelease）は段数不加算
+    // （S3 L1A「手を伸ばす」の上昇 11/15/15 が +4 のみで一致）のため、s3 の 1 段は
+    // 加算されず 24 が表示される（旧期待値 25 は加算説に基づく推測だった）。
     const withoutLimit = aggregateBuffs([
       effect({ type: "vocal_up", stages: 12, sourceSkillId: "s1" }),
       effect({ type: "vocal_up", stages: 12, sourceSkillId: "s2" }),
@@ -287,15 +294,17 @@ describe("aggregateBuffs", () => {
       effect({ type: "vocal_up", stages: 12, sourceSkillId: "s2" }),
       effect({ type: "vocal_up", stages: 1, sourceSkillId: "s3", limitRelease: true }),
     ]);
-    expect(withLaterLimit.vocal_up).toBe(25);
+    expect(withLaterLimit.vocal_up).toBe(24);
   });
 
-  it("limitRelease 付きソースが混ざるとキー上限が30へ拡張", () => {
+  it("limitRelease 付きソースが混ざるとキー上限が30へ拡張（段数は加算しない）", () => {
+    // 【サンプル3・2026-09-03 修正】旧期待値 24（12+12 加算説）は S3 実測と矛盾するため
+    // 12（limit_break 行は上限解放のみ）に更新。根拠は上記テストと同一。
     const snap = aggregateBuffs([
       effect({ type: "vocal_up", stages: 12, sourceSkillId: "s1" }),
       effect({ type: "vocal_up", stages: 12, sourceSkillId: "s2", limitRelease: true }),
     ]);
-    expect(snap.vocal_up).toBe(24);
+    expect(snap.vocal_up).toBe(12);
   });
 
   it("上限解放変数型は段数を加算せず上限のみ拡張する（実測確定: T5 b2 A検算）", () => {
@@ -349,13 +358,18 @@ describe("liveStatusMultiplierPermil", () => {
   });
 
   it("vocal_up_extreme の1段値は 50‰（Peing確定: 超化=一律+5段階分・表記段数はダミー）", () => {
-    // 【Peing確定 2026-08-31】超化は表記段階数によらず「元のバフの+5段階分（固定）」。
-    // golden fest-03-2 は stages=5（旧 10段×25‰=250‰ と 5段×50‰=250‰ で合計値は同一）
+    // 【Peing確定 2026-08-31 / サンプル3実測確定 2026-09-04】
+    // 超化は表記段階数によらず「元のバフの+5段階分（固定・250‰）」。
+    // かつ、基底バフ（vocal_up > 0）が存在する場合のみ発動する。
     expect(
       liveStatusMultiplierPermil(snapshotOf({ vocal_up: 7, vocal_up_extreme: 5 }), "vocal"),
     ).toBe(1000 + 350 + 250);
-    // T5実測の ×1.875→×2.125（+250‰）を再現
-    expect(liveStatusMultiplierPermil(snapshotOf({ vocal_up_extreme: 5 }), "vocal")).toBe(1250);
+    // 基底バフがない場合は超化は乗らない（1000‰）
+    expect(liveStatusMultiplierPermil(snapshotOf({ vocal_up_extreme: 5 }), "vocal")).toBe(1000);
+    // 基底バフが1段以上あれば +250‰ が乗る
+    expect(
+      liveStatusMultiplierPermil(snapshotOf({ vocal_up: 1, vocal_up_extreme: 5 }), "vocal"),
+    ).toBe(1000 + 50 + 250);
   });
 
   it("dance/visual: 対称キーが効く（Phase 6 一般化）・vocal バフは流入しない", () => {

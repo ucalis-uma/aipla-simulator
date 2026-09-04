@@ -326,6 +326,46 @@ function processBeat(
   return { beatTrace };
 }
 
+/**
+ * スキル発動のスタミナ消費量（research/13 §3-4【Confirmed】+ サンプル3 拡張）。
+ *
+ *   cost = floor(floor(staminaCost × ステージ消費倍率 / 1000) × バフ倍率 / 1000)
+ *
+ * - 適用順序はステージ→バフ（【Confirmed 2026-09-04: S3 L4 b3 の 1939 =
+ *   floor(610×3=1830 ×1.06)。逆順では 1938 になり1ずれる】）
+ * - バフ倍率 = consumptionMultiplierPermil（自属性ブースト +1%/段等。
+ *   S3 L4 b1/b3/b14/b42/b61 = 1884/1939/1386/1272/1884 で1の位一致）
+ * - ステージ消費倍率 = StageInput.skillStaminaWeightPermil
+ *   （Quest.skillStaminaWeightPermil。標準 1000・STAGE045 は 3000=3.0倍。
+ *   サンプル3 F1: 424×3=1272 等 8 件以上で 1 の位一致【Confirmed: S3 実測】）
+ */
+function staminaCostOf(
+  skill: Pick<SkillDef, "staminaCost">,
+  snap: BuffSnapshot,
+  stageWeightPermil?: number,
+  attr?: "vocal" | "dance" | "visual",
+): number {
+  if (skill.staminaCost == null) return 0;
+  const afterStage = mulPermil(skill.staminaCost, stageWeightPermil ?? 1000);
+  return mulPermil(afterStage, consumptionMultiplierPermil(snap, attr));
+}
+
+/**
+ * 継続回復の 1 tick 量（research/02 §1.8・research/01 §2.2【Confirmed】）。
+ *
+ *   tick = floor(15 × 段階 × ライブ特徴 / 1000)
+ *
+ * - 段階 = stamina_recovery 行の value（マスタの回復量段数）
+ * - ライブ特徴 = StageInput.staminaRecoveryWeightPermil（Quest 由来。標準 1000。
+ *   0 は「特徴なし」= 1000 扱い）
+ * - S3 実測: のんびり温泉『出張』(v3)・泥酔者の愚痴(v3)とも +45/beat = 15×3×1.0
+ *   （100+ のビートデルタで確定。効果窓ものんびり 42b・泥酔 24b と一致）
+ */
+function recoveryTickOf(stages: number, featurePermil?: number): number {
+  const feat = featurePermil == null || featurePermil === 0 ? 1000 : featurePermil;
+  return mulPermil(15 * stages, feat);
+}
+
 /** P位相の処理順: メンタル降順・同値は IDOL_PRIORITY_ORDER（§4【Confirmed】） */
 function orderedStates(states: readonly LaneState[]): LaneState[] {
   const priority = (lane: LaneNumber): number => IDOL_PRIORITY_ORDER.indexOf(lane);
@@ -449,14 +489,27 @@ function resolveTargets(
         (a, b) => IDOL_PRIORITY_ORDER.indexOf(a.input.lane) - IDOL_PRIORITY_ORDER.indexOf(b.input.lane),
       )
       .slice(0, n);
-  /** <属性>が高いN人（*_higher_N）= メンバーのデッキ属性ステータス降順 */
+  /** <属性>が高いN人（*_higher_N）= メンバーのライブ中属性ステータス降順。
+   * 【サンプル3・2026-09-03】STAGE045 のライブボーナス（ビジュアルが高い2人のCT-47）:
+   * b1 は deck 順と同じ {L4, L3} だが、b61 はライブ中 visual {L4: 679074, L1: 222021,
+   * L3: 172933, ...} の上位2人 = {L4, L1}。deck 順 {L4, L3} では b61 の頑固に加え
+   * さらけ出す（L3）も発動してしまい実測（L3 不発）と矛盾するため、ライブ中値で順位付けする。
+   * 同値はレーン優先度（IDOL_PRIORITY_ORDER）で解決。レーン属性フィルタは維持。
+   */
   const attrStatDescLanes = (
     attr: "vocal" | "dance" | "visual",
     n: number,
   ): LaneState[] =>
     states
       .filter((s) => s.input.attribute === attr)
-      .sort((a, b) => b.input.deck[attr] - a.input.deck[attr])
+      .sort((a, b) => {
+        const liveA = mulPermil(a.input.deck[attr], liveStatusMultiplierPermil(snapshotOf(a), attr));
+        const liveB = mulPermil(b.input.deck[attr], liveStatusMultiplierPermil(snapshotOf(b), attr));
+        if (liveB !== liveA) {
+          return liveB - liveA;
+        }
+        return IDOL_PRIORITY_ORDER.indexOf(a.input.lane) - IDOL_PRIORITY_ORDER.indexOf(b.input.lane);
+      })
       .slice(0, n);
   const staminaSorted = (desc: boolean): LaneState[] =>
     [...states].sort((a, b) => (desc ? b.stamina - a.stamina : a.stamina - b.stamina));
@@ -683,12 +736,13 @@ function activatePhaseSkills(
     if (skill.restriction != null && !restrictionAllows(skill.restriction, state.input.role)) {
       continue; // 装着制限不一致（トレース省略・常時不発スキルのため毎ビート出ない）
     }
-    // 【2026-09-02 ユーザー確定】無条件行（none/battle_only）を 1 つでも持つ P/フォトは
-    // 「前発動」タイプ: CT0 で自動発動する（祭り千紗 P3 = 1行目無条件+2行目条件式 が b1 発動）。
+    // 【2026-09-02 ユーザー確定・2026-09-03 サンプル3で修正】無条件行（none）を 1 つでも持つ
+    // P/フォトは「前発動」タイプ: CT0 で自動発動する（祭り千紗 P3 = 1行目無条件+2行目条件式 が b1 発動）。
     // 全行条件式のスキルは「後発動」（条件成立まで後半で待つ・優 P3 = 不発の根拠）。
-    const isUnconditional = skill.effects.some(
-      (e) => e.condition === "none" || e.condition === "battle_only",
-    );
+    // battle_only 行は通常ライブで適用不能のため無条件扱いしない（S3 L2「誰も知らない雲の向こうへ」
+    // [combo>=50, battle_only] が b1 前半発動して limit=1 を消費し b50 発動を潰す誤りを修正。
+    // T5「結婚への願望」[none, battle_only] は none 行があるため前発動のまま不変）。
+    const isUnconditional = skill.effects.some((e) => e.condition === "none");
     const hasBeforeSpecial = skill.effects.some((e) => e.condition === "someone_before_special");
     // 条件を満たしたレーン（target="trigger" の解決用・Phase 8-B5）。
     // 行ごとの条件は tryActivate 内で個別評価するため、ここでは
@@ -1206,7 +1260,12 @@ function tryActivate(
   }
 
   const snap = snapshotOf(state);
-  const cost = skill.staminaCost == null ? 0 : mulPermil(skill.staminaCost, consumptionMultiplierPermil(snap));
+  const cost = staminaCostOf(
+    skill,
+    snap,
+    ctx.input.stage.skillStaminaWeightPermil,
+    state.input.attribute,
+  );
   if (state.stamina < cost) {
     return { trace: { ...baseTrace, success: false, failReason: "stamina_short" }, activated: false };
   }
@@ -1344,7 +1403,12 @@ function applyEffect(
             ctx.recoveredLanes.add(target.input.lane); // someone_recovered 条件用
           }
         } else {
-          target.scheduledRecoveries.push({ value, remainingBeats: effect.durationBeats });
+          // 【サンプル3・2026-09-03】継続回復 tick = 15 × 段階 × ライブ特徴
+          // （research/02 §1.8・research/01 §2.2「スタミナ継続回復 +15/段・ライブ特徴と乗算」。
+          // S3 実測: のんびり/泥酔とも +45/beat = 15×3×1.0。100+ デルタで確定）。
+          // 即時回復（duration なし）は従来どおり生値（T5 order9 +2560 で上限確認済み）。
+          const tick = recoveryTickOf(value, ctx.input.stage.staminaRecoveryWeightPermil);
+          target.scheduledRecoveries.push({ value: tick, remainingBeats: effect.durationBeats });
         }
       }
       return 0;
@@ -1392,6 +1456,44 @@ function applyEffect(
       }
       return 0;
     }
+    case "effect_passing": {
+      // 【サンプル4実測 2026-09-04・SK4#3】強化効果譲渡（strength_effect_assignment_all）。
+      // 発動レーンの有効な強化バフ・インスタンスを**コピー**（残りビート・段数そのまま）して
+      // 対象レーンへ付与する。源は消えない（実測: b77 の怜 SP で怜自身のバフは存続）。
+      // 譲渡されたインスタンスは対象レーンの集計で既存と合算され、上限（20段等）は
+      // aggregateBuffs のクランプで効く（実測: 怜Pスキルスコア上昇12→渚へ +12 で
+      // 12→20 上限到達、ダンス上昇 20+20→20、ブースト 7+7→14 加算）。
+      // buffKey 指定（strength_effect_assignment。全譲渡でなく特定バフのみ）は現データでは
+      // 未出現のため、scope/buffKey の絞り込みはとりあえず効かない【Estimate: 全譲渡扱い】。
+      const targets = resolveTargets(effect.target, self, states, triggerLanes);
+      for (const target of targets) {
+        if (target === self) {
+          // 自己譲渡（コンボ不足等、マスタ上ありうる現象）はコピーを増やさずスキップ【Estimate】
+          continue;
+        }
+        for (const active of self.effects) {
+          if (active.remainingBeats <= 0 || active.stages <= 0) {
+            continue;
+          }
+          if (mapEffectToBuffKey(active.type) === null) {
+            continue; // 段階型でないものは対象外（保険。effects には段階型しか入らない）
+          }
+          // コンボ継続を含め「全強化効果」をそのままコピーする（マスタ文どおり・
+          // S4 実測では譲渡側にコンボ継続が無く同定不能のため【Estimate】注記）。
+          target.effects.push({
+            type: active.type,
+            stages: active.stages,
+            limitRelease: active.limitRelease,
+            remainingBeats: active.remainingBeats, // 残ビート共有（譲渡元と同時に消える）
+            sourceSkillId: active.sourceSkillId, // 与・○○延長の「自分が付与した」判定は出所を維持
+            sourceLane: active.sourceLane,
+            skipFirstDecay: active.skipFirstDecay ?? false,
+            capExtend: active.capExtend,
+          });
+        }
+      }
+      return 0;
+    }
     case "effect_extension": {
       const value = effect.value ?? 0;
       if (effect.buffKey !== undefined || effect.scope === "given") {
@@ -1403,10 +1505,18 @@ function applyEffect(
       // 【2026-09-01 サンプル1 実測で修正】残り 0（期限切れ・処理順の端）は延長しない。
       // サンプル1: b136 過去の私へ が rem=0 のテンションに +7 して b143 まで残存させる誤り
       // （実測のテンションは b135 で終了・b136 以降は 0 = 二重延長にならない）。
+      // 【2026-09-04 サンプル3】継続回復の予約（scheduledRecoveries）も延長対象
+      // （S3 のんびり: さらけ出す b13/b73 の +7 で回復窓が 36→43b に延びる実測。
+      // 延長は「全強化効果」= バフインスタンスと回復予約の両方。rem=0 除外は共通）。
       for (const target of resolveTargets(effect.target, self, states, triggerLanes)) {
         for (const active of target.effects) {
           if (active.remainingBeats > 0 && active.remainingBeats < PERMANENT_BEATS) {
             active.remainingBeats += value;
+          }
+        }
+        for (const recovery of target.scheduledRecoveries) {
+          if (recovery.remainingBeats > 0) {
+            recovery.remainingBeats += value;
           }
         }
       }
@@ -1489,7 +1599,13 @@ function applyScopedAmplify(
   const best = new Map<BuffKey, ActiveEffect>();
   for (const active of collectScopedInstances(self, effect, states)) {
     const mapped = mapEffectToBuffKey(active.type);
-    if (mapped === null || mapped.key === "vocal_up_extreme" || mapped.limitRelease) {
+    if (
+      mapped === null ||
+      mapped.key === "vocal_up_extreme" ||
+      mapped.key === "dance_up_extreme" ||
+      mapped.key === "visual_up_extreme" ||
+      mapped.limitRelease
+    ) {
       continue;
     }
     const prev = best.get(mapped.key);
@@ -1519,7 +1635,12 @@ function amplifyLongestPerKey(state: LaneState, value: number, affectsExtreme: b
     if (mapped === null) {
       continue;
     }
-    if (mapped.key === "vocal_up_extreme" && !affectsExtreme) {
+    if (
+      (mapped.key === "vocal_up_extreme" ||
+        mapped.key === "dance_up_extreme" ||
+        mapped.key === "visual_up_extreme") &&
+      !affectsExtreme
+    ) {
       continue;
     }
     if (mapped.limitRelease) {
@@ -1696,7 +1817,12 @@ function settleScoreGet(
   // 【2026-09-02 ユーザー計算式確定】写真の「Aスコア（固定値）」は A スキルのスコアに平坦加算
   // （b123: +92,262+121,429 = 1,931,275、b66/b176/b40/97/130 も同様に整合。b40/97/130 の
   //   千紗ビームも 177,075 で 98.3%/102.6%/101.7% に収束）
-  const finalScore = score + (isRatio ? 0 : aScoreFlat ?? 0);
+  // 【サンプル3・2026-09-04】キャラ優位は全スコアに乗る（STAGE045 の ⅢX メンバー・
+  // ユーザー確定）。computeEventScore のファクター列には入れない（8 因子化で T5 golden が
+  // float 丸めで ±1 ずれるため。後段で整数乗算する。flat 加算との前後・ratio 基準への
+  // 波及は未観測のため【Estimate】: 乗算分のみに適用し flat は対象外）。
+  const advantage = self.input.characterAdvantagePermil ?? 1000;
+  const finalScore = mulPermil(score, advantage) + (isRatio ? 0 : aScoreFlat ?? 0);
   ctx.cumulative.value += finalScore;
   self.scoreCum += finalScore;
   events.push({
@@ -1908,8 +2034,12 @@ function settleBeatNote(
       critFactorPermil: critF,
       roundingPolicy: ctx.policy,
     });
-    ctx.cumulative.value += score;
-    state.scoreCum += score;
+    // 【サンプル3・2026-09-04】キャラ優位は全スコアに乗る（STAGE045 の ⅢX メンバー・
+    // ユーザー確定。ファクター列に入れると T5 golden が float 丸めでずれるため後段乗算）
+    const advantage = state.input.characterAdvantagePermil ?? 1000;
+    const finalBeatScore = mulPermil(score, advantage);
+    ctx.cumulative.value += finalBeatScore;
+    state.scoreCum += finalBeatScore;
     events.push({
       lane: state.input.lane,
       sourceKind: "beat",
@@ -1921,7 +2051,7 @@ function settleBeatNote(
       isRatioScore: false,
       randPermil: rand,
       critFactorPermil: critF,
-      gainedScore: score,
+      gainedScore: finalBeatScore,
     });
   });
 }
@@ -1980,7 +2110,12 @@ function settleSkillNote(
     if (skill.ct != null && (state.skillCt.get(skill.id) ?? 0) > 0) {
       continue; // in_ct
     }
-    const cost = skill.staminaCost == null ? 0 : mulPermil(skill.staminaCost, consumptionMultiplierPermil(snap));
+    const cost = staminaCostOf(
+      skill,
+      snap,
+      ctx.input.stage.skillStaminaWeightPermil,
+      state.input.attribute,
+    );
     if (state.stamina < cost) {
       blockedStamina = true;
       continue;

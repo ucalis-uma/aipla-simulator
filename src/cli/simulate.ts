@@ -140,6 +140,10 @@ function loadSourceData(stageFile: string, chartFile: string): SimSourceData {  
         a: number[];
         w: number[];
         aw: number[];
+        /** 【サンプル3】スタミナ消費倍率 permil（省略時 1000） */
+        st?: number;
+        /** 【サンプル3】スタミナ回復倍率 permil（0 = 特徴なし = 1000 扱い） */
+        rw?: number;
         /** 要求メンタル（stages_index 収載・CLI では未使用） */
         mt?: number;
         /** 会場最大キャパシティ（/5 = 個人来場ファン数の上限）。audience 導出に使用 */
@@ -155,6 +159,10 @@ function loadSourceData(stageFile: string, chartFile: string): SimSourceData {  
     stages[stageFile] = {
       beatWeightsPermil: { vocal: cfg.w[0]!, dance: cfg.w[1]!, visual: cfg.w[2]! },
       skillWeightsPermil: { active: cfg.aw[0]!, special: cfg.aw[1]! },
+      // 【サンプル3・2026-09-03】スタミナ消費倍率（Quest.skillStaminaWeightPermil。旧データ互換で省略時 1000）
+      skillStaminaWeightPermil: cfg.st ?? 1000,
+      // 【サンプル3・2026-09-03】スタミナ回復倍率（0 = 特徴なし = 1000 扱い。解決は engine 側）
+      staminaRecoveryWeightPermil: cfg.rw ?? 0,
       laneAttributes: cfg.a,
     };
     // 【2026-09-01】来場ファン数はステージの会場キャパから導出する（UI と同じ規則・
@@ -196,6 +204,19 @@ function loadSourceData(stageFile: string, chartFile: string): SimSourceData {  
   } catch {
     liveBonusesByQuest = undefined;
   }
+  // 【サンプル3・2026-09-04】クエストのキャラ優位（STAGE045 の ⅢX メンバー等）。無ければ undefined
+  let characterAdvantageByQuest:
+    | Record<string, { characterIds: readonly string[]; advantagePermil: number }>
+    | undefined;
+  try {
+    characterAdvantageByQuest = (
+      read(path.join(repoRoot, "data/character_advantage.json")) as {
+        byQuest: Record<string, { characterIds: readonly string[]; advantagePermil: number }>;
+      }
+    ).byQuest;
+  } catch {
+    characterAdvantageByQuest = undefined;
+  }
   let characterNames: Record<string, string> | undefined;
   try {
     characterNames = (read(path.join(repoRoot, "data/characters.json")) as { characters: Record<string, string> })
@@ -219,6 +240,7 @@ function loadSourceData(stageFile: string, chartFile: string): SimSourceData {  
     audienceAdvantage,
     skillsByCard,
     liveBonusesByQuest,
+    characterAdvantageByQuest,
     characterNames,
     skillLevels,
   };

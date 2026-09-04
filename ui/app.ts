@@ -75,6 +75,10 @@ interface UiConfig {
   a: number[];
   w: number[];
   aw: number[];
+  /** 【サンプル3・2026-09-03】スタミナ消費倍率 permil（旧データ互換で省略可・省略時 1000） */
+  st?: number;
+  /** 【サンプル3・2026-09-03】スタミナ回復倍率 permil（0 = 特徴なし = 1000 扱い） */
+  rw?: number;
   mt: number;
   cap: number;
 }
@@ -167,6 +171,9 @@ function stageWeightsFromConfig(cfg: UiConfig): StageWeights {
   return {
     beatWeightsPermil: { vocal: cfg.w[0]!, dance: cfg.w[1]!, visual: cfg.w[2]! },
     skillWeightsPermil: { active: cfg.aw[0]!, special: cfg.aw[1]! },
+    // 【サンプル3・2026-09-03】スタミナ消費倍率（省略時 1000）・回復倍率（解決は engine 側）
+    skillStaminaWeightPermil: cfg.st ?? 1000,
+    staminaRecoveryWeightPermil: cfg.rw ?? 0,
     laneAttributes: cfg.a,
   };
 }
@@ -4219,13 +4226,23 @@ function applyConfig(cfg: Record<string, unknown> & { characters?: unknown }): v
       }
     }
   }
+  if (typeof cfg.audience === "number") {
+    // 【Phase 12 追補】インポートされた audience が会場全体の最大キャパシティ（合計値）と一致する場合、
+    // 個人来場ファン数（合計÷5）に自動正規化する（例: S3 タワー45階で 40,000 → 8,000人）。
+    const q = currentQuest();
+    const stageCap = q ? DATA.stagesIndex.configs[q.c]?.cap : undefined;
+    let aud = Math.max(0, Math.floor(cfg.audience));
+    if (stageCap !== undefined && (aud === stageCap || (aud > Math.floor(stageCap / 5) && aud <= stageCap))) {
+      aud = Math.floor(aud / 5);
+    }
+    state.audience = aud;
+  }
   if (typeof cfg.fanFactorPermil === "number") {
     state.fanFactorPermil = cfg.fanFactorPermil;
-  } else if (typeof cfg.audience === "number" && DATA.data.audienceAdvantage !== undefined) {
-    // 旧スキーマ（audience 指定）との互換: テーブル引きで導出
-    state.fanFactorPermil = fanBonusPermil(Math.max(0, Math.floor(cfg.audience)), DATA.data.audienceAdvantage);
+  } else if (DATA.data.audienceAdvantage !== undefined) {
+    // テーブル引きでファンファクターを導出
+    state.fanFactorPermil = fanBonusPermil(state.audience, DATA.data.audienceAdvantage);
   }
-  if (typeof cfg.audience === "number") state.audience = cfg.audience;
   if (typeof cfg.critRate === "number") state.critRate = cfg.critRate;
   if (typeof cfg.successBasePermil === "number") state.successBasePct = cfg.successBasePermil / 10;
   if (Array.isArray(cfg.missedNotes)) state.missedNotesText = JSON.stringify(cfg.missedNotes);

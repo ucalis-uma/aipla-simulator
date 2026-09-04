@@ -1,0 +1,587 @@
+[
+ {
+  "lane": 1,
+  "attribute": "dance",
+  "role": "Supporter",
+  "cardType": "dance",
+  "deck": {
+   "vocal": 91293,
+   "dance": 125149,
+   "visual": 171086,
+   "stamina": 7929,
+   "mental": 8429,
+   "critical": 0
+  },
+  "scoreBonusPct": {
+   "beat": 253,
+   "active": 70,
+   "special": 120,
+   "passive": 0
+  },
+  "critExtrasPermil": 354,
+  "skills": [
+   {
+    "id": "sk-chs-05-fest-00-1",
+    "name": "星見の海の波",
+    "kind": "A",
+    "level": 4,
+    "lane": 1,
+    "ct": 30,
+    "staminaCost": 387,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "score_get",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": null,
+      "powerPermil": 5700
+     },
+     {
+      "type": "critical_coeff_up",
+      "target": "score_type_1",
+      "condition": "none",
+      "durationBeats": 31,
+      "stages": 5,
+      "capExtend": true,
+      "confidence": "Peing確定(超化: 表記段階数はダミー・一律+5段階分)"
+     }
+    ]
+   },
+   {
+    "id": "sk-chs-05-fest-00-2",
+    "name": "みんなで走った海岸通り",
+    "kind": "P",
+    "level": 4,
+    "lane": 1,
+    "ct": 50,
+    "staminaCost": 562,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "critical_rate_up",
+      "target": "center",
+      "condition": "none",
+      "durationBeats": 35,
+      "stages": 8
+     },
+     {
+      "type": "critical_coeff_up",
+      "target": "score_type_1",
+      "condition": "none",
+      "durationBeats": 35,
+      "stages": 8
+     }
+    ]
+   },
+   {
+    "id": "sk-chs-05-fest-00-3",
+    "name": "必殺！ゾンビフィッシュ",
+    "kind": "P",
+    "level": 2,
+    "lane": 1,
+    "ct": 50,
+    "staminaCost": 418,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "a_skill_score_up",
+      "target": "dance_type_2",
+      "condition": "none",
+      "durationBeats": 35,
+      "stages": 4
+     },
+     {
+      "type": "score_up",
+      "target": "dance_type_2",
+      "condition": "none",
+      "durationBeats": 35,
+      "stages": 4
+     }
+    ]
+   }
+  ],
+  "photos": []
+ },
+ {
+  "lane": 2,
+  "attribute": "dance",
+  "role": "Buffer",
+  "cardType": "dance",
+  "deck": {
+   "vocal": 78670,
+   "dance": 208641,
+   "visual": 61484,
+   "stamina": 7391,
+   "mental": 8655,
+   "critical": 0
+  },
+  "scoreBonusPct": {
+   "beat": 60,
+   "active": 143,
+   "special": 205,
+   "passive": 0
+  },
+  "critExtrasPermil": 260,
+  "skills": [
+   {
+    "id": "sk-rei-05-fest-00-1",
+    "name": "アイドルの私で踊ります",
+    "kind": "SP",
+    "level": 5,
+    "lane": 2,
+    "ct": 0,
+    "staminaCost": 586,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "score_get",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": null,
+      "powerPermil": 14900
+     },
+     {
+      "type": "effect_passing",
+      "target": "score_type_1",
+      "condition": "none",
+      "durationBeats": null
+     },
+     {
+      "type": "effect_extension",
+      "target": "score_type_1",
+      "condition": "none",
+      "durationBeats": null,
+      "value": 19
+     }
+    ]
+   },
+   {
+    "id": "sk-rei-05-fest-00-2",
+    "name": "切磋琢磨するライバル",
+    "kind": "A",
+    "level": 4,
+    "lane": 2,
+    "ct": 30,
+    "staminaCost": 142,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "score_get",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": null,
+      "powerPermil": 4000
+     },
+     {
+      "type": "tension_up",
+      "target": "dance_high_2",
+      "condition": "none",
+      "durationBeats": 25,
+      "stages": 3
+     },
+     {
+      "type": "dance_up",
+      "target": "dance_high_2",
+      "condition": "none",
+      "durationBeats": 25,
+      "stages": 5
+     }
+    ]
+   },
+   {
+    "id": "sk-rei-05-fest-00-3",
+    "name": "サニピの誇りと証明",
+    "kind": "P",
+    "level": 3,
+    "lane": 2,
+    "ct": 50,
+    "staminaCost": 243,
+    "probabilityPermil": 1000,
+    "limitPerLive": 2,
+    "effects": [
+     {
+      "type": "dance_up",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": 34,
+      "stages": 7
+     },
+     {
+      "type": "critical_rate_up",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": 34,
+      "stages": 3
+     }
+    ]
+   }
+  ],
+  "photos": []
+ },
+ {
+  "lane": 3,
+  "attribute": "dance",
+  "role": "Scorer",
+  "cardType": "dance",
+  "deck": {
+   "vocal": 96137,
+   "dance": 265108,
+   "visual": 97992,
+   "stamina": 13037,
+   "mental": 8360,
+   "critical": 0
+  },
+  "scoreBonusPct": {
+   "beat": 60,
+   "active": 204,
+   "special": 120,
+   "passive": 0
+  },
+  "critExtrasPermil": 525,
+  "skills": [
+   {
+    "id": "sk-ngs-05-fest-02-1",
+    "name": "私、決めたんだ",
+    "kind": "SP",
+    "level": 6,
+    "lane": 3,
+    "ct": 0,
+    "staminaCost": 1635,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "score_get",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": null,
+      "powerPermil": 14100,
+      "scaling": {
+       "ref": "dance_up_stages",
+       "perStagePermil": 60,
+       "fitted": false
+      },
+      "confidence": "Estimate(docs-806980235: ref=dance_up_stages は 60‰/段（6.0%/段）。超化は参照外（2026-09-01 確定）"
+     },
+     {
+      "type": "score_get_by_score_ratio",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": null,
+      "powerPermil": 130
+     }
+    ]
+   },
+   {
+    "id": "sk-ngs-05-fest-02-2",
+    "name": "自分だけの輝き",
+    "kind": "A",
+    "level": 5,
+    "lane": 3,
+    "ct": 30,
+    "staminaCost": 403,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "score_get",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": null,
+      "powerPermil": 3700,
+      "scaling": {
+       "ref": "dance_up_stages",
+       "perStagePermil": 60,
+       "fitted": false
+      },
+      "confidence": "Estimate(docs-806980235: ref=dance_up_stages は 60‰/段（6.0%/段）。超化は参照外（2026-09-01 確定）"
+     },
+     {
+      "type": "dance_up",
+      "target": "dance_type_2",
+      "condition": "none",
+      "durationBeats": 30,
+      "stages": 8
+     }
+    ]
+   },
+   {
+    "id": "sk-ngs-05-fest-02-3",
+    "name": "本当の強さ",
+    "kind": "P",
+    "level": 4,
+    "lane": 3,
+    "ct": 45,
+    "staminaCost": 893,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "score_get",
+      "target": "self",
+      "condition": "self_dance_lane",
+      "durationBeats": null,
+      "powerPermil": 650
+     },
+     {
+      "type": "dance_up",
+      "target": "self",
+      "condition": "self_dance_lane",
+      "durationBeats": 32,
+      "stages": 5
+     },
+     {
+      "type": "dance_down",
+      "target": "self",
+      "condition": "battle_only",
+      "durationBeats": 32,
+      "stages": 6
+     }
+    ]
+   }
+  ],
+  "photos": []
+ },
+ {
+  "lane": 4,
+  "attribute": "visual",
+  "role": "Supporter",
+  "cardType": "vocal",
+  "deck": {
+   "vocal": 107637,
+   "dance": 170895,
+   "visual": 100292,
+   "stamina": 6389,
+   "mental": 9495,
+   "critical": 0
+  },
+  "scoreBonusPct": {
+   "beat": 267,
+   "active": 309,
+   "special": 120,
+   "passive": 0
+  },
+  "critExtrasPermil": 354,
+  "skills": [
+   {
+    "id": "sk-szk-05-sail-00-1",
+    "name": "お見舞いありがたや",
+    "kind": "A",
+    "level": 3,
+    "lane": 4,
+    "ct": 40,
+    "staminaCost": 103,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "score_get",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": null,
+      "powerPermil": 2900
+     },
+     {
+      "type": "ct_reduction",
+      "target": "vocal_type_2",
+      "condition": "none",
+      "durationBeats": null,
+      "value": 2
+     },
+     {
+      "type": "stamina_recovery",
+      "target": "all",
+      "condition": "self_vocal_lane",
+      "durationBeats": null,
+      "value": 700
+     }
+    ]
+   },
+   {
+    "id": "sk-szk-05-sail-00-2",
+    "name": "アイドル衣装でアピール",
+    "kind": "P",
+    "level": 5,
+    "lane": 4,
+    "ct": 0,
+    "staminaCost": 773,
+    "probabilityPermil": 1000,
+    "limitPerLive": 1,
+    "effects": [
+     {
+      "type": "stamina_cost_down",
+      "target": "all",
+      "condition": "none",
+      "durationBeats": 78,
+      "stages": 20
+     },
+     {
+      "type": "p_skill_score_up",
+      "target": "all",
+      "condition": "none",
+      "durationBeats": 78,
+      "stages": 12
+     },
+     {
+      "type": "stamina_recovery",
+      "target": "self",
+      "condition": "battle_only",
+      "durationBeats": 78,
+      "value": 8
+     }
+    ]
+   },
+   {
+    "id": "sk-szk-05-sail-00-3",
+    "name": "心頭滅却すればなんとやら",
+    "kind": "P",
+    "level": 2,
+    "lane": 4,
+    "ct": 60,
+    "staminaCost": 175,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "skill_success_up",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": 27,
+      "stages": 3
+     }
+    ]
+   }
+  ],
+  "photos": [
+   {
+    "id": "uph-uph-lane4-3",
+    "name": "小美山愛 (Quality 150)",
+    "kind": "photo",
+    "level": 1,
+    "ct": null,
+    "staminaCost": 706,
+    "effects": [
+     {
+      "type": "critical_coeff_up",
+      "stages": 4,
+      "durationBeats": 48,
+      "target": "score_type_1",
+      "condition": "someone_skill_success_up"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "lane": 5,
+  "attribute": "dance",
+  "role": "Buffer",
+  "cardType": "dance",
+  "deck": {
+   "vocal": 76095,
+   "dance": 193126,
+   "visual": 82481,
+   "stamina": 6581,
+   "mental": 8359,
+   "critical": 0
+  },
+  "scoreBonusPct": {
+   "beat": 219,
+   "active": 70,
+   "special": 182,
+   "passive": 0
+  },
+  "critExtrasPermil": 311,
+  "skills": [
+   {
+    "id": "sk-suz-05-fest-02-1",
+    "name": "誰にも譲れない歌",
+    "kind": "A",
+    "level": 4,
+    "lane": 5,
+    "ct": 30,
+    "staminaCost": 404,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "score_get",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": null,
+      "powerPermil": 3700
+     },
+     {
+      "type": "dance_up",
+      "target": "dance_type_2",
+      "condition": "self_dance_lane",
+      "durationBeats": 32,
+      "stages": 10,
+      "limitRelease": true
+     },
+     {
+      "type": "dance_up",
+      "target": "dance_type_2",
+      "condition": "self_dance_lane",
+      "durationBeats": 32,
+      "stages": 7
+     }
+    ]
+   },
+   {
+    "id": "sk-suz-05-fest-02-2",
+    "name": "暗雲払う嵐",
+    "kind": "P",
+    "level": 4,
+    "lane": 5,
+    "ct": 50,
+    "staminaCost": 686,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "effect_amplify",
+      "target": "score_type_2",
+      "condition": "none",
+      "durationBeats": null,
+      "value": 2
+     },
+     {
+      "type": "tension_up",
+      "target": "score_type_2",
+      "condition": "none",
+      "durationBeats": 32,
+      "stages": 2
+     }
+    ]
+   },
+   {
+    "id": "sk-suz-05-fest-02-3",
+    "name": "挫けぬ意志を持って",
+    "kind": "P",
+    "level": 3,
+    "lane": 5,
+    "ct": 50,
+    "staminaCost": 536,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "dance_up",
+      "target": "dance_lane_2",
+      "condition": "none",
+      "durationBeats": 33,
+      "stages": 8
+     }
+    ]
+   }
+  ],
+  "photos": []
+ }
+]

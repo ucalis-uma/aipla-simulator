@@ -1,0 +1,718 @@
+[
+ {
+  "lane": 1,
+  "attribute": "visual",
+  "role": "Buffer",
+  "cardType": "visual",
+  "deck": {
+   "vocal": 149146,
+   "dance": 100162,
+   "visual": 158587,
+   "stamina": 10683,
+   "mental": 3064,
+   "critical": 0
+  },
+  "scoreBonusPct": {
+   "beat": 60,
+   "active": 325,
+   "special": 120,
+   "passive": 0
+  },
+  "critExtrasPermil": 666,
+  "skills": [
+   {
+    "id": "sk-ktn-05-fest-02-1",
+    "name": "手を伸ばすのは輝く夢",
+    "kind": "A",
+    "level": 4,
+    "lane": 1,
+    "ct": 30,
+    "staminaCost": 368,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "score_get",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": null,
+      "powerPermil": 3800
+     },
+     {
+      "type": "visual_up",
+      "target": "visual_type_2",
+      "condition": "self_visual_lane",
+      "durationBeats": 40,
+      "stages": 10,
+      "limitRelease": true
+     },
+     {
+      "type": "visual_up",
+      "target": "visual_type_2",
+      "condition": "self_visual_lane",
+      "durationBeats": 40,
+      "stages": 4
+     }
+    ]
+   },
+   {
+    "id": "sk-ktn-05-fest-02-2",
+    "name": "暗闇を照らす月",
+    "kind": "P",
+    "level": 4,
+    "lane": 1,
+    "ct": 50,
+    "staminaCost": 424,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "effect_extension",
+      "target": "center",
+      "condition": "none",
+      "durationBeats": null,
+      "value": 10
+     },
+     {
+      "type": "focus",
+      "target": "center",
+      "condition": "none",
+      "durationBeats": 34,
+      "stages": 6
+     }
+    ]
+   },
+   {
+    "id": "sk-ktn-05-fest-02-3",
+    "name": "五人で起こした奇跡",
+    "kind": "P",
+    "level": 3,
+    "lane": 1,
+    "ct": 50,
+    "staminaCost": 460,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "visual_up",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": 34,
+      "stages": 4
+     },
+     {
+      "type": "visual_up",
+      "target": "score_type_1",
+      "condition": "none",
+      "durationBeats": 34,
+      "stages": 3
+     }
+    ]
+   }
+  ],
+  "photos": [
+   {
+    "id": "uph-uph-lane1-1",
+    "name": "成宮すず 3/7 (Quality 140)",
+    "kind": "photo",
+    "level": 1,
+    "ct": 60,
+    "staminaCost": 662,
+    "effects": [
+     {
+      "type": "visual_boost",
+      "stages": 3,
+      "durationBeats": 22,
+      "target": "visual_type_1",
+      "condition": "none"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "lane": 2,
+  "attribute": "vocal",
+  "role": "Buffer",
+  "cardType": "vocal",
+  "deck": {
+   "vocal": 244588,
+   "dance": 155289,
+   "visual": 89496,
+   "stamina": 10592,
+   "mental": 4589,
+   "critical": 0
+  },
+  "scoreBonusPct": {
+   "beat": 60,
+   "active": 307,
+   "special": 120,
+   "passive": 0
+  },
+  "critExtrasPermil": 120,
+  "skills": [
+   {
+    "id": "sk-rui-05-fest-01-1",
+    "name": "もっと高く、もっと遠く",
+    "kind": "SP",
+    "level": 5,
+    "lane": 2,
+    "ct": 0,
+    "staminaCost": 1420,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "score_get",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": null,
+      "powerPermil": 20500
+     },
+     {
+      "type": "vocal_up",
+      "target": "vocal_type_2",
+      "condition": "none",
+      "durationBeats": 84,
+      "stages": 6
+     }
+    ]
+   },
+   {
+    "id": "sk-rui-05-fest-01-2",
+    "name": "新たな衣装とさらなる飛躍",
+    "kind": "A",
+    "level": 4,
+    "lane": 2,
+    "ct": 30,
+    "staminaCost": 377,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "score_get",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": null,
+      "powerPermil": 4900
+     },
+     {
+      "type": "vocal_boost",
+      "target": "neighbors",
+      "condition": "none",
+      "durationBeats": 36,
+      "stages": 5
+     }
+    ]
+   },
+   {
+    "id": "sk-rui-05-fest-01-3",
+    "name": "誰も知らない雲の向こうへ",
+    "kind": "P",
+    "level": 2,
+    "lane": 2,
+    "ct": 0,
+    "staminaCost": 1375,
+    "probabilityPermil": 1000,
+    "limitPerLive": 1,
+    "effects": [
+     {
+      "type": "vocal_up",
+      "target": "self",
+      "condition": "combo>=50",
+      "durationBeats": 42,
+      "stages": 7
+     },
+     {
+      "type": "vocal_down",
+      "target": "self",
+      "condition": "battle_only",
+      "durationBeats": 42,
+      "stages": 10
+     }
+    ]
+   }
+  ],
+  "photos": [
+   {
+    "id": "uph-uph-lane2-1",
+    "name": "井川葵 6/23 (Quality 140)",
+    "kind": "photo",
+    "level": 1,
+    "ct": 60,
+    "staminaCost": 662,
+    "effects": [
+     {
+      "type": "dance_boost",
+      "stages": 3,
+      "durationBeats": 22,
+      "target": "dance_type_1",
+      "condition": "none"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "lane": 3,
+  "attribute": "visual",
+  "role": "Buffer",
+  "cardType": "vocal",
+  "deck": {
+   "vocal": 146078,
+   "dance": 91123,
+   "visual": 172933,
+   "stamina": 11157,
+   "mental": 6405,
+   "critical": 0
+  },
+  "scoreBonusPct": {
+   "beat": 309,
+   "active": 186,
+   "special": 120,
+   "passive": 0
+  },
+  "critExtrasPermil": 120,
+  "skills": [
+   {
+    "id": "sk-ski-05-waso-00-1",
+    "name": "殻をやぶる",
+    "kind": "A",
+    "level": 4,
+    "lane": 3,
+    "ct": 50,
+    "staminaCost": 164,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "score_get",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": null,
+      "powerPermil": 5100
+     },
+     {
+      "type": "critical_rate_up",
+      "target": "vocal_type_2",
+      "condition": "none",
+      "durationBeats": 56,
+      "stages": 5
+     }
+    ]
+   },
+   {
+    "id": "sk-ski-05-waso-00-2",
+    "name": "アイドルの掟への反抗",
+    "kind": "A",
+    "level": 4,
+    "lane": 3,
+    "ct": 50,
+    "staminaCost": 154,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "score_get",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": null,
+      "powerPermil": 4700
+     },
+     {
+      "type": "vocal_up",
+      "target": "neighbors",
+      "condition": "none",
+      "durationBeats": 34,
+      "stages": 5
+     },
+     {
+      "type": "vocal_up",
+      "target": "center",
+      "condition": "none",
+      "durationBeats": 34,
+      "stages": 3,
+      "confidence": "Unknown(効果行トリガー未対応: tg-someone_status-audience_amount_increase)"
+     }
+    ]
+   },
+   {
+    "id": "sk-ski-05-waso-00-3",
+    "name": "さらけ出す",
+    "kind": "P",
+    "level": 2,
+    "lane": 3,
+    "ct": 60,
+    "staminaCost": 183,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "focus",
+      "target": "center",
+      "condition": "none",
+      "durationBeats": 31,
+      "stages": 7
+     },
+     {
+      "type": "effect_extension",
+      "target": "center",
+      "condition": "none",
+      "durationBeats": null,
+      "value": 7
+     }
+    ]
+   }
+  ],
+  "photos": [
+   {
+    "id": "uph-uph-lane3-1",
+    "name": "成宮すず 6/24 (Quality 125)",
+    "kind": "photo",
+    "level": 1,
+    "ct": 60,
+    "staminaCost": 662,
+    "effects": [
+     {
+      "type": "visual_boost",
+      "stages": 3,
+      "durationBeats": 22,
+      "target": "visual_type_1",
+      "condition": "none"
+     }
+    ]
+   },
+   {
+    "id": "uph-uph-lane3-2",
+    "name": "TRINITYAiLE (Quality 60)",
+    "kind": "photo",
+    "level": 1,
+    "ct": 70,
+    "staminaCost": 180,
+    "effects": [
+     {
+      "type": "score_get",
+      "powerPermil": 400,
+      "durationBeats": null,
+      "target": "self",
+      "condition": "none"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "lane": 4,
+  "attribute": "visual",
+  "role": "Scorer",
+  "cardType": "visual",
+  "deck": {
+   "vocal": 145788,
+   "dance": 113459,
+   "visual": 305202,
+   "stamina": 12607,
+   "mental": 4932,
+   "critical": 0
+  },
+  "scoreBonusPct": {
+   "beat": 253,
+   "active": 70,
+   "special": 120,
+   "passive": 0
+  },
+  "critExtrasPermil": 581,
+  "skills": [
+   {
+    "id": "sk-rei-05-fest-01-1",
+    "name": "歌に乗せて、届けたい",
+    "kind": "SP",
+    "level": 6,
+    "lane": 4,
+    "ct": 0,
+    "staminaCost": 1635,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "score_get",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": null,
+      "powerPermil": 14100,
+      "scaling": {
+       "ref": "visual_up_stages",
+       "perStagePermil": 60,
+       "fitted": false
+      },
+      "confidence": "Estimate(docs-806980235: ref=visual_up_stages は 60‰/段（6.0%/段）。超化は参照外（2026-09-01 確定）"
+     },
+     {
+      "type": "score_get_by_score_ratio",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": null,
+      "powerPermil": 130
+     }
+    ]
+   },
+   {
+    "id": "sk-rei-05-fest-01-2",
+    "name": "似た者親子のメッセージ",
+    "kind": "A",
+    "level": 5,
+    "lane": 4,
+    "ct": 25,
+    "staminaCost": 424,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "score_get",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": null,
+      "powerPermil": 5700
+     },
+     {
+      "type": "visual_up_extreme",
+      "target": "self",
+      "condition": "self_visual_lane",
+      "durationBeats": 31,
+      "stages": 5,
+      "confidence": "Peing確定(超化: 表記段階数はダミー・一律+5段階分=+250‰)"
+     },
+     {
+      "type": "critical_coeff_up",
+      "target": "visual_type_2",
+      "condition": "self_visual_lane",
+      "durationBeats": 31,
+      "stages": 6
+     }
+    ]
+   },
+   {
+    "id": "sk-rei-05-fest-01-3",
+    "name": "頑固じゃありません！",
+    "kind": "P",
+    "level": 4,
+    "lane": 4,
+    "ct": 50,
+    "staminaCost": 610,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "skill_success_up",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": 37,
+      "stages": 3
+     },
+     {
+      "type": "visual_up",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": 37,
+      "stages": 4
+     }
+    ]
+   }
+  ],
+  "photos": []
+ },
+ {
+  "lane": 5,
+  "attribute": "visual",
+  "role": "Supporter",
+  "cardType": "vocal",
+  "deck": {
+   "vocal": 183936,
+   "dance": 153896,
+   "visual": 150074,
+   "stamina": 9770,
+   "mental": 3054,
+   "critical": 0
+  },
+  "scoreBonusPct": {
+   "beat": 60,
+   "active": 381,
+   "special": 120,
+   "passive": 0
+  },
+  "critExtrasPermil": 350,
+  "skills": [
+   {
+    "id": "sk-mhk-05-poli-00-1",
+    "name": "こりごり二日酔い",
+    "kind": "A",
+    "level": 4,
+    "lane": 5,
+    "ct": 40,
+    "staminaCost": 161,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "score_get",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": null,
+      "powerPermil": 4300
+     },
+     {
+      "type": "score_up",
+      "target": "score_type_2",
+      "condition": "none",
+      "durationBeats": 40,
+      "stages": 8
+     },
+     {
+      "type": "stamina_cost_up",
+      "target": "self",
+      "condition": "battle_only",
+      "durationBeats": 55,
+      "stages": 15
+     }
+    ]
+   },
+   {
+    "id": "sk-mhk-05-poli-00-2",
+    "name": "のんびり温泉『出張』",
+    "kind": "P",
+    "level": 3,
+    "lane": 5,
+    "ct": 50,
+    "staminaCost": 183,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "score_up",
+      "target": "vocal_type_1",
+      "condition": "none",
+      "durationBeats": 32,
+      "stages": 7
+     },
+     {
+      "type": "stamina_recovery",
+      "target": "vocal_type_1",
+      "condition": "none",
+      "durationBeats": 36,
+      "value": 3
+     }
+    ]
+   },
+   {
+    "id": "sk-mhk-05-poli-00-3",
+    "name": "泥酔者の愚痴",
+    "kind": "P",
+    "level": 2,
+    "lane": 5,
+    "ct": 40,
+    "staminaCost": 259,
+    "probabilityPermil": 1000,
+    "limitPerLive": null,
+    "effects": [
+     {
+      "type": "a_skill_score_up",
+      "target": "vocal_type_3",
+      "condition": "none",
+      "durationBeats": 24,
+      "stages": 2
+     },
+     {
+      "type": "stamina_recovery",
+      "target": "self",
+      "condition": "none",
+      "durationBeats": 24,
+      "value": 3
+     },
+     {
+      "type": "vocal_down",
+      "target": "self",
+      "condition": "battle_only",
+      "durationBeats": 29,
+      "stages": 7
+     }
+    ]
+   }
+  ],
+  "photos": [
+   {
+    "id": "uph-uph-lane5-1",
+    "name": "神崎莉央 (Quality 140)",
+    "kind": "photo",
+    "level": 1,
+    "ct": 50,
+    "staminaCost": 266,
+    "effects": [
+     {
+      "type": "score_up",
+      "stages": 2,
+      "durationBeats": 29,
+      "target": "score_type_1",
+      "condition": "none"
+     }
+    ]
+   },
+   {
+    "id": "uph-uph-lane5-2",
+    "name": "早坂芽衣 (Quality 140)",
+    "kind": "photo",
+    "level": 1,
+    "ct": null,
+    "staminaCost": 733,
+    "effects": [
+     {
+      "type": "critical_coeff_up",
+      "stages": 5,
+      "durationBeats": 40,
+      "target": "score_type_1",
+      "condition": "combo>=50"
+     }
+    ]
+   },
+   {
+    "id": "uph-uph-lane5-3",
+    "name": "佐伯遙子 7/5 (Quality 145)",
+    "kind": "photo",
+    "level": 1,
+    "ct": 50,
+    "staminaCost": 540,
+    "effects": [
+     {
+      "type": "score_get",
+      "powerPermil": 750,
+      "durationBeats": null,
+      "target": "self",
+      "condition": "none",
+      "scaling": {
+       "ref": "stamina_remaining",
+       "perStagePermil": null,
+       "formula": "staminaRatioQuad",
+       "maxPermil": 800,
+       "remainingRatio": true
+      }
+     }
+    ]
+   },
+   {
+    "id": "uph-uph-lane5-4",
+    "name": "小美山愛 (Quality 150)",
+    "kind": "photo",
+    "level": 1,
+    "ct": null,
+    "staminaCost": 706,
+    "effects": [
+     {
+      "type": "critical_coeff_up",
+      "stages": 4,
+      "durationBeats": 48,
+      "target": "score_type_1",
+      "condition": "someone_skill_success_up"
+     }
+    ]
+   }
+  ]
+ }
+]

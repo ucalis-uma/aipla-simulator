@@ -36,8 +36,11 @@ export function simulateTimeline(input: SimulateInput): TimelineResult
 1. **（A/SP時）移動（ワープ）効果** — 現データにワープ効果なし。実装はステップのみ用意し即returnでよい（将来拡張）。
 2. **（A/SP時）発動アイドル決定・スキルチャンス譲渡** — 譲渡スキルは現データになし。スキップ。
 3. **（A/SP時）スキル存在確認** — 各レーンが当該種別（A note→kind"A"、SP note→kind"SP"）のスキルを1つ以上持つか。左から=レーン順 `[1,2,3,4,5]`【Estimate】。
-4. **（A/SP時）残スタミナ確認** — 消費 = `mulPermil(skill.staminaCost, consumptionMultiplierPermil(付与先レーンのスナップショット))`（切捨て）。不足レーンは FAIL `stamina_short`。research/01 §4-4【Confirmed】。
+4. **（A/SP時）残スタミナ確認** — 消費 = `mulPermil(mulPermil(skill.staminaCost, ステージ消費倍率), バフ倍率)`（切捨て・ステージ→バフの順【Confirmed 2026-09-04: S3 L4 b3 の 1939。逆順では 1938】）。ステージ消費倍率 = `StageInput.skillStaminaWeightPermil`（Quest.skillStaminaWeightPermil。標準1000・STAGE045は3000=3.0倍【Confirmed: S3 F1・8件以上で1の位一致】）。バフ倍率 = `consumptionMultiplierPermil`（**自属性ブースト** +1%/段等【Confirmed 2026-09-04: S3 L4 b1/b3/b14/b42/b61 = 1884/1939/1386/1272/1884。L2 の dance_boost は無視】）。不足レーンは FAIL `stamina_short`。research/01 §4-4【Confirmed】。
 5. **（Aスキル時）CT確認** — `skillCt > 0` なら FAIL `in_ct`。SP も同様に CT チェックを行う（現データのSPはCT0のため常に通過。research/01 §4-5 はAのみ明記だがSPもCT概念は同一【Estimate】）。
+   CT の規定値はフォト付与の静的短縮で減ることがある（`DeckCharacter.ct_cuts`。
+   【Confirmed 2026-09-04: S3 L4 早坂芽衣 6/6 の CTカット2nd → A（-2）の CT30→25。
+   b14→b42 の gap 28 発動と整合。ユーザー提供・マスタ schema は未確定のため入力側の記録）
 6. **（バトル）発動権決定** — 非バトル（デイリーライブ）のためスキップ。`battle_only` 条件付き効果は通常ライブでは常に不発（P3a condition 拡張タグの仕様）。
 7. **Pスキル発動（前半）** — §4 の選択規則。
 8. **SP/A/ビートの発動・スコア精算** — §5。成功→そのレーン combo+1、MISS→combo=0（コンボ継続効果が有効なレーンはリセット免除・増加もしない。research/01 §2.2「コンボ継続」行）。
@@ -54,9 +57,12 @@ export function simulateTimeline(input: SimulateInput): TimelineResult
   L2/L5 は同値で、b3 後半の実測発動順 L2→L5 はタイブレーク規則で再現される。
 - 各レーンは各位相で **Pスキル1つ + フォト1つ** まで発動できる（「各アイドル1つ→次いでPフォト1つ」research/01 §4-7【Estimate: フォトも1つ/アイドル/位相と解釈】）。
 - 候補選択: 各レーンの `skills` / `photos` 配列の**先頭から**最初の発動可能なもの【Estimate: 上から順】。
-- **前半（ステップ7）**: 全効果行の condition が "none" または "battle_only" のスキル/フォトが対象。
-  （battle_only 行は通常ライブで「除外して評価」のため無条件扱い・実測 order3 の
-  結婚への願望が前半発動することで確認。P3a condition 拡張タグの仕様）
+- **前半（ステップ7）**: 無条件行（condition "none"）を 1 つでも持つスキル/フォトが対象
+  （【2026-09-02 ユーザー確定】前発動 some 判定。【2026-09-03 サンプル3で修正】:
+  battle_only 行は通常ライブで適用不能のため無条件扱い**しない**。
+  T5 order3 の結婚への願望 [none, battle_only] は none 行があるため前半発動のまま不変。
+  S3 L2「誰も知らない雲の向こうへ」[combo>=50, battle_only] は後発動となり、
+  b1 前半の誤発動（limit=1 消費で b50 発動を潰す）と b1 スタミナ不一致が解消）
   - 初回発動はここで起こる（初期CT=0のため前半で使用可）。
 - **後半（ステップ11）**: 以下を前半と同一規則で処理。
   - 条件付きスキル/フォト（condition ≠ none を1つでも含む。条件評価はこの時点）。
@@ -78,6 +84,13 @@ export function simulateTimeline(input: SimulateInput): TimelineResult
 ## 5. スコア精算（ステップ8）
 
 共通: 係数は**発動者（スコアを得るレーン）自身の**スナップショットで計算。丸めは `computeEventScore`（src/formula/scoreEvent.ts）に一任。`roundingPolicy` は `SimulateInput` から透過。
+ファクター列は7因子（PLAN.md §3.3 の表記順）で固定する。恒等因子（×1000）の追加は
+禁止（float 乱数経路で BigInt→Number 変換の精度が劣化し T5 golden が ±1 ずれる実例あり。
+2026-09-04。キャラ優位は後段で整数乗算する）。
+**キャラ優位**: 対象キャラのレーンの全スコアイベントに `advantagePermil/1000` を後段乗算する
+（`LaneInput.characterAdvantagePermil`。STAGE045 の ⅢX メンバーは 2250。
+【Confirmed 2026-09-04: S3 L5 ビート 12 点で約2倍・ユーザー確定「全スコア」】。
+flat 加算との前後・ratio 基準への波及は未観測【Estimate】）。
 
 ### 5.1 ビートノート（noteType=1）
 - 対象: **全5レーン**が独立イベント。
@@ -134,13 +147,13 @@ export function simulateTimeline(input: SimulateInput): TimelineResult
 
 | type | 処理 |
 |---|---|
-| 段階型バフ（mapEffectToBuffKey が非null） | 対象レーン各々に `ActiveEffect` を付与（stages=行の stages、remainingBeats=durationBeats、limitRelease 引継ぎ）。付与時に対象レーンの同種実効段数が上限超になる分は無視（aggregateBuffs がクランプ）【Confirmed: research/01 §2.2】。`durationBeats` null の段階型は現データになし（あれば永続扱い【Estimate】） |
+| 段階型バフ（mapEffectToBuffKey が非null） | 対象レーン各々に `ActiveEffect` を付与（stages=行の stages、remainingBeats=durationBeats、limitRelease 引継ぎ）。付与時に対象レーンの同種実効段数が上限超になる分は無視（aggregateBuffs がクランプ）【Confirmed: research/01 §2.2】。`durationBeats` null の段階型は現データになし（あれば永続扱い【Estimate】）。**limit_break 行（基底型+limitRelease）は上限解放のみで段数不加算**（【Confirmed 2026-09-03: S3 L1A「手を伸ばす」b53/b61/b81 の上昇 11/15/15。*_limit 変数型・T5 b2 ccu 検算と同一規則。旧「段数も加算」は S3 と矛盾） |
 | `score_get` / `score_get_by_score_ratio` | §5 のスコアイベント（A/SPはステップ8内、P/フォトは発動位相内で即時） |
-| `stamina_recovery` | `value` を発動対象レーンのスタミナに加算（負値=ダメージ）。**[0, maxStamina] にクランプ**（maxStamina=デッキスタミナ。実測 order9: L3 18730−866+2560 → 18730 で上限確認【Confirmed】）。`durationBeats` があればステップ10で毎ビート `value`【Estimate: 継続型の単位は1回/ビートと解釈】 |
+| `stamina_recovery` | `value` を発動対象レーンのスタミナに加算（負値=ダメージ）。**[0, maxStamina] にクランプ**（maxStamina=デッキスタミナ。実測 order9: L3 18730−866+2560 → 18730 で上限確認【Confirmed】）。即時型（`durationBeats` なし）は生値を加算。継続型（`durationBeats` あり）はステップ10で毎ビート `tick = floor(15 × value × ステージ回復倍率 / 1000)` を加算（ステージ回復倍率 = `StageInput.staminaRecoveryWeightPermil`。標準1000・0は特徴なし=1000扱い。【Confirmed 2026-09-03: S3 のんびり/泥酔とも +45/beat = 15×3×1.0。research/02 §1.8「継続回復 = 15×段階（ライブ特徴と乗算）」と一致】） |
 | `ct_reduction` | 対象レーンの全スキル `skillCt = max(0, skillCt − value)`（b106 ドリームウエディングの隣接CT−15実測【Confirmed: research/08 §2.5】。Aスキルも短縮対象に含める【Estimate: [T1]に「Aスキル対象外」の明記がある短縮スキルがあるとのみ記載】） |
 | `ct_increase` | 対象レーンの全スキル `skillCt += value`【Estimate: 実測での発火箇所が少なく T4 で検証】 |
 | `effect_amplify` | 対象レーンのアクティブなバフ効果のうち、各BuffKeyで残りビート最大の1インスタンスに `value` 段追加【Confirmed: research/01 §2.2「残りビート数が最長のものだけが増強・延長の対象」】 |
-| `effect_extension` | 対象レーンの全アクティブバフ効果の remainingBeats に `value` 加算【Confirmed: 同上「延長は全強化効果が対象」】 |
+| `effect_extension` | 対象レーンの全アクティブバフ効果の remainingBeats に `value` 加算【Confirmed: 同上「延長は全強化効果が対象」】。**継続回復の予約（scheduledRecoveries）も延長対象**（【Confirmed 2026-09-04: S3 のんびり b1/b50 の回復窓が さらけ出す b13/b73 の +7 で 36→43b に延びる実測。rem=0 除外は共通） |
 
 ## 7. 対象解決（resolveEffectTargetLanes）
 
@@ -153,7 +166,7 @@ export function simulateTimeline(input: SimulateInput): TimelineResult
 | `center` | `[3]` | 【Estimate】 |
 | `all` | `[1,2,3,4,5]` | 【Confirmed: テキスト「味方全員」】 |
 | `neighbors` | `[A−1, A+1]`（範囲内のみ。A=1なら[2]、A=5なら[4]） | 【Estimate: 隣接=左右1レーンずつ】 |
-| `vocal_high_1`、`*_higher_N` | レーン属性が <attr> のレーンをデッキ属性ステータス降順で N 個（「ボーカル高い1人」等） | 【Estimate】 |
+| `vocal_high_1`、`*_higher_N` | レーン属性が <attr> のレーンを**ライブ中属性ステータス**降順で N 個（「ボーカル高い1人」等）。同値はレーン優先度 | 【Confirmed 2026-09-03: S3 STAGE045 ライボ「ビジュアルが高い2人」= b1 {L4,L3} / b61 {L4,L1}。deck 順では b61 にさらけ出すも発動してしまい実測（L3 不発）と矛盾】 |
 | `vocal_type_1/2/3`、`dance_type_*`、`visual_type_*` | **メンバーのタイプ**（cardType=装着カードの属性【Estimate: ratiosPermil 最大。research/07 確度 Medium】）が一致するレーンをレーン優先度順（L3>L2>L4>L1>L5）で先頭 N 個。レーン属性（stage laneAttributes）とは独立 | 【Confirmed 2026-09-01: サンプル1 殻をやぶる（ボーカルタイプ2人）→ L3,L2。デッキ vocal 降順説は棄却】 |
 | `same_lane_other` | `[]`（非バトルでは対象なし・不発） | 【Estimate: ライブバトル用と解釈】 |
 
@@ -175,7 +188,9 @@ export function simulateTimeline(input: SimulateInput): TimelineResult
 
 ※ T4（ビート1〜3の発動15件・スタミナ全点）で以下は解決済み【Confirmed】:
 - A/SPノートは該当レーンのみ挑戦（旧「全レーン挑戦」説は否定）
-- battle_only 行を含むスキルは無条件扱いで前半発動する
+- battle_only 行のみで無条件になるスキルは通常ライブで発動しない
+  （【2026-09-03 修正】旧「battle_only 行を含むスキルは無条件扱いで前半発動」は、none 行を持たない
+  場合に S3 L2P と矛盾。T5 結婚への願望は none 行による前半発動で不変）
 - スタミナ回復は maxStamina でクランプ
 - P前半の各レーン処理 = 無条件Pスキル1つ + 無条件フォト1つ、条件付きは後半
 - L2 フォトの前半/後半発動スケジュール（配列順・CT・条件評価の実装と全点一致）

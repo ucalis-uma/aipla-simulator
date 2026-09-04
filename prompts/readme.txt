@@ -5,7 +5,8 @@ deck-json-from-images.md
 は編成JSONを画像分析させるためのやつ
 
 prompts/continue-session.md
-は0901 0:14の引継ぎ用プロンプト
+は開発継続用の引継ぎプロンプト（0901 0:14 作成・09-02/09-03 のサンプル2対応で内容更新済み。
+現状サマリ・テスト数・不変条件の数値はここが一次）
 
 prompts/measure-new-sample.md
 は新しいサンプルの画像解析→measured_data 生成（画像分析エージェント用）
@@ -16,3 +17,7 @@ prompts/improve-from-sample.md
 
 prompts/measure-sample1-antigravity.md
 はサンプル1測定時の記録（完了済み・新規は measure-new-sample.md を使う）
+
+prompts/analyze-sample1-gap.md
+はサンプル1乖離分析の診断専用プロンプト（完了済み 2026-09-02・S1 は ±5% 内で決着。
+再利用の際は確定値を research/17_sample1_gap_analysis/CONCLUSION で更新してから使う）

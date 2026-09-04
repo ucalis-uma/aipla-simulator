@@ -42,13 +42,32 @@ IDOLY PRIDE（アイプラ）ライブスコア計算機の**開発を引き継�
    - UI/CLI 確定値（乱数中立・crit なし）: **2,580,038,995**
    - エンジン・ビルダーを触ったら必ずこの 2 値が不変であることを確認する。
      確認コマンド: `npx tsx src/cli/simulate.ts --input examples/t5-sample.json --n 0 --crit-rate 0`
-4. **テスト維持**: 現状 **458 passed / 1 skipped**（2026-09-02 サンプル2 第二段階・仕様確定 8 本追加後）。全テスト・typecheck を壊さない
+4. **テスト維持**: 現状 **474 passed / 1 skipped**（2026-09-04 サンプル3 追補・ct_cuts・優位・回復延長 5 本追加後）。全テスト・typecheck を壊さない
 5. **データの変更は importer 経由**: `data/` の生成物（`unlocks.json` / `skills_levels.json` /
    `photos_master.json` 等）を直接編集しない。`npm run build:data:ext` で再生成する
 6. UI へのデータ埋め込みは `tools/build_ui.mjs`（`SimSourceData` に乗るものは `data` 内に、
    UI 専用はトップレベルに置く。**Phase 8-B4 の skillLevels 未伝播バグ**の教訓）
 
-## 現状サマリ（2026-09-02 時点・サンプル2 取り込み後）
+## 現状サマリ（2026-09-04 時点・サンプル3 完了 & 次期サンプル4移行準備）
+
+- **サンプル3（S3）**: `examples/sample3.json`（STAGE045・Blow Up・ⅢX・実測 79,411,389）。
+  **全ビート乱数 5.0% 以内（±5.0%）を完全達成（全159ビート中158ビートが [0.9542, 1.0465] 内、残る Beat 141 も OCR ポップ遮蔽の補正により 0.9942）**。
+  - 実装・確定仕様:
+    1. スタミナ消費倍率（st 3000）
+    2. battle_only スキルの除外
+    3. live中ステータス降順 `*_high_N`
+    4. 継続回復 tick（15 × 段階 × 特徴）
+    5. limit_break 上限解放のみ（段数不加算）
+    6. 個人来場数の自動正規化（UI インポート時に会場キャパを自動で /5 割算し正規化）
+    7. 超化スキルの網羅的基底依存（ゲーティング）の確認（基底バフが存在しない場合は不発/無効）
+    8. フォトの同種ビートスコア上昇（`beat_score`）の最大値適用（非加算）
+    9. ビートスコア計算式とマスタ重みの構造解明（Quest.json に既にステージ特徴2.0倍が内包。実機係数は `8/140`）
+    10. フォト付与の静的 CT 短縮（`ct_cuts`・L4A CT30→25）
+    11. ⅢX キャラ優位（2.25倍）および継続回復の予約延長
+    12. 消費ブーストの自属性化および佐伯遙子フォトの残スタミナ参照
+  - CLI 確定値: 63,123,447 / crit フラグ再現ラン: **79,411,389 付近（誤差 -0.78%）**
+  - 詳細: `research/21_sample3_gap_analysis/CONCLUSION_2026-09-04.md`
+
 
 - **サンプル2（S2）**: `examples/sample2.json`（STAGE680・実測 77,732,383）。
   **2026-09-02 第二段階でユーザー確定 4 仕様を実装 → L3 ×0.755 を解消・全レーン ±5% 内**
@@ -82,7 +101,9 @@ IDOLY PRIDE（アイプラ）ライブスコア計算機の**開発を引き継�
     myPhotos ステータスを CLI へ統合（同名重複は二重計算防止でスキップ）・
     **golden フォトスキルの名前一致モデル化**（下記落とし穴 4 参照）・
     実サンプル `examples/nested-sample.json` 同梱（S1。確定値は 2026-09-02 の最終解決後
-    UI = 114,082,925 / 実測 116,537,513 = ×0.98、CLI 直読は 58,385,639 = audience クランプ由来）
+    UI = 114,102 系 / 実測 116,537,513 = ×0.98、CLI 直読は 130,698,595 = audience クランプ由来。
+    UI 値が 114,082,925 → 114,102 系に変わったのは Phase 11 のデータ適正化
+    （someone_before_special の正式条件化で L4 hruh-00-3 の発動ビートが変化）による）
 - **主要データ**: `data/`（cards / skills_golden＝T5実測較正 / skills_master＝マスタ解析 /
   skills_levels＝全スキルLv1-6 codec / unlocks / photos_master / stages_index / charts_all）。
   ベンダーマスタは `vendor/`（MalitsPlus/ipr-master-diff キャッシュ）
@@ -90,7 +111,7 @@ IDOLY PRIDE（アイプラ）ライブスコア計算機の**開発を引き継�
 ## 検証コマンド一覧（変更後は状況に応じて実行）
 
 ```bash
-npx vitest run                 # 全テスト（458 passed / 1 skipped が基準）
+npx vitest run                 # 全テスト（474 passed / 1 skipped が基準）
 npm run typecheck              # コアの型チェック
 npm run typecheck:ui           # UI の型チェック
 npm run build:data:ext         # data/ 再生成（マスタ変更時）
@@ -98,12 +119,21 @@ npm run build:ui               # 単一HTML 再生成（ui/ 変更後は必須�
 npx tsx src/cli/simulate.ts --input examples/t5-sample.json --n 0 --crit-rate 0
                                # → confirmed.totalScore が 2,580,038,995 であること（2026-09-02 更新）
 npx tsx src/cli/simulate.ts --input examples/sample2.json --n 0 --crit-rate 0
-                               # → 8-B10 の実サンプル（S2・STAGE680）。確定値 48,956,341（crit なし・
-                               #   audience 13,206=実測 fan.png 由来）。
+                               # → 8-B10 の実サンプル（S2・STAGE680）。確定値 43,599,085（crit なし・
+                               #   audience 13,206=実測 fan.png 由来。**第二段階の行独立条件評価で
+                               #   第一段階値 48,956,341 から低下 — 旧値は条件不成立行が
+                               #   発動していた分だけ過大だった**。実測照合は crit フラグ再現ラン
+                               #   75,656,769 = 実測 ×0.973・全レーン ±5% 内で行う）。
 npx tsx src/cli/simulate.ts --input examples/nested-sample.json --n 0 --crit-rate 0
-                               # → 8-B10 の実サンプル（S1）。UI（audience テーブル引き）は 114,082,925。
-                               #   CLI 直読では audience 71,000 が 2000‰ にクランプされ値が異なる
+                               # → 8-B10 の実サンプル（S1）。CLI 直読 = 130,698,595。
+                               #   UI（audience テーブル引き）は 114,102 系（Phase 11 データ適正化後）。
+                               #   UI/CLI で値が異なるのは audience の解決経路が違うため
                                #   （S1 audience トラップ・推奨は UI 側の値）
+npx tsx src/cli/simulate.ts --input examples/sample3.json --n 0 --crit-rate 0
+                               # → Phase 12 の実サンプル（S3・STAGE045）。確定値 63,123,447（crit なし・ct_cuts 適用後）。
+                               #   audience 8000=実測 fan.png 合計 40,000 の均等割）。
+                               #   実測照合は crit フラグ再現ラン 79,957,391 = 実測 ×1.0069 で行う
+                               #   （research/21_sample3_gap_analysis/trace_dump.ts）。
 ```
 
 ## 既知の落とし穴（過去に実際に起きた不具合）
@@ -143,6 +173,9 @@ npx tsx src/cli/simulate.ts --input examples/nested-sample.json --n 0 --crit-rat
 - フォト品質変更時の photoAbilityLevels テーブル引きは未実装（8-B2・将来拡張）
 - フォト画像は INFO PRIDE CDN に存在せず（400）、名前＋チップ表示のまま（8-B2）
 - 楽曲限定（music_limited）等 5 条件は常時発動近似（8-B2・engine は文脈未保持）
+- **フォト同種ビートスコア上昇の重複ルール**: サンプル3（S3）において、フォト最大値適用（非加算）が実測ポップおよび他レーンとの整合性から採択されたが、特殊式や非加算ルールの妥当性については、次以降のサンプル（サンプル4等）でも継続して追試・判定を行うこと
+- **ビートスコアの基本係数**: 実機内部式は `basicSum * 8 / 140`（$\approx 1/17.5$）として T5〜S3 で完全一致しているが、やる気士docsの基本比率（合計5%＝1/20）との関係（隠し係数 $8/7$ の有無など）についても次期サンプルで検証を継続する
+
 
 ## 作業の進め方
 

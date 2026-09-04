@@ -183,10 +183,10 @@
 
 <!-- ============ ③ PHASES ============ -->
 <section class="tab" id="tab-phases">
-  <h2 class="sectionTitle">📋 PLAN.md §14 フェーズ別実装計画 — 全ステップ完了 (Phase 0 → 8-B10)</h2>
-  <div class="note">PLAN.md がこの作業全体の大元。§14のフェーズ表が git コミット履歴 (17コミット) とほぼ 1:1 で対応。テストは 41 → 431 へ増加し、T5 確定値 <b>2,436,373,427</b> を破らずに機能追加が続けられています。</div>
+  <h2 class="sectionTitle">📋 PLAN.md §14 フェーズ別実装計画 — 全ステップ完了 (Phase 0 → 11)</h2>
+  <div class="note">PLAN.md がこの作業全体の大元。§14のフェーズ表が git コミット履歴 (20コミット) とほぼ 1:1 で対応。テストは 41 → 458 へ増加し、T5 確定値 <b>2,580,038,995</b> を破らずに機能追加が続けられています。</div>
   <div id="phaseList"></div>
-  <h2 class="sectionTitle" style="margin-top:26px">🔧 現在進行中 (未コミット: 19修正 + 12未追跡)</h2>
+  <h2 class="sectionTitle" style="margin-top:26px">🔧 現在の残課題・次サンプル候補</h2>
   <div id="wipList"></div>
 </section>
 
@@ -249,9 +249,9 @@ const NODES = [
  {id:"ana",  x:24,y:762,w:400,h:96, zone:"nox", title:"サンプル1/analysis/", agents:["zc"],
   sub:"OCR解析パイプライン: ocr→build_templates→extract→build_outputs→build_summary",
   desc:"連番PNGから stat/stam/dots を抽出 (extracted.json 167KB) → measured_data*.json 構築 → レポート生成。build_outputs.py が最大 (33.7KB)。preview 149枚。",refs:["aipura_nox\\サンプル1\\analysis\\build_outputs.py"]},
- {id:"s2",   x:24,y:882,w:400,h:126, zone:"nox", title:"サンプル2/（進行中）", agents:["ag"],
-  sub:"beat 840枚＋scroll 64枚・order 44枚・result なし・別編成",
-  desc:"佐伯遙子/川咲さくら/一ノ瀬怜/白石千紗/長瀬琴乃 編成。lane3 に効果欄スクロール2枚目 (beat_NNN_2.PNG) 64枚。lane2/5 に欠損の可能性（issues.md 言及はサンプル1）。result_*.PNG 未取得。",refs:["aipura_nox\\サンプル2\\"]},
+ {id:"s2",   x:24,y:882,w:400,h:126, zone:"nox", title:"サンプル2/（解析完了・取り込み済み）", agents:["ag","zc"],
+  sub:"beat 840枚＋scroll 64枚・order 44枚・STAGE680 実測 77,732,383 / 168 ビート",
+  desc:"佐伯遙子/川咲さくら/一ノ瀬怜/白石千紗/長瀬琴乃 編成。解析→measured_data_v2.json まで完了しリポジトリへ取り込み済み（Phase 10-11・research/20）。current_stamina に OCR 7→2 誤読 236 行（修正表 measured_data_v2_ocr7to2_fix.json を追記・元ファイル不変）。",refs:["aipura_nox\\サンプル2\\"]},
  {id:"noxdata", x:24,y:1032,w:400,h:88, zone:"nox", title:"data/ ＋ 失敗run記録", agents:[],
   sub:"communication_levels.json（全アイドル交流Lv）・idoly_pride/json (MCPツール不足で失敗した自動化の構造化記録)",
   desc:"home_20260831T000342Z.json は status:\"failed\"・human_intervention_required:true の厳格スキーマ。失敗も記録として残す運用の痕跡。",refs:[]},
@@ -443,15 +443,16 @@ const PHASES = [
   {id:"8-B8", st:"✅ 08-31", t:"UI テーマ黄色化・ステータス/ロール色（表示のみ・計算不変）", tests:"425"},
   {id:"8-B9", st:"✅ 08-31", t:"画像→編成JSON 生成プロンプト (deck-json-from-images.md) 新設", tests:"428"},
  ]},
- {g:"現在地 (09-01)", items:[
+ {g:"現在地 (09-03)", items:[
   {id:"8-B10", st:"✅ 09-01", t:"ネスト形式インポート対応・myPhotos ステータス統合・golden フォトスキルの名前一致モデル化", c:"UI確定値 = CLI確定値 (304,238,070)・examples/nested-sample.json 同梱", tests:"431"},
+  {id:"Phase 9-10", st:"✅ 09-02", t:"S1 全14イベント ±5% 達成（マスタ順効果行・PRE・写真A固定値平坦加算）・S2 取り込み・someone_down_group 条件化・CLI audience 修正", c:"S1 確定値 ×0.98・fan_bonus テーブル実機一致", tests:"450", commit:"b32fdbb"},
+  {id:"Phase 11", st:"✅ 09-02", t:"S2 ユーザー確定 4 仕様（超化=増強型・行独立条件評価・前発動 some・レーン属性説＋self_down_group）・OCR 7→2 誤読 236 行訂正（フォト無消費説撤回）", c:"S2 crit フラグ再現 ×0.973・全レーン ±5% 内・L3 critF 1の位一致", tests:"458", commit:"b32fdbb"},
  ]},
 ];
 const WIP = [
- {t:"サンプル1 残余乖離分析（195,077,552 vs 116,537,513 ≈ 1.674倍）", d:"hermes が prompts/analyze-sample1-gap.md に基づき診断中。ファンファクター0.2%・会場キャパ100による個人来場ファン数上限20人の実装、効果種類数バフの上限仕様変更履歴の反映など。→ research/17_sample1_gap_analysis*"},
- {t:"type36 スキル係数の逆算", d:"スプレッドシート (tools/sheet_fetch.py・research/sheets/) から取得し data/type36_coefficients.json として確定中 → research/18_type36_coefficients.md。"},
- {t:"一次資料精査の成果を反映", d:"zcode fork セッション: 「効果延長=残り+7ビート は嘘。キャラ・スキルレベル別の延長ビート数が Info Pride にある」→ prompts/ 3本・research/16 改訂済み。"},
- {t:"未コミットファイル (抜粋)", d:"data/type36_coefficients.json・examples/nested-sample.json・prompts/ 4本・research/17,18・tests/unit/timeline/sample1-specs.test.ts・type36-scaling.test.ts・tools/sheet_fetch.py ほか、src/timeline/engine.ts・photos.ts 等の修正 19本。"},
+ {t:"次サンプルの設計", d:"S2 残課題の検証候補: 祭り千紗 P2 2行目（self_down_group）実測・ccu 消失ビートの直接観測・S2 全体 −2.7% 傾向の再確認 → research/19 追記3・research/20 README §6。"},
+ {t:"type36 未対応効果", d:"コアファン率・観客数割合・強化効果種類数の上限解放（_limit_increase 変種）等は未実装 → research/18_type36_coefficients.md §1-3。"},
+ {t:"未解決（小）", d:"HIT 94.1% 分母・クリ率式（率0編成実測なし）・スタミナ消費の表示/実測差（S1 681 vs 662）・RANK S+ 式 → research/19 §1。"},
 ];
 
 /* ---------- ④ ツリー ---------- */
@@ -518,8 +519,10 @@ const TREE_B = {n:"aipura_nox/", d:"git管理外・NoxPlayer ADB撮影ワーク�
    {n:"lane1-5/ + skill_order/", d:"beat_NNN.PNG 連番 880枚＋order_NN.PNG 34枚"},
    {n:"photo_skill_lane3_3.PNG 等", d:"フォトスキル詳細の長押し撮影・laneM_photos_and_accessories1/2・result_total/charactor"},
  ]},
- {n:"サンプル2/", d:"進行中。別編成 (佐伯遙子/川咲さくら/一ノ瀬怜/白石千紗/長瀬琴乃)。lane1-5 各168枚＋lane3 scroll 64枚 (beat_NNN_2.PNG)・order 44枚。result 未取得。", c:[
+ {n:"サンプル2/", d:"解析完了・リポジトリ取り込み済み (Phase 10-11・research/20)。別編成 (佐伯遙子/川咲さくら/一ノ瀬怜/白石千紗/長瀬琴乃)。STAGE680・実測 77,732,383 / 168 ビート。lane1-5 各168枚＋lane3 scroll 64枚 (beat_NNN_2.PNG)・order 44枚。current_stamina に OCR 7→2 誤読 236 行 → 修正表を追記 (元ファイル不変)。", c:[
    {n:"communication_levels.json", d:"サンプル2用の交流レベル。"},
+   {n:"measured_data_v2.json", d:"解析成果物。timeline[0]=beat0 (プレライブ)・timeline[b]=beat b 終了後の状態。critical_flags は \"b%03d_L%d\" 形式。"},
+   {n:"measured_data_v2_ocr7to2_fix.json", d:"OCR 誤読修正表 (236 行 + 中間フレーム 3 件・追記のみ)。"},
  ]},
  {n:"__pycache__", d:"cpython-313 の .pyc 3本。"},
 ]};

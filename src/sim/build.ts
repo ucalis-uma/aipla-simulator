@@ -71,6 +71,14 @@ export interface DeckCharacter {
    * （実測較正は最大レベルのみ）警告に出力する。
    */
   skill_levels?: Record<string, number>;
+  /**
+   * 【サンプル3・2026-09-04】フォト付与の静的 CT 短縮（スキル枠番号 → 短縮量）。
+   * skill はカードのスキル枠（1/2/3 = skillId 末尾。L4 の A = 2）。
+   * 装備フォトの CT カット効果（発動せず常時適用・「規定値短縮」）を再現する。
+   * S3 L4: 早坂芽衣 6/6 の CTカット2nd → A（-2）の CT-5（ユーザー提供・CT30→25。
+   * b14→b42 の gap 28 発動と整合）。マスタ側の schema が未確定のため【Estimate】。
+   */
+  ct_cuts?: ReadonlyArray<{ skill: number; value: number }>;
 }
 
 export interface DeckJsonV2 {
@@ -97,6 +105,16 @@ export interface DeckJsonV2 {
 export interface StageWeights {
   beatWeightsPermil: { vocal: number; dance: number; visual: number };
   skillWeightsPermil: { active: number; special: number };
+  /**
+   * 【サンプル3・2026-09-03】スタミナ消費倍率 permil（Quest.skillStaminaWeightPermil。
+   * 標準 1000。省略時は 1000 扱い）
+   */
+  skillStaminaWeightPermil?: number;
+  /**
+   * 【サンプル3・2026-09-03】スタミナ回復倍率 permil（Quest.staminaRecoveryWeightPermil。
+   * 0 は「特徴なし」= 1000 扱い。省略時は 1000 扱い）
+   */
+  staminaRecoveryWeightPermil?: number;
   /** position 1-5 の属性コード（1=dance, 2=vocal, 3=visual）。省略可（BuildSimOptions で上書き可） */
   laneAttributes?: readonly number[];
 }
@@ -131,10 +149,46 @@ export interface SimSourceData {
   /** 【Phase 9】characterId → 名前（UI 表示用。CLI/テストでは省略可） */
   characterNames?: Record<string, string>;
   /**
+   * 【サンプル3・2026-09-04】クエストID → キャラ優位定義
+   * （data/character_advantage.json・QuestCharacterAdvantage 由来。
+   * STAGE045 は ⅢX メンバー [fran/kana/miho] に advantagePermil 2250。
+   * ユーザー確定「全スコア」に乗る）
+   */
+  characterAdvantageByQuest?: Record<
+    string,
+    { characterIds: readonly string[]; advantagePermil: number }
+  >;
+  /**
    * 【Phase 8-B3】レベル別スキル定義（data/skills_levels.json・全カードスキル Lv1-6）。
    * 指定時は characters[].skill_levels のレベル指定スキルをこのデータから復元する。
    */
   skillLevels?: SkillLevelData;
+}
+
+/**
+ * フォト付与の静的 CT 短縮をレーン別スキル定義へ適用する
+ *（【サンプル3・2026-09-04】S3 L4: A の CT30→25。純粋関数・単体テスト対象）。
+ *
+ * @param skills 当該レーンの解決済みスキル（A/SP/P）
+ * @param cuts DeckCharacter.ct_cuts（スキル枠番号 1-based → 短縮量）
+ * @param warn 不一致枠の警告を受け取るコールバック
+ */
+export function applySkillCtCuts(
+  skills: SkillDef[],
+  cuts: ReadonlyArray<{ skill: number; value: number }> | undefined,
+  warn: (message: string) => void,
+): SkillDef[] {
+  if (cuts === undefined || cuts.length === 0) return skills;
+  return skills.map((s) => {
+    const slot = Number(s.id.slice(s.id.lastIndexOf("-") + 1));
+    const cut = cuts.find((c) => c.skill === slot);
+    if (cut === undefined) return s;
+    if (s.ct == null) {
+      warn(`ct_cuts: skill "${s.id}" has no CT (cut -${cut.value} ignored)`);
+      return s;
+    }
+    return { ...s, ct: Math.max(0, s.ct - cut.value) };
+  });
 }
 
 /** マスタ自動解析スキル（lane は構築時に選択レーンへ上書きされる） */
@@ -313,6 +367,25 @@ function sumScorePct(items: PhotoOrAccessory[], key: string): number {
   return sum;
 }
 
+/**
+ * 写真・アクセサリのスコアボーナス%最大値（同一ステータス非重複用）。
+ * 【サンプル3実測確定・2026-09-04】フォトの「ビートスコア上昇%」は複数枚積んでも
+ * 重複加算されず最大値のみ適用される（L4 怜: 17.5%+19.3% を sum すると実測 pop
+ * +86.4K に対し +11.4% 過大。max(17.5%, 19.3%) で実測比 1.018 と完璧に乱数内一致）。
+ */
+function maxScorePct(items: PhotoOrAccessory[], key: string): number {
+  let max = 0;
+  for (const item of items) {
+    for (const s of item.structured) {
+      if (s.stat === key && s.type === "pct") {
+        const val = pctToPermil(s.value);
+        if (val > max) max = val;
+      }
+    }
+  }
+  return max;
+}
+
 /** 写真のスキルステータス固定値合計（例: a_score 固定値 = Aスキルスコア追加の平坦加算） */
 function sumFixedPhotoScore(photos: PhotoOrAccessory[], key: string): number {
   let sum = 0;
@@ -463,7 +536,13 @@ export function buildSimulateInput(options: BuildSimOptions): BuildSimResult {
       mental: overrideRaw !== undefined ? Number(overrideRaw) : result.deck.mental,
       critical: 0,
     };
-    const equipment = [...ch.photos, ...ch.accessories];
+    // スコア系フォト加算の対象写真リスト。ch.photos 全体を使う。
+    // 【2026-09-04 訂正】装備のみへの絞り込みは S1/S2 の確定値を破壊するため撤回した。
+    // S1 L1 の flat +92,262/+121,429・S1 L4 の +177,075（=66641+47601+62833）・
+    // S2 L3 の flat 66641 はいずれも未装備フォト由来であり実測と一致するため、
+    // 未装備フォトのスコア加算は計上する（deck ステータス計算と同一範囲）。
+    // S3 L4 の beat+368‰ 等の扱いは残課題として個別に検証する。
+    const equipmentForScore = [...ch.photos, ...ch.accessories];
     // golden スキルの元カード ID（"sk-" 接頭辞 ↔ "card-" の正規化比較）
     const ownerCardIdOf = (s: SkillDef): string | null =>
       s.cardId == null || s.cardId === ""
@@ -568,35 +647,55 @@ export function buildSimulateInput(options: BuildSimOptions): BuildSimResult {
         return { ...decoded, lane };
       });
     }
+    // 【サンプル3・2026-09-04】フォト付与の静的 CT 短縮（S3 L4: A の CT30→25）。
+    // レベル解決の後に適用する（短縮はレベル確定後の規定値にかかる）。
+    if (ch.ct_cuts !== undefined && ch.ct_cuts.length > 0) {
+      const before = laneSkills.map((s) => `${s.id}:${s.ct ?? "-"}`).join(",");
+      laneSkills = applySkillCtCuts(laneSkills, ch.ct_cuts, (m) => warnings.push(`L${lane}: ${m}`));
+      const after = laneSkills.map((s) => `${s.id}:${s.ct ?? "-"}`).join(",");
+      if (before !== after) {
+        warnings.push(`L${lane}: ct_cuts applied (${before} → ${after})`);
+      }
+    }
     lanes.push({
       lane,
       attribute: laneAttributeOf(lane, laneAttributes),
       role: ch.role as LaneInput["role"],
       cardType: cardTypeOf(card),
+      // 【サンプル3・2026-09-04】キャラ優位（該当キャラのレーンは advantagePermil。
+      // STAGE045 の L5 miho = 2250。それ以外は 1000）
+      characterAdvantagePermil: (() => {
+        const adv = data.characterAdvantageByQuest?.[options.stageFile];
+        if (adv === undefined) return 1000;
+        const characterId = card.characterId ?? "";
+        return adv.characterIds.includes(characterId) ? adv.advantagePermil : 1000;
+      })(),
       deck: deckStatus,
       skills: laneSkills,
       photos: lanePhotos,
       scoreBonusPct: {
         beat:
           Y.scorePct.beat +
-          sumScorePct(equipment, "beat_score") +
+          maxScorePct(equipmentForScore, "beat_score") +
           (scoreGrants.get(lane)?.beat_score ?? 0),
         active:
           Y.scorePct.active +
-          sumScorePct(equipment, "a_score") +
+          sumScorePct(equipmentForScore, "a_score") +
           (scoreGrants.get(lane)?.a_score ?? 0),
         special:
           Y.scorePct.special +
-          sumScorePct(equipment, "sp_score") +
+          sumScorePct(equipmentForScore, "sp_score") +
           (scoreGrants.get(lane)?.sp_score ?? 0),
-        passive: sumScorePct(equipment, "p_score") + (scoreGrants.get(lane)?.p_score ?? 0),
+        passive:
+          sumScorePct(equipmentForScore, "p_score") + (scoreGrants.get(lane)?.p_score ?? 0),
       },
       critExtrasPermil:
         Y.scorePct.criticalScore +
-        sumScorePct(equipment, "critical_score") +
+        sumScorePct(equipmentForScore, "critical_score") +
         (scoreGrants.get(lane)?.critical_score ?? 0),
       // 【2026-09-02 サンプル1確定】写真の「Aスコア（固定値）」は A スキルスコアに平坦加算
-      // （b123: +92,262+121,429。千紗ビーム b40/97/130 は +177,075。出典: S1 実測とユーザー計算式）
+      // （b123: +92,262+121,429。千紗ビーム b40/97/130 は +177,075。出典: S1 実測とユーザー計算式。
+      // 【2026-09-04】未装備フォト由来の flat も計上する（S1/S2 実測と一致））
       aScoreAdditionalFlat: sumFixedPhotoScore(ch.photos, "a_score"),
     });
   }
@@ -615,6 +714,10 @@ export function buildSimulateInput(options: BuildSimOptions): BuildSimResult {
       active: stageWeights.skillWeightsPermil.active,
       special: stageWeights.skillWeightsPermil.special,
     },
+    // 【サンプル3・2026-09-03】スタミナ消費倍率（STAGE045 は 3000=3.0倍。省略時 1000）
+    skillStaminaWeightPermil: stageWeights.skillStaminaWeightPermil ?? 1000,
+    // 【サンプル3・2026-09-03】スタミナ回復倍率（0 = 特徴なし = 1000 扱い。解決は engine 側）
+    staminaRecoveryWeightPermil: stageWeights.staminaRecoveryWeightPermil ?? 0,
     stageFactorPermil: 1000,
   };
   let fanFactorPermil = options.fanFactorPermil ?? 1620;

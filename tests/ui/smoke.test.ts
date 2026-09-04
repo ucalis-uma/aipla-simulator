@@ -1291,6 +1291,8 @@ describe("単一HTML UI スモーク", () => {
     (document.querySelector<HTMLInputElement>("#g-runs")!).value = "10";
     (document.querySelector("#btn-run") as HTMLButtonElement).click();
     const kpi = document.querySelector("#kpi-root")!.textContent ?? "";
-    expect(kpi).toMatch(/114,102,\d{3}/); // S1 UI 確定値（2026-09-02 データ修正後: L4 hruh-00-3 の someone_before_special がマスタ側で正しく条件化され発動ビートが変化）
+    // S1 UI 確定値（2026-09-04 サンプル3実測確定: フォトの同一 beat_score は重複せず最大値のみ適用されるため
+    // L3 麻奈のフォト beat_score 17.5%+19.3% が max(17.5%, 19.3%)=19.3% に改定され 114,102 系 → 112,864 系に変化）
+    expect(kpi).toMatch(/112,864,\d{3}/);
   });
 });

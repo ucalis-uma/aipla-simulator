@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>サンプル3/4 並列開発ワークフロー</title>
+<style>
+  :root{
+    --bg:#0e1014; --bg2:#151922; --card:#1a1f2b; --card2:#202636; --line:#2a3142;
+    --tx:#e8ecf4; --tx2:#9aa4b8; --tx3:#6b7488;
+    --accent:#f5c518;
+    --ag:#60a5fa;   /* antigravity: S3実装 */
+    --ana:#34d399;  /* エージェントB: 分析 */
+    --cap:#fbbf24;  /* エージェントA: 画像解析 */
+    --ok:#34d399; --ng:#fb7185; --warn:#f59e0b;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--tx);font-family:"Yu Gothic UI","Meiryo","Hiragino Sans",system-ui,sans-serif;font-size:14px;line-height:1.65}
+  header{padding:18px 28px 14px;background:linear-gradient(180deg,#141824,#0e1014);border-bottom:1px solid var(--line)}
+  h1{margin:0;font-size:21px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  h1 .sub{font-size:12px;color:var(--tx2);font-weight:normal}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-size:12px;color:var(--tx2)}
+  .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:middle}
+  main{max-width:1180px;margin:0 auto;padding:20px 28px 80px}
+  h2{font-size:16px;color:var(--accent);border-left:4px solid var(--accent);padding-left:12px;margin:44px 0 6px}
+  h2:first-of-type{margin-top:24px}
+  .lead{color:var(--tx2);font-size:13px;margin:0 0 16px 16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-bottom:14px}
+  code,.mono{font-family:Consolas,monospace;font-size:12.5px;background:#10131a;border:1px solid var(--line);border-radius:5px;padding:1px 6px}
+  .badge{display:inline-block;border-radius:20px;padding:1px 12px;font-size:11.5px;font-weight:bold;color:#10131a}
+  .b-ok{background:var(--ok)} .b-ng{background:var(--ng)} .b-warn{background:var(--warn)}
+
+  /* ===== 図1: 3段階分解 ===== */
+  .flow3{display:flex;align-items:stretch;gap:0;margin:18px 0 6px}
+  .stage{flex:1;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;position:relative}
+  .stage .no{font-size:11px;font-weight:bold;letter-spacing:.1em;color:var(--tx3)}
+  .stage .t{font-weight:bold;font-size:15px;margin:2px 0 6px}
+  .stage .s{font-size:12px;color:var(--tx2)}
+  .stage .files{font-size:11.5px;margin-top:8px;color:var(--tx3)}
+  .stage .files code{font-size:11px}
+  .stage .verdict{margin-top:10px}
+  .st1{border-top:3px solid var(--cap)} .st2{border-top:3px solid var(--ana)} .st3{border-top:3px solid var(--ag)}
+  .arrow{display:flex;align-items:center;padding:0 8px;color:var(--tx3);font-size:20px;flex-shrink:0}
+  .outlbl{font-size:11px;color:var(--tx3);text-align:center;margin-top:6px;line-height:1.5}
+  .outlbl b{color:var(--tx2)}
+
+  /* ===== 図2: タイムライン ===== */
+  .gantt{position:relative;margin:14px 0 0 210px;border-left:1px solid var(--line)}
+  .grow{position:relative;height:64px;border-top:1px solid var(--line)}
+  .grow .lbl{position:absolute;left:-210px;top:0;width:200px;height:100%;display:flex;flex-direction:column;justify-content:center;font-size:12.5px;font-weight:bold}
+  .grow .lbl small{color:var(--tx3);font-weight:normal;font-size:11px}
+  .gbar{position:absolute;height:34px;top:15px;border-radius:7px;font-size:11px;line-height:30px;padding:0 10px;color:#10131a;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border:2px solid transparent}
+  .gbar:hover{border-color:#fff;z-index:5}
+  .g-ag{background:var(--ag)} .g-cap{background:var(--cap)} .g-ana{background:var(--ana)} .g-wait{background:#3a4257;color:var(--tx2)}
+  .gmerge{position:absolute;height:34px;top:15px;background:transparent;border:2px dashed var(--accent);border-radius:7px;font-size:11px;line-height:30px;padding:0 10px;color:var(--accent);font-weight:bold;white-space:nowrap}
+  .gaxis{position:relative;height:30px}
+  .gaxis .tick{position:absolute;top:4px;transform:translateX(-50%);font-size:11.5px;color:var(--tx2)}
+  .gaxis .tick::before{content:"";position:absolute;left:50%;top:-8px;width:1px;height:6px;background:var(--tx3)}
+  .gline{position:absolute;top:0;bottom:0;width:1px;background:repeating-linear-gradient(180deg,#3a4257 0 6px,transparent 6px 12px);z-index:0}
+
+  /* ===== 図3: 書き込み先 ===== */
+  .writers{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+  @media(max-width:1000px){.writers{grid-template-columns:1fr}}
+  .wcard{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .wcard h3{margin:0 0 2px;font-size:14.5px;display:flex;align-items:center;gap:8px}
+  .wcard .role{font-size:11.5px;color:var(--tx3);margin-bottom:10px}
+  .wrow{display:flex;gap:8px;align-items:flex-start;font-size:12px;margin:7px 0}
+  .wrow .k{flex-shrink:0;width:44px;text-align:center;border-radius:5px;font-size:10.5px;font-weight:bold;padding:1px 0;color:#10131a}
+  .k-w{background:var(--ok)} .k-r{background:#3a4257;color:var(--tx2)} .k-x{background:var(--ng)}
+  .wrow .v{color:var(--tx2)} .wrow .v code{font-size:11.5px}
+  .rule{margin-top:14px;background:#2a1d14;border:1px solid #5c4020;border-radius:10px;padding:10px 16px;font-size:12.5px;color:#fcd9a8}
+  .rule b{color:var(--warn)}
+
+  /* ===== 図4: データフロー ===== */
+  .dflow{margin:16px 0;overflow-x:auto}
+  .dfchain{display:flex;align-items:stretch;gap:0;min-width:980px}
+  .dnode{flex:1;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .dnode .t{font-weight:bold;font-size:13px;margin-bottom:4px}
+  .dnode .s{font-size:11.5px;color:var(--tx2)}
+  .dnode .who{font-size:10.5px;margin-top:8px}
+  .dnode .who .badge{font-size:10px;padding:0 8px}
+  .dn-nox{border-left:4px solid var(--cap)} .dn-ana{border-left:4px solid var(--ana)} .dn-imp{border-left:4px solid var(--ag)} .dn-doc{border-left:4px solid var(--accent)}
+
+  /* ===== チェックリスト ===== */
+  .checks{list-style:none;padding:0;margin:8px 0 0}
+  .checks li{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin-bottom:8px;font-size:13px;color:var(--tx2)}
+  .checks li b{color:var(--tx)}
+  .checks .cb{display:inline-block;width:16px;height:16px;border:2px solid var(--accent);border-radius:4px;margin-right:10px;vertical-align:-3px}
+
+  /* ===== プロンプト一覧 ===== */
+  .plist{width:100%;border-collapse:collapse;margin-top:10px}
+  .plist th{font-size:12px;color:var(--tx3);text-align:left;border-bottom:1px solid var(--line);padding:6px 10px;font-weight:normal}
+  .plist td{font-size:12.5px;padding:8px 10px;border-bottom:1px solid var(--line);color:var(--tx2);vertical-align:top}
+  .plist td code{white-space:nowrap}
+  .tag{display:inline-block;border-radius:5px;font-size:10.5px;font-weight:bold;padding:0 7px;margin-right:8px;color:#10131a}
+  .tag-new{background:var(--ok)} .tag-mod{background:var(--warn)} .tag-keep{background:#3a4257;color:var(--tx2)}
+  footer{color:var(--tx3);font-size:11.5px;text-align:center;padding:20px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<header>
+  <h1>サンプル3/4 並列開発ワークフロー <span class="sub">— improve-from-sample の分割と git worktree 運用（2026-09-04 提案）</span></h1>
+  <div class="legend">
+    <span><span class="dot" style="background:var(--ag)"></span>antigravity（S3 仕様実装・main ツリー単一書き込み者）</span>
+    <span><span class="dot" style="background:var(--cap)"></span>エージェントA（S4 画像解析・aipura_nox 側）</span>
+    <span><span class="dot" style="background:var(--ana)"></span>エージェントB（S4 乖離分析・worktree）</span>
+    <span><span class="dot" style="background:var(--accent)"></span>直列化ポイント（S3 マージ待ち）</span>
+  </div>
+</header>
+<main>
+
+  <!-- ============ 図1 ============ -->
+  <h2>1. 課題の本質 — improve-from-sample を 3 段階に分解する</h2>
+  <p class="lead">競合するのは ③ だけ。①②は今すぐ並列実行できる。</p>
+  <div class="flow3">
+    <div class="stage st1">
+      <div class="no">STAGE ①</div>
+      <div class="t">画像解析</div>
+      <div class="s">スクショ → measured_data_v2.json / issues.md を生成</div>
+      <div class="files"><code>aipura_nox/サンプル4/</code> に出力のみ。<b>リポジトリは一切変更しない</b>（measure-new-sample.md §6 に明記済み）</div>
+      <div class="verdict"><span class="badge b-ok">並列可・競合ゼロ</span></div>
+    </div>
+    <div class="arrow">➜</div>
+    <div class="stage st2">
+      <div class="no">STAGE ②</div>
+      <div class="t">乖離分析</div>
+      <div class="s">CLI baseline・trace 突合・ビート単位残差・確定/未確定分類</div>
+      <div class="files">リポジトリを<b>読むだけ</b>。成果物は <code>research/22_sample4_gap_analysis/</code> に「仕様提案リスト」として出力（worktree 上で実行）</div>
+      <div class="verdict"><span class="badge b-ok">並列可・worktree 使用</span></div>
+    </div>
+    <div class="arrow">➜</div>
+    <div class="stage st3">
+      <div class="no">STAGE ③</div>
+      <div class="t">確定仕様の実装</div>
+      <div class="s">engine / buffs / build / tests を変更し全サンプル再検証</div>
+      <div class="files"><code>src/timeline/*</code>・<code>tests/</code>・<code>research/12,13</code>・<code>continue-session.md</code> — 全サンプル共有コア</div>
+      <div class="verdict"><span class="badge b-ng">直列必須・単一書き込み者</span></div>
+    </div>
+  </div>
+  <div class="outlbl">段間データ: ①→② <b>measured_data_v2.json + issues.md</b> ／ ②→③ <b>CONCLUSION + 実装すべき仕様提案リスト（出典・根拠付き）</b></div>
+
+  <!-- ============ 図2 ============ -->
+  <h2>2. 並列タイムライン</h2>
+  <p class="lead">S3 完了を待つのは「S4 の実装開始」だけ。分析完了済みで待機するので、S3 マージ後の S4 実装は 1 セッションで済む。</p>
+  <div class="gantt">
+    <div class="grow">
+      <div class="lbl" style="color:var(--ag)">antigravity<small>main ツリー（本リポジトリ）</small></div>
+      <div class="gbar g-ag" style="left:0%;width:30%">S3 improve（③実装）</div>
+      <div class="gmerge" style="left:30.5%;width:11%">S3 マージ</div>
+      <div class="gbar g-ag" style="left:42%;width:33%">S4 improve（③実装）</div>
+    </div>
+    <div class="grow">
+      <div class="lbl" style="color:var(--cap)">エージェントA<small>aipura_nox/サンプル4/</small></div>
+      <div class="gbar g-cap" style="left:0%;width:26%">S4 画像解析 ①</div>
+      <div class="gbar g-wait" style="left:26.5%;width:48.5%">完了 — 成果物は aipura_nox 側で静態保管</div>
+    </div>
+    <div class="grow">
+      <div class="lbl" style="color:var(--ana)">エージェントB<small>worktree ../アイプラ-s4-analysis</small></div>
+      <div class="gbar g-wait" style="left:0%;width:14%">①の成果物待ち</div>
+      <div class="gbar g-ana" style="left:14.5%;width:34%">S4 乖離分析 ② → 仕様提案リスト</div>
+      <div class="gbar g-wait" style="left:49%;width:26%">提案完成・S3 マージ待ち</div>
+    </div>
+    <div class="grow">
+      <div class="lbl" style="color:var(--accent)">直列化ポイント<small>main 上で実行</small></div>
+      <div class="gbar g-wait" style="left:0%;width:41.5%">（待機）</div>
+      <div class="gbar" style="left:42%;width:33%;background:var(--accent)">S4 確定値登録・全ゴールデン再検証</div>
+    </div>
+    <div class="gaxis">
+      <div class="gline" style="left:30.5%"></div>
+      <div class="tick" style="left:0%">今（S3 実装中）</div>
+      <div class="tick" style="left:30.5%">S3 マージ時点</div>
+      <div class="tick" style="left:75%">S4 確定値登録</div>
+    </div>
+  </div>
+
+  <!-- ============ 図3 ============ -->
+  <h2>3. 書き込み先マップ（誰が何を触れるか）</h2>
+  <p class="lead">「src・tests・data への書き込みは同時に 1 エージェント」の単一書き込み者ルールを AGENTS.md に明記する。</p>
+  <div class="writers">
+    <div class="wcard">
+      <h3><span class="dot" style="background:var(--ag)"></span>antigravity（実装者）</h3>
+      <div class="role">main ツリーで作業・S3 improve 継続中</div>
+      <div class="wrow"><span class="k k-w">書込</span><span class="v"><code>src/</code> <code>tests/</code> <code>ui/</code> — engine / buffs / build / types</span></div>
+      <div class="wrow"><span class="k k-w">書込</span><span class="v"><code>data/</code>（importer 経由のみ）・<code>examples/sample3.json</code></span></div>
+      <div class="wrow"><span class="k k-w">書込</span><span class="v"><code>research/12_implementation_log.md</code>・<code>research/13_engine_spec.md</code>・<code>research/21_sample3_gap_analysis/</code></span></div>
+      <div class="wrow"><span class="k k-w">書込</span><span class="v"><code>prompts/continue-session.md</code>（現状サマリ・確定値）</span></div>
+      <div class="wrow"><span class="k k-r">読取</span><span class="v"><code>aipura_nox/サンプル3/</code>・<code>aipura_nox/サンプル4/</code>（B の分析結論も後で読む）</span></div>
+    </div>
+    <div class="wcard">
+      <h3><span class="dot" style="background:var(--cap)"></span>エージェントA（画像解析）</h3>
+      <div class="role">measure-new-sample.md のまま・即開始可</div>
+      <div class="wrow"><span class="k k-w">書込</span><span class="v"><code>aipura_nox/サンプル4/</code> の<b>新規ファイルのみ</b>（measured_data_v2.json・summary・issues.md）</span></div>
+      <div class="wrow"><span class="k k-x">禁触</span><span class="v">リポジトリ全体（<code>src/</code> <code>data/</code> <code>examples/</code> 等・既存 JSON も不変）</span></div>
+      <div class="wrow"><span class="k k-r">読取</span><span class="v">マスタ（Info Pride API / <code>vendor/</code>）・過去サンプルの summary</span></div>
+    </div>
+    <div class="wcard">
+      <h3><span class="dot" style="background:var(--ana)"></span>エージェントB（分析）</h3>
+      <div class="role">analyze-sample.md（新設）・worktree 上で実行</div>
+      <div class="wrow"><span class="k k-w">書込</span><span class="v">worktree 内 <code>research/22_sample4_gap_analysis/</code> のみ（CONCLUSION・trace_dump・仕様提案リスト）</span></div>
+      <div class="wrow"><span class="k k-r">読取</span><span class="v">worktree の <code>src/</code>（凍結時点の main）・CLI 実行もここで行う</span></div>
+      <div class="wrow"><span class="k k-x">禁触</span><span class="v">main ツリー全体・<code>research/12</code> <code>13</code> <code>continue-session.md</code>（共有文書は実装者だけが書く）</span></div>
+      <div class="wrow"><span class="k k-x">禁触</span><span class="v"><code>aipura_nox/</code> の既存ファイル</span></div>
+    </div>
+  </div>
+  <div class="rule"><b>worktree の作り方</b>（main ツリーの作業中ファイルと完全分離）:
+    <code>git worktree add ../アイプラ-s4-analysis main</code> — 分析側の CLI baseline は「どの時点のエンジンか」が main の変更に影響されない凍結スナップショットで実行される。</div>
+
+  <!-- ============ 図4 ============ -->
+  <h2>4. データフロー全体図</h2>
+  <div class="dflow">
+    <div class="dfchain">
+      <div class="dnode dn-nox">
+        <div class="t">スクショ</div>
+        <div class="s">aipura_nox/サンプル4/<br>lane*/beat_NNN・skill_order・fan.png 等</div>
+        <div class="who"><span class="badge" style="background:var(--cap)">A</span></div>
+      </div>
+      <div class="arrow" style="color:var(--tx3);display:flex;align-items:center;padding:0 8px">➜</div>
+      <div class="dnode dn-nox">
+        <div class="t">measured_data_v2.json<br>issues.md</div>
+        <div class="s">全ビート timeline・発動ログ・stage（live_bonus_check）・v2_meta</div>
+        <div class="who"><span class="badge" style="background:var(--cap)">A</span> 生成 → 静態保管</div>
+      </div>
+      <div class="arrow" style="color:var(--tx3);display:flex;align-items:center;padding:0 8px">➜</div>
+      <div class="dnode dn-ana">
+        <div class="t">research/22_sample4_gap_analysis/<br>CONCLUSION + 仕様提案リスト</div>
+        <div class="s">worktree 上で baseline/trace 突合・確定/未確定分類。<b>コード変更なし</b></div>
+        <div class="who"><span class="badge" style="background:var(--ana)">B</span> 生成</div>
+      </div>
+      <div class="arrow" style="color:var(--tx3);display:flex;align-items:center;padding:0 8px">➜</div>
+      <div class="dnode dn-imp">
+        <div class="t">src/timeline 実装<br>examples/sample4.json</div>
+        <div class="s">S3 マージ後 main で実行。新仕様はまずデータ駆動（data/*.json）を検討</div>
+        <div class="who"><span class="badge" style="background:var(--ag)">antigravity</span> 実装</div>
+      </div>
+      <div class="arrow" style="color:var(--tx3);display:flex;align-items:center;padding:0 8px">➜</div>
+      <div class="dnode dn-doc">
+        <div class="t">確定値登録・文書更新</div>
+        <div class="s">research/12,13・continue-session.md 現状サマリ・全ゴールデン再検証</div>
+        <div class="who"><span class="badge" style="background:var(--ag)">antigravity</span> のみ書込</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 図5 ============ -->
+  <h2>5. S3 マージ時のチェックリスト（merge-specs.md に手順書化）</h2>
+  <ul class="checks">
+    <li><span class="cb"></span><b>全ゴールデン再検証</b> — T5 17,521,461,739 / 2,580,038,995・S1 114,102 系 / 130,698,595・S2 43,599,085 / 75,656,769・S3 63,123,447 / 79,957,391（確定値の更新漏れが過去の混乱の原因）</li>
+    <li><span class="cb"></span><b>S4 baseline 再取得</b> — B の分析は凍結時点のエンジンに対するものなので、S3 マージ後の main で baseline を取り直して残差を更新</li>
+    <li><span class="cb"></span><b>S4 分析結論の照合</b> — 提案リストのうち S3 マージで解決した項目を「解決済み」に更新、S3 の残課題（L5 ビート 2 倍不足・b169 不発・b81 1.20 倍）が S4 証拠で解けるか判定</li>
+    <li><span class="cb"></span><b>文書の単一更新</b> — research/12・13・continue-session.md はこのタイミングで実装者だけが更新（並列時は誰も触らない）</li>
+  </ul>
+
+  <!-- ============ 図6 ============ -->
+  <h2>6. プロンプトファイルの改訂一覧</h2>
+  <table class="plist">
+    <tr><th style="width:230px">ファイル</th><th style="width:90px">区分</th><th>内容</th></tr>
+    <tr><td><code>prompts/analyze-sample.md</code></td><td><span class="tag tag-new">新設</span></td><td>analyze-sample1-gap.md のサンプル非依存化。診断専用（コード変更一切なし）・worktree 規律つき。成果物 = research/2X_ 配下の CONCLUSION + 仕様提案リスト</td></tr>
+    <tr><td><code>prompts/improve-from-sample.md</code></td><td><span class="tag tag-mod">改訂</span></td><td>③実装に専化。分析部分（§3-1〜3-4）は analyze-sample.md の結論を入力とする形に置換。新規仕様はデータ駆動（data/*.json + 汎用機構）優先の規律を追加</td></tr>
+    <tr><td><code>prompts/merge-specs.md</code></td><td><span class="tag tag-new">新設</span></td><td>仕様ランディング時の再検証手順（§5 のチェックリスト本体）。全サンプル確定値の一覧を保持</td></tr>
+    <tr><td><code>prompts/measure-new-sample.md</code></td><td><span class="tag tag-keep">変更なし</span></td><td>既にリポジトリ非依存のため並列可。その旨をヘッダに明記</td></tr>
+    <tr><td><code>AGENTS.md</code></td><td><span class="tag tag-mod">追記</span></td><td>並列作業規律: 単一書き込み者ルール（src/tests/data への書込は同時 1 エージェント）・worktree の使い方・共有文書（research/12,13・continue-session.md）の書込は実装者のみ</td></tr>
+    <tr><td><code>prompts/readme.txt</code></td><td><span class="tag tag-mod">追記</span></td><td>新プロンプトの一覧追加（運用ルール通り）</td></tr>
+  </table>
+
+</main>
+<footer>アイプラ ライブスコア計算機 — 並列開発ワークフロー提案図（workspace_map.html と併用）</footer>
+</body>
+</html>

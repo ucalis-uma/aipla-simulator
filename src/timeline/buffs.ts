@@ -122,7 +122,8 @@ export interface BuffKeyMapping {
  * - vocal_up_extreme は独立キーのまま（上限30固定・1段値は vocal_up と同じ50‰。
  *   research/06 BF2: >20段の出現は上限解放効果と同時でなくても観測される）。
  * - スコア取得・即時系（score_get, score_get_by_score_ratio, stamina_recovery,
- *   ct_reduction, ct_increase, effect_extension, effect_amplify）は対象外（登録なし→null）。
+ *   ct_reduction, ct_increase, effect_extension, effect_amplify, effect_passing）は
+ *   対象外（登録なし→null）。
  */
 const STAGED_BUFF_KEY_MAP: ReadonlyMap<EffectType, BuffKeyMapping> = new Map<
   EffectType,
@@ -134,9 +135,11 @@ const STAGED_BUFF_KEY_MAP: ReadonlyMap<EffectType, BuffKeyMapping> = new Map<
   ["vocal_down", { key: "vocal_down", limitRelease: false }],
   ["dance_up", { key: "dance_up", limitRelease: false }],
   ["dance_boost", { key: "dance_boost", limitRelease: false }],
+  ["dance_up_extreme", { key: "dance_up_extreme", limitRelease: false }],
   ["dance_down", { key: "dance_down", limitRelease: false }],
   ["visual_up", { key: "visual_up", limitRelease: false }],
   ["visual_boost", { key: "visual_boost", limitRelease: false }],
+  ["visual_up_extreme", { key: "visual_up_extreme", limitRelease: false }],
   ["visual_down", { key: "visual_down", limitRelease: false }],
   ["beat_score_up", { key: "beat_score_up", limitRelease: false }],
   ["tension_up", { key: "tension_up", limitRelease: false }],
@@ -176,9 +179,11 @@ const PER_STAGE_PERMIL_BY_KEY: Record<BuffKey, number> = {
   vocal_boost: STATUS_BOOST_PER_STAGE_PERMIL,
   vocal_down: STATUS_DOWN_PER_STAGE_PERMIL,
   dance_up: STATUS_UP_PER_STAGE_PERMIL,
+  dance_up_extreme: STATUS_UP_EXTREME_PER_STAGE_PERMIL,
   dance_boost: STATUS_BOOST_PER_STAGE_PERMIL,
   dance_down: STATUS_DOWN_PER_STAGE_PERMIL,
   visual_up: STATUS_UP_PER_STAGE_PERMIL,
+  visual_up_extreme: STATUS_UP_EXTREME_PER_STAGE_PERMIL,
   visual_boost: STATUS_BOOST_PER_STAGE_PERMIL,
   visual_down: STATUS_DOWN_PER_STAGE_PERMIL,
   beat_score_up: BEAT_SCORE_UP_PER_STAGE_PERMIL,
@@ -229,6 +234,8 @@ export function stageCapPermil(type: EffectType, limitRelease: boolean): number 
 function baseStageCap(type: EffectType): number {
   switch (type) {
     case "vocal_up_extreme":
+    case "dance_up_extreme":
+    case "visual_up_extreme":
       return LIMIT_RELEASE_STAGE_CAP;
     case "tension_up":
     case "tension_limit":
@@ -272,9 +279,11 @@ function emptySnapshot(): BuffSnapshot {
     vocal_down: 0,
     dance_up: 0,
     dance_boost: 0,
+    dance_up_extreme: 0,
     dance_down: 0,
     visual_up: 0,
     visual_boost: 0,
+    visual_up_extreme: 0,
     visual_down: 0,
     beat_score_up: 0,
     tension_up: 0,
@@ -365,6 +374,12 @@ export function aggregateBuffs(active: readonly ActiveEffect[]): BuffSnapshot {
       // とすると 41.8M = 乱数域外、6段なら 25.7M で整合）も解放=段数加算なしを支持】
       const prevRel = releases.get(mapped.key) ?? 0;
       releases.set(mapped.key, Math.max(prevRel, effect.stages));
+    } else if (effect.limitRelease === true) {
+      // 【サンプル3・2026-09-03】limit_break 行（基底型+limitRelease）は上限解放のみで
+      // 段数は加算しない（L1A「手を伸ばすのは輝く夢」: b53/b61/b81 の上昇 11/15/15 が
+      // lr +10 を除いた 4+3+4 系でのみ一致。マスタ技能文も「10段階上限解放効果」と
+      // 「4段階上昇効果」を分離記載。*_limit 変数型・T5 b2 ccu 検算と同一規則）。
+      // 上限自体は caps 側の stageCap(type, true) で拡張済みのためここでは何もしない。
     } else {
       snapshot[mapped.key] += effect.stages;
     }
@@ -400,7 +415,14 @@ export function liveStatusMultiplierPermil(
       : attr === "dance"
         ? snapshot.dance_up
         : snapshot.visual_up;
-  const extremeStages = attr === "vocal" ? snapshot.vocal_up_extreme : 0;
+  const extremeStages =
+    upStages > 0
+      ? attr === "vocal"
+        ? (snapshot.vocal_up_extreme ?? 0)
+        : attr === "dance"
+          ? (snapshot.dance_up_extreme ?? 0)
+          : (snapshot.visual_up_extreme ?? 0)
+      : 0;
   const boostStages =
     attr === "vocal"
       ? snapshot.vocal_boost
@@ -431,25 +453,38 @@ export function liveStatusMultiplierPermil(
 /**
  * 消費スタミナ倍率（permil）を返す（research/01 §2.2「消費スタミナ+1%/段」・§4-4【Confirmed】）。
  *
- *   1000 − 50×stamina_cost_down + 50×stamina_cost_up + 10×vocal_boost
+ *   1000 − 50×stamina_cost_down + 50×stamina_cost_up + 10×自属性ブースト
  *
  * - 【Peing確定 2026-08-31】消費増加（stamina_consumption_increase）は「スタミナ消費量に
  *   最大2倍の補正が入る低下効果」（質問箱 id=1190040607）。50‰×20段=+1000‰=2倍で
  *   上限と整合。バトル主体だが self 対象のものがスコアライブでも消費に乗る
  *
- * - ブースト副効果（消費 +1%/段）は vocal_boost のみ。vocal_up_extreme は含めない
+ * - ブースト副効果（消費 +1%/段）は**発動レーンの属性のブーストのみ**
+ *   （【Confirmed 2026-09-04: S3 L4 visual レーンの visual_boost 3/6/9/0 が
+ *   消費 1884/1939/1386/1272 と1の位一致。L2 vocal レーンの dance_boost 3 は
+ *   無視され 1131 と一致。旧 vocal_boost 固定は S3 と矛盾]）。
+ *   attr 省略時は vocal（旧挙動・既存テスト互換）。
+ * - vocal_up_extreme は含めない
  *   （research/01 §2.3 の表は「ブースト」行の副効果。extreme は上昇系の 30段上限版）。
- *   dance/visual_boost も将来対象だが現データには出現しない。
  * - 【Unknown】stamina_cost_down が上限解放で30段に達すると 1000−1500 = −500 と
  *   負になり得る。ゲーム本体の負値時の挙動（0 クランプ等）は未観測のため
  *   本実装ではクランプしない（呼び出し側の消費計算で保護すること）。
  */
-export function consumptionMultiplierPermil(snapshot: BuffSnapshot): number {
+export function consumptionMultiplierPermil(
+  snapshot: BuffSnapshot,
+  attr?: "vocal" | "dance" | "visual",
+): number {
+  const boost =
+    attr === "dance"
+      ? snapshot.dance_boost
+      : attr === "visual"
+        ? snapshot.visual_boost
+        : snapshot.vocal_boost;
   return (
     1000 -
     STAMINA_COST_DOWN_PER_STAGE_PERMIL * snapshot.stamina_cost_down +
     STAMINA_COST_UP_PER_STAGE_PERMIL * snapshot.stamina_cost_up +
-    BOOST_STAMINA_COST_PER_STAGE_PERMIL * snapshot.vocal_boost
+    BOOST_STAMINA_COST_PER_STAGE_PERMIL * boost
   );
 }
 
