@@ -1,0 +1,16 @@
+,
+      });
+      return true;
+    }
+    case "effect_passing": {
+      // 【S4 #3】強化効果譲渡 = 移動
+      const targets = resolveTargets(effect.target, self, states);
+      const moved = applyEffectPassing(self, targets);
+      activations.push({
+        beat,
+        phase: "main",
+        lane: self.input.lane,
+        skillId: skill.id,
+        kind: skill.kind,
+        success: true,
+        note: \

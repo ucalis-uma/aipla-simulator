@@ -172,6 +172,25 @@ export function mapEffectToBuffKey(type: EffectType): BuffKeyMapping | null {
   return STAGED_BUFF_KEY_MAP.get(type) ?? null;
 }
 
+/** 低下効果グループ（vocal/dance/visual_down・stamina_cost_up） */
+const DEBUFF_TYPES: ReadonlySet<EffectType> = new Set<EffectType>([
+  "vocal_down",
+  "dance_down",
+  "visual_down",
+  "stamina_cost_up",
+]);
+
+/**
+ * 「強化効果」（譲渡・延長・青ドット対象になるバフ）かどうか。
+ * 段階型（mapEffectToBuffKey が非 null）のうち、低下効果グループを除いたもの。
+ */
+export function isEnhancementEffect(type: EffectType): boolean {
+  if (mapEffectToBuffKey(type) === null) {
+    return false;
+  }
+  return !DEBUFF_TYPES.has(type);
+}
+
 /** BuffKey ごとの1段あたり値（permil）。出典は各定数の JSDoc 参照 */
 const PER_STAGE_PERMIL_BY_KEY: Record<BuffKey, number> = {
   vocal_up: STATUS_UP_PER_STAGE_PERMIL,

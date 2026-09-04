@@ -1,0 +1,15 @@
+// ============================================================================
+
+// src/timeline/engine.ts への改修パッチ（サンプル4 / STAGE054 取り込み）
+// ----------------------------------------------------------------------------
+// 対象: settleSkillNote / applyEffect(effect_passing, effect_extension) と
+//       その補助関数。本ファイルの関数群を engine.ts の同名関数と差し替える。
+//
+// 実装仕様（01_issues_and_summary.md / issues.md より）
+//   #1 SP未習得FAIL      : candidates.length===0 → failReason "no_skill"、
+//                          スコア0・コンボ全レーン0・MISS 不加算
+//   #2 CT中FAIL          : skillCt>0 の候補をスキップし、候補が尽きたら
+//                          failReason "in_ct"、コンボ切断・MISS 不加算
+//   #3 強化譲渡 + 延長   : effect_passing は「移動（move）」。
+//                          effect_extension（scope なし）は対象レーンの
+//                          全強化効果を \

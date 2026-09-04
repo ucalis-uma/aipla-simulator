@@ -1,0 +1,39 @@
+).join(", ");
+}
+
+/** スキル効果を行順に適用（score_get 等は本リプレイでは対象外、バフ/譲渡/延長のみ） */
+function applySkillEffects(
+  skill: LaneState["input"]["skills"][number],
+  self: LaneState,
+  states: LaneState[],
+  beat: number,
+  acts: ActivationTrace[],
+): void {
+  for (const effect of skill.effects) {
+    if (effect.condition === "battle_only") continue; // バトル限定デバフはライブでは不発
+    const handled = applyPassingOrExtension(effect, self, states, beat, acts, skill, {
+      applyRetouchExtension: () => { /* T5 のレタッチ経路。S4 では未使用 */ },
+    });
+    if (handled) continue;
+    if (effect.durationBeats == null || effect.stages == null) continue; // 即時系
+    for (const t of resolveTargets(effect.target, self, states)) {
+      t.effects.push({
+        type: effect.type,
+        stages: effect.stages,
+        powerPermil: effect.powerPermil,
+        capExtend: effect.capExtend,
+
+limitRelease: effect.limitRelease,
+        startBeat: beat,
+        endBeat: beat + effect.durationBeats - 1,
+        skillId: skill.id,
+        sourceLane: self.input.lane,
+      });
+    }
+  }
+}
+
+/** 参考: 渚 SP の score_get 倍率（dance_up 段階数スケーリング 60‰/段） */
+export function nagisaSpPowerPermil(stages: number): number {
+  return mulPermil(14100, 1000 + stages * 60);
+}

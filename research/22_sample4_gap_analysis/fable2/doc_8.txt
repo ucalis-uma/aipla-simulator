@@ -1,0 +1,49 @@
+# engine.ts 統合手順（サンプル4 パッチ）
+
+対象リポジトリ: ucalis-uma/aipla-simulator
+対象ファイル : src/timeline/engine.ts（約 800 行目 applyEffect / 約 1260 行目 settleSkillNote）
+
+## 1. 追加する補助関数（engine.ts 冒頭 or 別ファイル engine-patch.ts を import）
+- isEnhancementEffect(e)            … 青ドット対象の強化効果判定
+- applyEffectPassing(self, targets)   … 全強化効果を「移動」（コピーではない）
+- applyEffectExtensionToLane(t, beats)… 対象レーンの全強化効果を beats 延長
+- applyComboFailOnNote(state, ctx, states) … 全レーン combo=0 / MISS 不加算
+- aggregateStages(effects, type, beat)… 上限 20 / limitRelease で 30（×2.5）
+
+## 2. applyEffect の switch に追加（既存 case の後ろ）
+case "effect_extension": {
+      if (effect.scope != null) { applyRetouchExtension(effect, self, states); break; } // T5 経路維持
+      const beats = effect.value ?? effect.stages ?? 0;   // ★ value が正
+      for (const t of resolveTargets(effect.target, self, states)) applyEffectExtensionToLane(t, beats);
+      break;
+    }
+    case "effect_passing": {
+      applyEffectPassing(self, resolveTargets(effect.target, self, states));
+      break;
+    }
+  ※ skill.effects は定義順に for-of するため、passing → extension の行順が
+    そのまま「移動してきたインスタンスも延長」を保証する。順序を変えないこと。
+
+## 3. settleSkillNote の差し替え
+- candidates.length === 0 → failReason "no_skill"（SP レーンにサポーター配置）
+  - CT>0 の候補は continue、候補が尽きたら blockedCt ? "in_ct" : "stamina_short"
+  - いずれも applyComboFailOnNote → 全レーン combo=0、ctx.missCount は不変
+  - スコア加算なし（gainedScore: 0）。ノーツ自体は HIT 扱いで beat 処理を継続
+
+## 4. 型（types.ts）
+- SkillEffect に value?: number を追加（未定義なら）
+  - ActiveEffect に passedFromLane?: number（診断用・任意）
+  - ActivationTrace.failReason に "no_skill" を追加
+
+## 5. 回帰確認コマンド
+npm run cli -- examples/nested-sample.json   # S1: 130,698,595
+  npm run cli -- examples/sample2.json         # S2: 43,599,085（crit なし）
+  npm run cli -- examples/sample3.json         # S3: 72,427,317（crit なし）
+  npm test -- t5                                # T5: 2,580,038,995 / ReplayRng 17,521,461,739
+  npx tsx research/22_sample4_gap_analysis/trace_dump.ts   # S4: 修正後値を取得
+
+## 6. 非回帰の根拠
+- effect_passing は新規 type（過去サンプルのスキルに存在しない）
+  - scope 付き effect_extension（T5 レタッチ）は先頭で早期 return し従来関数へ委譲
+  - settleSkillNote の CT/スタミナ判定ロジックは既存のまま。追加は
+    (a) candidates 空の no_skill 分岐 (b) FAIL 時の MISS 不加算の明文化 のみ

@@ -1,0 +1,157 @@
+
+//                          ビート延長。同一スキル内の行順どおりに適用するので
+//                          直前に移動してきたインスタンスも延長対象になる。
+//
+// 鉄則: Math.floor 直接使用禁止 → src/rounding.ts を経由。
+// ============================================================================
+
+import type {
+  ActiveEffect,
+  ActivationTrace,
+  BeatContext,
+  BeatNote,
+  EffectType,
+  LaneState,
+  SkillDef,
+  SkillEffect,
+} from "./types";
+import { mulPermil } from "../rounding";
+
+// ----------------------------------------------------------------------------
+// 0. 強化効果の判定
+// ----------------------------------------------------------------------------
+
+/** 「強化効果」= 青ドットとして表示されるバフ種別。デバフ・即時効果は含めない */
+const ENHANCEMENT_TYPES: ReadonlySet<EffectType> = new Set<EffectType>([
+  "vocal_up",
+  "dance_up",
+  "visual_up",
+  "score_up",
+  "a_skill_score_up",
+  "sp_skill_score_up",
+  "beat_score_up",
+  "critical_rate_up",
+  "critical_coeff_up",
+  "tension_up",
+  "combo_continue",
+]);
+
+export function isEnhancementEffect(e: Pick<ActiveEffect, "type">): boolean {
+  return ENHANCEMENT_TYPES.has(e.type);
+}
+
+// ----------------------------------------------------------------------------
+// 1. 対象解決（engine.ts の resolveTargets と同一契約の参照実装）
+// ----------------------------------------------------------------------------
+
+export function resolveTargets(
+  target: string,
+  self: LaneState,
+  states: LaneState[],
+): LaneState[] {
+  switch (target) {
+    case "self":
+      return [self];
+    case "all":
+      return [...states];
+    case "center":
+      return states.filter((s) => s.input.lane === 3);
+    case "score_type_1":
+      return states.filter((s) => s.input.role === "Scorer").slice(0, 1);
+    case "dance_type_2":
+      // ダンスタイプのアイドル上位 2 名（ダンス値順）。S4 では 渚(L3)・怜(L2)
+      return states
+        .filter((s) => s.input.attribute === "dance")
+        .sort((a, b) => b.input.stats.dance - a.input.stats.dance)
+        .slice(0, 2);
+    case "dance_high_2":
+      return [...states]
+        .sort((a, b) => b.input.stats.dance - a.input.stats.dance)
+        .slice(0, 2);
+    default:
+      return [self];
+  }
+}
+
+// ----------------------------------------------------------------------------
+// 2. 【S4 #3】強化効果譲渡 = 移動（move）
+// ----------------------------------------------------------------------------
+
+/**
+ * 発動者 self の全強化効果を targets へ「移動」する。
+ * - 実測: 怜の青ドット 4 → 0（コピーではなく移動）
+ * - 残りビート（endBeat）・段階数・上限解放フラグはそのまま引き継ぐ
+ * - 対象が複数の場合は各対象に同一内容を配布し、発動者側からは除去する
+ * @returns 移動したインスタンス数
+ */
+export function applyEffectPassing(self: LaneState, targets: LaneState[]): number {
+  const movable = self.effects.filter(isEnhancementEffect);
+  if (movable.length === 0) return 0;
+
+  // 発動者側から除去（= 移動）
+  self.effects = self.effects.filter((e) => !isEnhancementEffect(e));
+
+  for (const t of targets) {
+    if (t === self) continue;
+    for (const e of movable) {
+      t.effects.push({
+        ...e,
+        passedFromLane: self.input.lane,
+      });
+    }
+  }
+
+return movable.length;
+}
+
+// ----------------------------------------------------------------------------
+// 3. 【S4 #3】対象レーン型の強化効果延長
+// ----------------------------------------------------------------------------
+
+/**
+ * 対象レーンに現在乗っている全強化効果を beats ビート延長する。
+ * effect_passing の直後に呼ばれれば、移動してきたインスタンスも含まれる。
+ * @returns 延長したインスタンス数
+ */
+export function applyEffectExtensionToLane(target: LaneState, beats: number): number {
+  if (beats <= 0) return 0;
+  let n = 0;
+  for (const e of target.effects) {
+    if (!isEnhancementEffect(e)) continue;
+    e.endBeat += beats;
+    n += 1;
+  }
+  return n;
+}
+
+// ----------------------------------------------------------------------------
+// 4. applyEffect の該当 case（engine.ts の switch に差し込む）
+// ----------------------------------------------------------------------------
+
+export interface ApplyEffectDeps {
+  /** 与/被レタッチ型（scope あり）。T5 ゴールデンの既存実装をそのまま渡す */
+  applyRetouchExtension: (effect: SkillEffect, self: LaneState, states: LaneState[]) => void;
+}
+
+/**
+ * effect_passing / effect_extension のみを処理する。他の type は false を返し、
+ * 既存の switch に委ねる（既存挙動を一切変更しないための分岐）。
+ */
+export function applyPassingOrExtension(
+  effect: SkillEffect,
+  self: LaneState,
+  states: LaneState[],
+  beat: number,
+  activations: ActivationTrace[],
+  skill: SkillDef,
+  deps: ApplyEffectDeps,
+): boolean {
+  switch (effect.type) {
+    case "effect_extension": {
+      if (effect.scope != null) {
+        // 与/被レタッチ（T5 ゴールデン用）— 既存経路を維持
+        deps.applyRetouchExtension(effect, self, states);
+        return true;
+      }
+      // 【S4 #3】対象レーン型（scope なし）
+      // ★ マスタでは延長値は \

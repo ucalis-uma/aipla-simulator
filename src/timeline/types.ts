@@ -541,6 +541,8 @@ export interface ActivationTrace {
   staminaCost?: number;
   /** 獲得スコア（score_get 系のみ） */
   gainedScore?: number;
+  /** 【サンプル4】FAIL によりコンボがリセットされたか（comboReset: true） */
+  comboReset?: boolean;
 }
 
 /** レーン1件分のスコアイベントトレース（T5: 検算用） */

@@ -1,0 +1,169 @@
+,
+      });
+      return true;
+    }
+    default:
+      return false;
+  }
+}
+
+// ----------------------------------------------------------------------------
+// 5. 【S4 #1/#2】スキルノーツ FAIL 処理
+// ----------------------------------------------------------------------------
+
+/** 有効期限切れの効果を落とす（ビート先頭で呼ぶ想定） */
+export function pruneExpired(state: LaneState, beat: number): void {
+  state.effects = state.effects.filter((e) => e.endBeat >= beat);
+}
+
+/** combo_continue バフが有効ならコンボは維持される */
+function hasComboContinue(state: LaneState): boolean {
+  return state.effects.some((e) => e.type === "combo_continue");
+}
+
+/**
+ * ノーツ FAIL 時のコンボ処理。
+ * - コンボは全レーン共通カウンタ（実測: b45 で 44→0, b117 で 71→0 = 経過ビート数と一致）
+ * - MISS は加算しない（リザルト MISS=0）。ノーツ通過判定は HIT 扱い。
+ * @returns コンボをリセットしたか
+ */
+export function applyComboFailOnNote(
+  state: LaneState,
+  ctx: BeatContext,
+  states: LaneState[],
+): boolean {
+  void ctx.missCount; // 明示: MISS は増やさない
+  if (hasComboContinue(state)) return false;
+  for (const s of states) s.combo = 0;
+  return true;
+}
+
+export function candidateSkills(state: LaneState, kind: "A" | "SP"): SkillDef[] {
+  return state.input.skills.filter((s) => s.kind === kind);
+}
+
+/** スタミナ消費 = staminaCost × 舞台倍率‰（STAGE054 は 3000‰） */
+export function staminaCostOf(skill: SkillDef, weightPermil: number): number {
+  return mulPermil(skill.staminaCost, weightPermil);
+}
+
+export interface SettleResult {
+  chosen: SkillDef | null;
+  cost: number;
+  failReason?: ActivationTrace["failReason"];
+  comboReset: boolean;
+}
+
+/**
+ * settleSkillNote の判定部。成功時は chosen を返し、呼び出し側が既存の
+ * 発動処理（スタミナ減算・CT設定・applyEffect ループ）を続行する。
+ */
+export function settleSkillNote(
+  state: LaneState,
+  note: BeatNote,
+  kind: "A" | "SP",
+  ctx: BeatContext,
+  activations: ActivationTrace[],
+  states: LaneState[],
+): SettleResult {
+  const laneNum = state.input.lane;
+  const candidates = candidateSkills(state, kind);
+
+  // 【S4 #1】SP レーンにサポーター等（SP 未所持）を配置 → 未習得 FAIL
+  if (candidates.length === 0) {
+    const reset = applyComboFailOnNote(state, ctx, states);
+    activations.push({
+      beat: note.beat,
+      phase: "main",
+      lane: laneNum,
+      skillId: "",
+      kind,
+      success: false,
+      failReason: "no_skill",
+      comboReset: reset,
+      gainedScore: 0,
+    });
+    return { chosen: null, cost: 0, failReason: "no_skill", comboReset: reset };
+  }
+
+  let chosen: SkillDef | null = null;
+  let blockedStamina = false;
+  let blockedCt = false;
+  let costOfChosen = 0;
+  for (const skill of candidates) {
+    // 【S4 #2】CT 残り >= 1 なら発動不可
+    if (skill.ct != null && (state.skillCt.get(skill.id) ?? 0) > 0) {
+      blockedCt = true;
+      continue;
+    }
+    if (skill.limitPerLive != null && (state.skillUses.get(skill.id) ?? 0) >= skill.limitPerLive) {
+      continue;
+    }
+    const cost = staminaCostOf(skill, ctx.input.stage.skillStaminaWeightPermil);
+    if (state.stamina < cost) {
+      blockedStamina = true;
+      continue;
+    }
+    chosen = skill;
+    costOfChosen = cost;
+    break;
+  }
+
+  if (chosen === null) {
+    const failReason: ActivationTrace["failReason"] = blockedCt
+      ? "in_ct"
+      : blockedStamina
+        ? "stamina_short"
+        : "limit";
+    const reset = applyComboFailOnNote(state, ctx, states);
+    activations.push({
+      beat: note.beat,
+      phase: "main",
+      lane: laneNum,
+      skillId: candidates[0]?.id ?? "",
+      kind,
+      success: false,
+      failReason,
+      comboReset: reset,
+      gainedScore: 0,
+    });
+    return { chosen: null, cost: 0, failReason, comboReset: reset };
+  }
+
+  return { chosen, cost: costOfChosen, comboReset: false };
+}
+
+// ----------------------------------------------------------------------------
+// 6. 段階集計（aggregateBuffs の該当部・参照実装）
+// ----------------------------------------------------------------------------
+
+export interface StageAggregate {
+  stages: number;
+  cap: number;
+  /** 1000‰ 基準の倍率（dance_up 30段 = 2500‰ = ×2.5） */
+  multiplierPermil: number;
+}
+
+/**
+ * 同一 type の段階数を合算し、上限 20 段（limitRelease インスタンスがあれば 30 段）
+ * でクランプする。ステータス系は 1段 = +5%。
+ * 新規 EffectType（vocal_up_limit 等）は不要: マスタ側で基底キーへ写像済み。
+ */
+export function aggregateStages(effects: ActiveEffect[], type: EffectType, beat: number): StageAggregate {
+  let sum = 0;
+  let released = false;
+  for (const e of effects) {
+    if (e.type !== type) continue;
+    if (e.endBeat < beat || e.startBeat > beat) continue;
+    sum += e.stages;
+    if (e.limitRelease) released = true;
+  }
+  const cap = released ? 30 : 20;
+  const stages = Math.min(sum, cap);
+  return { stages, cap, multiplierPermil: 1000 + stages * 50 };
+}
+
+/** ステータス実効値（例: 265,108 × 2500‰ = 662,770） */
+export function effectiveStat(base: number, agg: StageAggregate): number {
+  return mulPermil(base, agg.multiplierPermil);
+}

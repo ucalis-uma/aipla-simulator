@@ -1,0 +1,191 @@
+// サンプル4（STAGE054 / qt-ex-tower-004-054 / chart-tri-004-001）
+// 出典: 02_skills_sample4.json（Lv6 マスタ定義）, 03_deck_compact.json, 01_issues_and_summary.md
+// 注: 02/03 は取得上限（約8KB）で Lane4/5 の末尾が欠落したため、Lane4/5 のスキルは
+//     01 のサマリ記述（すず A = 上限解放10 + dance_up7 / 雫 = SP 未所持）から最小構成で復元。
+
+import type { LaneInput, SkillDef } from "../timeline/types";
+
+export const MEASURED = {
+  stage: "STAGE054 (qt-ex-tower-004-054) / TRINITYAiLE / lumiere",
+  chart: "chart-tri-004-001",
+  total: 134_925_158,
+  lanes: [5_679_093, 24_166_846, 95_482_429, 3_629_583, 5_967_207],
+  maxCombo: 71,
+  miss: 0,
+  critRatePct: 12.3,
+  fanFactorPermil: 1375,
+  audiencePerLane: 8000,
+  simBefore: 113_758_719,
+} as const;
+
+// ---- スキル定義（Lv 依存値は判明しているもののみ deck の Lv に合わせて上書き） ----
+
+const chisa: SkillDef[] = [
+  {
+    id: "sk-chs-05-fest-00-1", name: "星見の海の波", kind: "A", level: 4, lane: null, ct: 30,
+    staminaCost: 443, probabilityPermil: 1000, limitPerLive: null, condition: "none",
+    effects: [
+      { type: "score_get", target: "self", condition: "none", durationBeats: null, powerPermil: 6500 },
+      { type: "critical_coeff_up", target: "score_type_1", condition: "none", durationBeats: 41, stages: 5, capExtend: true },
+    ],
+  },
+  {
+    id: "sk-chs-05-fest-00-2", name: "みんなで走った海岸通り", kind: "P", level: 4, lane: null, ct: 50,
+    staminaCost: 722, probabilityPermil: 1000, limitPerLive: null, condition: "none",
+    effects: [
+      { type: "critical_rate_up", target: "center", condition: "none", durationBeats: 45, stages: 8 },
+      { type: "critical_coeff_up", target: "score_type_1", condition: "none", durationBeats: 45, stages: 8 },
+    ],
+  },
+  {
+    id: "sk-chs-05-fest-00-3", name: "必殺！ゾンビフィッシュ", kind: "P", level: 2, lane: null, ct: 50,
+    staminaCost: 735, probabilityPermil: 1000, limitPerLive: null, condition: "none",
+    effects: [
+      { type: "a_skill_score_up", target: "dance_type_2", condition: "none", durationBeats: 44, stages: 6 },
+      { type: "score_up", target: "dance_type_2", condition: "none", durationBeats: 44, stages: 5 },
+    ],
+  },
+];
+
+const rei: SkillDef[] = [
+  {
+    id: "sk-rei-05-fest-00-1", name: "アイドルの手で掴む未来（マスタ名: アイドルの私で踊ります）", kind: "SP", level: 5, lane: null, ct: 0,
+    staminaCost: 652, probabilityPermil: 1000, limitPerLive: null, condition: "none",
+    effects: [
+      { type: "score_get", target: "self", condition: "none", durationBeats: null, powerPermil: 16600 },
+      // 効果2: スコアラータイプ1人へ自身の全強化効果を譲渡（移動）
+      { type: "effect_passing", target: "score_type_1", condition: "none", durationBeats: null },
+      // 効果3: 対象の強化効果を延長。★ビート数は value（Lv5 = 19, Lv6 = 22）
+      { type: "effect_extension", target: "score_type_1", condition: "none", durationBeats: null, value: 19 },
+    ],
+  },
+  {
+    id: "sk-rei-05-fest-00-2", name: "切磋琢磨するライバル", kind: "A", level: 4, lane: null, ct: 30,
+    staminaCost: 163, probabilityPermil: 1000, limitPerLive: null, condition: "none",
+    effects: [
+      { type: "score_get", target: "self", condition: "none", durationBeats: null, powerPermil: 4200 },
+      { type: "tension_up", target: "dance_high_2", condition: "none", durationBeats: 30, stages: 4 },
+      { type: "dance_up", target: "dance_high_2", condition: "none", durationBeats: 30, stages: 6 },
+    ],
+  },
+  {
+    id: "sk-rei-05-fest-00-3", name: "サニピの誇りと証明", kind: "P", level: 3, lane: null, ct: 50,
+    staminaCost: 355, probabilityPermil: 1000, limitPerLive: 2, condition: "none",
+    effects: [
+      { type: "dance_up", target: "self", condition: "none", durationBeats: 42, stages: 8 },
+      { type: "critical_rate_up", target: "self", condition: "none", durationBeats: 42, stages: 4 },
+    ],
+
+},
+];
+
+const nagisa: SkillDef[] = [
+  {
+    id: "sk-ngs-05-fest-02-1", name: "受け止める愛（マスタ名: 私、決めたんだ）", kind: "SP", level: 6, lane: null, ct: 0,
+    staminaCost: 1635, probabilityPermil: 1000, limitPerLive: null, condition: "none",
+    effects: [
+      { type: "score_get", target: "self", condition: "none", durationBeats: null, powerPermil: 14100, scaling: { ref: "dance_up_stages", perStagePermil: 60, fitted: false } },
+      { type: "score_get_by_score_ratio", target: "self", condition: "none", durationBeats: null, powerPermil: 130 },
+    ],
+  },
+  {
+    id: "sk-ngs-05-fest-02-2", name: "自分だけの輝き", kind: "A", level: 5, lane: null, ct: 30,
+    staminaCost: 430, probabilityPermil: 1000, limitPerLive: null, condition: "none",
+    effects: [
+      { type: "score_get", target: "self", condition: "none", durationBeats: null, powerPermil: 3900, scaling: { ref: "dance_up_stages", perStagePermil: 60, fitted: false } },
+      { type: "dance_up", target: "dance_type_2", condition: "none", durationBeats: 34, stages: 8 },
+    ],
+  },
+  {
+    id: "sk-ngs-05-fest-02-3", name: "本当の強さ", kind: "P", level: 4, lane: null, ct: 45,
+    staminaCost: 1174, probabilityPermil: 1000, limitPerLive: null, condition: "self_dance_lane",
+    effects: [
+      { type: "score_get", target: "self", condition: "self_dance_lane", durationBeats: null, powerPermil: 800 },
+      { type: "dance_up", target: "self", condition: "self_dance_lane", durationBeats: 43, stages: 5 },
+      { type: "dance_down", target: "self", condition: "battle_only", durationBeats: 43, stages: 6 },
+    ],
+  },
+];
+
+// Lane4 兵藤雫: A1/P2/P3 のみ（SP 未所持）。P2/P3 の効果は取得欠落のため空定義。
+const shizuku: SkillDef[] = [
+  {
+    id: "sk-szk-05-sail-00-1", name: "お見舞いありがたや", kind: "A", level: 4, lane: null, ct: 40,
+    staminaCost: 118, probabilityPermil: 1000, limitPerLive: null, condition: "none",
+    effects: [{ type: "score_get", target: "self", condition: "none", durationBeats: null, powerPermil: 3000 }],
+  },
+  { id: "sk-szk-05-sail-00-2", name: "P2（定義欠落）", kind: "P", level: 1, lane: null, ct: 50, staminaCost: 0, probabilityPermil: 1000, limitPerLive: 1, condition: "none", effects: [] },
+  { id: "sk-szk-05-sail-00-3", name: "P3（定義欠落）", kind: "P", level: 1, lane: null, ct: 50, staminaCost: 0, probabilityPermil: 1000, limitPerLive: 1, condition: "none", effects: [] },
+];
+
+// Lane5 成宮すず: A「誰にも譲れない歌」Lv4 = 上限解放(+10, limitRelease) + dance_up 7。
+// 対象・持続は取得欠落 → 実測(b77 時点で渚に有効, b88 で 30 段到達)と整合する
+// score_type_1 / 40 ビートを仮置き（【仮定】として UI に明示）。
+const suzu: SkillDef[] = [
+  {
+    id: "sk-szs-A", name: "誰にも譲れない歌", kind: "A", level: 4, lane: null, ct: 30,
+    staminaCost: 300, probabilityPermil: 1000, limitPerLive: null, condition: "none",
+    effects: [
+      { type: "score_get", target: "self", condition: "none", durationBeats: null, powerPermil: 3000 },
+      { type: "dance_up", target: "score_type_1", condition: "none", durationBeats: 40, stages: 10, limitRelease: true },
+      { type: "dance_up", target: "score_type_1", condition: "none", durationBeats: 40, stages: 7 },
+    ],
+  },
+  { id: "sk-szs-P", name: "P（定義欠落）", kind: "P", level: 1, lane: null, ct: 50, staminaCost: 0, probabilityPermil: 1000, limitPerLive: null, condition: "none", effects: [] },
+];
+
+export const LANES: LaneInput[] = [
+  { lane: 1, name: "白石千紗", role: "Supporter", attribute: "dance", skills: chisa,
+    stats: { vocal: 91293, dance: 125149, visual: 171086, stamina: 7929, mental: 8429, critical: 1399 } },
+  { lane: 2, name: "一ノ瀬怜", role: "Buffer", attribute: "dance", skills: rei,
+    stats: { vocal: 78670, dance: 208641, visual: 61484, stamina: 7391, mental: 8655, critical: 3271 } },
+  { lane: 3, name: "伊吹渚", role: "Scorer", attribute: "dance", skills: nagisa,
+    stats: { vocal: 96137, dance: 265108, visual: 97992, stamina: 13037, mental: 8360, critical: 2941 } },
+  { lane: 4, name: "兵藤雫", role: "Supporter", attribute: "visual", skills: shizuku,
+    stats: { vocal: 0, dance: 0, visual: 0, stamina: 0, mental: 0, critical: 0 } },
+  { lane: 5, name: "成宮すず", role: "Buffer", attribute: "dance", skills: suzu,
+    stats: { vocal: 0, dance: 0, visual: 0, stamina: 0, mental: 0, critical: 0 } },
+
+];
+
+/** 実測スキル発動順（01_issues_and_summary.md §3 + 05 タイムライン）。P は b53 以降が要約から欠落。 */
+export interface ScheduledAct {
+  beat: number;
+  lane: number;
+  kind: "A" | "SP" | "P";
+  /** P の場合に発動したスキル id（省略時は kind 一致の先頭） */
+  skillId?: string;
+  measuredNote?: string;
+}
+
+export const SCHEDULE: ScheduledAct[] = [
+  { beat: 1, lane: 4, kind: "P", skillId: "sk-szk-05-sail-00-2" },
+  { beat: 1, lane: 2, kind: "P", skillId: "sk-rei-05-fest-00-3" },
+  { beat: 1, lane: 1, kind: "P", skillId: "sk-chs-05-fest-00-2" },
+  { beat: 1, lane: 5, kind: "P", skillId: "sk-szs-P" },
+  { beat: 1, lane: 3, kind: "P", skillId: "sk-ngs-05-fest-02-3", measuredNote: "+568,656" },
+  { beat: 2, lane: 4, kind: "P", skillId: "sk-szk-05-sail-00-3" },
+  { beat: 2, lane: 1, kind: "P", skillId: "sk-chs-05-fest-00-3" },
+  { beat: 2, lane: 5, kind: "P", skillId: "sk-szs-P" },
+  { beat: 7, lane: 5, kind: "A", measuredNote: "+1,132,661 / 上限解放10 + dance_up7" },
+  { beat: 18, lane: 3, kind: "A", measuredNote: "+6,314,106 / CT30 開始" },
+  { beat: 25, lane: 1, kind: "A", measuredNote: "+1,616,247" },
+  { beat: 32, lane: 2, kind: "A", measuredNote: "+4,760,648" },
+  { beat: 45, lane: 3, kind: "A", measuredNote: "実測 FAIL(in_ct) コンボ 44→0" },
+  { beat: 46, lane: 3, kind: "P", skillId: "sk-ngs-05-fest-02-3", measuredNote: "+938,283" },
+  { beat: 50, lane: 2, kind: "P", skillId: "sk-rei-05-fest-00-3" },
+  { beat: 50, lane: 1, kind: "P", skillId: "sk-chs-05-fest-00-2" },
+  { beat: 50, lane: 5, kind: "P", skillId: "sk-szs-P" },
+  { beat: 51, lane: 1, kind: "P", skillId: "sk-chs-05-fest-00-3" },
+  { beat: 51, lane: 5, kind: "P", skillId: "sk-szs-P" },
+  { beat: 53, lane: 5, kind: "A" },
+  { beat: 77, lane: 2, kind: "SP", measuredNote: "譲渡(怜ドット4→0) + 19 延長" },
+  { beat: 88, lane: 3, kind: "A", measuredNote: "PRE 662,770 (=265,108×2.5)" },
+  { beat: 117, lane: 4, kind: "SP", measuredNote: "実測 FAIL(SP未習得) コンボ 71→0" },
+  { beat: 124, lane: 5, kind: "A" },
+  { beat: 131, lane: 2, kind: "A" },
+  { beat: 142, lane: 1, kind: "A" },
+  { beat: 166, lane: 3, kind: "SP", measuredNote: "+47,039,011（最終SP）" },
+];
+
+export const LAST_BEAT = 166;

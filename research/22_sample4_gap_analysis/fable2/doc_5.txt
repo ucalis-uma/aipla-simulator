@@ -1,0 +1,75 @@
+// サンプル4 キービート・リプレイ（engine-patch.ts の関数を実際に駆動する構造検証）
+// - コンボは全レーン共通カウンタ（1 ビート = 1 ノーツ、trace_dump.ts の beat=i+1 に準拠）
+// - スタミナは十分量として扱う（S4 の争点はスタミナ切れではない）
+// - P の発動タイミングは実測発動順に従う（確率・条件は実測で解決済み）
+
+import type { ActivationTrace, BeatContext, LaneState } from "../timeline/types";
+import {
+  aggregateStages,
+  applyPassingOrExtension,
+  effectiveStat,
+  pruneExpired,
+  resolveTargets,
+  settleSkillNote,
+} from "../timeline/engine-patch";
+import { LANES, LAST_BEAT, SCHEDULE, type ScheduledAct } from "../data/sample4";
+import { mulPermil } from "../rounding";
+
+export interface LaneSnapshot {
+  lane: number;
+  dots: number;           // 青ドット数（有効な強化効果の種別数）
+  instances: number;      // 効果インスタンス数
+  danceStages: number;
+  danceCap: number;
+  danceMultPermil: number;
+  effectiveDance: number;
+  effects: { type: string; stages: number; endBeat: number; from: string }[];
+}
+
+export interface BeatRow {
+  beat: number;
+  acts: ActivationTrace[];
+  comboBefore: number;
+  comboAfter: number;
+  miss: number;
+  lanes: LaneSnapshot[];
+  highlight?: string;
+  scheduled: ScheduledAct[];
+}
+
+export interface ReplayResult {
+  rows: BeatRow[];
+  maxCombo: number;
+  finalCombo: number;
+  miss: number;
+  checks: { label: string; expected: string; actual: string; ok: boolean }[];
+}
+
+function makeState(i: number): LaneState {
+  return {
+    input: LANES[i],
+    effects: [],
+    skillCt: new Map(),
+    skillUses: new Map(),
+    stamina: 1_000_000,
+    combo: 0,
+    score: 0,
+  };
+}
+
+function snapshot(s: LaneState, beat: number): LaneSnapshot {
+  const live = s.effects.filter((e) => e.endBeat >= beat && e.startBeat <= beat);
+  const agg = aggregateStages(s.effects, "dance_up", beat);
+  return {
+    lane: s.input.lane,
+    dots: new Set(live.map((e) => e.type)).size,
+    instances: live.length,
+    danceStages: agg.stages,
+    danceCap: agg.cap,
+    danceMultPermil: agg.multiplierPermil,
+    effectiveDance: effectiveStat(s.input.stats.dance, agg),
+    effects: live.map((e) => ({
+      type: e.type,
+      stages: e.stages,
+      endBeat: e.endBeat,
+      from: e.passedFromLane != null ? \
