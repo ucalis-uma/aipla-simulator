@@ -2,7 +2,7 @@
 
 > **使い方**:
 > LMarena の新規セッション（初見LLM）の入力欄に、以下のコードブロック内のテキストをそのままコピー＆ペーストして投入してください。
-> （会話履歴や過去セッションへの言及を一切排除し、アイプラの計算アーキテクチャ・検証データ・観察事実・GitHubリポジトリURLを客観的・網羅的に提示した独立プロンプトです）
+> （会話履歴や過去セッションへの言及を一切排除し、アイプラの精密な計算アーキテクチャ・検証データ・観察事実・GitHubリポジトリURLを客観的・網羅的に提示した独立プロンプトです）
 
 ---
 
@@ -28,10 +28,14 @@ Webアクセス／外部参照機能がある場合は、以下のURLを直接�
 - **GitHubリポジトリ**: `https://github.com/ucalis-uma/aipla-simulator`
 - **詳細実測データ集 (S4全67白ノーツ実測値・S3・T5比較表)**:
   `https://github.com/ucalis-uma/aipla-simulator/blob/main/research/23_beat_score_analysis/pack_v2/02_clean_data_by_sample.md`
+- **スコアイベント計算実装 (`computeEventScore`, 逐次floor乗算)**:
+  `https://github.com/ucalis-uma/aipla-simulator/blob/main/src/formula/scoreEvent.ts#L101-L160`
+- **クリティカル係数計算実装 (`criticalFactorPermil`)**:
+  `https://github.com/ucalis-uma/aipla-simulator/blob/main/src/formula/critical.ts`
 - **通常ビート計算実装 (`settleBeatNote`, `BEAT_LAMBDA`)**:
-  `https://github.com/ucalis-uma/aipla-simulator/blob/main/src/timeline/engine.ts#L1960-L2020`
-- **フォトスキル集計ロジック (`scoreBonusPct.beat`)**:
-  `https://github.com/ucalis-uma/aipla-simulator/blob/main/src/sim/build.ts#L676-L691`
+  `https://github.com/ucalis-uma/aipla-simulator/blob/main/src/timeline/engine.ts#L1960-L2040`
+- **フォトスキル集計ロジック (`scoreBonusPct.beat`, `critExtrasPermil`)**:
+  `https://github.com/ucalis-uma/aipla-simulator/blob/main/src/sim/build.ts#L676-L698`
 - **ステージマスタデータ (`beatWeightsPermil`)**:
   `https://github.com/ucalis-uma/aipla-simulator/blob/main/vendor/Quest.json`
 - **譜面ノーツパターンデータ (`charts_all.json`)**:
@@ -39,20 +43,45 @@ Webアクセス／外部参照機能がある場合は、以下のURLを直接�
 
 ---
 
-## 1. 確定しているスコア計算アーキテクチャ
+## 1. 確定しているスコア計算アーキテクチャ（精密仕様）
 
-アイプラの1回のビート（ノーツ）における獲得スコアは、以下の階層的 floor 構造で計算されることが確定しています：
+アイプラの1回のビート（ノーツ）における獲得スコアは、ゲーム内部で千分率（permil、基準値 $1000 = 1.0	ext{倍}$）を用いた**「逐次乗算・都度切捨て（sequential floor）」**で計算されることが確定しています：
 
-$$\text{Score} = \text{floor}\left( \text{floor}\left( \text{floor}\left( \text{floor}(\text{basic} \times \text{buff}) \times \text{combo} \right) \times \text{fan} \right) \times \text{stage} \right) \times \text{rnd} \times \text{crit}$$
+$$\begin{aligned}
+v_1 &= \lfloor \text{basicScore} \times \text{skillPowerPermil} / 1000 \rfloor \quad (\text{※通常ビートは } \text{skillPowerPermil} = 1000) \\
+v_2 &= \lfloor v_1 \times \text{b1Permil} / 1000 \rfloor \\
+v_3 &= \lfloor v_2 \times \text{comboFactorPermil} / 1000 \rfloor \\
+v_4 &= \lfloor v_3 \times \text{fanFactorPermil} / 1000 \rfloor \\
+v_5 &= \lfloor v_4 \times \text{stageFactorPermil} / 1000 \rfloor \\
+v_6 &= \lfloor v_5 \times \text{randPermil} / 1000 \rfloor \\
+v_7 &= \lfloor v_6 \times \text{critFactorPermil} / 1000 \rfloor \\
+\text{Score} &= v_7 + \text{fixedScore} \quad (\text{※フォトのAスコア固定加算等})
+\end{aligned}$$
 
-各要素の仕様：
-1. **$\text{rnd}$（乱数）**: 実機仕様は千分率で $950 \sim 1050 / 1000$（$[0.950, 1.050]$、中心値 $1.000$、最大振れ幅 $\pm 5.0\%$、通常は $\pm 4.5\%$）。
-2. **$\text{crit}$（クリティカル）**: 通常HIT時は $1.0$。クリティカル発生時はキャラのクリティカル係数（$\ge 1.5$）が乗算される。
-3. **$\text{fan}$（ファン数ボーナス）**: 会場来場者数に応じたボーナス（例: 40,000人一律ステージでは $1.375$）。
-4. **$\text{combo}$（コンボ倍率）**: コンボ数テーブルに基づく倍率（例: 100コンボで $2.0$）。
-5. **$\text{stage}$（ステージ固有倍率）**: 通常は $1.0$。
-6. **$\text{buff}$（スコア上昇バフ）**: スキルやフォトによる「ビートスコア上昇%」等の補正 $(1 + \sum \text{buff}_\%) $。
-7. **$\text{basic}$（基本スコア）**: 通常ビートの基礎値（**今回の解析対象**）。
+各ファクターの確定仕様：
+1. **$\text{basicScore}$（基本スコア）**: 通常ビートの基礎値（**今回の解析・再推定対象**）。
+2. **$\text{b1Permil}$（スコア上昇バフ B1）**:
+   - 基準値 $1000‰$（$100%$）。
+   - スコア上昇バフ（スキル効果）: 1段につき $+25‰$（$+2.5%$、T5実測で確定）。
+   - エールボーナス: アイドルのエールによるビートスコア上昇%が加算。
+   - フォトスキル: 装備フォトの「ビートスコア上昇%」（加算 sum か 最大値 max かが検証課題）。
+3. **$\text{comboFactorPermil}$（コンボ倍率）**:
+   - 基準値 $1000‰$。表示コンボ数に応じたテーブル値（$1000 + 2.5 \times \text{combo} ‰$ 等、100コンボで $2.0\text{倍}$）。
+4. **$\text{fanFactorPermil}$（ファン数ボーナス）**:
+   - 会場来場者数に応じたボーナス（例: 40,000人一律ステージでは $1375‰ = 1.375\text{倍}$）。
+5. **$\text{stageFactorPermil}$（ステージ固有倍率）**:
+   - 通常は $1000‰ = 1.0\text{倍}$。
+6. **$\text{randPermil}$（乱数）**:
+   - 実機仕様は千分率で $950 \sim 1050‰$（$[0.950, 1.050]$、中心値 $1000‰ = 1.000$、実測上の振れ幅は概ね $\pm 4.5\%$）。
+7. **$\text{critFactorPermil}$（クリティカル係数・重要）**:
+   - **非発生時（通常HIT）**: **$1000‰$（$1.000\text{倍}$、スコア変動なし）**。
+   - **クリティカル発生時**:
+     $$\text{critFactorPermil} = 1500 + (\text{coeffUpStages} \times 50) + \text{extrasPermil}$$
+     - 基本係数: **$1500‰$（$150%$）**
+     - クリティカル係数上昇スキルバフ: 1段につき $+50‰$（$+5%$）
+     - **エールおよびフォトの「クリティカルスコア上昇%」**: $\text{extrasPermil}$ としてそのまま加算
+     - （例: エール $+25.5\%$、フォト $+18.0\%$、バフ2段（$+10\%$）の場合: $150\% + 10\% + 25.5\% + 18.0\% = 203.5\% \rightarrow 2035‰$）
+     - **※極めて重要**: クリティカル発生時の倍率は固定ではなく、装備フォトやエール、バフによって **$1.8\text{倍} \sim 2.5\text{倍}$ 以上へと大幅に変動**します。そのため、本検証ではクリティカル発生ノーツを完全に除外した「純粋な白ノーツ（全5レーン通常HIT）」のみを抽出して検証を行っています。
 
 ---
 
@@ -90,7 +119,7 @@ $$\text{basic} = \left\lfloor basicSum \times \frac{8}{140} \right\rfloor \quad 
 
 ## 3. 実機実測データ（3ステージの検証結果）
 
-実機プレイ動画から、**クリティカルおよびスキル発動を完全に除外した「純粋な白ノーツ（全5レーンHIT）」のみ** を抽出し、計算値と実測値の比率（$\text{ratio} = \text{sim} / \text{actual}$）を検証しました。
+実機プレイ動画から、**クリティカルおよびスキル発動を完全に除外した「純粋な白ノーツ（全5レーン通常HIT）」のみ** を抽出し、計算値と実測値の比率（$\text{ratio} = \text{sim} / \text{actual}$）を検証しました。
 
 ### サンプルA: S4（EXタワー Liznoir-054 / 曲: lumiere）
 - **ステージ属性**: **Dance特化**（センター属性: Dance）
