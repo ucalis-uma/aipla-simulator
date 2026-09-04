@@ -21,3 +21,8 @@ prompts/measure-sample1-antigravity.md
 prompts/analyze-sample1-gap.md
 はサンプル1乖離分析の診断専用プロンプト（完了済み 2026-09-02・S1 は ±5% 内で決着。
 再利用の際は確定値を research/17_sample1_gap_analysis/CONCLUSION で更新してから使う）
+
+prompts/continue-beat-score-session.md
+は通常ビートスコア計算式の再推定・Fable回答検証用の引継ぎプロンプト（2026-09-05作成。
+Fableに投げたプロンプトの回答URLとともに新セッションへ投入して検証・実装を進める用）
+
