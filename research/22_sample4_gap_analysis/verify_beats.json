@@ -1,0 +1,1140 @@
+{
+  "totalSim": 135229019,
+  "totalMeas": 134925158,
+  "totalRatio": 1.0023,
+  "totalDiffPct": 0.23,
+  "skills": [
+    {
+      "beat": 2,
+      "simGained": 133221,
+      "measGained": 129234,
+      "ratio": 1.0309,
+      "diffPct": 3.09,
+      "kind": "photo",
+      "skillNames": [
+        "4:uph-uph-lane4-3"
+      ],
+      "inRange": true
+    },
+    {
+      "beat": 7,
+      "simGained": 1132661,
+      "measGained": 1126353,
+      "ratio": 1.0056,
+      "diffPct": 0.56,
+      "kind": "A",
+      "skillNames": [
+        "5:sk-suz-05-fest-02-1"
+      ],
+      "inRange": true
+    },
+    {
+      "beat": 18,
+      "simGained": 10057621,
+      "measGained": 9828641,
+      "ratio": 1.0233,
+      "diffPct": 2.33,
+      "kind": "A",
+      "skillNames": [
+        "3:sk-ngs-05-fest-02-2"
+      ],
+      "inRange": true
+    },
+    {
+      "beat": 25,
+      "simGained": 1154466,
+      "measGained": 1208726,
+      "ratio": 0.9551,
+      "diffPct": -4.49,
+      "kind": "A",
+      "skillNames": [
+        "1:sk-chs-05-fest-00-1"
+      ],
+      "inRange": true
+    },
+    {
+      "beat": 32,
+      "simGained": 4760648,
+      "measGained": 4655914,
+      "ratio": 1.0225,
+      "diffPct": 2.25,
+      "kind": "A",
+      "skillNames": [
+        "2:sk-rei-05-fest-00-2"
+      ],
+      "inRange": true
+    },
+    {
+      "beat": 53,
+      "simGained": 1132661,
+      "measGained": 1177867,
+      "ratio": 0.9616,
+      "diffPct": -3.84,
+      "kind": "A",
+      "skillNames": [
+        "5:sk-suz-05-fest-02-1"
+      ],
+      "inRange": true
+    },
+    {
+      "beat": 61,
+      "simGained": 663904,
+      "measGained": 666102,
+      "ratio": 0.9967,
+      "diffPct": -0.33,
+      "kind": "A",
+      "skillNames": [
+        "4:sk-szk-05-sail-00-1"
+      ],
+      "inRange": true
+    },
+    {
+      "beat": 69,
+      "simGained": 1154466,
+      "measGained": 1149848,
+      "ratio": 1.004,
+      "diffPct": 0.4,
+      "kind": "A",
+      "skillNames": [
+        "1:sk-chs-05-fest-00-1"
+      ],
+      "inRange": true
+    },
+    {
+      "beat": 77,
+      "simGained": 13471506,
+      "measGained": 13224481,
+      "ratio": 1.0187,
+      "diffPct": 1.87,
+      "kind": "SP",
+      "skillNames": [
+        "2:sk-rei-05-fest-00-1"
+      ],
+      "inRange": true
+    },
+    {
+      "beat": 88,
+      "simGained": 21633992,
+      "measGained": 21310424,
+      "ratio": 1.0152,
+      "diffPct": 1.52,
+      "kind": "A",
+      "skillNames": [
+        "3:sk-ngs-05-fest-02-2"
+      ],
+      "inRange": true
+    },
+    {
+      "beat": 98,
+      "simGained": 2295334,
+      "measGained": 2375671,
+      "ratio": 0.9662,
+      "diffPct": -3.38,
+      "kind": "A",
+      "skillNames": [
+        "2:sk-rei-05-fest-00-2"
+      ],
+      "inRange": true
+    },
+    {
+      "beat": 108,
+      "simGained": 1395487,
+      "measGained": 1402058,
+      "ratio": 0.9953,
+      "diffPct": -0.47,
+      "kind": "A",
+      "skillNames": [
+        "5:sk-suz-05-fest-02-1"
+      ],
+      "inRange": true
+    },
+    {
+      "beat": 130,
+      "simGained": 663904,
+      "measGained": 689188,
+      "ratio": 0.9633,
+      "diffPct": -3.67,
+      "kind": "A",
+      "skillNames": [
+        "4:sk-szk-05-sail-00-1"
+      ],
+      "inRange": true
+    },
+    {
+      "beat": 142,
+      "simGained": 2965517,
+      "measGained": 3017765,
+      "ratio": 0.9827,
+      "diffPct": -1.73,
+      "kind": "A",
+      "skillNames": [
+        "3:sk-ngs-05-fest-02-2"
+      ],
+      "inRange": true
+    },
+    {
+      "beat": 154,
+      "simGained": 1206942,
+      "measGained": 1174354,
+      "ratio": 1.0277,
+      "diffPct": 2.77,
+      "kind": "A",
+      "skillNames": [
+        "1:sk-chs-05-fest-00-1"
+      ],
+      "inRange": true
+    },
+    {
+      "beat": 166,
+      "simGained": 46155506,
+      "measGained": 47039011,
+      "ratio": 0.9812,
+      "diffPct": -1.88,
+      "kind": "SP",
+      "skillNames": [
+        "3:sk-ngs-05-fest-02-1"
+      ],
+      "inRange": true
+    }
+  ],
+  "normalBeatsSummary": {
+    "total": 148,
+    "passed": 55,
+    "passPct": 37.2,
+    "minRatio": 0.7012,
+    "maxRatio": 1.2632,
+    "avgRatio": 1.0418
+  },
+  "outBeats": [
+    {
+      "beat": 4,
+      "simGained": 138714,
+      "measGained": 128979,
+      "ratio": 1.0755,
+      "diffPct": 7.55,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 5,
+      "simGained": 138714,
+      "measGained": 127489,
+      "ratio": 1.088,
+      "diffPct": 8.8,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 8,
+      "simGained": 156532,
+      "measGained": 148736,
+      "ratio": 1.0524,
+      "diffPct": 5.24,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 10,
+      "simGained": 120490,
+      "measGained": 114691,
+      "ratio": 1.0506,
+      "diffPct": 5.06,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 11,
+      "simGained": 105421,
+      "measGained": 99947,
+      "ratio": 1.0548,
+      "diffPct": 5.48,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 14,
+      "simGained": 126516,
+      "measGained": 119908,
+      "ratio": 1.0551,
+      "diffPct": 5.51,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 15,
+      "simGained": 105421,
+      "measGained": 98394,
+      "ratio": 1.0714,
+      "diffPct": 7.14,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 16,
+      "simGained": 105421,
+      "measGained": 100179,
+      "ratio": 1.0523,
+      "diffPct": 5.23,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 17,
+      "simGained": 105421,
+      "measGained": 99772,
+      "ratio": 1.0566,
+      "diffPct": 5.66,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 20,
+      "simGained": 185748,
+      "measGained": 171941,
+      "ratio": 1.0803,
+      "diffPct": 8.03,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 23,
+      "simGained": 194591,
+      "measGained": 181051,
+      "ratio": 1.0748,
+      "diffPct": 7.48,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 24,
+      "simGained": 194591,
+      "measGained": 180291,
+      "ratio": 1.0793,
+      "diffPct": 7.93,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 27,
+      "simGained": 205135,
+      "measGained": 191538,
+      "ratio": 1.071,
+      "diffPct": 7.1,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 28,
+      "simGained": 205135,
+      "measGained": 187535,
+      "ratio": 1.0938,
+      "diffPct": 9.38,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 29,
+      "simGained": 121840,
+      "measGained": 114390,
+      "ratio": 1.0651,
+      "diffPct": 6.51,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 30,
+      "simGained": 205135,
+      "measGained": 190253,
+      "ratio": 1.0782,
+      "diffPct": 7.82,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 31,
+      "simGained": 214460,
+      "measGained": 199131,
+      "ratio": 1.077,
+      "diffPct": 7.7,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 33,
+      "simGained": 219421,
+      "measGained": 202336,
+      "ratio": 1.0844,
+      "diffPct": 8.44,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 35,
+      "simGained": 188058,
+      "measGained": 173061,
+      "ratio": 1.0867,
+      "diffPct": 8.67,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 36,
+      "simGained": 114149,
+      "measGained": 106650,
+      "ratio": 1.0703,
+      "diffPct": 7.03,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 37,
+      "simGained": 108415,
+      "measGained": 102888,
+      "ratio": 1.0537,
+      "diffPct": 5.37,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 38,
+      "simGained": 108415,
+      "measGained": 102009,
+      "ratio": 1.0628,
+      "diffPct": 6.28,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 39,
+      "simGained": 108415,
+      "measGained": 93244,
+      "ratio": 1.1627,
+      "diffPct": 16.27,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 43,
+      "simGained": 103185,
+      "measGained": 97992,
+      "ratio": 1.053,
+      "diffPct": 5.3,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 46,
+      "simGained": 1024269,
+      "measGained": 1090862,
+      "ratio": 0.939,
+      "diffPct": -6.1,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 47,
+      "simGained": 89298,
+      "measGained": 83377,
+      "ratio": 1.071,
+      "diffPct": 7.1,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 48,
+      "simGained": 89298,
+      "measGained": 79448,
+      "ratio": 1.124,
+      "diffPct": 12.4,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 56,
+      "simGained": 173975,
+      "measGained": 162694,
+      "ratio": 1.0693,
+      "diffPct": 6.93,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 57,
+      "simGained": 137117,
+      "measGained": 120337,
+      "ratio": 1.1394,
+      "diffPct": 13.94,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 58,
+      "simGained": 161371,
+      "measGained": 153594,
+      "ratio": 1.0506,
+      "diffPct": 5.06,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 59,
+      "simGained": 161371,
+      "measGained": 149192,
+      "ratio": 1.0816,
+      "diffPct": 8.16,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 63,
+      "simGained": 161371,
+      "measGained": 151265,
+      "ratio": 1.0668,
+      "diffPct": 6.68,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 66,
+      "simGained": 169055,
+      "measGained": 157678,
+      "ratio": 1.0722,
+      "diffPct": 7.22,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 67,
+      "simGained": 169055,
+      "measGained": 160994,
+      "ratio": 1.0501,
+      "diffPct": 5.01,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 68,
+      "simGained": 112035,
+      "measGained": 106331,
+      "ratio": 1.0536,
+      "diffPct": 5.36,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 70,
+      "simGained": 200502,
+      "measGained": 187657,
+      "ratio": 1.0684,
+      "diffPct": 6.84,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 71,
+      "simGained": 178402,
+      "measGained": 168155,
+      "ratio": 1.0609,
+      "diffPct": 6.09,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 75,
+      "simGained": 112035,
+      "measGained": 106094,
+      "ratio": 1.056,
+      "diffPct": 5.6,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 79,
+      "simGained": 200157,
+      "measGained": 182324,
+      "ratio": 1.0978,
+      "diffPct": 9.78,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 80,
+      "simGained": 200157,
+      "measGained": 188745,
+      "ratio": 1.0605,
+      "diffPct": 6.05,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 83,
+      "simGained": 200157,
+      "measGained": 186283,
+      "ratio": 1.0745,
+      "diffPct": 7.45,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 84,
+      "simGained": 200157,
+      "measGained": 185925,
+      "ratio": 1.0765,
+      "diffPct": 7.65,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 85,
+      "simGained": 200157,
+      "measGained": 190363,
+      "ratio": 1.0514,
+      "diffPct": 5.14,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 87,
+      "simGained": 208859,
+      "measGained": 195806,
+      "ratio": 1.0667,
+      "diffPct": 6.67,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 91,
+      "simGained": 2396429,
+      "measGained": 2660906,
+      "ratio": 0.9006,
+      "diffPct": -9.94,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 92,
+      "simGained": 213863,
+      "measGained": 201267,
+      "ratio": 1.0626,
+      "diffPct": 6.26,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 94,
+      "simGained": 213863,
+      "measGained": 201532,
+      "ratio": 1.0612,
+      "diffPct": 6.12,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 96,
+      "simGained": 126879,
+      "measGained": 119684,
+      "ratio": 1.0601,
+      "diffPct": 6.01,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 97,
+      "simGained": 222775,
+      "measGained": 210997,
+      "ratio": 1.0558,
+      "diffPct": 5.58,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 99,
+      "simGained": 130137,
+      "measGained": 121366,
+      "ratio": 1.0723,
+      "diffPct": 7.23,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 100,
+      "simGained": 130137,
+      "measGained": 121169,
+      "ratio": 1.074,
+      "diffPct": 7.4,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 103,
+      "simGained": 281397,
+      "measGained": 265986,
+      "ratio": 1.0579,
+      "diffPct": 5.79,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 104,
+      "simGained": 281397,
+      "measGained": 222768,
+      "ratio": 1.2632,
+      "diffPct": 26.32,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 106,
+      "simGained": 124075,
+      "measGained": 116449,
+      "ratio": 1.0655,
+      "diffPct": 6.55,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 109,
+      "simGained": 138842,
+      "measGained": 131928,
+      "ratio": 1.0524,
+      "diffPct": 5.24,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 111,
+      "simGained": 138842,
+      "measGained": 128549,
+      "ratio": 1.0801,
+      "diffPct": 8.01,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 112,
+      "simGained": 138842,
+      "measGained": 131395,
+      "ratio": 1.0567,
+      "diffPct": 5.67,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 113,
+      "simGained": 138842,
+      "measGained": 128318,
+      "ratio": 1.082,
+      "diffPct": 8.2,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 115,
+      "simGained": 138842,
+      "measGained": 130333,
+      "ratio": 1.0653,
+      "diffPct": 6.53,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 116,
+      "simGained": 144394,
+      "measGained": 132629,
+      "ratio": 1.0887,
+      "diffPct": 8.87,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 118,
+      "simGained": 111071,
+      "measGained": 98973,
+      "ratio": 1.1222,
+      "diffPct": 12.22,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 119,
+      "simGained": 161695,
+      "measGained": 151580,
+      "ratio": 1.0667,
+      "diffPct": 6.67,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 121,
+      "simGained": 161695,
+      "measGained": 149970,
+      "ratio": 1.0782,
+      "diffPct": 7.82,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 122,
+      "simGained": 104332,
+      "measGained": 98536,
+      "ratio": 1.0588,
+      "diffPct": 5.88,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 123,
+      "simGained": 161695,
+      "measGained": 138236,
+      "ratio": 1.1697,
+      "diffPct": 16.97,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 124,
+      "simGained": 92783,
+      "measGained": 86672,
+      "ratio": 1.0705,
+      "diffPct": 7.05,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 125,
+      "simGained": 92783,
+      "measGained": 88130,
+      "ratio": 1.0528,
+      "diffPct": 5.28,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 127,
+      "simGained": 92783,
+      "measGained": 128711,
+      "ratio": 0.7209,
+      "diffPct": -27.91,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 129,
+      "simGained": 97424,
+      "measGained": 103825,
+      "ratio": 0.9383,
+      "diffPct": -6.17,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 133,
+      "simGained": 97424,
+      "measGained": 92122,
+      "ratio": 1.0576,
+      "diffPct": 5.76,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 134,
+      "simGained": 143728,
+      "measGained": 156141,
+      "ratio": 0.9205,
+      "diffPct": -7.95,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 135,
+      "simGained": 123559,
+      "measGained": 130448,
+      "ratio": 0.9472,
+      "diffPct": -5.28,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 137,
+      "simGained": 86307,
+      "measGained": 82192,
+      "ratio": 1.0501,
+      "diffPct": 5.01,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 138,
+      "simGained": 90416,
+      "measGained": 85871,
+      "ratio": 1.0529,
+      "diffPct": 5.29,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 139,
+      "simGained": 90416,
+      "measGained": 85131,
+      "ratio": 1.0621,
+      "diffPct": 6.21,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 140,
+      "simGained": 90416,
+      "measGained": 76469,
+      "ratio": 1.1824,
+      "diffPct": 18.24,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 141,
+      "simGained": 81303,
+      "measGained": 77298,
+      "ratio": 1.0518,
+      "diffPct": 5.18,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 143,
+      "simGained": 91719,
+      "measGained": 98422,
+      "ratio": 0.9319,
+      "diffPct": -6.81,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 144,
+      "simGained": 91719,
+      "measGained": 86497,
+      "ratio": 1.0604,
+      "diffPct": 6.04,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 145,
+      "simGained": 91719,
+      "measGained": 87137,
+      "ratio": 1.0526,
+      "diffPct": 5.26,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 146,
+      "simGained": 91719,
+      "measGained": 86575,
+      "ratio": 1.0594,
+      "diffPct": 5.94,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 148,
+      "simGained": 95889,
+      "measGained": 91272,
+      "ratio": 1.0506,
+      "diffPct": 5.06,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 149,
+      "simGained": 95889,
+      "measGained": 103209,
+      "ratio": 0.9291,
+      "diffPct": -7.09,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 151,
+      "simGained": 95889,
+      "measGained": 105077,
+      "ratio": 0.9126,
+      "diffPct": -8.74,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 153,
+      "simGained": 111524,
+      "measGained": 105695,
+      "ratio": 1.0551,
+      "diffPct": 5.51,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 155,
+      "simGained": 174206,
+      "measGained": 210100,
+      "ratio": 0.8292,
+      "diffPct": -17.08,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 157,
+      "simGained": 174206,
+      "measGained": 163090,
+      "ratio": 1.0682,
+      "diffPct": 6.82,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 158,
+      "simGained": 116373,
+      "measGained": 107322,
+      "ratio": 1.0843,
+      "diffPct": 8.43,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 159,
+      "simGained": 116373,
+      "measGained": 108382,
+      "ratio": 1.0737,
+      "diffPct": 7.37,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 160,
+      "simGained": 116373,
+      "measGained": 107786,
+      "ratio": 1.0797,
+      "diffPct": 7.97,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 163,
+      "simGained": 116373,
+      "measGained": 109549,
+      "ratio": 1.0623,
+      "diffPct": 6.23,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 164,
+      "simGained": 130159,
+      "measGained": 185630,
+      "ratio": 0.7012,
+      "diffPct": -29.88,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    },
+    {
+      "beat": 165,
+      "simGained": 116373,
+      "measGained": 109411,
+      "ratio": 1.0636,
+      "diffPct": 6.36,
+      "kind": "beat",
+      "skillNames": [],
+      "inRange": false
+    }
+  ]
+}
