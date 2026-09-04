@@ -1,0 +1,1 @@
+})]}),f.jsxs(Ln,{n:2,title:"「8/140」の由来を再解釈する: 8 は定数、140 は T5 譜面のビートノーツ数",children:[f.jsxs("p",{children:["コミット 39fb3c8 は T5 の画面ポップから 0.0571428… を得て、",f.jsx("em",{children:"T5 の総ノーツ 156 − A/SP 16 = 140"})," で分数化した。 この分母は「偶然きれいに割れた数」ではなく、譜面固有の ",f.jsx("strong",{className:"text-slate-100",children:"N_beat"})," である。 独立した通信解析（Vibbit, 2022）も同じ構造を報告している:"]}),f.jsx(La,{children:

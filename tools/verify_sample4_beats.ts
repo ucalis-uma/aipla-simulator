@@ -198,6 +198,8 @@ const summary = {
     maxRatio: Number(maxRatio.toFixed(4)),
     avgRatio: Number(avgRatio.toFixed(4)),
   },
+  normalBeats,
+  allChecks: checks,
   outBeats: checks.filter(c => !c.inRange),
 };
 

@@ -1,0 +1,233 @@
+]}),f.jsx(La,{children:`λ_T5 = 8/140 ÷ 1.000  = 0.05714   (較正済み)
+
+λ_S3 = 8/140 ÷ 1.0002 = 0.05713   (フォト無しレーン)
+λ_S4 = 8/140 ÷ 1.0418 = 0.05485   ← T5/S3 より 4% 小さい
+
+→ 1/20 = 0.0500 はどのサンプルにも合わず（−9〜−12%）、
+  8/140 = 0.0571 は S4 だけ合わない。単一の定数 λ は存在しない。`})]}),f.jsxs(Ln,{n:2,title:
+---
+]}),f.jsx(La,{children:`S_beat = λ · V_base / N_beat × (1 + P_photo + P_yell + P_skill) × (1 + P_aud) × (1 + P_cmb) × (1 + P_ctb) × (1 + α)
+
+  λ      ≈ 8（整数 8 に近い定数）
+  V_base = Σ_{da,vo,vi} V_live × w / 1000   （= 本エンジンの basicSum・重み和は 1000/1500/2000）
+  N_beat = そのライブの総ビート数（A・SP は含まない）
+  α      ∈ [−0.05, 0.05]・0.001 刻みの離散一様乱数   （= randPermil 950〜1050）`}),f.jsxs(
+---
+,children:[f.jsx(La,{children:`S4 (STAGE054): 通常ビート 148 件・スキルノーツ 16 件
+λ_S4(提案) = 8 / 148 = 0.054054
+
+平均比(8/148) = 1.0418 × (8/148) / (8/140) = 1.0418 × 140/148 = 0.9855   (−1.5%)
+Beat 23      = 194,591 × 140/148 = 184,075  → 184,075 / 181,051 = 1.0167   (+1.7%)
+
+比較: 8/140 → +4.2% / +7.5%,  1/20 → −8.8% / −6.0%`}),f.jsxs(
+---
+}),f.jsx(La,{children:`basic = ⌊752,704 × 8/140⌋ = 43,011
+
+max (193‰): B1 = 1303‰ → 43,011 × 1.303 × 1.020 × 1.375 = 78,614  → 78.6K / 86.3K = 0.911  ✗ (−8.9%・乱数外)
+
+sum (368‰): B1 = 1478‰ → 43,011 × 1.478 × 1.020 × 1.375 = 89,166  → 89.2K / 86.3K = 1.033  ✓ (+3.3%・乱数内)
+
+max を成立させるには λ ≥ 0.0596（N_beat ≤ 134）が必要だが、
+そのとき他 4 レーンは +4.5% 以上へ系統的にずれる → 矛盾。`}),f.jsxs(
+---
+,diff:`--- a/src/timeline/engine.ts
++++ b/src/timeline/engine.ts
+@@ -6,7 +6,7 @@
+  * 確度タグ（【Confirmed】/【Estimate】/【Unknown】）は research/13 から引き継ぐ。
+  *
+  * 数値規律: 全演算は千分率整数（src/rounding.ts 経由。Math.floor 直書きなし）。
+  * スコア計算は src/formula/scoreEvent.ts の computeEventScore に一任する。
+  */
+ import { floorDiv, mulPermil } from 
+---
+;
+@@ interface EngineCtx {
+   /** このビートで発動済みのライブボーナス skillId（前後半で各1回まで） */
+   readonly liveBonusUsedThisBeat: Set<string>;
+   /**
+    * このビートでスタミナ回復効果を受けたレーン（someone_recovered 条件・
+    * target-trigger 対象の解決用）。step10 の継続回復と step7/8 の即時回復で記録。
+    */
+   readonly recoveredLanes: Set<LaneNumber>;
++  /**
++   * 【research/23 確定 2026-09-05】譜面の通常ビートノーツ数 N_beat（noteType===1 の件数。
++   * ミスノートも含む譜面上の総数）。ビート基本スコアは全曲合計 λ=8.0 を N_beat で
++   * 等分する（Vibbit 解析式 S_beat = λ·V_base / N_beat・λ≈8）。
++   * T5: 140（総156−A/SP16）→ 8/140 で旧定数と一致。S4: 148 → 8/148。
++   */
++  readonly beatNoteCount: number;
+ }
+
+-/**
+- * 【T5実測フィット確定 2026-08-30】ビート CB の combo_score_up 連成係数‰/段。
++/**
++ * 【T5実測フィット確定 2026-08-30】ビート CB の combo_score_up 連成係数‰/段。
+@@
+-/**
+- * 【T5実測確定・Strong estimate】ビート基本スコア係数 λ = 8/140 ≈ 0.057143。
+- * T5 譜面（総ノーツ156 − Aスキルノーツ16 = 140）から分数化。
+- */
+-export const BEAT_LAMBDA_NUM = 8;
+-export const BEAT_LAMBDA_DEN = 140;
++/**
++ * 【research/23 確定 2026-09-05】ビート基本スコアの全曲合計倍率 λ（permil）。
++ *
++ *   basic = floor(basicSum × 8000 / (N_beat × 1000))   (= basicSum × 8 / N_beat)
++ *
++ * 1 ライブの通常ビート基本スコア合計が basicSum × 8.0（800%）になるよう、
++ * 各ビートは 8000‰ / N_beat を受け取る（譜面長に依存しない設計）。
++ * - 旧 BEAT_LAMBDA_NUM/DEN（8/140）は T5 譜面（N_beat=140）での本式の特殊解。
++ * - S4（N_beat=148）: 8/140 では平均比 1.0418 だったものが 8/148 で ≈0.986 に収束。
++ * - やる気士 docs の 1/20（5.0%）は N_beat=160 相当の値で、通常譜面（140〜150）では過小。
++ * 出典: blog.vibbit.me/2022/04/ipr-formula-rsc §2.2（λ≈8・N_beat は A/SP を含まない）。
++ */
++export const BEAT_TOTAL_RATE_PERMIL = 8000;
++
++/**
++ * 通常ビートの基本スコア（純粋関数・単体テスト対象）。
++ * @param basicSum 重み付きステータス和（Σ floor(stat × w / 1000)）
++ * @param beatNoteCount 譜面の通常ビートノーツ数 N_beat（>0）
++ */
++export function beatBasicScore(basicSum: number, beatNoteCount: number): number {
++  if (!Number.isInteger(beatNoteCount) || beatNoteCount <= 0) {
++    throw new Error(
+
++      \`beatBasicScore: beatNoteCount must be a positive integer, got \${beatNoteCount}\`,
++    );
++  }
++  return floorDiv(basicSum * BEAT_TOTAL_RATE_PERMIL, beatNoteCount * 1000);
++}
+
+ /**
+  * タイムラインをシミュレートする（純粋関数）。
+@@ export function simulateTimeline(input: SimulateInput): TimelineResult {
+   if (notes.length === 0) {
+     throw new Error(
+---
+);
+   }
++  // 【research/23】ビート基本スコアの分母 N_beat。省略時は譜面の noteType===1 を数える
++  //（ミスノートも譜面上のノーツとして含める。T5 b1 全レーン取りこぼしでも 140 で一致）。
++  const beatNoteCount =
++    input.beatNoteCountOverride ?? notes.filter((n) => n.noteType === 1).length;
++  if (beatNoteCount <= 0) {
++    throw new Error(
+---
+,
+     cumulative: { value: 0 },
+     globalCombo: { value: 0 },
+     displayCombo: { value: 0 },
+     currentNote: null,
+     liveBonusCt: new Map<string, number>(),
+     liveBonusUsedThisBeat: new Set<string>(),
+     recoveredLanes: new Set<LaneNumber>(),
++    beatNoteCount,
+   };
+@@ function settleBeatNote(
+- * 【T5実測確定・Strong estimate】ビート基本スコア:
+- *   basic = (vocal×600×liveMult_vocal(レーン) + dance×250 + visual×150) × λ
+- * - 重みはステージの beatWeightsPermil（全レーン共通・属性混成。L4/L1 pop比 1.13 と
+- *   L4 の b60 跳ね(+19%)が vocal_up 連動で同時説明される。research/12 §T5-2b）。
+- * - λ = 8/140 ≈ 0.057143（離散乱数スキャンで L1/L2/L4/L5 の 88% が
+- *   |r−round(r)| < 0.5 に入る唯一の分数）。
++ * 【research/23 確定 2026-09-05】ビート基本スコア:
++ *   basic = floor( Σ_attr floor(stat_attr × liveMult_attr × w_attr / 1000) × 8 / N_beat )
++ * - 重みはステージの beatWeightsPermil（全レーン共通・属性混成。research/12 §T5-2b）。
++ * - λ = 8 / N_beat（N_beat = 譜面の通常ビートノーツ数）。T5 は N_beat=140 のため
++ *   旧定数 8/140 と同値で golden 不変。S4 は N_beat=148 → 平均比 1.0418 → ≈0.986。
++ * - 検証: S3 L4 b8（N_beat=140・フォト sum 368‰）= 89,166 vs 実測 86.3K（+3.3%）。
+  */
+@@
+-    const basic = Math.floor((basicSum * BEAT_LAMBDA_NUM) / BEAT_LAMBDA_DEN);
++    const basic = beatBasicScore(basicSum, ctx.beatNoteCount);
+
+     // ビート B1: score_up は 25‰/段（SCORE_UP_PER_STAGE_PERMIL・T5確定）で乗る
+     const b1 = b1Permil(snap, 
+---
+,diff:`--- a/src/timeline/types.ts
++++ b/src/timeline/types.ts
+@@ export interface SimulateInput {
+   /** 丸めポリシー（既定 
+---
+。T4/T5 で at-end が確定・推奨は 
+---
+） */
+   roundingPolicy?: RoundingPolicy;
++  /**
++   * 【research/23】ビート基本スコアの分母 N_beat の上書き（既定: notes の noteType===1 件数）。
++   * 譜面ファイルが不完全な検証ハーネス・λ スキャン用。通常運用では指定しない。
++   */
++  beatNoteCountOverride?: number;
+   /**
+    * 【Phase 9・Peing確定】ステージのライブボーナスPスキル（data/live_bonuses.json 由来）。`},{id:
+---
+,diff:`--- a/src/sim/build.ts
++++ b/src/sim/build.ts
+@@ function sumScorePct(items: PhotoOrAccessory[], key: string): number {
+   return sum;
+ }
+
+-/**
+- * 写真・アクセサリのスコアボーナス%最大値（同一ステータス非重複用）。
+- * 【サンプル3実測確定・2026-09-04】フォトの「ビートスコア上昇%」は複数枚積んでも
+- * 重複加算されず最大値のみ適用される（L4 怜: 17.5%+19.3% を sum すると実測 pop
+- * +86.4K に対し +11.4% 過大。max(17.5%, 19.3%) で実測比 1.018 と完璧に乱数内一致）。
+- */
+
+-function maxScorePct(items: PhotoOrAccessory[], key: string): number {
+-  let max = 0;
+-  for (const item of items) {
+-    for (const s of item.structured) {
+-      if (s.stat === key && s.type === 
+---
+) {
+-        const val = pctToPermil(s.value);
+-        if (val > max) max = val;
+-      }
+-    }
+-  }
+-  return max;
+-}
++// 【research/23 で撤回 2026-09-05】旧 maxScorePct（フォト beat_score の最大値採用）は削除。
++// 「max で 1.018」は score_up 未計上時の誤フィットで、確定ファクター（score_up 2段・
++// yale 60‰・combo 1020‰・fan 1375‰）では max=0.911（乱数外）・sum=1.033（乱数内）。
++// フォトのスコア%は a_score / sp_score / critical_score と同様、全枚数を加算する
++//（Vibbit §2.1.4「フォトボーナス: 全部加算すれば OK」と一致）。
+
+ /** 写真のスキルステータス固定値合計（例: a_score 固定値 = Aスキルスコア追加の平坦加算） */
+@@ export function buildSimulateInput(options: BuildSimOptions): BuildSimResult {
+       scoreBonusPct: {
+-        beat:
+-          Y.scorePct.beat +
+-          maxScorePct(equipmentForScore, 
+---
+) +
+-          (scoreGrants.get(lane)?.beat_score ?? 0),
++        // 【research/23 確定】beat_score も sum（S3 L4: 175+193=368‰ → b8 実測比 1.033）
++        beat:
++          Y.scorePct.beat +
++          sumScorePct(equipmentForScore, 
+---
+, () => {
++    const basic = beatBasicScore(752704, 140);
++    expect(basic).toBe(43011);
++    const b1 = 1000 + 50 + 60 + 175 + 193; // score_up2段 + yale + photo sum
++    const score = Math.floor((basic * b1 * 1020 * 1375) / 1000 ** 3);
++    expect(score / 86_300).toBeGreaterThan(0.95);
++    expect(score / 86_300).toBeLessThan(1.05);
++    // max ルール（193‰）は乱数外（0.911）
++    const scoreMax = Math.floor((basic * (1000 + 50 + 60 + 193) * 1020 * 1375) / 1000 ** 3);
++    expect(scoreMax / 86_300).toBeLessThan(0.95);
++  });
++
++  it(
+---
+,children:`basicSum = Σ ⌊stat_a × liveMult_a × w_a / 1000⌋
+basic    = ⌊basicSum × 8000 / (N_beat × 1000)⌋
+
+N_beat = 譜面の noteType===1 の件数
+T5: 140 → 0.05714 (=8/140・golden 不変)
+S4: 148 → 0.05405
+
+S3: ≈140 → 0.05714`}),f.jsx(
+---

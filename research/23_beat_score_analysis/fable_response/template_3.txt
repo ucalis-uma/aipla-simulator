@@ -1,0 +1,1 @@
+}),f.jsxs("p",{children:["つまり設計意図は「",f.jsx("strong",{className:"text-slate-100",children:"1 ライブの通常ビート基本スコア合計 = 重み付きステータス × 8.0（800%）"}),"」で、 譜面の長さに依らず総量が一定になるよう、各ビートが 8/N_beat を受け取る。 スキルの「470% のスコア獲得」と同じ発想の「800% を N_beat 分割払い」と見なせる。"]})]}),f.jsxs(Ln,{n:3,title:"S4 で検証: N_beat = 148 を代入すると平均比が乱数帯へ収束",children:[f.jsx(La,{children:

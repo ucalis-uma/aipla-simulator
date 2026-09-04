@@ -1,0 +1,1 @@
+},{id:"test",path:"test/beatBasicScore.test.ts（新規）",summary:"回帰テスト: T5 golden 不変・S3 L4 b8 の sum 一致・S4 の λ シフト。",diff:
