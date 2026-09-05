@@ -77,3 +77,8 @@ prompts/continue-t5-backfill.md
 は T5 欠損 111 セル遡及の引継ぎプロンプト（2026-09-05 作成・**完了 2026-09-06**:
 111/111 popなし（ダッシュ確認）・lane3対応表確定（b0=1・b1-37=2・b38-156=3枚、IMG_0632/1000欠番）・
 flags白色25件はダッシュ誤検出・K合計はover-sum1件のみ（既存値の帰属ラグ）。詳細は research/12 §8）。
+
+prompts/continue-beat-score-session.md
+は v0.app 等の外部 LLM 回答（レーン別オフセット仮説ページ等）の検証用引継ぎプロンプト。
+検証結果は research/23_beat_score_analysis/pack_v3/05_v0_response_verification.md に記録済み
+（2026-09-06・E0 新規実行でビート専用要因に絞り込み済み。次は E3 レーン入れ替えラン）
