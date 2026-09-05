@@ -66,3 +66,9 @@ S4 は無効化のため混入禁止・pack_v2 は書き換えない。係数は
 fan 引力式 1356‰・deck 実値 basicSum）に修正する。Fable への投入はユーザーが LMarena で行い、
 回答 URL は prompts/continue-beat-score-session.md とともに新セッションへ投入して検証する。
 T5 遡及の成果を反映できるよう、実行順は T5 遡及の後を想定。
+
+
+prompts/continue-t5-backfill.md
+は T5 欠損 111 セル遡及の引継ぎプロンプト（2026-09-05 作成・**完了 2026-09-06**:
+111/111 popなし（ダッシュ確認）・lane3対応表確定（b0=1・b1-37=2・b38-156=3枚、IMG_0632/1000欠番）・
+flags白色25件はダッシュ誤検出・K合計はover-sum1件のみ（既存値の帰属ラグ）。詳細は research/12 §8）。

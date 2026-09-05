@@ -1,0 +1,1911 @@
+{
+ "sample": "T5（STAGE019 デイリー・qt-daily-003-19）",
+ "source_screenshots": "スコア分析サンプル/lane1〜5/IMG_NNNN.PNG（lane1:157・lane2:157・lane3:432・lane4:157・lane5:157）",
+ "method": "LLM 画像目視（T5専用クロップシート13枚・OCR不使用）。1セル1画像（lane3はバースト先頭1枚。ポップはバースト全枚で同一表示を確認済み）",
+ "img_map": {
+  "rule": "lane1: IMG_(323+b) / lane2: IMG_(480+b)（b152以降+1。IMG_0632欠番）/ lane4: IMG_(1071+b) / lane5: IMG_(1228+b)。lane3: b0=[638]・b1〜b37は2枚ずつ（639+(b-1)*2〜）・b38〜b156は3枚ずつ（IMG_1000欠番はカメラ側採番スキップ。b133=[998,999,1001]）",
+  "missing_numbers": {
+   "lane2": [
+    "IMG_0632.PNG（b151=0631・b152=0633をBEAT表示で確認）"
+   ],
+   "lane3": [
+    "IMG_1000.PNG（b133=[998,999,1001]をBEAT表示133で確認）"
+   ]
+  },
+  "lane3": {
+   "0": [
+    "IMG_0638.PNG"
+   ],
+   "1": [
+    "IMG_0639.PNG",
+    "IMG_0640.PNG"
+   ],
+   "2": [
+    "IMG_0641.PNG",
+    "IMG_0642.PNG"
+   ],
+   "3": [
+    "IMG_0643.PNG",
+    "IMG_0644.PNG"
+   ],
+   "4": [
+    "IMG_0645.PNG",
+    "IMG_0646.PNG"
+   ],
+   "5": [
+    "IMG_0647.PNG",
+    "IMG_0648.PNG"
+   ],
+   "6": [
+    "IMG_0649.PNG",
+    "IMG_0650.PNG"
+   ],
+   "7": [
+    "IMG_0651.PNG",
+    "IMG_0652.PNG"
+   ],
+   "8": [
+    "IMG_0653.PNG",
+    "IMG_0654.PNG"
+   ],
+   "9": [
+    "IMG_0655.PNG",
+    "IMG_0656.PNG"
+   ],
+   "10": [
+    "IMG_0657.PNG",
+    "IMG_0658.PNG"
+   ],
+   "11": [
+    "IMG_0659.PNG",
+    "IMG_0660.PNG"
+   ],
+   "12": [
+    "IMG_0661.PNG",
+    "IMG_0662.PNG"
+   ],
+   "13": [
+    "IMG_0663.PNG",
+    "IMG_0664.PNG"
+   ],
+   "14": [
+    "IMG_0665.PNG",
+    "IMG_0666.PNG"
+   ],
+   "15": [
+    "IMG_0667.PNG",
+    "IMG_0668.PNG"
+   ],
+   "16": [
+    "IMG_0669.PNG",
+    "IMG_0670.PNG"
+   ],
+   "17": [
+    "IMG_0671.PNG",
+    "IMG_0672.PNG"
+   ],
+   "18": [
+    "IMG_0673.PNG",
+    "IMG_0674.PNG"
+   ],
+   "19": [
+    "IMG_0675.PNG",
+    "IMG_0676.PNG"
+   ],
+   "20": [
+    "IMG_0677.PNG",
+    "IMG_0678.PNG"
+   ],
+   "21": [
+    "IMG_0679.PNG",
+    "IMG_0680.PNG"
+   ],
+   "22": [
+    "IMG_0681.PNG",
+    "IMG_0682.PNG"
+   ],
+   "23": [
+    "IMG_0683.PNG",
+    "IMG_0684.PNG"
+   ],
+   "24": [
+    "IMG_0685.PNG",
+    "IMG_0686.PNG"
+   ],
+   "25": [
+    "IMG_0687.PNG",
+    "IMG_0688.PNG"
+   ],
+   "26": [
+    "IMG_0689.PNG",
+    "IMG_0690.PNG"
+   ],
+   "27": [
+    "IMG_0691.PNG",
+    "IMG_0692.PNG"
+   ],
+   "28": [
+    "IMG_0693.PNG",
+    "IMG_0694.PNG"
+   ],
+   "29": [
+    "IMG_0695.PNG",
+    "IMG_0696.PNG"
+   ],
+   "30": [
+    "IMG_0697.PNG",
+    "IMG_0698.PNG"
+   ],
+   "31": [
+    "IMG_0699.PNG",
+    "IMG_0700.PNG"
+   ],
+   "32": [
+    "IMG_0701.PNG",
+    "IMG_0702.PNG"
+   ],
+   "33": [
+    "IMG_0703.PNG",
+    "IMG_0704.PNG"
+   ],
+   "34": [
+    "IMG_0705.PNG",
+    "IMG_0706.PNG"
+   ],
+   "35": [
+    "IMG_0707.PNG",
+    "IMG_0708.PNG"
+   ],
+   "36": [
+    "IMG_0709.PNG",
+    "IMG_0710.PNG"
+   ],
+   "37": [
+    "IMG_0711.PNG",
+    "IMG_0712.PNG"
+   ],
+   "38": [
+    "IMG_0713.PNG",
+    "IMG_0714.PNG",
+    "IMG_0715.PNG"
+   ],
+   "39": [
+    "IMG_0716.PNG",
+    "IMG_0717.PNG",
+    "IMG_0718.PNG"
+   ],
+   "40": [
+    "IMG_0719.PNG",
+    "IMG_0720.PNG",
+    "IMG_0721.PNG"
+   ],
+   "41": [
+    "IMG_0722.PNG",
+    "IMG_0723.PNG",
+    "IMG_0724.PNG"
+   ],
+   "42": [
+    "IMG_0725.PNG",
+    "IMG_0726.PNG",
+    "IMG_0727.PNG"
+   ],
+   "43": [
+    "IMG_0728.PNG",
+    "IMG_0729.PNG",
+    "IMG_0730.PNG"
+   ],
+   "44": [
+    "IMG_0731.PNG",
+    "IMG_0732.PNG",
+    "IMG_0733.PNG"
+   ],
+   "45": [
+    "IMG_0734.PNG",
+    "IMG_0735.PNG",
+    "IMG_0736.PNG"
+   ],
+   "46": [
+    "IMG_0737.PNG",
+    "IMG_0738.PNG",
+    "IMG_0739.PNG"
+   ],
+   "47": [
+    "IMG_0740.PNG",
+    "IMG_0741.PNG",
+    "IMG_0742.PNG"
+   ],
+   "48": [
+    "IMG_0743.PNG",
+    "IMG_0744.PNG",
+    "IMG_0745.PNG"
+   ],
+   "49": [
+    "IMG_0746.PNG",
+    "IMG_0747.PNG",
+    "IMG_0748.PNG"
+   ],
+   "50": [
+    "IMG_0749.PNG",
+    "IMG_0750.PNG",
+    "IMG_0751.PNG"
+   ],
+   "51": [
+    "IMG_0752.PNG",
+    "IMG_0753.PNG",
+    "IMG_0754.PNG"
+   ],
+   "52": [
+    "IMG_0755.PNG",
+    "IMG_0756.PNG",
+    "IMG_0757.PNG"
+   ],
+   "53": [
+    "IMG_0758.PNG",
+    "IMG_0759.PNG",
+    "IMG_0760.PNG"
+   ],
+   "54": [
+    "IMG_0761.PNG",
+    "IMG_0762.PNG",
+    "IMG_0763.PNG"
+   ],
+   "55": [
+    "IMG_0764.PNG",
+    "IMG_0765.PNG",
+    "IMG_0766.PNG"
+   ],
+   "56": [
+    "IMG_0767.PNG",
+    "IMG_0768.PNG",
+    "IMG_0769.PNG"
+   ],
+   "57": [
+    "IMG_0770.PNG",
+    "IMG_0771.PNG",
+    "IMG_0772.PNG"
+   ],
+   "58": [
+    "IMG_0773.PNG",
+    "IMG_0774.PNG",
+    "IMG_0775.PNG"
+   ],
+   "59": [
+    "IMG_0776.PNG",
+    "IMG_0777.PNG",
+    "IMG_0778.PNG"
+   ],
+   "60": [
+    "IMG_0779.PNG",
+    "IMG_0780.PNG",
+    "IMG_0781.PNG"
+   ],
+   "61": [
+    "IMG_0782.PNG",
+    "IMG_0783.PNG",
+    "IMG_0784.PNG"
+   ],
+   "62": [
+    "IMG_0785.PNG",
+    "IMG_0786.PNG",
+    "IMG_0787.PNG"
+   ],
+   "63": [
+    "IMG_0788.PNG",
+    "IMG_0789.PNG",
+    "IMG_0790.PNG"
+   ],
+   "64": [
+    "IMG_0791.PNG",
+    "IMG_0792.PNG",
+    "IMG_0793.PNG"
+   ],
+   "65": [
+    "IMG_0794.PNG",
+    "IMG_0795.PNG",
+    "IMG_0796.PNG"
+   ],
+   "66": [
+    "IMG_0797.PNG",
+    "IMG_0798.PNG",
+    "IMG_0799.PNG"
+   ],
+   "67": [
+    "IMG_0800.PNG",
+    "IMG_0801.PNG",
+    "IMG_0802.PNG"
+   ],
+   "68": [
+    "IMG_0803.PNG",
+    "IMG_0804.PNG",
+    "IMG_0805.PNG"
+   ],
+   "69": [
+    "IMG_0806.PNG",
+    "IMG_0807.PNG",
+    "IMG_0808.PNG"
+   ],
+   "70": [
+    "IMG_0809.PNG",
+    "IMG_0810.PNG",
+    "IMG_0811.PNG"
+   ],
+   "71": [
+    "IMG_0812.PNG",
+    "IMG_0813.PNG",
+    "IMG_0814.PNG"
+   ],
+   "72": [
+    "IMG_0815.PNG",
+    "IMG_0816.PNG",
+    "IMG_0817.PNG"
+   ],
+   "73": [
+    "IMG_0818.PNG",
+    "IMG_0819.PNG",
+    "IMG_0820.PNG"
+   ],
+   "74": [
+    "IMG_0821.PNG",
+    "IMG_0822.PNG",
+    "IMG_0823.PNG"
+   ],
+   "75": [
+    "IMG_0824.PNG",
+    "IMG_0825.PNG",
+    "IMG_0826.PNG"
+   ],
+   "76": [
+    "IMG_0827.PNG",
+    "IMG_0828.PNG",
+    "IMG_0829.PNG"
+   ],
+   "77": [
+    "IMG_0830.PNG",
+    "IMG_0831.PNG",
+    "IMG_0832.PNG"
+   ],
+   "78": [
+    "IMG_0833.PNG",
+    "IMG_0834.PNG",
+    "IMG_0835.PNG"
+   ],
+   "79": [
+    "IMG_0836.PNG",
+    "IMG_0837.PNG",
+    "IMG_0838.PNG"
+   ],
+   "80": [
+    "IMG_0839.PNG",
+    "IMG_0840.PNG",
+    "IMG_0841.PNG"
+   ],
+   "81": [
+    "IMG_0842.PNG",
+    "IMG_0843.PNG",
+    "IMG_0844.PNG"
+   ],
+   "82": [
+    "IMG_0845.PNG",
+    "IMG_0846.PNG",
+    "IMG_0847.PNG"
+   ],
+   "83": [
+    "IMG_0848.PNG",
+    "IMG_0849.PNG",
+    "IMG_0850.PNG"
+   ],
+   "84": [
+    "IMG_0851.PNG",
+    "IMG_0852.PNG",
+    "IMG_0853.PNG"
+   ],
+   "85": [
+    "IMG_0854.PNG",
+    "IMG_0855.PNG",
+    "IMG_0856.PNG"
+   ],
+   "86": [
+    "IMG_0857.PNG",
+    "IMG_0858.PNG",
+    "IMG_0859.PNG"
+   ],
+   "87": [
+    "IMG_0860.PNG",
+    "IMG_0861.PNG",
+    "IMG_0862.PNG"
+   ],
+   "88": [
+    "IMG_0863.PNG",
+    "IMG_0864.PNG",
+    "IMG_0865.PNG"
+   ],
+   "89": [
+    "IMG_0866.PNG",
+    "IMG_0867.PNG",
+    "IMG_0868.PNG"
+   ],
+   "90": [
+    "IMG_0869.PNG",
+    "IMG_0870.PNG",
+    "IMG_0871.PNG"
+   ],
+   "91": [
+    "IMG_0872.PNG",
+    "IMG_0873.PNG",
+    "IMG_0874.PNG"
+   ],
+   "92": [
+    "IMG_0875.PNG",
+    "IMG_0876.PNG",
+    "IMG_0877.PNG"
+   ],
+   "93": [
+    "IMG_0878.PNG",
+    "IMG_0879.PNG",
+    "IMG_0880.PNG"
+   ],
+   "94": [
+    "IMG_0881.PNG",
+    "IMG_0882.PNG",
+    "IMG_0883.PNG"
+   ],
+   "95": [
+    "IMG_0884.PNG",
+    "IMG_0885.PNG",
+    "IMG_0886.PNG"
+   ],
+   "96": [
+    "IMG_0887.PNG",
+    "IMG_0888.PNG",
+    "IMG_0889.PNG"
+   ],
+   "97": [
+    "IMG_0890.PNG",
+    "IMG_0891.PNG",
+    "IMG_0892.PNG"
+   ],
+   "98": [
+    "IMG_0893.PNG",
+    "IMG_0894.PNG",
+    "IMG_0895.PNG"
+   ],
+   "99": [
+    "IMG_0896.PNG",
+    "IMG_0897.PNG",
+    "IMG_0898.PNG"
+   ],
+   "100": [
+    "IMG_0899.PNG",
+    "IMG_0900.PNG",
+    "IMG_0901.PNG"
+   ],
+   "101": [
+    "IMG_0902.PNG",
+    "IMG_0903.PNG",
+    "IMG_0904.PNG"
+   ],
+   "102": [
+    "IMG_0905.PNG",
+    "IMG_0906.PNG",
+    "IMG_0907.PNG"
+   ],
+   "103": [
+    "IMG_0908.PNG",
+    "IMG_0909.PNG",
+    "IMG_0910.PNG"
+   ],
+   "104": [
+    "IMG_0911.PNG",
+    "IMG_0912.PNG",
+    "IMG_0913.PNG"
+   ],
+   "105": [
+    "IMG_0914.PNG",
+    "IMG_0915.PNG",
+    "IMG_0916.PNG"
+   ],
+   "106": [
+    "IMG_0917.PNG",
+    "IMG_0918.PNG",
+    "IMG_0919.PNG"
+   ],
+   "107": [
+    "IMG_0920.PNG",
+    "IMG_0921.PNG",
+    "IMG_0922.PNG"
+   ],
+   "108": [
+    "IMG_0923.PNG",
+    "IMG_0924.PNG",
+    "IMG_0925.PNG"
+   ],
+   "109": [
+    "IMG_0926.PNG",
+    "IMG_0927.PNG",
+    "IMG_0928.PNG"
+   ],
+   "110": [
+    "IMG_0929.PNG",
+    "IMG_0930.PNG",
+    "IMG_0931.PNG"
+   ],
+   "111": [
+    "IMG_0932.PNG",
+    "IMG_0933.PNG",
+    "IMG_0934.PNG"
+   ],
+   "112": [
+    "IMG_0935.PNG",
+    "IMG_0936.PNG",
+    "IMG_0937.PNG"
+   ],
+   "113": [
+    "IMG_0938.PNG",
+    "IMG_0939.PNG",
+    "IMG_0940.PNG"
+   ],
+   "114": [
+    "IMG_0941.PNG",
+    "IMG_0942.PNG",
+    "IMG_0943.PNG"
+   ],
+   "115": [
+    "IMG_0944.PNG",
+    "IMG_0945.PNG",
+    "IMG_0946.PNG"
+   ],
+   "116": [
+    "IMG_0947.PNG",
+    "IMG_0948.PNG",
+    "IMG_0949.PNG"
+   ],
+   "117": [
+    "IMG_0950.PNG",
+    "IMG_0951.PNG",
+    "IMG_0952.PNG"
+   ],
+   "118": [
+    "IMG_0953.PNG",
+    "IMG_0954.PNG",
+    "IMG_0955.PNG"
+   ],
+   "119": [
+    "IMG_0956.PNG",
+    "IMG_0957.PNG",
+    "IMG_0958.PNG"
+   ],
+   "120": [
+    "IMG_0959.PNG",
+    "IMG_0960.PNG",
+    "IMG_0961.PNG"
+   ],
+   "121": [
+    "IMG_0962.PNG",
+    "IMG_0963.PNG",
+    "IMG_0964.PNG"
+   ],
+   "122": [
+    "IMG_0965.PNG",
+    "IMG_0966.PNG",
+    "IMG_0967.PNG"
+   ],
+   "123": [
+    "IMG_0968.PNG",
+    "IMG_0969.PNG",
+    "IMG_0970.PNG"
+   ],
+   "124": [
+    "IMG_0971.PNG",
+    "IMG_0972.PNG",
+    "IMG_0973.PNG"
+   ],
+   "125": [
+    "IMG_0974.PNG",
+    "IMG_0975.PNG",
+    "IMG_0976.PNG"
+   ],
+   "126": [
+    "IMG_0977.PNG",
+    "IMG_0978.PNG",
+    "IMG_0979.PNG"
+   ],
+   "127": [
+    "IMG_0980.PNG",
+    "IMG_0981.PNG",
+    "IMG_0982.PNG"
+   ],
+   "128": [
+    "IMG_0983.PNG",
+    "IMG_0984.PNG",
+    "IMG_0985.PNG"
+   ],
+   "129": [
+    "IMG_0986.PNG",
+    "IMG_0987.PNG",
+    "IMG_0988.PNG"
+   ],
+   "130": [
+    "IMG_0989.PNG",
+    "IMG_0990.PNG",
+    "IMG_0991.PNG"
+   ],
+   "131": [
+    "IMG_0992.PNG",
+    "IMG_0993.PNG",
+    "IMG_0994.PNG"
+   ],
+   "132": [
+    "IMG_0995.PNG",
+    "IMG_0996.PNG",
+    "IMG_0997.PNG"
+   ],
+   "133": [
+    "IMG_0998.PNG",
+    "IMG_0999.PNG",
+    "IMG_1001.PNG"
+   ],
+   "134": [
+    "IMG_1002.PNG",
+    "IMG_1003.PNG",
+    "IMG_1004.PNG"
+   ],
+   "135": [
+    "IMG_1005.PNG",
+    "IMG_1006.PNG",
+    "IMG_1007.PNG"
+   ],
+   "136": [
+    "IMG_1008.PNG",
+    "IMG_1009.PNG",
+    "IMG_1010.PNG"
+   ],
+   "137": [
+    "IMG_1011.PNG",
+    "IMG_1012.PNG",
+    "IMG_1013.PNG"
+   ],
+   "138": [
+    "IMG_1014.PNG",
+    "IMG_1015.PNG",
+    "IMG_1016.PNG"
+   ],
+   "139": [
+    "IMG_1017.PNG",
+    "IMG_1018.PNG",
+    "IMG_1019.PNG"
+   ],
+   "140": [
+    "IMG_1020.PNG",
+    "IMG_1021.PNG",
+    "IMG_1022.PNG"
+   ],
+   "141": [
+    "IMG_1023.PNG",
+    "IMG_1024.PNG",
+    "IMG_1025.PNG"
+   ],
+   "142": [
+    "IMG_1026.PNG",
+    "IMG_1027.PNG",
+    "IMG_1028.PNG"
+   ],
+   "143": [
+    "IMG_1029.PNG",
+    "IMG_1030.PNG",
+    "IMG_1031.PNG"
+   ],
+   "144": [
+    "IMG_1032.PNG",
+    "IMG_1033.PNG",
+    "IMG_1034.PNG"
+   ],
+   "145": [
+    "IMG_1035.PNG",
+    "IMG_1036.PNG",
+    "IMG_1037.PNG"
+   ],
+   "146": [
+    "IMG_1038.PNG",
+    "IMG_1039.PNG",
+    "IMG_1040.PNG"
+   ],
+   "147": [
+    "IMG_1041.PNG",
+    "IMG_1042.PNG",
+    "IMG_1043.PNG"
+   ],
+   "148": [
+    "IMG_1044.PNG",
+    "IMG_1045.PNG",
+    "IMG_1046.PNG"
+   ],
+   "149": [
+    "IMG_1047.PNG",
+    "IMG_1048.PNG",
+    "IMG_1049.PNG"
+   ],
+   "150": [
+    "IMG_1050.PNG",
+    "IMG_1051.PNG",
+    "IMG_1052.PNG"
+   ],
+   "151": [
+    "IMG_1053.PNG",
+    "IMG_1054.PNG",
+    "IMG_1055.PNG"
+   ],
+   "152": [
+    "IMG_1056.PNG",
+    "IMG_1057.PNG",
+    "IMG_1058.PNG"
+   ],
+   "153": [
+    "IMG_1059.PNG",
+    "IMG_1060.PNG",
+    "IMG_1061.PNG"
+   ],
+   "154": [
+    "IMG_1062.PNG",
+    "IMG_1063.PNG",
+    "IMG_1064.PNG"
+   ],
+   "155": [
+    "IMG_1065.PNG",
+    "IMG_1066.PNG",
+    "IMG_1067.PNG"
+   ],
+   "156": [
+    "IMG_1068.PNG",
+    "IMG_1069.PNG",
+    "IMG_1070.PNG"
+   ]
+  },
+  "seeds_verified": "research/14 の16ビート対応と全一致＋BEAT表示目視（b0/b1/b37/b38境界・b133・b156・全111ブロックのBEAT欄）"
+ },
+ "pops": [
+  {
+   "beat": 0,
+   "lane": "1",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b0、全レーン）"
+  },
+  {
+   "beat": 0,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b0、全レーン）"
+  },
+  {
+   "beat": 0,
+   "lane": "3",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b0、全レーン）"
+  },
+  {
+   "beat": 0,
+   "lane": "4",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b0、全レーン。flagsはwhiteだがダッシュの白色を誤検出）"
+  },
+  {
+   "beat": 0,
+   "lane": "5",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b0、全レーン）"
+  },
+  {
+   "beat": 1,
+   "lane": "1",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b1開幕P/フォト9連発・全レーンmiss）"
+  },
+  {
+   "beat": 1,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b1開幕P/フォト9連発・全レーンmiss）"
+  },
+  {
+   "beat": 1,
+   "lane": "3",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b1開幕P/フォト9連発・全レーンmiss）"
+  },
+  {
+   "beat": 1,
+   "lane": "4",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b1。flagsはwhiteだがダッシュの白色を誤検出）"
+  },
+  {
+   "beat": 1,
+   "lane": "5",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b1開幕P/フォト9連発・全レーンmiss）"
+  },
+  {
+   "beat": 2,
+   "lane": "1",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b2はA(L3)+フォト発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 2,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b2はA(L3)+フォト発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 2,
+   "lane": "4",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b2。flagsはwhiteだがダッシュの白色を誤検出）"
+  },
+  {
+   "beat": 3,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b3フォト発動ビート）"
+  },
+  {
+   "beat": 23,
+   "lane": "1",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b23はA(L4)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 23,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b23はA(L4)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 23,
+   "lane": "3",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b23はA(L4)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 23,
+   "lane": "5",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b23はA(L4)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 30,
+   "lane": "1",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b30はA(L5)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 30,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b30はA(L5)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 30,
+   "lane": "3",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b30はA(L5)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 30,
+   "lane": "4",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b30。flagsはwhiteだがダッシュの白色を誤検出）"
+  },
+  {
+   "beat": 38,
+   "lane": "1",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b38はA(L2)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 38,
+   "lane": "3",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b38はA(L2)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 38,
+   "lane": "4",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b38。flagsはwhiteだがダッシュの白色を誤検出）"
+  },
+  {
+   "beat": 38,
+   "lane": "5",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b38はA(L2)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 40,
+   "lane": "4",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b40はP(L4)発動ビート。スコアは獲得されるが表示抑制）"
+  },
+  {
+   "beat": 47,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b47はA(L1)+フォト3発動ビート）"
+  },
+  {
+   "beat": 47,
+   "lane": "4",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b47。flagsはwhiteだがダッシュの白色を誤検出）"
+  },
+  {
+   "beat": 47,
+   "lane": "5",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b47はA(L1)+フォト3発動ビート）"
+  },
+  {
+   "beat": 48,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b48フォト発動ビート）"
+  },
+  {
+   "beat": 49,
+   "lane": "1",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b49はSP FAIL・全レーン0点）"
+  },
+  {
+   "beat": 49,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b49はSP FAIL・全レーン0点）"
+  },
+  {
+   "beat": 49,
+   "lane": "3",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b49はSP FAIL・全レーン0点）"
+  },
+  {
+   "beat": 49,
+   "lane": "4",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b49はSP FAIL（FAILバナー確認）。flagsはwhiteだがダッシュの白色を誤検出）"
+  },
+  {
+   "beat": 49,
+   "lane": "5",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b49はSP FAIL・全レーン0点）"
+  },
+  {
+   "beat": 50,
+   "lane": "1",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b50はP(L1)発動ビート。スコアは獲得されるが表示抑制）"
+  },
+  {
+   "beat": 50,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b50はP(L1)発動ビート。スコアは獲得されるが表示抑制）"
+  },
+  {
+   "beat": 50,
+   "lane": "4",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b50。flagsはwhiteだがダッシュの白色を誤検出）"
+  },
+  {
+   "beat": 51,
+   "lane": "1",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b51フォト発動ビート）"
+  },
+  {
+   "beat": 51,
+   "lane": "3",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b51フォト発動ビート）"
+  },
+  {
+   "beat": 51,
+   "lane": "4",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b51フォト発動ビート。flagsはwhiteだがダッシュの白色を誤検出）"
+  },
+  {
+   "beat": 52,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b52フォト発動ビート）"
+  },
+  {
+   "beat": 60,
+   "lane": "1",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b60はA(L5)+フォト+P発動ビート）"
+  },
+  {
+   "beat": 60,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b60はA(L5)+フォト+P発動ビート）"
+  },
+  {
+   "beat": 60,
+   "lane": "3",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b60はA(L5)+フォト+P発動ビート）"
+  },
+  {
+   "beat": 60,
+   "lane": "4",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b60。flagsはwhiteだがダッシュの白色を誤検出）"
+  },
+  {
+   "beat": 69,
+   "lane": "1",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b69はA(L3)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 69,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b69はA(L3)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 69,
+   "lane": "4",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b69。flagsはwhiteだがダッシュの白色を誤検出）"
+  },
+  {
+   "beat": 69,
+   "lane": "5",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b69はA(L3)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 80,
+   "lane": "1",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b80はA(L4)+P発動ビート）"
+  },
+  {
+   "beat": 80,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b80はA(L4)+P発動ビート）"
+  },
+  {
+   "beat": 80,
+   "lane": "3",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b80はA(L4)+P発動ビート）"
+  },
+  {
+   "beat": 80,
+   "lane": "5",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b80はA(L4)+P発動ビート）"
+  },
+  {
+   "beat": 81,
+   "lane": "1",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b81フォト2発動ビート）"
+  },
+  {
+   "beat": 86,
+   "lane": "1",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b86はA(L2)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 86,
+   "lane": "3",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b86はA(L2)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 86,
+   "lane": "4",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b86。flagsはwhiteだがダッシュの白色を誤検出）"
+  },
+  {
+   "beat": 86,
+   "lane": "5",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b86はA(L2)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 93,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b93フォト発動ビート）"
+  },
+  {
+   "beat": 94,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b94はA(L1)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 94,
+   "lane": "3",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b94はA(L1)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 94,
+   "lane": "4",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b94。flagsはwhiteだがダッシュの白色を誤検出）"
+  },
+  {
+   "beat": 94,
+   "lane": "5",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b94はA(L1)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 97,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b97フォト3発動ビート）"
+  },
+  {
+   "beat": 97,
+   "lane": "4",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b97。flagsはwhiteだがダッシュの白色を誤検出）"
+  },
+  {
+   "beat": 100,
+   "lane": "1",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b100はP(L1)+フォト+P発動ビート）"
+  },
+  {
+   "beat": 100,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b100はP(L1)+フォト+P発動ビート）"
+  },
+  {
+   "beat": 100,
+   "lane": "4",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b100。flagsはwhiteだがダッシュの白色を誤検出）"
+  },
+  {
+   "beat": 101,
+   "lane": "1",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b101はフォト+P(L3)発動ビート）"
+  },
+  {
+   "beat": 101,
+   "lane": "3",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b101はフォト+P(L3)発動ビート）"
+  },
+  {
+   "beat": 102,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b102フォト発動ビート）"
+  },
+  {
+   "beat": 103,
+   "lane": "1",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b103はSP(L3)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 103,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b103はSP(L3)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 103,
+   "lane": "4",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b103。flagsはwhiteだがダッシュの白色を誤検出）"
+  },
+  {
+   "beat": 103,
+   "lane": "5",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b103はSP(L3)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 106,
+   "lane": "1",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b106はA(L4)+P(L5)発動ビート）"
+  },
+  {
+   "beat": 106,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b106はA(L4)+P(L5)発動ビート）"
+  },
+  {
+   "beat": 106,
+   "lane": "3",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b106はA(L4)+P(L5)発動ビート）"
+  },
+  {
+   "beat": 106,
+   "lane": "5",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b106はA(L4)+P(L5)発動ビート。P発動レーンだが表示抑制）"
+  },
+  {
+   "beat": 115,
+   "lane": "1",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b115はA(L2)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 115,
+   "lane": "3",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b115はA(L2)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 115,
+   "lane": "4",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b115。flagsはwhiteだがダッシュの白色を誤検出）"
+  },
+  {
+   "beat": 115,
+   "lane": "5",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b115はA(L2)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 120,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b120はP(L4)+フォト発動ビート）"
+  },
+  {
+   "beat": 120,
+   "lane": "4",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b120はP(L4)発動レーン。スコアは獲得されるが表示抑制）"
+  },
+  {
+   "beat": 128,
+   "lane": "1",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b128はA(L5)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 128,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b128はA(L5)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 128,
+   "lane": "3",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b128はA(L5)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 128,
+   "lane": "4",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b128。flagsはwhiteだがダッシュの白色を誤検出）"
+  },
+  {
+   "beat": 136,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b136はA(L1)+P(L3)発動ビート）"
+  },
+  {
+   "beat": 136,
+   "lane": "3",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b136はA(L1)+P(L3)発動ビート。P発動レーンだが表示抑制）"
+  },
+  {
+   "beat": 136,
+   "lane": "4",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b136。flagsはwhiteだがダッシュの白色を誤検出）"
+  },
+  {
+   "beat": 136,
+   "lane": "5",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b136はA(L1)+P(L3)発動ビート）"
+  },
+  {
+   "beat": 138,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b138フォト(L2)発動レーン。発動レーンも表示抑制）"
+  },
+  {
+   "beat": 144,
+   "lane": "1",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b144はA(L2)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 144,
+   "lane": "3",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b144はA(L2)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 144,
+   "lane": "4",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b144。flagsはwhiteだがダッシュの白色を誤検出）"
+  },
+  {
+   "beat": 144,
+   "lane": "5",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b144はA(L2)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 147,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b147フォト2発動ビート）"
+  },
+  {
+   "beat": 147,
+   "lane": "4",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b147。flagsはwhiteだがダッシュの白色を誤検出）"
+  },
+  {
+   "beat": 150,
+   "lane": "1",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b150はP(L1)+フォト+P発動ビート。P発動レーンだが表示抑制）"
+  },
+  {
+   "beat": 150,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b150はP(L1)+フォト+P発動ビート）"
+  },
+  {
+   "beat": 150,
+   "lane": "4",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b150。flagsはwhiteだがダッシュの白色を誤検出）"
+  },
+  {
+   "beat": 151,
+   "lane": "1",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b151フォト(L1)発動レーン。発動レーンも表示抑制）"
+  },
+  {
+   "beat": 152,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b152フォト(L2)発動レーン。発動レーンも表示抑制）"
+  },
+  {
+   "beat": 156,
+   "lane": "1",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b156はA(L3)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 156,
+   "lane": "2",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b156はA(L3)発動ビート。非オーナーレーンは抑制）"
+  },
+  {
+   "beat": 156,
+   "lane": "4",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b156。flagsはwhiteだがダッシュの白色を誤検出）"
+  },
+  {
+   "beat": 156,
+   "lane": "5",
+   "displayed": null,
+   "color": null,
+   "readable": false,
+   "note": "popなし（ダッシュ「－」表示・b156はA(L3)発動ビート。非オーナーレーンは抑制）"
+  }
+ ],
+ "critical_flag_review": [
+  {
+   "beat": 0,
+   "lane": "4",
+   "existing_flag": "white",
+   "observed": "dash(－表示・ポップなし)",
+   "confidence": "high",
+   "note": "既存flagsは白色ダッシュ「－」を白ポップと誤検出。シート目視で確定",
+   "resolution": "backfill側をpopなしで記録。既存JSONは未変更"
+  },
+  {
+   "beat": 1,
+   "lane": "4",
+   "existing_flag": "white",
+   "observed": "dash(－表示・ポップなし)",
+   "confidence": "high",
+   "note": "既存flagsは白色ダッシュ「－」を白ポップと誤検出。シート目視で確定",
+   "resolution": "backfill側をpopなしで記録。既存JSONは未変更"
+  },
+  {
+   "beat": 2,
+   "lane": "4",
+   "existing_flag": "white",
+   "observed": "dash(－表示・ポップなし)",
+   "confidence": "high",
+   "note": "既存flagsは白色ダッシュ「－」を白ポップと誤検出。シート目視で確定",
+   "resolution": "backfill側をpopなしで記録。既存JSONは未変更"
+  },
+  {
+   "beat": 30,
+   "lane": "4",
+   "existing_flag": "white",
+   "observed": "dash(－表示・ポップなし)",
+   "confidence": "high",
+   "note": "既存flagsは白色ダッシュ「－」を白ポップと誤検出。シート目視で確定",
+   "resolution": "backfill側をpopなしで記録。既存JSONは未変更"
+  },
+  {
+   "beat": 38,
+   "lane": "4",
+   "existing_flag": "white",
+   "observed": "dash(－表示・ポップなし)",
+   "confidence": "high",
+   "note": "既存flagsは白色ダッシュ「－」を白ポップと誤検出。シート目視で確定",
+   "resolution": "backfill側をpopなしで記録。既存JSONは未変更"
+  },
+  {
+   "beat": 40,
+   "lane": "4",
+   "existing_flag": "white",
+   "observed": "dash(－表示・ポップなし)",
+   "confidence": "high",
+   "note": "既存flagsは白色ダッシュ「－」を白ポップと誤検出。シート目視で確定",
+   "resolution": "backfill側をpopなしで記録。既存JSONは未変更"
+  },
+  {
+   "beat": 47,
+   "lane": "4",
+   "existing_flag": "white",
+   "observed": "dash(－表示・ポップなし)",
+   "confidence": "high",
+   "note": "既存flagsは白色ダッシュ「－」を白ポップと誤検出。シート目視で確定",
+   "resolution": "backfill側をpopなしで記録。既存JSONは未変更"
+  },
+  {
+   "beat": 49,
+   "lane": "4",
+   "existing_flag": "white",
+   "observed": "dash(－表示・ポップなし)",
+   "confidence": "high",
+   "note": "既存flagsは白色ダッシュ「－」を白ポップと誤検出。シート目視で確定",
+   "resolution": "backfill側をpopなしで記録。既存JSONは未変更"
+  },
+  {
+   "beat": 50,
+   "lane": "4",
+   "existing_flag": "white",
+   "observed": "dash(－表示・ポップなし)",
+   "confidence": "high",
+   "note": "既存flagsは白色ダッシュ「－」を白ポップと誤検出。シート目視で確定",
+   "resolution": "backfill側をpopなしで記録。既存JSONは未変更"
+  },
+  {
+   "beat": 51,
+   "lane": "4",
+   "existing_flag": "white",
+   "observed": "dash(－表示・ポップなし)",
+   "confidence": "high",
+   "note": "既存flagsは白色ダッシュ「－」を白ポップと誤検出。シート目視で確定",
+   "resolution": "backfill側をpopなしで記録。既存JSONは未変更"
+  },
+  {
+   "beat": 60,
+   "lane": "4",
+   "existing_flag": "white",
+   "observed": "dash(－表示・ポップなし)",
+   "confidence": "high",
+   "note": "既存flagsは白色ダッシュ「－」を白ポップと誤検出。シート目視で確定",
+   "resolution": "backfill側をpopなしで記録。既存JSONは未変更"
+  },
+  {
+   "beat": 69,
+   "lane": "4",
+   "existing_flag": "white",
+   "observed": "dash(－表示・ポップなし)",
+   "confidence": "high",
+   "note": "既存flagsは白色ダッシュ「－」を白ポップと誤検出。シート目視で確定",
+   "resolution": "backfill側をpopなしで記録。既存JSONは未変更"
+  },
+  {
+   "beat": 86,
+   "lane": "4",
+   "existing_flag": "white",
+   "observed": "dash(－表示・ポップなし)",
+   "confidence": "high",
+   "note": "既存flagsは白色ダッシュ「－」を白ポップと誤検出。シート目視で確定",
+   "resolution": "backfill側をpopなしで記録。既存JSONは未変更"
+  },
+  {
+   "beat": 94,
+   "lane": "4",
+   "existing_flag": "white",
+   "observed": "dash(－表示・ポップなし)",
+   "confidence": "high",
+   "note": "既存flagsは白色ダッシュ「－」を白ポップと誤検出。シート目視で確定",
+   "resolution": "backfill側をpopなしで記録。既存JSONは未変更"
+  },
+  {
+   "beat": 97,
+   "lane": "4",
+   "existing_flag": "white",
+   "observed": "dash(－表示・ポップなし)",
+   "confidence": "high",
+   "note": "既存flagsは白色ダッシュ「－」を白ポップと誤検出。シート目視で確定",
+   "resolution": "backfill側をpopなしで記録。既存JSONは未変更"
+  },
+  {
+   "beat": 100,
+   "lane": "4",
+   "existing_flag": "white",
+   "observed": "dash(－表示・ポップなし)",
+   "confidence": "high",
+   "note": "既存flagsは白色ダッシュ「－」を白ポップと誤検出。シート目視で確定",
+   "resolution": "backfill側をpopなしで記録。既存JSONは未変更"
+  },
+  {
+   "beat": 103,
+   "lane": "4",
+   "existing_flag": "white",
+   "observed": "dash(－表示・ポップなし)",
+   "confidence": "high",
+   "note": "既存flagsは白色ダッシュ「－」を白ポップと誤検出。シート目視で確定",
+   "resolution": "backfill側をpopなしで記録。既存JSONは未変更"
+  },
+  {
+   "beat": 115,
+   "lane": "4",
+   "existing_flag": "white",
+   "observed": "dash(－表示・ポップなし)",
+   "confidence": "high",
+   "note": "既存flagsは白色ダッシュ「－」を白ポップと誤検出。シート目視で確定",
+   "resolution": "backfill側をpopなしで記録。既存JSONは未変更"
+  },
+  {
+   "beat": 120,
+   "lane": "4",
+   "existing_flag": "white",
+   "observed": "dash(－表示・ポップなし)",
+   "confidence": "high",
+   "note": "既存flagsは白色ダッシュ「－」を白ポップと誤検出。シート目視で確定",
+   "resolution": "backfill側をpopなしで記録。既存JSONは未変更"
+  },
+  {
+   "beat": 128,
+   "lane": "4",
+   "existing_flag": "white",
+   "observed": "dash(－表示・ポップなし)",
+   "confidence": "high",
+   "note": "既存flagsは白色ダッシュ「－」を白ポップと誤検出。シート目視で確定",
+   "resolution": "backfill側をpopなしで記録。既存JSONは未変更"
+  },
+  {
+   "beat": 136,
+   "lane": "4",
+   "existing_flag": "white",
+   "observed": "dash(－表示・ポップなし)",
+   "confidence": "high",
+   "note": "既存flagsは白色ダッシュ「－」を白ポップと誤検出。シート目視で確定",
+   "resolution": "backfill側をpopなしで記録。既存JSONは未変更"
+  },
+  {
+   "beat": 144,
+   "lane": "4",
+   "existing_flag": "white",
+   "observed": "dash(－表示・ポップなし)",
+   "confidence": "high",
+   "note": "既存flagsは白色ダッシュ「－」を白ポップと誤検出。シート目視で確定",
+   "resolution": "backfill側をpopなしで記録。既存JSONは未変更"
+  },
+  {
+   "beat": 147,
+   "lane": "4",
+   "existing_flag": "white",
+   "observed": "dash(－表示・ポップなし)",
+   "confidence": "high",
+   "note": "既存flagsは白色ダッシュ「－」を白ポップと誤検出。シート目視で確定",
+   "resolution": "backfill側をpopなしで記録。既存JSONは未変更"
+  },
+  {
+   "beat": 150,
+   "lane": "4",
+   "existing_flag": "white",
+   "observed": "dash(－表示・ポップなし)",
+   "confidence": "high",
+   "note": "既存flagsは白色ダッシュ「－」を白ポップと誤検出。シート目視で確定",
+   "resolution": "backfill側をpopなしで記録。既存JSONは未変更"
+  },
+  {
+   "beat": 156,
+   "lane": "4",
+   "existing_flag": "white",
+   "observed": "dash(－表示・ポップなし)",
+   "confidence": "high",
+   "note": "既存flagsは白色ダッシュ「－」を白ポップと誤検出。シート目視で確定",
+   "resolution": "backfill側をpopなしで記録。既存JSONは未変更"
+  }
+ ],
+ "summary": {
+  "readable": 0,
+  "blocked": 0,
+  "no_pop": 111,
+  "unreadable": 0,
+  "by_lane": {
+   "1": {
+    "no_pop": 24
+   },
+   "2": {
+    "no_pop": 29
+   },
+   "3": {
+    "no_pop": 17
+   },
+   "4": {
+    "no_pop": 25
+   },
+   "5": {
+    "no_pop": 16
+   }
+  },
+  "note": "欠損111セルは全てダッシュ「－」表示を確認（popなし）。既存674セルと合わせ785/785確定（取得率100%・数値0・ダッシュ111）"
+ },
+ "meta": {
+  "created": "2026-09-06",
+  "agent": "T5ポップ遡及セッション",
+  "notes": "S1第二波の機序（A/SP非オーナー抑制・P/フォト発動ビートの表示抑制・FAIL・b0/b1全miss）と完全整合。flagsのwhite25件（L4の欠損25全て）は白色ダッシュの誤検出（既存JSONは未変更）。K合計検証はunder-sumのみ・over-sumは既存値の帰属ラグに由来し読取とは無関係"
+ }
+}
