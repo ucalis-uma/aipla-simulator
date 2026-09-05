@@ -2561,3 +2561,36 @@ S1 スクショで Pスキル CT バッジ（L1/L4 CT50・L5 CT60）を b1〜b3/
   - `スコア分析サンプル/measured_data_summary.md` に§7追記（既存記述は未変更）
   - `tools/backfill/make_pop_sheets_t5.py`（新規。T5の1668×2420・IMG_NNNN命名対応。S系とは別ファイル）
   - 作業ファイル（シート・中間JSON・検証出力）は `C:/Users/umaro/AppData/Local/Temp/opencode/T5/`・`t5_*.json/py`
+
+### 9. 全サンプル backfill の最終検証と S3 ラベル訂正（2026-09-06・S4 ロールバックセッション）
+
+> T5 遡及完了（§8）を受け、S1/S2/S3/T5 の lane_pops_backfill.json を全件突合検証した。
+> **aipura_nox 側の遡及対象はゼロ**（S4 は再撮影後の Step D で全件新規取得予定）。
+> 併せて S3 のラベル誤りを訂正した（下記）。既存 measured_data*.json は一切未変更。
+
+- **S3 ラベル訂正（本体）**: `サンプル3/lane_pops_backfill.json` の 680 セルに
+  「該当フレームなし（全フォルダのこのビートで他レーンがフォーカス）」note が入っていたが、
+  これは**遡及対象外（既存 measured_data_v2 の gained_score_pop.text 記録済み 733 セルのうち
+  スポット再読 53 を除く 680）に S4 由来のプレースホルダ文が誤って入ったもの**。
+  突合の結果、該当なし note かつ既存 text なし（本当の欠損）は **0 件**で、データ欠落は無い。
+  訂正内容: note →「既存 measured_data に記録済み・再読見送り（スポット再読 53 件は既存 text と
+  全一致）」・displayed に既存値を転記・covered_by_existing フラグ付与・meta.summary の
+  no_frame:680 → covered_by_existing:680（no_frame は 0）・correction 節追記。
+  訂正後の分類: readable 57 / popなし 113 / covered_by_existing 680 = 850 全セル決着
+- **S1 検証（追加修正なし・issues.md の内訳行のみ訂正）**: 885 セル全カバレッジ（timeline と完全一致）。
+  readable 792 / popなし 87 / 該当フレームなし 6。over-sum 0 件。
+  該当なし 6 セルは実ファイル照合で正当性を確認（lane5 b10/83/121/149・lane2 b154 は撮影失敗で
+  当該フォルダにファイル無し・lane1 b0 は全 5 フレーム非フォーカス）。
+  issues.md §7-1 が訂正前数値（793/86・L4=159）のままだったため最終値（792/87・L4=158）に訂正
+- **S2 検証（修正なし）**: 840 セル全決着（readable 745 / popなし 95）・未分類 0・over-sum 0・
+  既存 text は 0 件のため readable 745 は全て新規取得分として一貫
+- **T5 検証（§8 の成果物をコミット e409865）**: backfill 111 セル = 既存欠損 111 と完全一致・
+  既存 have との重複 0・全セルダッシュ「－」確認・img_map 総数 432 = lane3 実ファイル数一致・
+  flag_review 25 件（白色ダッシュ誤検出の訂正候補）記録済み。既存 674 と合わせ 785/785 確定
+- **横断サマリ（レーン別ポップ確定状況）**: S1 885/885・S2 840/840・S3 850/850・T5 785/785。
+  残る未取得は S4 のみ（再撮影 → Step D 初回解析で全記録予定）。
+  注意事項: T5 の既存 critical_flags は白色ダッシュを誤検出するためレーン別検証では
+  backfill の pop なし判定を優先すること（§8）。
+  「該当フレームなし」ラベルの意味はサンプル間で異なり得る（S3 旧分=遡及対象外の誤記・
+  S1 6 セル=真の撮影失敗/全フレーム非フォーカス・S4 無効分=カメラ自動遷移）ため、
+  横断解析では各 backfill の correction/summary 節を必ず確認すること
