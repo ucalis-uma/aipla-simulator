@@ -59,13 +59,15 @@ prompts/continue-s1-backfill.md
 共存規律は各プロンプト §5/冒頭に記載: make_pop_sheets.py の改変は T5 セッション専任・
 共有ファイルのコミット前には git status 確認）。
 
-prompts/create-pack-v3-fable-inquiry.md
-は research/23 pack_v3（S4 完全除外・係数修正版 Fable 投入プロンプト）の作成タスク
-（2026-09-05 作成）。主問題は「S2 白ビート系統的 +4.5% シフトの犯人特定」。
+prompts/create-pack-v3-inquiry.md
+は research/23 pack_v3（S4 完全除外・係数修正版の外部 LLM 投入プロンプト）の作成タスク
+（2026-09-05 作成・2026-09-06 投入先をサービス非依存に変更・旧名 create-pack-v3-fable-inquiry.md）。
+主問題は「S2 白ビート系統的 +4.5% シフトの犯人特定」。
 S4 は無効化のため混入禁止・pack_v2 は書き換えない。係数は現行エンジン実装（B2 テーブル・
-fan 引力式 1356‰・deck 実値 basicSum）に修正する。Fable への投入はユーザーが LMarena で行い、
-回答 URL は prompts/continue-beat-score-session.md とともに新セッションへ投入して検証する。
-T5 遡及の成果を反映できるよう、実行順は T5 遡及の後を想定。
+fan 引力式 1356‰・deck 実値 basicSum）に修正する。投入プロンプト本文にはサービス/モデル固有名を
+含まない（単発チャット完結前提・回答の厳密検証はローカル側責任）。
+ユーザーが v0.app 等の任意の投入先に貼り付け、回答 URL を prompts/continue-beat-score-session.md
+とともに新セッションへ投入して検証する。S1/T5 遡及は完了済みのため実行順の制約はなく随时実行可。
 
 
 prompts/continue-t5-backfill.md
