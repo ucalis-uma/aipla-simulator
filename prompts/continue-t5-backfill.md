@@ -4,6 +4,14 @@
 > `research/22_sample4_rollback/progress.md` が一次情報）。**S4 は全面無効化済みなので
 > 本タスクで S4 に触れてはならない**（旧 `サンプル4_invalid_capture_20260905/` も読み書き禁止）。
 > S2/S3 の backfill 成果は有効・維持。T5 作業自体は S4 の状況に依存しないため単独で進めてよい。
+>
+> **並列実行が承認された**（2026-09-05 ユーザー決定）: S1 遡及セッション
+> （`prompts/continue-s1-backfill.md`）が同時進行する。共有ファイル（`research/12`・
+> `prompts/readme.txt`）の追記・コミット前には git status/log で他セッションのコミットを確認し、
+> 衝突は追加コミットで解決すること（rebase/revert 禁止）。
+> **`tools/backfill/make_pop_sheets.py` の改変（profiles 辞書化等）は本 T5 セッションの専任**。
+> S1 セッションは現行スクリプトを使うだけなので、改変は T5 側のビート↔IMG 対応が
+> 確定してから最後にまとめて行い、S1 の読取を壊さないこと
 
 あなたは IDOLY PRIDE ライブスコア計算機プロジェクト（リポジトリ: `C:\Users\umaro\Documents\アイプラ`）の
 **T5 ポップ遡及エージェント**です。まず `AGENTS.md`・`prompts/backfill-lane-pops.md`（手法の元規約）・
