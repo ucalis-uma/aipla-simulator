@@ -21,3 +21,6 @@ src-tauri/gen/
 スコア分析サンプル/*.JPG
 スコア分析サンプル/*.jpg
 簡易検証/
+
+# backfill pipeline generated artifacts (local only)
+tools/backfill/out/

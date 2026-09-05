@@ -2324,3 +2324,42 @@ LMarena にデプロイされた Fable 5.1 の回答サイト（`https://01a06e2
     白ポップ巨大値（=クリティカル読み間違い疑い）チェック
   - 優先順位: **S4（research/23 主戦場）→ S2（白ビート +4.5% シフトの犯人特定）→
     S3（欠損 117）→ S1/T5（欠損分のみ）**。総セル数 ≈ 4,000
+
+### 5. レーン別ポップ遡及の実施（2026-09-05・zcode）: S4/S2/S3 完了・S1/T5 は残置
+
+- **実行**（`prompts/backfill-lane-pops.md` に基づく・LLM 画像目視）:
+  - パイプライン: 全フレームから 3 領域クロップ（pop / アイドル名帯 / BEAT カウンタ）を
+    9 フレーム/シートに合成（`tools/backfill/make_pop_sheets.py`）→ サブエージェント 10 シート/バッチで
+    目視読取 → `tools/backfill/aggregate_backfill.py` でセル帰属（**フォーカスは名前帯で判定・フォルダ無関係**）・
+    検証（over-sum / 色×flags / 既存 text 突合）→ `<sample>/lane_pops_backfill.json` 書き出し
+  - **S4 完了**: 1008 フレーム→112 シート。385/835 セル取得（L1 134/L2 59/L3 150/L4 22/L5 20）。
+    over-sum 0 件・色×flags 不一致 0 件。M 単位ポップ（b18 +9.8M / b88 +21.3M / b166 +47M 等）は
+    beat_gained_score と 99.7-99.95% 一致し SP 単レーン巨大スコアと実証。
+    未取得 450 セルは該当フレームなし 400（L4 141・L5 144 等・既存記録少の理由と整合）+ popなし 50（FAIL 等）
+  - **S2 完了**: 904 フレーム→101 シート。**745/840 セル（88.7%）取得**（全レーン 146-153 と均衡）。
+    over-sum 1 件 = b1（既存 timeline が cumulative 差分由来で b1=0 だが L2 +9.9K ポップを直接観測。
+    b1/b2 の帰属ラグ問題を issues.md に記録）。色×flags 1 件不一致（b12 L2）は拡大再確認で
+    **既存 flag が正しい**（yellow）と判明・backfill 側を訂正（既存 JSON は未変更）。
+    research/12 §2 の白ビート +4.5% シフト検証に必要な素材が揃った
+  - **S3 完了**: 欠損 117 セル対象 181 フレーム→21 シート。4 セル新規取得・113 セル popなし確認
+    （L4/L5 のスタミナ枯渇 FAIL 連鎖）。既存 733 セルの再読 53 件は全て既存 text と一致・訂正候補 0
+  - **S1/T5 は残置**: S1 は全 885 セル新規（要 170-177 シート規模）、T5 は欠損 111 セルだが
+    beat↔IMG 対応（lane3 は IMG_(637+2N) だが他レーンは未解明）の解明が前提で別セッション推奨。
+    `make_pop_sheets.py` は T5 の IMG_NNNN 命名に未対応（beat 数→ファイル名のマップ生成が要）
+- **品質の証跡**:
+  - サブエージェント読取の網羅性を manifest と突合して全バッチ検収（欠ブロック 0 に是正・
+    block 名のゆらぎ 2 件のみ rename で解消）
+  - プロバイダエラーでサブエージェントが途中死んだ場合も、シート単位の逐次保存指示により
+    読取済み分は失われず再開可能だった（S2 で実績）
+  - S2 b12 L2 のように色判定の誤読が 1 件あった → 拡大クロップ再確認プロセスで決着。
+    critical_flag_review には resolution フィールドで経緯を記録
+- **成果物**:
+  - `aipura_nox/サンプル4/lane_pops_backfill.json`（835 pops + meta）
+  - `aipura_nox/サンプル2/lane_pops_backfill.json`（840 pops + flag_review[b12 resolution 付き]）
+  - `aipura_nox/サンプル3/lane_pops_backfill.json`（850 pops・既存 733 は突合済みとして併記）
+  - 各サンプルの issues.md / measured_data_summary.md に追記（既存記述は未変更）
+  - `tools/backfill/`（make_pop_sheets.py / aggregate_backfill.py / check_batches.py / recon_*.py）
+- **次のアクション（計算機側）**: S4/S2 の backfill を既存データとマージし、research/23 の
+  純白ビート検証（S4）と +4.5% シフト犯人特定（S2）を再実行すること。
+  `displayed` は K/M 表示値なので、比較は表示分解能（±50/K 桁・±50k/M 桁）を許容して行うこと
+
