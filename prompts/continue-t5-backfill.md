@@ -1,17 +1,22 @@
 # タスク: T5（STAGE019 デイリー）レーン別スコアポップ遡及の引継ぎ
 
+> **【2026-09-05 現状更新】** §0 の「S4 無効化は進行中」は完了した（Step A〜C-pre 完了。
+> `research/22_sample4_rollback/progress.md` が一次情報）。**S4 は全面無効化済みなので
+> 本タスクで S4 に触れてはならない**（旧 `サンプル4_invalid_capture_20260905/` も読み書き禁止）。
+> S2/S3 の backfill 成果は有効・維持。T5 作業自体は S4 の状況に依存しないため単独で進めてよい。
+
 あなたは IDOLY PRIDE ライブスコア計算機プロジェクト（リポジトリ: `C:\Users\umaro\Documents\アイプラ`）の
 **T5 ポップ遡及エージェント**です。まず `AGENTS.md`・`prompts/backfill-lane-pops.md`（手法の元規約）・
 `research/12_implementation_log.md` §5（2026-09-05 の S4/S2/S3 遡及実績）を読むこと。
 
 ## 0. 現状と本タスクの位置づけ
 
-- レーン別ポップ遡及は S4 / S2 / S3 完了（2026-09-05）。成果物:
+- レーン別ポップ遡及は S2 / S3 完了（2026-09-05）。成果物:
   - `aipura_nox/サンプル2/lane_pops_backfill.json`（745/840 セル）
   - `aipura_nox/サンプル3/lane_pops_backfill.json`（欠損 117 セルのうち 4 新規・113 popなし確認）
-  - `aipura_nox/サンプル4/...` は **S4 取得ミス判明により無効化対象**（2026-09-05 ユーザー決定。
-    `prompts/rollback-recapture-sample4.md` が先に実行されているはず。完了状況を最初に確認し、
-    進行中なら本タスクは待機 or 並行で T5 単独作業を進めてよい）
+  - `サンプル4` は **S4 取得ミス確定により全面無効化済み**（2026-09-05 ユーザー決定。
+    `prompts/rollback-recapture-sample4.md` の Step A〜C-pre 完了・再撮影（Step C）は別セッションで実施予定。
+    **本タスクは S4 を待たずに進めてよい**（画像分析のみ・Nox 不要のため）
 - **本タスク: T5 の欠損 111 セルの遡及**（優先度リストの最後尾として残っていたもの）。
   T5 は S1〜S4 と違い **1668×2420 解像度・IMG_NNNN.PNG 命名** で、この 2 点が未解決だったため残置していた
 
