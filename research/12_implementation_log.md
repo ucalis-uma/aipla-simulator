@@ -2164,6 +2164,17 @@ as-is 反映」と確定した。ユーザーの意図「インポートした�
 
 ---
 
+> **【2026-09-05 無効化】本節（Phase 13）は S4 無効データ由来のため参考扱い**: S4 実測はカメラ自動遷移により
+> 「あるビートの全 5 フレームでカメラが目的レーンを向いていない」事象（全レーンで発生）を含む体系的欠落が確定し、
+> **全面ロールバックされた**（ユーザー決定・`prompts/rollback-recapture-sample4.md` Step B 実行済み）。
+> 本節の 4 点の「確定仕様」（譲渡 move 化・低下効果除外・延長の強化のみ対象化・comboReset トレース・
+> attrLaneLanes 優先度ソート）は src から除去済み（engine/buffs/types を 809838f 直前へ復元・
+> テストは `tests/invalidated/` へ隔離）。実測 134,925,158・再現ラン 135,241,180・確定値 129,579,105 等の
+> S4 数値はすべて無効データ由来。再検証は新データ（フォーカス検収付き再撮影）で行うこと。
+> 進捗: `research/22_sample4_rollback/progress.md`・`research/22_sample4_gap_analysis/INVALID_20260905_README.md`
+> ※ T5/S1/S2/S3 の「不変」確定値の行は有効（ロールバック後の CLI 再実行で T5 2,580,038,995・
+> S1 129,201,077・S2 43,236,162・S3 66,227,491 を再確認済み・2026-09-05 Step B）。
+
 ## Phase 13（2026-09-05）: サンプル4（STAGE054 / lumiere）確定仕様の実装と検証
 
 サンプル4（STAGE054・TRINITYAiLE / lumiere・実測 134,925,158）の乖離分析に基づき、4点の確定仕様改修を実施。
@@ -2205,6 +2216,10 @@ as-is 反映」と確定した。ユーザーの意図「インポートした�
 ---
 
 ## 2026-09-05 Fable 5.1 回答（λ = 8 / N_beat 説）の検証と反証・pack_v2 作成
+
+> **【2026-09-05 無効化】本節の S4 に関する記述は参考扱い**: S4 実測データ（ノーツ数の実測適合・
+> S4 純白ビート 67 件の検証等）は全面ロールバック対象（`research/22_sample4_rollback/progress.md`）。
+> T5/S3 に関する記述（ノーツ数のマスタ突合・8/140 適合）は有効。
 
 ### 1. Fable 5.1 回答の検証と破綻の数理的証明
 LMarena にデプロイされた Fable 5.1 の回答サイト（`https://01a06e2c-2e48-78d5-be43-eec6da6ff8a8.arena.site/`）について、ゲーム内マスタおよび実機実測データとの詳細な照合を実施した結果、**本提案は完全に誤りであり破綻している**ことを実証・特定した。
@@ -2251,6 +2266,12 @@ LMarena にデプロイされた Fable 5.1 の回答サイト（`https://01a06e2
    - `prompts/continue-beat-score-session.md` を作成。新規セッションで Fable の回答 URL とともに投入することで、即座に実機データ照合スクリプトの実行と検証・実装に入れる体制を整えた。
 
 ## 2026-09-05 Fable v2 Webアプリ（統一モデル提案）の厳密検証 — 現行実装の維持を決定
+
+> **【2026-09-05 無効化】本節の S4 に関する記述は参考扱い**: S4 実測データは全面ロールバック対象
+> （`research/22_sample4_rollback/progress.md`）。§2 のうち S4 に依存する項目（S4 κ≈850・
+> S4 off-attr 比率・S4 非ランダム残差の 4 ビート検証）は参考扱い。S2（+4.5% シフト）・S3（70/70）・
+> T5 の記述は有効。「現行実装の維持」の結論自体は S3/T5 根拠で独立に成立（S4 部分を除いても
+> 方向は変わらないが、再検証時に改めて確認する）。
 
 ### 1. 対象と検証方法
 - Fable v2 のデプロイ Web アプリ（`https://01a06e58-51bd-73aa-bfa7-7537d0c6ad05.arena.site/`）を
@@ -2299,6 +2320,12 @@ LMarena にデプロイされた Fable 5.1 の回答サイト（`https://01a06e2
   エラー 11 件は既存の `tools/verify_sample4_beats.ts` のみ（本検証で新規 src 変更なし）。
 
 ### 4. レーン別ポップ数字の記録義務化と遡及取得プロンプト（同日追補）
+
+> **【2026-09-05 注記】規約・プロンプト自体は有効**（AGENTS.md・measure-new-sample.md・
+> create_sample.md・readme.txt への追記は S2/S3/T5 にも共通する義務化であり維持）。
+> **S4 を動機とした記述（S4 の 67→4 件激減の背景等）は無効データ由来の経緯说明として参考扱い**
+> （S4 全面ロールバック: `research/22_sample4_rollback/progress.md`）。
+
 - **背景**: Fable v2 検証（本日 §2）で、レーン別ポップ数字が未記録のため S4 の純白ビート検証が
   67 件 → 4 件に激減し、λ・κ・フォト規則のレーン単位検証が不可能であることが確定した。
 - **既存データのポップ記録状況**（measured_data 調査）:
@@ -2326,6 +2353,13 @@ LMarena にデプロイされた Fable 5.1 の回答サイト（`https://01a06e2
     S3（欠損 117）→ S1/T5（欠損分のみ）**。総セル数 ≈ 4,000
 
 ### 5. レーン別ポップ遡及の実施（2026-09-05・zcode）: S4/S2/S3 完了・S1/T5 は残置
+
+> **【2026-09-05 無効化】S4 部分は参考扱い**: S4 の backfill 成果（`S4 完了` のバルク・
+> `aipura_nox/サンプル4/lane_pops_backfill.json`）は、S4 実測フレーム自体の無効化
+> （`aipura_nox/サンプル4_invalid_capture_20260905/` へ隔離・`research/22_sample4_rollback/progress.md`）
+> に伴い**無効**。ただし本節の方法論・パイプライン（make_pop_sheets.py 等）と S2/S3 の成果は
+> S4 と独立に有効（維持）。なお S4 の遡及で発見された「全 5 フレーム非フォーカス」事象こそが
+> 本ロールバックの直接の原因である（記録として価値あり）。
 
 - **実行**（`prompts/backfill-lane-pops.md` に基づく・LLM 画像目視）:
   - パイプライン: 全フレームから 3 領域クロップ（pop / アイドル名帯 / BEAT カウンタ）を
@@ -2363,3 +2397,57 @@ LMarena にデプロイされた Fable 5.1 の回答サイト（`https://01a06e2
   純白ビート検証（S4）と +4.5% シフト犯人特定（S2）を再実行すること。
   `displayed` は K/M 表示値なので、比較は表示分解能（±50/K 桁・±50k/M 桁）を許容して行うこと
 
+---
+
+## 2026-09-05 S4（サンプル4 / qt-ex-tower-004-054）全面無効化と再撮影の決定（Step B 実行）
+
+- **根拠（ユーザー決定・2026-09-05）**: レーン別ポップ遡及（前節 §5）で「あるビートの全 5 フレームで
+  カメラが目的のレーンを向いていない」事象が **L4/L5 に限らず全レーンで発生**していることが確定。
+  カメラ自動遷移のため非フォーカスレーンのポップ・状態は取得不能であり、S4 の既存解析はレーン単位の
+  検証（λ・off-attr・フォト重複規則・クリティカル等）に**体系的な欠落**がある。
+  よって S4 の画像取得から全部やり直す。手順: `prompts/rollback-recapture-sample4.md`（ステップ実行式・
+  進捗の一次情報は `research/22_sample4_rollback/progress.md`）
+- **スコープ**: S4 固有の無効化。S1/S2/S3/T5 のデータ・2026-09-05 の backfill 成果
+  （サンプル2/3 の lane_pops_backfill.json・`tools/backfill/` 共通パイプライン・AGENTS.md の
+  ポップ記録義務化）は**有効のまま**。git 履歴は書き換えない（revert なし・隔離 + マーカー方式）
+- **Step B で実行した無効化**:
+  - **src**: commit `809838f`（Phase 13）の変更を `9141ffb` 時点へ復元
+    （`src/timeline/engine.ts`・`buffs.ts`・`types.ts`。S4 以降の src/tests 変更は 0 件だったため
+    これで完全復元）。`tests/unit/timeline/sample4-specs.test.ts`（423 行・5 テスト）→
+    `tests/invalidated/sample4-specs.test.ts.disabled`
+  - **tools**: `tools/verify_sample4_beats.ts` → `tools/invalidated/verify_sample4_beats.ts.disabled`
+    （拡張子変更で vitest/typecheck 対象外）。S4 専用スクリプト `recon_s4frames.py`・`recon_s4pop.py` も
+    `tools/invalidated/` へ（`tools/backfill/` 共通パイプラインは維持）
+  - **examples**: `examples/sample4.json` → `examples/invalidated/sample4.invalid.json`
+    （src/tests からの参照なし・grep 確認済み）
+  - **research/22_sample4_gap_analysis/**: ディレクトリ先頭に `INVALID_20260905_README.md` を作成
+    （中身は証跡として保持）
+  - **research/23_beat_score_analysis/**（クロスサンプル文書・全体無効化はしない）: S4 由来の節のみ
+    INVALID マーカー追記 — pack/01 §2.3・pack/03 §2（Beat 23 実測）・pack_v2/01 の S4 反証行・
+    pack_v2/02 §2（S4 純白 67 ビート）・pack_v2/03 §2 の S4 記述・pack_v2/04 サンプルA 節・
+    pack_v2/05 §2.1/§2.2・pack_v2/verification/verify_output.txt 冒頭。S2/S3/T5 の節は有効
+  - **research/12 本ログ**: Phase 13 節・Fable 5.1 節・Fable v2 節・§4・§5 に【2026-09-05 無効化】
+    または【注記】マーカー追記（エントリ削除はしない）
+  - **data/**: 保持（`stages_index.json`・`character_advantage.json`・`live_bonuses.json` の
+    004-054 参照は `vendor/Quest.json` 等ゲームマスタ由来の生成物で実測由来でないことを確認）
+  - **aipura_nox**: `サンプル4/` → `サンプル4_invalid_capture_20260905/` へ隔離。無効部分のみ隔離し、
+    **機能しているものは新 `サンプル4/` に残置**（2026-09-05 ユーザー判定）:
+    - 無効（隔離）: lane1〜5/（beat_NNN.PNG 1008 枚）・analysis/・issues.md・measured_data.json・
+      measured_data_v2.json・measured_data_summary.md・lane_pops_backfill.json
+    - 残置（機能）: deck.json・communication_levels.json・skill_order/・fan.png・yale.png・staff.PNG・
+      stage_ex_liznoir_tower_54.png・result_*.PNG・lane*_charactor.PNG・
+      lane*_photos_and_accessories*.PNG・photo_skill_lane4_3.PNG・
+      スキル以外での補正後のステータス一覧.PNG
+    - 隔離フォルダに `INVALID_20260905_README.md` を作成。旧 issues.md の撮影知見（#5 banner 判定・
+      #6 クロップ座標）は `research/22_sample4_rollback/capture_knowledge_notes.md` に原文保全済み
+  - **旧 deck.json 編成**（再撮影用・L1 card-chs-05-fest-00 / L2 card-rei-05-fest-00 /
+    L3 card-ngs-05-fest-02 / L4 card-szk-05-sail-00 / L5 card-suz-05-fest-02・全員 Lv182）:
+    `capture_knowledge_notes.md` に記録
+- **検証（ロールバック後）**: `npx vitest run` 37 ファイル **474 passed / 1 skipped**
+  （809838f 直前の 474 基準に戻った・S4 テスト 5 件分減）・`npm run typecheck` **エラー 0 件**
+  （旧 S4 ツール起因の 11 エラーも消滅）・T5 ゴールデン **2,580,038,995** 不変・
+  S3 **66,227,491** 不変。S1 **129,201,077** / S2 **43,236,162** は 809838f 時点と同一値
+  （Phase 13 エントリ内の「S1/S2 不変」記載と一致。`prompts/continue-session.md` の
+  S1=130,698,595・S2=43,599,085 はさらに前の更新漏れ=先行課題で本ロールバックとは無関係）
+- **残タスク**: Step C-pre（撮影手順メモ・リテイク対応案・フォーカス検収ツール）→
+  Step C（人間補助あり再撮影）→ Step D（再解析・ポップ全記録）→ Step E（再検証）

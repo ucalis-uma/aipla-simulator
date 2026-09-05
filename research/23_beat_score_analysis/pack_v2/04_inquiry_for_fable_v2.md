@@ -122,6 +122,9 @@ $$\text{basic} = \left\lfloor basicSum \times \frac{8}{140} \right\rfloor \quad 
 実機プレイ動画から、**クリティカルおよびスキル発動を完全に除外した「純粋な白ノーツ（全5レーン通常HIT）」のみ** を抽出し、計算値と実測値の比率（$\text{ratio} = \text{sim} / \text{actual}$）を検証しました。
 
 ### サンプルA: S4（EXタワー Liznoir-054 / 曲: lumiere）
+
+> **【2026-09-05 無効化】本節（### サンプルA: S4）は無効データ由来**: S4 実測はカメラ自動遷移による体系的欠落で全面ロールバック済み（`research/22_sample4_rollback/progress.md`）。サンプルB（S3）/C（T5）は有効。
+
 - **ステージ属性**: **Dance特化**（センター属性: Dance）
 - **属性重み**: Vo 150‰ / Da 600‰ / Vi 250‰（合計 1000‰）
 - **来場者数**: 40,000人（fan倍率 一律 1.375）

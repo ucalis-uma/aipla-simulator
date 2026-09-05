@@ -24,7 +24,6 @@ import {
   consumptionMultiplierPermil,
   fanFactorPermil,
   fanFactorPermilByAttraction,
-  isEnhancementEffect,
   liveStatusMultiplierPermil,
   mapEffectToBuffKey,
   stealthFanBonusPermil,
@@ -514,14 +513,9 @@ function resolveTargets(
       .slice(0, n);
   const staminaSorted = (desc: boolean): LaneState[] =>
     [...states].sort((a, b) => (desc ? b.stamina - a.stamina : a.stamina - b.stamina));
-  /** <属性>レーンN人（*_lane_N・レーン優先度順 L3>L2>L4>L1>L5） */
+  /** <属性>レーンN人（*_lane_N・サンプル1実測確定・レーン番号順。states はレーン順） */
   const attrLaneLanes = (attr: "vocal" | "dance" | "visual", n: number): LaneState[] =>
-    states
-      .filter((s) => s.input.attribute === attr)
-      .sort(
-        (a, b) => IDOL_PRIORITY_ORDER.indexOf(a.input.lane) - IDOL_PRIORITY_ORDER.indexOf(b.input.lane),
-      )
-      .slice(0, n);
+    states.filter((s) => s.input.attribute === attr).slice(0, n);
   switch (target) {
     case "self":
       return [self];
@@ -1463,30 +1457,39 @@ function applyEffect(
       return 0;
     }
     case "effect_passing": {
-      // 【サンプル4実測 2026-09-05 確定・fable 5.1検証】強化効果譲渡（strength_effect_assignment_all）。
-      // 発動レーンの有効な強化バフ・インスタンスを対象レーンへ「移動（move）」する（コピーではない:
-      // S4 b77 で怜 L2 の青ドット 4→0 を実測）。
-      // 低下効果（vocal/dance/visual_down・stamina_cost_up）は対象外（発動レーンに残る）。
-      // 上限解放（limitRelease）・超化（capExtend）も強化バフの一部として一緒に移動する。
+      // 【サンプル4実測 2026-09-04・SK4#3】強化効果譲渡（strength_effect_assignment_all）。
+      // 発動レーンの有効な強化バフ・インスタンスを**コピー**（残りビート・段数そのまま）して
+      // 対象レーンへ付与する。源は消えない（実測: b77 の怜 SP で怜自身のバフは存続）。
+      // 譲渡されたインスタンスは対象レーンの集計で既存と合算され、上限（20段等）は
+      // aggregateBuffs のクランプで効く（実測: 怜Pスキルスコア上昇12→渚へ +12 で
+      // 12→20 上限到達、ダンス上昇 20+20→20、ブースト 7+7→14 加算）。
+      // buffKey 指定（strength_effect_assignment。全譲渡でなく特定バフのみ）は現データでは
+      // 未出現のため、scope/buffKey の絞り込みはとりあえず効かない【Estimate: 全譲渡扱い】。
       const targets = resolveTargets(effect.target, self, states, triggerLanes);
-      const moved: ActiveEffect[] = [];
-      const kept: ActiveEffect[] = [];
-      for (const active of self.effects) {
-        if (active.remainingBeats > 0 && active.stages > 0 && isEnhancementEffect(active.type)) {
-          moved.push(active);
-        } else {
-          kept.push(active);
+      for (const target of targets) {
+        if (target === self) {
+          // 自己譲渡（コンボ不足等、マスタ上ありうる現象）はコピーを増やさずスキップ【Estimate】
+          continue;
         }
-      }
-      if (moved.length > 0) {
-        self.effects = kept;
-        for (const target of targets) {
-          if (target === self) {
+        for (const active of self.effects) {
+          if (active.remainingBeats <= 0 || active.stages <= 0) {
             continue;
           }
-          for (const active of moved) {
-            target.effects.push({ ...active });
+          if (mapEffectToBuffKey(active.type) === null) {
+            continue; // 段階型でないものは対象外（保険。effects には段階型しか入らない）
           }
+          // コンボ継続を含め「全強化効果」をそのままコピーする（マスタ文どおり・
+          // S4 実測では譲渡側にコンボ継続が無く同定不能のため【Estimate】注記）。
+          target.effects.push({
+            type: active.type,
+            stages: active.stages,
+            limitRelease: active.limitRelease,
+            remainingBeats: active.remainingBeats, // 残ビート共有（譲渡元と同時に消える）
+            sourceSkillId: active.sourceSkillId, // 与・○○延長の「自分が付与した」判定は出所を維持
+            sourceLane: active.sourceLane,
+            skipFirstDecay: active.skipFirstDecay ?? false,
+            capExtend: active.capExtend,
+          });
         }
       }
       return 0;
@@ -1505,14 +1508,9 @@ function applyEffect(
       // 【2026-09-04 サンプル3】継続回復の予約（scheduledRecoveries）も延長対象
       // （S3 のんびり: さらけ出す b13/b73 の +7 で回復窓が 36→43b に延びる実測。
       // 延長は「全強化効果」= バフインスタンスと回復予約の両方。rem=0 除外は共通）。
-      // 【2026-09-05 サンプル4】強化効果のみ延長（低下効果は延長しない）
       for (const target of resolveTargets(effect.target, self, states, triggerLanes)) {
         for (const active of target.effects) {
-          if (
-            active.remainingBeats > 0 &&
-            active.remainingBeats < PERMANENT_BEATS &&
-            isEnhancementEffect(active.type)
-          ) {
+          if (active.remainingBeats > 0 && active.remainingBeats < PERMANENT_BEATS) {
             active.remainingBeats += value;
           }
         }
@@ -2092,7 +2090,6 @@ function settleSkillNote(
   }
   const candidates = state.input.skills.filter((s) => s.kind === kind);
   if (candidates.length === 0) {
-    const comboReset = applyComboFailOnNote(state, ctx, states);
     activations.push({
       beat: note.beat,
       phase: "main",
@@ -2101,8 +2098,8 @@ function settleSkillNote(
       kind,
       success: false,
       failReason: "no_skill",
-      comboReset,
     });
+    applyComboFailOnNote(state, ctx, states);
     return;
   }
   const snap = snapshotOf(state);
@@ -2136,7 +2133,6 @@ function settleSkillNote(
     break;
   }
   if (chosen === null) {
-    const comboReset = applyComboFailOnNote(state, ctx, states);
     activations.push({
       beat: note.beat,
       phase: "main",
@@ -2145,8 +2141,8 @@ function settleSkillNote(
       kind,
       success: false,
       failReason: blockedStamina ? "stamina_short" : "in_ct",
-      comboReset,
     });
+    applyComboFailOnNote(state, ctx, states);
     return;
   }
   // 発動: スタミナ消費 → CT設定 → 効果適用（research/13 §5.2・§6。上から順【Confirmed】）
@@ -2208,22 +2204,19 @@ function settleSkillNote(
  * - コンボ継続バフあり（T5 b49 実測）: リセットされず、表示コンボは +1 して消化
  *   （T5 b49: COMBO 48→49。レーン別コンボ自体は加算しないため T5 ゴールデンの
  *   CB 係数は不変）。
- * @returns コンボを 0 にリセットした場合は true
  */
 function applyComboFailOnNote(
   failing: LaneState,
   ctx: EngineCtx,
   states: readonly LaneState[],
-): boolean {
+): void {
   if (snapshotOf(failing).combo_continue === 0) {
     for (const s of states) {
       s.combo = 0;
     }
     ctx.globalCombo.value = 0;
     ctx.displayCombo.value = 0;
-    return true;
   } else {
     ctx.displayCombo.value += 1;
-    return false;
   }
 }
