@@ -2297,3 +2297,30 @@ LMarena にデプロイされた Fable 5.1 の回答サイト（`https://01a06e2
   `create_sample.md` 側に反映することを推奨。
 - 検証: `npx vitest run` 38 ファイル **479 passed / 1 skipped**（不変）・`npm run typecheck` の
   エラー 11 件は既存の `tools/verify_sample4_beats.ts` のみ（本検証で新規 src 変更なし）。
+
+### 4. レーン別ポップ数字の記録義務化と遡及取得プロンプト（同日追補）
+- **背景**: Fable v2 検証（本日 §2）で、レーン別ポップ数字が未記録のため S4 の純白ビート検証が
+  67 件 → 4 件に激減し、λ・κ・フォト規則のレーン単位検証が不可能であることが確定した。
+- **既存データのポップ記録状況**（measured_data 調査）:
+  - T5: `gained_score_displayed` 674/785（残り 111 が欠損）
+  - S1: 0/885・S2: 0/840・S4: 0/835（色のみ。S4 は null 400/835 = 遮蔽・非表示）
+  - S3: `gained_score_pop.text` 733/850（残り 117 欠損）
+- **規約変更**:
+  - `AGENTS.md`「その他の基本規律」→ スクショが必要なものの節に
+    「レーン別スコアポップの数字は全ビート×全レーンで必ず記録（`gained_score_pop{color, text}`）」
+    を追加。合計値では乱数が平均化され検証不能な旨と、遡及は `prompts/backfill-lane-pops.md` を
+    使う旨を明記
+  - `prompts/measure-new-sample.md` §4 スコアポップ・§7 出力スキーマ・§8 検証要件に
+    ポップ数字記録の義務と null 時の理由付けルールを追加
+  - `aipura_nox/create_sample.md` に【Step E】を追加（撮影側の確認事項: ポップ遮蔽ビートの
+    記録・フォーカス外れチェック。スクリプト変更は不要）
+  - `prompts/readme.txt` に backfill-lane-pops.md の説明を追加
+- **新規プロンプト `prompts/backfill-lane-pops.md`**（遡及取得・LLM 画像分析）:
+  - **手法は OCR ではなく LLM 自身の画像目視**（ポップは装飾フォントで OCR 誤読が多く、
+    文脈判読のほうが信頼できるため）。クロップ・拡大の補助に Python は使用可
+  - 既存 JSON は書き換えず、新規 `lane_pops_backfill.json`（pops[] / critical_flag_review /
+    summary）に追記する設計（S3 の既存 text・T5 の既存 displayed は維持）
+  - 自己検証: 色と既存 critical_flags の突合・K 単位合計 ≈ beat_gained_score の桁照合・
+    白ポップ巨大値（=クリティカル読み間違い疑い）チェック
+  - 優先順位: **S4（research/23 主戦場）→ S2（白ビート +4.5% シフトの犯人特定）→
+    S3（欠損 117）→ S1/T5（欠損分のみ）**。総セル数 ≈ 4,000

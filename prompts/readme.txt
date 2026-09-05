@@ -26,3 +26,10 @@ prompts/continue-beat-score-session.md
 は通常ビートスコア計算式の再推定・Fable回答検証用の引継ぎプロンプト（2026-09-05作成。
 Fableに投げたプロンプトの回答URLとともに新セッションへ投入して検証・実装を進める用）
 
+prompts/backfill-lane-pops.md
+は既存サンプル（T5〜S4）のレーン別スコアポップ数字の遡及取得プロンプト（2026-09-05作成）。
+LLM画像分析（OCR不使用）で元スクショから +38.6K 等のポップ数字を読み、
+lane_pops_backfill.json に追記する。λ・off-attr・フォト重複規則のレーン単位検証に必須。
+優先順位: S4 → S2 → S3 → S1/T5。新規サンプルでは measure-new-sample.md の規約どおり
+初回解析時に gained_score_pop.text を必ず記録する（遡及は不要にする）
+
