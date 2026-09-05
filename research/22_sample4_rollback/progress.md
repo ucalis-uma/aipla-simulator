@@ -1,10 +1,9 @@
 # S4 全面ロールバック・再撮影 — 進捗ファイル（一次情報）
 
 - **プロンプト**: `prompts/rollback-recapture-sample4.md`（ステップ実行式。ユーザーが範囲を指示して起動）
-- **現ステップ**: **Step B 完了（ロールバック実行）→ 次は Step C-pre（撮影準備）**
+- **現ステップ**: **Step B 完了（ロールバック実行・コミット済み）→ 次は Step C-pre（撮影準備）**
 - **次にユーザーが指示すべきこと**: 「Step C-pre を実行」
-  （なお、リポジトリ側の変更は**未コミット**。コミットはプロンプト §3 の「要ユーザー確認」のため
-  ユーザー指示待ち — 「コミットして」と指示すれば 2 コミットに分離して作成する）
+  （コミットは 2026-09-05 ユーザー承認により完了: f9d044c backfill 記録 / 4fdf191 S4 ロールバック）
 
 ---
 
@@ -76,10 +75,12 @@
 **本ロールバック起因の回帰ではない**（Phase 12 時点以降の更新漏れ = 先行課題）。
 Step E で continue-session.md の検証コマンド節を最新化するときに直すことを推奨。
 
-**コミット状態**: 変更はすべて**ワーキングツリーにあり未コミット**（プロンプト §3「revert コミットは可・
-要ユーザー確認」のため）。前セッション（backfill）の未コミット分（research/12 §5・prompts/readme.txt・
-`prompts/continue-t5-backfill.md`・`prompts/rollback-recapture-sample4.md`・`tools/backfill/`）と混在 —
-コミット時は「backfill 記録コミット」と「ロールバックコミット」の 2 件に分離することを推奨。
+**コミット状態**: 2026-09-05 ユーザー承認により 2 コミットに分離して作成済み:
+- `f9d044c` docs: add lane-pop backfill pipeline (tools/backfill) and T5 backfill handoff prompt
+  （前セッション分。research/12 §5 はロールバック注記を除いた中間版で記録）
+- `4fdf191` docs: S4（qt-ex-tower-004-054）全面無効化とロールバック実行（隔離+マーカー方式・Step B）
+  （ロールバック一式。research/12 は無効化注記+末尾エントリ込みの完全版）
+- コミット後に最終再検証: vitest 474 passed / 1 skipped・typecheck 0 エラー・T5 2,580,038,995 不変 ✅
 
 ---
 
