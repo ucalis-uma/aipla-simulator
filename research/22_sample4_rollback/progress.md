@@ -1,9 +1,9 @@
 # S4 全面ロールバック・再撮影 — 進捗ファイル（一次情報）
 
 - **プロンプト**: `prompts/rollback-recapture-sample4.md`（ステップ実行式。ユーザーが範囲を指示して起動）
-- **現ステップ**: **Step B 完了（ロールバック実行・コミット済み）→ 次は Step C-pre（撮影準備）**
-- **次にユーザーが指示すべきこと**: 「Step C-pre を実行」
-  （コミットは 2026-09-05 ユーザー承認により完了: f9d044c backfill 記録 / 4fdf191 S4 ロールバック）
+- **現ステップ**: **Step C-pre 完了（撮影準備）→ 次は Step C（再撮影・人間補助前提）**
+- **次にユーザーが指示すべきこと**: 「Step C を実行」（NoxPlayer が他サンプル収集中なら空いてから。
+  Step C は `research/22_sample4_rollback/recapture_procedure.md` §4 の手順・複数セッション可）
 
 ---
 
@@ -84,6 +84,63 @@ Step E で continue-session.md の検証コマンド節を最新化するとき�
 
 ---
 
+### Step C-pre（2026-09-05・本セッション）: 撮影準備 ✅
+
+**制約**: Nox が他サンプル収集中のため **ADB 接続・撮影は一切行わず**、手元の旧サンプル画像分析のみで完結。
+（検収ツールの検証には旧 S4 隔離フォルダを**読み取り専用**で使用。隔離フォルダは未変更 — 改名以外触っていない）
+
+1. **誤タップ回避の仕様確定（ユーザー指示への対応）**: 「A/SP/P/フォトスキルアイコンをタップすると
+   そのレーン/ビートに遷移する」問題に対し、旧フローの全タップ箇所を棚卸しし
+   **タップはアイドルカード帯 (lane_x, 1630) のみに限定**（スキルアイコン帯 y=1450〜1575・
+   効果ボックス内アイコン・ノーツ座標は禁止）。効果ボックスのスクロールスワイプがタップ誤認された
+   場合もフォーカス検証が検出して再撮する設計。座標根拠は旧 S4 フレームの実測クロップで確認済み
+2. **フォーカス判定器の開発と検証**: アイドル名帯 (70,393)-(235,437) テンプレートマッチング（閾値 0.80）。
+   旧 S4 の `lane_pops_backfill.json`（読取済み 909 フレーム = ラベル。ポップが読めたフレームは
+   そのレーン フォーカス済みという既存事実）で精度検証 → **精度 100%（909/909）・
+   自レーン 1.000 vs 他レーン最大 0.546（最小マージン 0.454）**
+3. **テンプレート画像の生成**: `aipura_nox/templates/name_band/lane{1-5}.png`（165×44px・
+   名前文字のみ。S4 計測データは不含有効）+ `README.md`。同時に本リポジトリ
+   `tools/recapture/templates/` へも同梱（検収ツール既定 refs）。アイドル名はマスタ
+   `vendor/Character.json` で確定（L1 白石千紗 / L2 一ノ瀬怜 / L3 伊吹渚 / L4 兵藤雫 / L5 成宮すず）
+4. **リテイク対応 capture スクリプト**: `aipura_nox/capture_lane_focus_retake.py`（新規・旧
+   capture_lane_generic.py を継承・旧スクリプトは無変更）。サブコマンド:
+   `focus-setup`（実画面からの refs 校正 + クロス判定 + 同梱テンプレ突合で ABORT 保証）/
+   `lane`（全ビート撮影・**保存直前にフォーカス判定→非フォーカスなら同ビート内リテイク**（待ち段階延長
+   4 ラウンド・最終は ±1 ビート揺らし）→ 4 ラウンド NG なら beat_NNN_NG.PNG 保存 + 
+   focus_retake_log.json 記録）/ `repair`（欠損ビート再撮）/ `stepd`（効果欄スクロール・検証込み）。
+   BEAT 認識 3 連続失敗で即停止（暴走防止ルール）・既存ファイルスキップでセッション跨ぎ再開可
+5. **検収ツール（本リポジトリ `tools/recapture/`）**:
+   - `focus_check.py`: 全ビート×全レーンの自動検収（OK/MISSING/NOFOCUS/NGFILE/LOWMARGIN・
+     repair 対象リスト出力・pass_quality 参考値）。**フォルダ名とフォーカスは無関係**として判定
+     （旧 backfill で実証済みの仕様）
+   - `make_focus_sheets.py`: 目視確認シート生成（名前帯+BEAT カウンタ・9 枚/シート。
+     `tools/backfill/make_pop_sheets.py` 流用の 1080×1920 座標。**measured_data.json 非依存**で
+     撮影直後から使える）
+   - **セルフテスト（旧 S4 無効データへの読み取り専用実行・エビデンスは
+     `acceptance_selftest/`）**: 判定 909 フレーム精度 100% + 全 835 セル検収で
+     **NOFOCUS 400 = 旧 backfill の「該当フレームなし 400 セル」と完全一致、
+     OK 435 = 読取可能 385 + popなし 50 と完全一致**。旧 S4 の自レーン フォーカス率は
+     パス毎に 13〜17% と定量化（再撮影の必要性の裏取り）。シート 1 枚目視確認済み
+6. **撮影手順メモ**: `recapture_procedure.md`（旧 deck.json 編成の完全ミラー（表+フォト明細。
+   実ファイルは `サンプル4/deck.json` に残置）・タップ禁止ゾーン地図・ツール一式の使い方・
+   セッション手順（冒頭=前回検収から）・完了条件（835 セル全 OK・達成不能なら理由付き missing_frames）
+
+**成果物パス一覧**:
+- `aipura_nox/capture_lane_focus_retake.py`（撮影本体・aipura_nox 側は git 管理外）
+- `aipura_nox/templates/name_band/`（テンプレート 5 枚 + README）
+- `tools/recapture/focus_check.py` / `tools/recapture/make_focus_sheets.py` / `tools/recapture/templates/`（本リポジトリ・未コミット）
+- `research/22_sample4_rollback/recapture_procedure.md`（手順メモ）
+- `research/22_sample4_rollback/acceptance_selftest/`（検収ツール検証のエビデンス 4 点）
+
+**留意事項（Step C 冒頭で必読）**:
+- 実撮影ではまず `focus-setup`（実画面校正）を 1 回行う。同梱テンプレートはフォールバック・突合用
+- 待ち時間・リテイク回数（`MAX_RETAKES=4`）は現状推定値。実機で自レーン維持率が悪ければ
+  progress.md に記録して調整
+- 本リポジトリ側の成果物（tools/recapture・research/22 追加分）は**コミット済み**
+  （commit `693f564`・2026-09-05 ユーザー承認）
+
+---
+
 ## Step B の前準備（完了済み）
 
 - [x] 旧 S4 `issues.md` の banner 判定（テンプレートマッチング）知見のメモ化
@@ -91,9 +148,7 @@ Step E で continue-session.md の検証コマンド節を最新化するとき�
 
 ## 次ステップ
 
-- **Step C-pre**（次）: 撮影手順メモ作成（deck.json 編成コピー含む）・capture スクリプトの
-  リテイク対応案（フォーカス判定→同ビート内再撮）・検収ツール（フォーカス判定クロップ一式・
-  `tools/backfill/make_pop_sheets.py` の 1080×1920 座標流用）
-- **Step C**: 再撮影（人間補助前提・複数セッション可・暴走防止ルール遵守）
+- **Step C**: 再撮影（人間補助前提・複数セッション可・暴走防止ルール遵守）。
+  手順は `recapture_procedure.md` §4。セッション冒頭は必ず「前回までの検収（focus_check）」から入る
 - **Step D/E**: 未着手
 

@@ -1,0 +1,101 @@
+{
+ "sample_dir": "C:\\Users\\umaro\\Documents\\aipura_nox\\サンプル4_invalid_capture_20260905",
+ "refs_dir": "c:\\Users\\umaro\\Documents\\aipura_nox\\templates\\name_band",
+ "summary": {
+  "MISSING": 0,
+  "NGFILE": 0,
+  "NOFOCUS": 400,
+  "OK": 435,
+  "OK(LOWMARGIN)": 0
+ },
+ "pass_quality": {
+  "1": {
+   "total": 167,
+   "focused_own": 23
+  },
+  "2": {
+   "total": 167,
+   "focused_own": 22
+  },
+  "3": {
+   "total": 167,
+   "focused_own": 29
+  },
+  "4": {
+   "total": 167,
+   "focused_own": 23
+  },
+  "5": {
+   "total": 167,
+   "focused_own": 23
+  }
+ },
+ "note": "旧 S4 無効データ（読み取り専用）への focus_check.py 自動判定セルフテスト結果。NOFOCUS 400 = 旧 backfill の「該当フレームなし 400 セル」と一致、OK 435 = 読取可能 385 + popなし 50 と一致。",
+ "nofocus_sample": [
+  {
+   "lane": 1,
+   "beat": 17,
+   "files": [
+    "1:beat_017.PNG(focus=3)",
+    "2:beat_017.PNG(focus=3)",
+    "2:beat_017_2.PNG(focus=2)",
+    "3:beat_017.PNG(focus=3)",
+    "3:beat_017_2.PNG(focus=3)",
+    "4:beat_017.PNG(focus=3)",
+    "5:beat_017.PNG(focus=3)"
+   ]
+  },
+  {
+   "lane": 1,
+   "beat": 18,
+   "files": [
+    "1:beat_018.PNG(focus=3)",
+    "2:beat_018.PNG(focus=3)",
+    "2:beat_018_2.PNG(focus=2)",
+    "3:beat_018.PNG(focus=3)",
+    "3:beat_018_2.PNG(focus=3)",
+    "4:beat_018.PNG(focus=3)",
+    "5:beat_018.PNG(focus=3)"
+   ]
+  },
+  {
+   "lane": 1,
+   "beat": 19,
+   "files": [
+    "1:beat_019.PNG(focus=3)",
+    "2:beat_019.PNG(focus=3)",
+    "2:beat_019_2.PNG(focus=2)",
+    "3:beat_019.PNG(focus=3)",
+    "3:beat_019_2.PNG(focus=3)",
+    "4:beat_019.PNG(focus=3)",
+    "5:beat_019.PNG(focus=3)"
+   ]
+  },
+  {
+   "lane": 1,
+   "beat": 20,
+   "files": [
+    "1:beat_020.PNG(focus=3)",
+    "2:beat_020.PNG(focus=3)",
+    "2:beat_020_2.PNG(focus=2)",
+    "3:beat_020.PNG(focus=3)",
+    "3:beat_020_2.PNG(focus=3)",
+    "4:beat_020.PNG(focus=3)",
+    "5:beat_020.PNG(focus=3)"
+   ]
+  },
+  {
+   "lane": 1,
+   "beat": 21,
+   "files": [
+    "1:beat_021.PNG(focus=3)",
+    "2:beat_021.PNG(focus=3)",
+    "2:beat_021_2.PNG(focus=2)",
+    "3:beat_021.PNG(focus=3)",
+    "3:beat_021_2.PNG(focus=3)",
+    "4:beat_021.PNG(focus=3)",
+    "5:beat_021.PNG(focus=3)"
+   ]
+  }
+ ]
+}
