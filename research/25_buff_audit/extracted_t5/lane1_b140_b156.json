@@ -1,0 +1,224 @@
+[
+  {
+    "beat": 140,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      }
+    ]
+  },
+  {
+    "beat": 141,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      }
+    ]
+  },
+  {
+    "beat": 142,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      }
+    ]
+  },
+  {
+    "beat": 143,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      }
+    ]
+  },
+  {
+    "beat": 144,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      }
+    ]
+  },
+  {
+    "beat": 145,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      }
+    ]
+  },
+  {
+    "beat": 146,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      }
+    ]
+  },
+  {
+    "beat": 147,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      }
+    ]
+  },
+  {
+    "beat": 148,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      }
+    ]
+  },
+  {
+    "beat": 149,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      }
+    ]
+  },
+  {
+    "beat": 150,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      }
+    ]
+  },
+  {
+    "beat": 151,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      }
+    ]
+  },
+  {
+    "beat": 152,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      }
+    ]
+  },
+  {
+    "beat": 153,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      }
+    ]
+  },
+  {
+    "beat": 154,
+    "effects": []
+  },
+  {
+    "beat": 155,
+    "effects": []
+  },
+  {
+    "beat": 156,
+    "effects": []
+  }
+]

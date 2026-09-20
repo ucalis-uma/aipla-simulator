@@ -1,0 +1,742 @@
+[
+  {
+    "beat": 40,
+    "effects": [
+      {
+        "id": "combo_score_up",
+        "name": "コンボスコア上昇",
+        "stage": 11
+      },
+      {
+        "id": "combo_score_limit",
+        "name": "コンボスコア上昇上限開放",
+        "stage": 10
+      },
+      {
+        "id": "score_up",
+        "name": "スコア上昇",
+        "stage": 16
+      },
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 12
+      },
+      {
+        "id": "tension_up",
+        "name": "テンションUP",
+        "stage": 8
+      },
+      {
+        "id": "vocal_boost",
+        "name": "ボーカルブースト",
+        "stage": 12
+      },
+      {
+        "id": "focus",
+        "name": "集目",
+        "stage": 10
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 12
+      },
+      {
+        "id": "vocal_up_extreme",
+        "name": "ボーカル上昇超化",
+        "stage": 10
+      },
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 11
+      },
+      {
+        "id": "critical_rate_up",
+        "name": "クリティカル率上昇",
+        "stage": 9
+      },
+      {
+        "id": "tension_limit",
+        "name": "テンションUP上限開放",
+        "stage": 5
+      }
+    ]
+  },
+  {
+    "beat": 41,
+    "effects": [
+      {
+        "id": "combo_score_up",
+        "name": "コンボスコア上昇",
+        "stage": 11
+      },
+      {
+        "id": "combo_score_limit",
+        "name": "コンボスコア上昇上限開放",
+        "stage": 10
+      },
+      {
+        "id": "score_up",
+        "name": "スコア上昇",
+        "stage": 16
+      },
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 12
+      },
+      {
+        "id": "tension_up",
+        "name": "テンションUP",
+        "stage": 8
+      },
+      {
+        "id": "vocal_boost",
+        "name": "ボーカルブースト",
+        "stage": 12
+      },
+      {
+        "id": "focus",
+        "name": "集目",
+        "stage": 10
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 12
+      },
+      {
+        "id": "vocal_up_extreme",
+        "name": "ボーカル上昇超化",
+        "stage": 10
+      },
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 11
+      },
+      {
+        "id": "critical_rate_up",
+        "name": "クリティカル率上昇",
+        "stage": 9
+      },
+      {
+        "id": "tension_limit",
+        "name": "テンションUP上限開放",
+        "stage": 5
+      }
+    ]
+  },
+  {
+    "beat": 42,
+    "effects": [
+      {
+        "id": "combo_score_up",
+        "name": "コンボスコア上昇",
+        "stage": 11
+      },
+      {
+        "id": "combo_score_limit",
+        "name": "コンボスコア上昇上限開放",
+        "stage": 10
+      },
+      {
+        "id": "score_up",
+        "name": "スコア上昇",
+        "stage": 16
+      },
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 12
+      },
+      {
+        "id": "tension_up",
+        "name": "テンションUP",
+        "stage": 8
+      },
+      {
+        "id": "vocal_boost",
+        "name": "ボーカルブースト",
+        "stage": 12
+      },
+      {
+        "id": "focus",
+        "name": "集目",
+        "stage": 10
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 12
+      },
+      {
+        "id": "vocal_up_extreme",
+        "name": "ボーカル上昇超化",
+        "stage": 10
+      },
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 11
+      },
+      {
+        "id": "critical_rate_up",
+        "name": "クリティカル率上昇",
+        "stage": 9
+      },
+      {
+        "id": "tension_limit",
+        "name": "テンションUP上限開放",
+        "stage": 5
+      }
+    ]
+  },
+  {
+    "beat": 43,
+    "effects": [
+      {
+        "id": "combo_score_up",
+        "name": "コンボスコア上昇",
+        "stage": 11
+      },
+      {
+        "id": "combo_score_limit",
+        "name": "コンボスコア上昇上限開放",
+        "stage": 10
+      },
+      {
+        "id": "score_up",
+        "name": "スコア上昇",
+        "stage": 16
+      },
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 12
+      },
+      {
+        "id": "tension_up",
+        "name": "テンションUP",
+        "stage": 8
+      },
+      {
+        "id": "vocal_boost",
+        "name": "ボーカルブースト",
+        "stage": 12
+      },
+      {
+        "id": "focus",
+        "name": "集目",
+        "stage": 10
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 12
+      },
+      {
+        "id": "vocal_up_extreme",
+        "name": "ボーカル上昇超化",
+        "stage": 10
+      },
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 11
+      },
+      {
+        "id": "critical_rate_up",
+        "name": "クリティカル率上昇",
+        "stage": 9
+      },
+      {
+        "id": "tension_limit",
+        "name": "テンションUP上限開放",
+        "stage": 5
+      }
+    ]
+  },
+  {
+    "beat": 44,
+    "effects": [
+      {
+        "id": "combo_score_up",
+        "name": "コンボスコア上昇",
+        "stage": 11
+      },
+      {
+        "id": "combo_score_limit",
+        "name": "コンボスコア上昇上限開放",
+        "stage": 10
+      },
+      {
+        "id": "score_up",
+        "name": "スコア上昇",
+        "stage": 8
+      },
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 12
+      },
+      {
+        "id": "tension_up",
+        "name": "テンションUP",
+        "stage": 8
+      },
+      {
+        "id": "vocal_boost",
+        "name": "ボーカルブースト",
+        "stage": 12
+      },
+      {
+        "id": "focus",
+        "name": "集目",
+        "stage": 10
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 12
+      },
+      {
+        "id": "vocal_up_extreme",
+        "name": "ボーカル上昇超化",
+        "stage": 10
+      },
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 11
+      },
+      {
+        "id": "critical_rate_up",
+        "name": "クリティカル率上昇",
+        "stage": 9
+      },
+      {
+        "id": "tension_limit",
+        "name": "テンションUP上限開放",
+        "stage": 5
+      }
+    ]
+  },
+  {
+    "beat": 45,
+    "effects": [
+      {
+        "id": "combo_score_up",
+        "name": "コンボスコア上昇",
+        "stage": 11
+      },
+      {
+        "id": "combo_score_limit",
+        "name": "コンボスコア上昇上限開放",
+        "stage": 10
+      },
+      {
+        "id": "score_up",
+        "name": "スコア上昇",
+        "stage": 8
+      },
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 12
+      },
+      {
+        "id": "tension_up",
+        "name": "テンションUP",
+        "stage": 8
+      },
+      {
+        "id": "vocal_boost",
+        "name": "ボーカルブースト",
+        "stage": 12
+      },
+      {
+        "id": "focus",
+        "name": "集目",
+        "stage": 10
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 12
+      },
+      {
+        "id": "vocal_up_extreme",
+        "name": "ボーカル上昇超化",
+        "stage": 10
+      },
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 11
+      },
+      {
+        "id": "critical_rate_up",
+        "name": "クリティカル率上昇",
+        "stage": 9
+      },
+      {
+        "id": "tension_limit",
+        "name": "テンションUP上限開放",
+        "stage": 5
+      }
+    ]
+  },
+  {
+    "beat": 46,
+    "effects": [
+      {
+        "id": "combo_score_up",
+        "name": "コンボスコア上昇",
+        "stage": 11
+      },
+      {
+        "id": "combo_score_limit",
+        "name": "コンボスコア上昇上限開放",
+        "stage": 10
+      },
+      {
+        "id": "score_up",
+        "name": "スコア上昇",
+        "stage": 8
+      },
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 12
+      },
+      {
+        "id": "tension_up",
+        "name": "テンションUP",
+        "stage": 8
+      },
+      {
+        "id": "vocal_boost",
+        "name": "ボーカルブースト",
+        "stage": 12
+      },
+      {
+        "id": "focus",
+        "name": "集目",
+        "stage": 10
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 12
+      },
+      {
+        "id": "vocal_up_extreme",
+        "name": "ボーカル上昇超化",
+        "stage": 10
+      },
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 11
+      },
+      {
+        "id": "critical_rate_up",
+        "name": "クリティカル率上昇",
+        "stage": 9
+      },
+      {
+        "id": "tension_limit",
+        "name": "テンションUP上限開放",
+        "stage": 5
+      }
+    ]
+  },
+  {
+    "beat": 47,
+    "effects": [
+      {
+        "id": "combo_score_up",
+        "name": "コンボスコア上昇",
+        "stage": 11
+      },
+      {
+        "id": "combo_score_limit",
+        "name": "コンボスコア上昇上限開放",
+        "stage": 10
+      },
+      {
+        "id": "score_up",
+        "name": "スコア上昇",
+        "stage": 8
+      },
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 12
+      },
+      {
+        "id": "tension_up",
+        "name": "テンションUP",
+        "stage": 8
+      },
+      {
+        "id": "vocal_boost",
+        "name": "ボーカルブースト",
+        "stage": 12
+      },
+      {
+        "id": "focus",
+        "name": "集目",
+        "stage": 10
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 12
+      },
+      {
+        "id": "vocal_up_extreme",
+        "name": "ボーカル上昇超化",
+        "stage": 10
+      },
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 11
+      },
+      {
+        "id": "critical_rate_up",
+        "name": "クリティカル率上昇",
+        "stage": 9
+      },
+      {
+        "id": "tension_limit",
+        "name": "テンションUP上限開放",
+        "stage": 5
+      },
+      {
+        "id": "critical_coeff_up",
+        "name": "クリティカル係数上昇",
+        "stage": 8
+      },
+      {
+        "id": "critical_coeff_limit",
+        "name": "クリティカル係数上昇上限開放",
+        "stage": 10
+      }
+    ]
+  },
+  {
+    "beat": 48,
+    "effects": [
+      {
+        "id": "combo_score_up",
+        "name": "コンボスコア上昇",
+        "stage": 11
+      },
+      {
+        "id": "combo_score_limit",
+        "name": "コンボスコア上昇上限開放",
+        "stage": 10
+      },
+      {
+        "id": "score_up",
+        "name": "スコア上昇",
+        "stage": 8
+      },
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 12
+      },
+      {
+        "id": "tension_up",
+        "name": "テンションUP",
+        "stage": 8
+      },
+      {
+        "id": "vocal_boost",
+        "name": "ボーカルブースト",
+        "stage": 12
+      },
+      {
+        "id": "focus",
+        "name": "集目",
+        "stage": 10
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 12
+      },
+      {
+        "id": "vocal_up_extreme",
+        "name": "ボーカル上昇超化",
+        "stage": 10
+      },
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 11
+      },
+      {
+        "id": "critical_rate_up",
+        "name": "クリティカル率上昇",
+        "stage": 9
+      },
+      {
+        "id": "tension_limit",
+        "name": "テンションUP上限開放",
+        "stage": 5
+      },
+      {
+        "id": "critical_coeff_up",
+        "name": "クリティカル係数上昇",
+        "stage": 8
+      },
+      {
+        "id": "critical_coeff_limit",
+        "name": "クリティカル係数上昇上限開放",
+        "stage": 10
+      },
+      {
+        "id": "skill_success_up",
+        "name": "スキル成功率上昇",
+        "stage": 2
+      }
+    ]
+  },
+  {
+    "beat": 49,
+    "effects": [
+      {
+        "id": "combo_score_up",
+        "name": "コンボスコア上昇",
+        "stage": 11
+      },
+      {
+        "id": "combo_score_limit",
+        "name": "コンボスコア上昇上限開放",
+        "stage": 10
+      },
+      {
+        "id": "score_up",
+        "name": "スコア上昇",
+        "stage": 8
+      },
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 12
+      },
+      {
+        "id": "tension_up",
+        "name": "テンションUP",
+        "stage": 8
+      },
+      {
+        "id": "vocal_boost",
+        "name": "ボーカルブースト",
+        "stage": 12
+      },
+      {
+        "id": "focus",
+        "name": "集目",
+        "stage": 10
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 12
+      },
+      {
+        "id": "vocal_up_extreme",
+        "name": "ボーカル上昇超化",
+        "stage": 10
+      },
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 11
+      },
+      {
+        "id": "critical_rate_up",
+        "name": "クリティカル率上昇",
+        "stage": 9
+      },
+      {
+        "id": "tension_limit",
+        "name": "テンションUP上限開放",
+        "stage": 5
+      },
+      {
+        "id": "critical_coeff_up",
+        "name": "クリティカル係数上昇",
+        "stage": 8
+      },
+      {
+        "id": "critical_coeff_limit",
+        "name": "クリティカル係数上昇上限開放",
+        "stage": 10
+      },
+      {
+        "id": "skill_success_up",
+        "name": "スキル成功率上昇",
+        "stage": 2
+      }
+    ]
+  }
+]

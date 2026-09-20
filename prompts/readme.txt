@@ -82,3 +82,21 @@ prompts/continue-beat-score-session.md
 は v0.app 等の外部 LLM 回答（レーン別オフセット仮説ページ等）の検証用引継ぎプロンプト。
 検証結果は research/23_beat_score_analysis/pack_v3/05_v0_response_verification.md に記録済み
 （2026-09-06・E0 新規実行でビート専用要因に絞り込み済み。次は E3 レーン入れ替えラン）
+
+prompts/audit-buff-snapshots.md
+はバフスナップショット全件監査・修正セッション用の引継ぎプロンプト（2026-09-20 作成）。
+発端は S1・b132・L3 のコンボ上昇が実測 6 段に対し sim 16 段だった件（重ね合わせ加算の疑い）。
+T5/S1〜S3 の全ビート×全レーンの効果段数突合→画像検証→sim 修正→厳格テスト化の手順。
+成果物は research/25_buff_audit/ に出すこと。（**完了 2026-09-21**: T5 実測画像 1,060 枚をマルチモーダル画像認識サブエージェント 48 分割で全件再抽出して measured_data_v3.json 生成。過去の T5 スコア合わせによる琴乃Aスキル改ざんが発覚）。
+
+prompts/recover-golden-integrity.md
+は Phase 14 データ健全化（改ざん全件調査・復元）とバフモデル適正化セッション用の引継ぎプロンプト（2026-09-21 作成・**完了 2026-09-21**:
+琴乃A/かけがえのない二人の公式マスタ復元、実効N-1 Decayモデル適正化、DECAY_TIMING_LAG 0件、テスト刷新、単一HTML UI再ビルド完了）。
+
+prompts/audit-samples-s1-s3.md
+は S1〜S3 新バフ減衰モデル再突合・影響分析セッション用の引継ぎプロンプト（2026-09-21 作成）。
+Phase 14 で適正化された実機バフ減衰モデル（実効 N-1 ビート、発動ビート終了時減算）を
+S1, S2, S3 の全実測データと再突合し、バフ消滅タイミング改善・段数一致率・スコア推移への影響を
+網羅的に評価して research/26_data_integrity/samples_decay_audit.md にまとめる。
+
+

@@ -261,13 +261,12 @@
       "powerPermil": 5700
      },
      {
-      "type": "visual_up",
+      "type": "visual_up_extreme",
       "target": "self",
       "condition": "self_visual_lane",
       "durationBeats": 31,
       "stages": 5,
-      "capExtend": true,
-      "confidence": "Peing確定(超化: 表記段階数はダミー・一律+5段階分)"
+      "confidence": "Peing確定(超化: 表記段階数はダミー・一律+5段階分=+250‰)"
      },
      {
       "type": "critical_coeff_up",
@@ -340,7 +339,7 @@
    "critical": 0
   },
   "scoreBonusPct": {
-   "beat": 441,
+   "beat": 266,
    "active": 70,
    "special": 120,
    "passive": 0

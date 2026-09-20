@@ -1,0 +1,222 @@
+{
+ "T5_L1": {
+  "A": 21231893,
+  "B_min": 20920465,
+  "B_max": 21412900,
+  "unresolved": 0,
+  "in_range": true,
+  "excess_over_Bmax": null,
+  "shortfall_under_Bmin": null,
+  "relative_gap_pct": 0.3071346488040421,
+  "verdict": "OK: A∈[B_min,B_max]"
+ },
+ "T5_L2": {
+  "A": 53435162,
+  "B_min": 52939339,
+  "B_max": 54260495,
+  "unresolved": 0,
+  "in_range": true,
+  "excess_over_Bmax": null,
+  "shortfall_under_Bmin": null,
+  "relative_gap_pct": -0.30832694022711116,
+  "verdict": "OK: A∈[B_min,B_max]"
+ },
+ "T5_L3": {
+  "A": 17398054223,
+  "B_min": 17331588625,
+  "B_max": 17545197900,
+  "unresolved": 0,
+  "in_range": true,
+  "excess_over_Bmax": null,
+  "shortfall_under_Bmin": null,
+  "relative_gap_pct": -0.23185948832526523,
+  "verdict": "OK: A∈[B_min,B_max]"
+ },
+ "T5_L4": {
+  "A": 23863258,
+  "B_min": 23470450,
+  "B_max": 24010410,
+  "unresolved": 0,
+  "in_range": true,
+  "excess_over_Bmax": null,
+  "shortfall_under_Bmin": null,
+  "relative_gap_pct": 0.5147159704680727,
+  "verdict": "OK: A∈[B_min,B_max]"
+ },
+ "T5_L5": {
+  "A": 32547478,
+  "B_min": 31691000,
+  "B_max": 32004800,
+  "unresolved": 0,
+  "in_range": false,
+  "excess_over_Bmax": 542678,
+  "shortfall_under_Bmin": null,
+  "relative_gap_pct": 2.149407705260604,
+  "verdict": "NG: A > B_max（超過 542,678）"
+ },
+ "S1_L1": {
+  "A": 11593657,
+  "B_min": 11388355,
+  "B_max": 11768990,
+  "unresolved": 0,
+  "in_range": true,
+  "excess_over_Bmax": null,
+  "shortfall_under_Bmin": null,
+  "relative_gap_pct": 0.12924739795217333,
+  "verdict": "OK: A∈[B_min,B_max]"
+ },
+ "S1_L2": {
+  "A": 6108813,
+  "B_min": 5908795,
+  "B_max": 6225295,
+  "unresolved": 0,
+  "in_range": true,
+  "excess_over_Bmax": null,
+  "shortfall_under_Bmin": null,
+  "relative_gap_pct": 0.6837334847211725,
+  "verdict": "OK: A∈[B_min,B_max]"
+ },
+ "S1_L3": {
+  "A": 84938328,
+  "B_min": 84776600,
+  "B_max": 85192500,
+  "unresolved": 0,
+  "in_range": true,
+  "excess_over_Bmax": null,
+  "shortfall_under_Bmin": null,
+  "relative_gap_pct": -0.05441830689203112,
+  "verdict": "OK: A∈[B_min,B_max]"
+ },
+ "S1_L4": {
+  "A": 5893074,
+  "B_min": 5804700,
+  "B_max": 6049780,
+  "unresolved": 0,
+  "in_range": true,
+  "excess_over_Bmax": null,
+  "shortfall_under_Bmin": null,
+  "relative_gap_pct": -0.5797653313024748,
+  "verdict": "OK: A∈[B_min,B_max]"
+ },
+ "S1_L5": {
+  "A": 8003641,
+  "B_min": 7813145,
+  "B_max": 8154395,
+  "unresolved": 0,
+  "in_range": true,
+  "excess_over_Bmax": null,
+  "shortfall_under_Bmin": null,
+  "relative_gap_pct": 0.24827450406633683,
+  "verdict": "OK: A∈[B_min,B_max]"
+ },
+ "S2_L1": {
+  "A": 6415040,
+  "B_min": 6366684,
+  "B_max": 6482584,
+  "unresolved": 0,
+  "in_range": true,
+  "excess_over_Bmax": null,
+  "shortfall_under_Bmin": null,
+  "relative_gap_pct": -0.14955479622886217,
+  "verdict": "OK: A∈[B_min,B_max]"
+ },
+ "S2_L2": {
+  "A": 4386772,
+  "B_min": 4379100,
+  "B_max": 4394400,
+  "unresolved": 0,
+  "in_range": true,
+  "excess_over_Bmax": null,
+  "shortfall_under_Bmin": null,
+  "relative_gap_pct": 0.0005015077145563982,
+  "verdict": "OK: A∈[B_min,B_max]"
+ },
+ "S2_L3": {
+  "A": 49841012,
+  "B_min": 49639985,
+  "B_max": 50215380,
+  "unresolved": 0,
+  "in_range": true,
+  "excess_over_Bmax": null,
+  "shortfall_under_Bmin": null,
+  "relative_gap_pct": -0.17389394099782726,
+  "verdict": "OK: A∈[B_min,B_max]"
+ },
+ "S2_L4": {
+  "A": 12237899,
+  "B_min": 11995225,
+  "B_max": 12397640,
+  "unresolved": 0,
+  "in_range": true,
+  "excess_over_Bmax": null,
+  "shortfall_under_Bmin": null,
+  "relative_gap_pct": 0.3388367562111764,
+  "verdict": "OK: A∈[B_min,B_max]"
+ },
+ "S2_L5": {
+  "A": 4851660,
+  "B_min": 4769370,
+  "B_max": 4947640,
+  "unresolved": 0,
+  "in_range": true,
+  "excess_over_Bmax": null,
+  "shortfall_under_Bmin": null,
+  "relative_gap_pct": -0.141085731481596,
+  "verdict": "OK: A∈[B_min,B_max]"
+ },
+ "S3_L1": {
+  "A": 5931931,
+  "B_min": 5862585,
+  "B_max": 6076665,
+  "unresolved": 0,
+  "in_range": true,
+  "excess_over_Bmax": null,
+  "shortfall_under_Bmin": null,
+  "relative_gap_pct": -0.6354423205529531,
+  "verdict": "OK: A∈[B_min,B_max]"
+ },
+ "S3_L2": {
+  "A": 9859761,
+  "B_min": 9799245,
+  "B_max": 10063530,
+  "unresolved": 0,
+  "in_range": true,
+  "excess_over_Bmax": null,
+  "shortfall_under_Bmin": null,
+  "relative_gap_pct": -0.7264527000198078,
+  "verdict": "OK: A∈[B_min,B_max]"
+ },
+ "S3_L3": {
+  "A": 18344645,
+  "B_min": 15844775,
+  "B_max": 16358390,
+  "unresolved": 0,
+  "in_range": false,
+  "excess_over_Bmax": 1986255,
+  "shortfall_under_Bmin": null,
+  "relative_gap_pct": 12.227342093564635,
+  "verdict": "NG: A > B_max（超過 1,986,255）"
+ },
+ "S3_L4": {
+  "A": 35714608,
+  "B_min": 35599456,
+  "B_max": 36287936,
+  "unresolved": 0,
+  "in_range": true,
+  "excess_over_Bmax": null,
+  "shortfall_under_Bmin": null,
+  "relative_gap_pct": -0.6414406116399205,
+  "verdict": "OK: A∈[B_min,B_max]"
+ },
+ "S3_L5": {
+  "A": 9560444,
+  "B_min": 9484523,
+  "B_max": 10117863,
+  "unresolved": 0,
+  "in_range": true,
+  "excess_over_Bmax": null,
+  "shortfall_under_Bmin": null,
+  "relative_gap_pct": -2.5181780260414683,
+  "verdict": "OK: A∈[B_min,B_max]"
+ }
+}

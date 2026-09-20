@@ -443,10 +443,13 @@ const PHASES = [
   {id:"8-B8", st:"✅ 08-31", t:"UI テーマ黄色化・ステータス/ロール色（表示のみ・計算不変）", tests:"425"},
   {id:"8-B9", st:"✅ 08-31", t:"画像→編成JSON 生成プロンプト (deck-json-from-images.md) 新設", tests:"428"},
  ]},
- {g:"現在地 (09-03)", items:[
+ {g:"現在地 (09-21)", items:[
   {id:"8-B10", st:"✅ 09-01", t:"ネスト形式インポート対応・myPhotos ステータス統合・golden フォトスキルの名前一致モデル化", c:"UI確定値 = CLI確定値 (304,238,070)・examples/nested-sample.json 同梱", tests:"431"},
   {id:"Phase 9-10", st:"✅ 09-02", t:"S1 全14イベント ±5% 達成（マスタ順効果行・PRE・写真A固定値平坦加算）・S2 取り込み・someone_down_group 条件化・CLI audience 修正", c:"S1 確定値 ×0.98・fan_bonus テーブル実機一致", tests:"450", commit:"b32fdbb"},
   {id:"Phase 11", st:"✅ 09-02", t:"S2 ユーザー確定 4 仕様（超化=増強型・行独立条件評価・前発動 some・レーン属性説＋self_down_group）・OCR 7→2 誤読 236 行訂正（フォト無消費説撤回）", c:"S2 crit フラグ再現 ×0.973・全レーン ±5% 内・L3 critF 1の位一致", tests:"458", commit:"b32fdbb"},
+  {id:"Phase 12", st:"✅ 09-04", t:"S3（STAGE045 Blow Up・ⅢX）取り込み・全ビート乱数 ±5.0% 達成・ビートスコア構造解明", c:"全159ビートが [0.9542, 1.0465] 内・確定値 63,123,447", tests:"474"},
+  {id:"Phase 13-B", st:"✅ 09-21", t:"バフスナップショット全件監査・T5全レーン画像1,060枚再抽出（measured_data_v3.json 生成）・過去のスキル改ざん発覚", c:"T5突合不一致率87.8%→22.3%へ激減・琴乃A(sk-ktn-05-wedd-00-2)の改ざん解明"},
+  {id:"Phase 14", st:"✅ 09-21", t:"データ健全化（改ざん全件調査・復元）& バフ減衰（Decay）モデル適正化（実効N-1ビート化・発動ビート終了時減算）・テスト刷新", c:"琴乃A(ccu)/かけがえのない二人(20%)復元・DECAY_TIMING_LAG 0件・UI再ビルド完了", tests:"485"},
  ]},
 ];
 const WIP = [

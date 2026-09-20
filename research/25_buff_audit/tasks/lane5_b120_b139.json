@@ -1,0 +1,129 @@
+{
+  "task_id": "lane5_b120_b139",
+  "lane": 5,
+  "start_beat": 120,
+  "end_beat": 139,
+  "output_file": "C:\\Users\\umaro\\Documents\\アイプラ\\research\\25_buff_audit\\extracted_t5\\lane5_b120_b139.json",
+  "beats": [
+    {
+      "beat": 120,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane5\\IMG_1348.PNG"
+      ]
+    },
+    {
+      "beat": 121,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane5\\IMG_1349.PNG"
+      ]
+    },
+    {
+      "beat": 122,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane5\\IMG_1350.PNG"
+      ]
+    },
+    {
+      "beat": 123,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane5\\IMG_1351.PNG"
+      ]
+    },
+    {
+      "beat": 124,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane5\\IMG_1352.PNG"
+      ]
+    },
+    {
+      "beat": 125,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane5\\IMG_1353.PNG"
+      ]
+    },
+    {
+      "beat": 126,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane5\\IMG_1354.PNG"
+      ]
+    },
+    {
+      "beat": 127,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane5\\IMG_1355.PNG"
+      ]
+    },
+    {
+      "beat": 128,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane5\\IMG_1356.PNG"
+      ]
+    },
+    {
+      "beat": 129,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane5\\IMG_1357.PNG"
+      ]
+    },
+    {
+      "beat": 130,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane5\\IMG_1358.PNG"
+      ]
+    },
+    {
+      "beat": 131,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane5\\IMG_1359.PNG"
+      ]
+    },
+    {
+      "beat": 132,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane5\\IMG_1360.PNG"
+      ]
+    },
+    {
+      "beat": 133,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane5\\IMG_1361.PNG"
+      ]
+    },
+    {
+      "beat": 134,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane5\\IMG_1362.PNG"
+      ]
+    },
+    {
+      "beat": 135,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane5\\IMG_1363.PNG"
+      ]
+    },
+    {
+      "beat": 136,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane5\\IMG_1364.PNG"
+      ]
+    },
+    {
+      "beat": 137,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane5\\IMG_1365.PNG"
+      ]
+    },
+    {
+      "beat": 138,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane5\\IMG_1366.PNG"
+      ]
+    },
+    {
+      "beat": 139,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane5\\IMG_1367.PNG"
+      ]
+    }
+  ]
+}

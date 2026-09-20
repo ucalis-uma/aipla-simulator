@@ -1,0 +1,66 @@
+{
+ "sample_dir": "C:\\Users\\umaro\\Documents\\aipura_nox\\サンプル4",
+ "refs_dir": "c:\\Users\\umaro\\Documents\\aipura_nox\\templates\\name_band",
+ "summary": {
+  "MISSING": 5,
+  "NGFILE": 0,
+  "NOFOCUS": 0,
+  "OK": 0,
+  "OK(LOWMARGIN)": 0
+ },
+ "pass_quality": {},
+ "ok_cells": [],
+ "missing_frames": [
+  {
+   "lane": 1,
+   "beat": 0
+  },
+  {
+   "lane": 2,
+   "beat": 0
+  },
+  {
+   "lane": 3,
+   "beat": 0
+  },
+  {
+   "lane": 4,
+   "beat": 0
+  },
+  {
+   "lane": 5,
+   "beat": 0
+  }
+ ],
+ "nofocus": [],
+ "ngfile": [],
+ "lowmargin": [],
+ "cells": [
+  {
+   "lane": 1,
+   "beat": 0,
+   "verdict": "MISSING"
+  },
+  {
+   "lane": 2,
+   "beat": 0,
+   "verdict": "MISSING"
+  },
+  {
+   "lane": 3,
+   "beat": 0,
+   "verdict": "MISSING"
+  },
+  {
+   "lane": 4,
+   "beat": 0,
+   "verdict": "MISSING"
+  },
+  {
+   "lane": 5,
+   "beat": 0,
+   "verdict": "MISSING"
+  }
+ ],
+ "check_sheets": []
+}

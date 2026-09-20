@@ -1,0 +1,81 @@
+{
+  "task_id": "lane3_b030_b039",
+  "lane": 3,
+  "start_beat": 30,
+  "end_beat": 39,
+  "output_file": "C:\\Users\\umaro\\Documents\\アイプラ\\research\\25_buff_audit\\extracted_t5\\lane3_b030_b039.json",
+  "beats": [
+    {
+      "beat": 30,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane3\\IMG_0697.PNG",
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane3\\IMG_0698.PNG"
+      ]
+    },
+    {
+      "beat": 31,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane3\\IMG_0699.PNG",
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane3\\IMG_0700.PNG"
+      ]
+    },
+    {
+      "beat": 32,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane3\\IMG_0701.PNG",
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane3\\IMG_0702.PNG"
+      ]
+    },
+    {
+      "beat": 33,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane3\\IMG_0703.PNG",
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane3\\IMG_0704.PNG"
+      ]
+    },
+    {
+      "beat": 34,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane3\\IMG_0705.PNG",
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane3\\IMG_0706.PNG"
+      ]
+    },
+    {
+      "beat": 35,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane3\\IMG_0707.PNG",
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane3\\IMG_0708.PNG"
+      ]
+    },
+    {
+      "beat": 36,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane3\\IMG_0709.PNG",
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane3\\IMG_0710.PNG"
+      ]
+    },
+    {
+      "beat": 37,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane3\\IMG_0711.PNG",
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane3\\IMG_0712.PNG"
+      ]
+    },
+    {
+      "beat": 38,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane3\\IMG_0713.PNG",
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane3\\IMG_0714.PNG",
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane3\\IMG_0715.PNG"
+      ]
+    },
+    {
+      "beat": 39,
+      "images": [
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane3\\IMG_0716.PNG",
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane3\\IMG_0717.PNG",
+        "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル\\lane3\\IMG_0718.PNG"
+      ]
+    }
+  ]
+}

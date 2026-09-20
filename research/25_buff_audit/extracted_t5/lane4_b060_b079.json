@@ -1,0 +1,402 @@
+[
+  {
+    "beat": 60,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 6
+      }
+    ]
+  },
+  {
+    "beat": 61,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 6
+      }
+    ]
+  },
+  {
+    "beat": 62,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 6
+      }
+    ]
+  },
+  {
+    "beat": 63,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 6
+      }
+    ]
+  },
+  {
+    "beat": 64,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 6
+      }
+    ]
+  },
+  {
+    "beat": 65,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 6
+      }
+    ]
+  },
+  {
+    "beat": 66,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 6
+      }
+    ]
+  },
+  {
+    "beat": 67,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 6
+      }
+    ]
+  },
+  {
+    "beat": 68,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 6
+      }
+    ]
+  },
+  {
+    "beat": 69,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 6
+      }
+    ]
+  },
+  {
+    "beat": 70,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 6
+      }
+    ]
+  },
+  {
+    "beat": 71,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 6
+      }
+    ]
+  },
+  {
+    "beat": 72,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 6
+      }
+    ]
+  },
+  {
+    "beat": 73,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 6
+      }
+    ]
+  },
+  {
+    "beat": 74,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 6
+      }
+    ]
+  },
+  {
+    "beat": 75,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 6
+      }
+    ]
+  },
+  {
+    "beat": 76,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 6
+      }
+    ]
+  },
+  {
+    "beat": 77,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 6
+      }
+    ]
+  },
+  {
+    "beat": 78,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 6
+      }
+    ]
+  },
+  {
+    "beat": 79,
+    "effects": [
+      {
+        "id": "combo_continue",
+        "name": "コンボ継続",
+        "stage": null
+      },
+      {
+        "id": "stamina_cost_down",
+        "name": "消費スタミナ低下",
+        "stage": 8
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 6
+      }
+    ]
+  }
+]

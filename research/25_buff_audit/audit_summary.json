@@ -1,0 +1,54 @@
+{
+  "S1": {
+    "sample": "S1",
+    "meas_path": "C:\\Users\\umaro\\Documents\\アイプラ\\../aipura_nox/サンプル1/measured_data.json",
+    "sim_path": "C:\\Users\\umaro\\Documents\\アイプラ\\research/17_sample1_gap_analysis/sim_trace_full.json",
+    "meas_present": true,
+    "meas_has_effects": true,
+    "sim_present": true,
+    "max_beat": 176,
+    "total_comparisons": 1747,
+    "match_count": 1596,
+    "discrepancy_count": 151,
+    "special_effects_count": 0
+  },
+  "S2": {
+    "sample": "S2",
+    "meas_path": "C:\\Users\\umaro\\Documents\\アイプラ\\../aipura_nox/サンプル2/measured_data_v2.json",
+    "sim_path": "C:\\Users\\umaro\\Documents\\アイプラ\\research/20_sample2_gap_analysis/sim_trace_full.json",
+    "meas_present": true,
+    "meas_has_effects": false,
+    "sim_present": true,
+    "max_beat": 167,
+    "total_comparisons": 1303,
+    "match_count": 0,
+    "discrepancy_count": 1303,
+    "special_effects_count": 0
+  },
+  "S3": {
+    "sample": "S3",
+    "meas_path": "C:\\Users\\umaro\\Documents\\アイプラ\\../aipura_nox/サンプル3/measured_data_v2.json",
+    "sim_path": "C:\\Users\\umaro\\Documents\\アイプラ\\research/21_sample3_gap_analysis/sim_trace_full.json",
+    "meas_present": true,
+    "meas_has_effects": true,
+    "sim_present": true,
+    "max_beat": 169,
+    "total_comparisons": 1757,
+    "match_count": 1445,
+    "discrepancy_count": 312,
+    "special_effects_count": 209
+  },
+  "T5": {
+    "sample": "T5",
+    "meas_path": "C:\\Users\\umaro\\Documents\\アイプラ\\スコア分析サンプル/measured_data_v2.json",
+    "sim_path": "C:\\Users\\umaro\\Documents\\アイプラ\\research/25_buff_audit/t5_sim_trace_full.json",
+    "meas_present": true,
+    "meas_has_effects": true,
+    "sim_present": true,
+    "max_beat": 156,
+    "total_comparisons": 3463,
+    "match_count": 421,
+    "discrepancy_count": 3042,
+    "special_effects_count": 787
+  }
+}

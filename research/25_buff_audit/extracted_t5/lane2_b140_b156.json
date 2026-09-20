@@ -1,0 +1,145 @@
+[
+  {
+    "beat": 140,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "critical_rate_up", "name": "クリティカル率上昇", "stage": 6 }
+    ]
+  },
+  {
+    "beat": 141,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "critical_rate_up", "name": "クリティカル率上昇", "stage": 6 }
+    ]
+  },
+  {
+    "beat": 142,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "critical_rate_up", "name": "クリティカル率上昇", "stage": 6 }
+    ]
+  },
+  {
+    "beat": 143,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "critical_rate_up", "name": "クリティカル率上昇", "stage": 6 }
+    ]
+  },
+  {
+    "beat": 144,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "critical_rate_up", "name": "クリティカル率上昇", "stage": 6 }
+    ]
+  },
+  {
+    "beat": 145,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "critical_rate_up", "name": "クリティカル率上昇", "stage": 6 }
+    ]
+  },
+  {
+    "beat": 146,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "critical_rate_up", "name": "クリティカル率上昇", "stage": 6 }
+    ]
+  },
+  {
+    "beat": 147,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "critical_rate_up", "name": "クリティカル率上昇", "stage": 6 }
+    ]
+  },
+  {
+    "beat": 148,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "critical_rate_up", "name": "クリティカル率上昇", "stage": 6 }
+    ]
+  },
+  {
+    "beat": 149,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "critical_rate_up", "name": "クリティカル率上昇", "stage": 6 }
+    ]
+  },
+  {
+    "beat": 150,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "critical_rate_up", "name": "クリティカル率上昇", "stage": 6 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 }
+    ]
+  },
+  {
+    "beat": 151,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "critical_rate_up", "name": "クリティカル率上昇", "stage": 6 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 },
+      { "id": "score_up", "name": "スコア上昇", "stage": 8 }
+    ]
+  },
+  {
+    "beat": 152,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "critical_rate_up", "name": "クリティカル率上昇", "stage": 6 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 },
+      { "id": "score_up", "name": "スコア上昇", "stage": 8 }
+    ]
+  },
+  {
+    "beat": 153,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "critical_rate_up", "name": "クリティカル率上昇", "stage": 6 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 },
+      { "id": "score_up", "name": "スコア上昇", "stage": 8 }
+    ]
+  },
+  {
+    "beat": 154,
+    "effects": [
+      { "id": "critical_rate_up", "name": "クリティカル率上昇", "stage": 6 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 },
+      { "id": "score_up", "name": "スコア上昇", "stage": 8 }
+    ]
+  },
+  {
+    "beat": 155,
+    "effects": [
+      { "id": "critical_rate_up", "name": "クリティカル率上昇", "stage": 6 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 },
+      { "id": "score_up", "name": "スコア上昇", "stage": 8 }
+    ]
+  },
+  {
+    "beat": 156,
+    "effects": [
+      { "id": "critical_rate_up", "name": "クリティカル率上昇", "stage": 6 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 },
+      { "id": "score_up", "name": "スコア上昇", "stage": 8 }
+    ]
+  }
+]

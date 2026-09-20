@@ -1,0 +1,161 @@
+[
+  {
+    "beat": 120,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 }
+    ]
+  },
+  {
+    "beat": 121,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 }
+    ]
+  },
+  {
+    "beat": 122,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 }
+    ]
+  },
+  {
+    "beat": 123,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 }
+    ]
+  },
+  {
+    "beat": 124,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 }
+    ]
+  },
+  {
+    "beat": 125,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 }
+    ]
+  },
+  {
+    "beat": 126,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 }
+    ]
+  },
+  {
+    "beat": 127,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 }
+    ]
+  },
+  {
+    "beat": 128,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 }
+    ]
+  },
+  {
+    "beat": 129,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 }
+    ]
+  },
+  {
+    "beat": 130,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 }
+    ]
+  },
+  {
+    "beat": 131,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 }
+    ]
+  },
+  {
+    "beat": 132,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 }
+    ]
+  },
+  {
+    "beat": 133,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 }
+    ]
+  },
+  {
+    "beat": 134,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 }
+    ]
+  },
+  {
+    "beat": 135,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 }
+    ]
+  },
+  {
+    "beat": 136,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 }
+    ]
+  },
+  {
+    "beat": 137,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 }
+    ]
+  },
+  {
+    "beat": 138,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 },
+      { "id": "a_skill_score_up", "name": "Aスキルスコア上昇", "stage": 7 }
+    ]
+  },
+  {
+    "beat": 139,
+    "effects": [
+      { "id": "combo_continue", "name": "コンボ継続", "stage": null },
+      { "id": "stamina_cost_down", "name": "消費スタミナ低下", "stage": 8 }
+    ]
+  }
+]

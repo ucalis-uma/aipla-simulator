@@ -212,15 +212,17 @@ describe("simulateTimeline: 処理順と実効ビート数（§3）", () => {
     // （L3: vocal 120000×1.25×0.6 = 90000 + 12500 + 3750 = 106250 → ×8/140 = 6071）
     expect(beat1?.buffSnapshots[2]?.vocal_up).toBe(5);
     expect(beat1?.events.find((e) => e.lane === 3)?.basicScore).toBe(6071);
-    // ビート2・3も有効（残り2→1）
+    // ビート2も有効（実効 3-1 = 2ビート: b1, b2）
     expect(result.beats[1]?.buffSnapshots[2]?.vocal_up).toBe(5);
-    expect(result.beats[2]?.buffSnapshots[2]?.vocal_up).toBe(5);
-    // ビート4は期限切れ（残り0→除去）
+    // ビート3は期限切れ（実効2ビートのためb3開始時に除去）
+    expect(result.beats[2]?.buffSnapshots[2]?.vocal_up).toBe(0);
+    expect(result.beats[2]?.events.find((e) => e.lane === 3)?.basicScore).toBe(5042);
+    // ビート4も期限切れ
     expect(beat4?.buffSnapshots[2]?.vocal_up).toBe(0);
     expect(beat4?.events.find((e) => e.lane === 3)?.basicScore).toBe(5042);
   });
 
-  it("後半発動バフは翌ビートから乗る（表記どおりの窓）", () => {
+  it("後半発動バフは翌ビートから乗る（実効ビート数=表記-1）", () => {
     const lanes = defaultLanes();
     const l3 = lanes[2];
     if (l3 === undefined) {
@@ -251,21 +253,21 @@ describe("simulateTimeline: 処理順と実効ビート数（§3）", () => {
     // ビート1のスコアには乗らない
     expect(result.beats[0]?.buffSnapshots[2]?.vocal_up).toBe(0);
     expect(result.beats[0]?.events.find((e) => e.lane === 3)?.basicScore).toBe(5042);
-    // ビート2〜4 で有効（表記どおり3ビート）
+    // ビート2〜3 で有効（実効 3-1 = 2ビート）
     expect(result.beats[1]?.buffSnapshots[2]?.vocal_up).toBe(5);
     expect(result.beats[2]?.buffSnapshots[2]?.vocal_up).toBe(5);
-    expect(result.beats[3]?.buffSnapshots[2]?.vocal_up).toBe(5);
-    // ビート5は期限切れ
+    // ビート4は期限切れ
+    expect(result.beats[3]?.buffSnapshots[2]?.vocal_up).toBe(0);
     expect(result.beats[4]?.buffSnapshots[2]?.vocal_up).toBe(0);
   });
 });
 
 describe("simulateTimeline: over-cap 内部保持（【ユーザー確定 2026-08-30】）", () => {
   it("上限超過の付与は切り捨てず、期限切れ後も内部段数が上限以上なら上限を維持する", () => {
-    // L3 に vocal_up を 19段[5b] + 2段[2b] + 2段[3b]（後半発動）で付与:
+    // L3 に vocal_up を 19段[6b] + 2段[3b] + 2段[4b]（後半発動）で付与:
     //   b1: 19+2=21 → 表示20（超過分は切り捨てない）
-    //   b2: 21 → 20
-    //   b3: 2段[2b]が期限切れ → 内部21 → 表示20を維持（旧仕様の付与時切り捨てなら19に落ちる）
+    //   b2: 21 → 20（b2後半で p-2 発動）
+    //   b3: 2段[3b](ph-2)が期限切れ → 内部21(19+2) → 表示20を維持（旧仕様の付与時切り捨てなら19に落ちる）
     //   b4/b5: 21 → 20
     //   b6: 全インスタンス期限切れ → 0
     const lanes = defaultLanes();
@@ -280,7 +282,7 @@ describe("simulateTimeline: over-cap 内部保持（【ユーザー確定 2026-0
         lane: 3,
         ct: 100,
         effects: [
-          { type: "vocal_up", stages: 19, durationBeats: 5, target: "self", condition: "none" },
+          { type: "vocal_up", stages: 19, durationBeats: 6, target: "self", condition: "none" },
         ],
       }),
       skill({
@@ -292,7 +294,7 @@ describe("simulateTimeline: over-cap 内部保持（【ユーザー確定 2026-0
           {
             type: "vocal_up",
             stages: 2,
-            durationBeats: 3,
+            durationBeats: 4,
             target: "self",
             condition: "self_vocal_lane", // L3 は vocal → 後半発動
           },
@@ -306,7 +308,7 @@ describe("simulateTimeline: over-cap 内部保持（【ユーザー確定 2026-0
         lane: 3,
         limitPerLive: 1, // b1 のみ発動（ct:null のフォトの毎ビート再発動を防止）
         effects: [
-          { type: "vocal_up", stages: 2, durationBeats: 2, target: "self", condition: "none" },
+          { type: "vocal_up", stages: 2, durationBeats: 3, target: "self", condition: "none" },
         ],
       }),
     ];

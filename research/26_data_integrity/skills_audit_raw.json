@@ -1,0 +1,1531 @@
+[
+  {
+    "id": "sk-yu-05-birt-02-1",
+    "name": "ハスハスしてる優ちゃん",
+    "lane": 1,
+    "level": 6,
+    "kind": "A",
+    "is_photo": false,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Confirmed(450%)",
+      "Confirmed(type20 grade8, 検証テキスト・発動ログb47/b94/b136と整合)",
+      "Confirmed(type81 grade10 上限解放)"
+    ],
+    "vendor_found": true,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "score_get",
+        "powerPermil": 4500,
+        "target": "self",
+        "condition": "none",
+        "durationBeats": null,
+        "confidence": "Confirmed(450%)"
+      },
+      {
+        "type": "critical_coeff_up",
+        "stages": 8,
+        "durationBeats": 47,
+        "target": "score_type_2",
+        "condition": "none",
+        "confidence": "Confirmed(type20 grade8, 検証テキスト・発動ログb47/b94/b136と整合)"
+      },
+      {
+        "type": "critical_coeff_limit",
+        "stages": 10,
+        "durationBeats": 47,
+        "target": "score_type_2",
+        "condition": "none",
+        "confidence": "Confirmed(type81 grade10 上限解放)"
+      }
+    ],
+    "vendor_level_info": {
+      "level": 6,
+      "description": "450%のスコア獲得 \nスコアラータイプ2人に8段階クリティカル係数上昇効果[47ビート]と10段階クリティカル係数上昇上限解放効果[47ビート] \nスタミナ157消費 CT:30",
+      "triggerId": "",
+      "coolTime": 30,
+      "stamina": 157,
+      "skillDetails": [
+        {
+          "efficacyId": "ef-score_get-4500-chart_dependence",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 0,
+          "duration": null,
+          "skillTarget": null
+        },
+        {
+          "efficacyId": "ef-critical_bonus_permil_up-8-target-character_type-1-2-47",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 8,
+          "duration": null,
+          "skillTarget": null
+        },
+        {
+          "efficacyId": "ef-limit_break_critical_bonus_permil_up-10-target-character_type-1-2-47",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 10,
+          "duration": null,
+          "skillTarget": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "sk-yu-05-birt-02-2",
+    "name": "かんしょ～かい",
+    "lane": 1,
+    "level": 6,
+    "kind": "P",
+    "is_photo": false,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Confirmed(type41 grade6, 発動ログb1/b50/b100/b150と整合)",
+      "Confirmed(type86 grade10 上限解放, スコア獲得なし)"
+    ],
+    "vendor_found": true,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "combo_score_up",
+        "stages": 6,
+        "durationBeats": 44,
+        "target": "score_type_1",
+        "condition": "none",
+        "confidence": "Confirmed(type41 grade6, 発動ログb1/b50/b100/b150と整合)"
+      },
+      {
+        "type": "combo_score_limit",
+        "stages": 10,
+        "durationBeats": 44,
+        "target": "score_type_1",
+        "condition": "none",
+        "confidence": "Confirmed(type86 grade10 上限解放, スコア獲得なし)"
+      }
+    ],
+    "vendor_level_info": {
+      "level": 6,
+      "description": "スコアラータイプ1人に6段階コンボスコア上昇効果[44ビート]と10段階コンボスコア上昇上限解放効果[44ビート] \nスタミナ279消費 CT:50",
+      "triggerId": "",
+      "coolTime": 50,
+      "stamina": 279,
+      "skillDetails": [
+        {
+          "efficacyId": "ef-combo_score_up-6-target-character_type-1-1-44",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 6,
+          "duration": null,
+          "skillTarget": null
+        },
+        {
+          "efficacyId": "ef-limit_break_combo_score_up-10-target-character_type-1-1-44",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 10,
+          "duration": null,
+          "skillTarget": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "sk-yu-05-birt-02-3",
+    "name": "これぞ深夜の背徳感",
+    "lane": 1,
+    "level": 5,
+    "kind": "P",
+    "is_photo": false,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Confirmed(type18 grade5)",
+      "Estimate(値Confirmed: type80 grade10 上限解放。エンジン定数にlimit版が無いため a_skill_score_up+limitRelease で代用)"
+    ],
+    "vendor_found": true,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "a_skill_score_up",
+        "stages": 5,
+        "durationBeats": 34,
+        "target": "score_type_1",
+        "condition": "self_visual_lane",
+        "confidence": "Confirmed(type18 grade5)"
+      },
+      {
+        "type": "a_skill_score_up",
+        "stages": 10,
+        "durationBeats": 34,
+        "target": "score_type_1",
+        "condition": "self_visual_lane",
+        "limitRelease": true,
+        "confidence": "Estimate(値Confirmed: type80 grade10 上限解放。エンジン定数にlimit版が無いため a_skill_score_up+limitRelease で代用)"
+      }
+    ],
+    "vendor_level_info": {
+      "level": 5,
+      "description": "自身がビジュアルレーンの時 \nスコアラータイプ1人に5段階Aスキルスコア上昇効果[34ビート]と10段階Aスキルスコア上昇上限解放効果[34ビート] \nスタミナ289消費 CT:50",
+      "triggerId": "tg-position_attribute_visual",
+      "coolTime": 50,
+      "stamina": 289,
+      "skillDetails": [
+        {
+          "efficacyId": "ef-active_skill_score_up-5-target-character_type-1-1-34",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 5,
+          "duration": null,
+          "skillTarget": null
+        },
+        {
+          "efficacyId": "ef-limit_break_active_skill_score_up-10-target-character_type-1-1-34",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 10,
+          "duration": null,
+          "skillTarget": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "sk-ski-05-onep-00-1",
+    "name": "やすらぎの贈り物",
+    "lane": 2,
+    "level": 6,
+    "kind": "A",
+    "is_photo": false,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Confirmed(480%)",
+      "Confirmed(type85 grade5(=max5) 上限解放, 発動ログb38/b115と整合)",
+      "Confirmed(強化効果を3段階増強: テキスト由来, type26)"
+    ],
+    "vendor_found": true,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "score_get",
+        "powerPermil": 4800,
+        "target": "self",
+        "condition": "none",
+        "durationBeats": null,
+        "confidence": "Confirmed(480%)"
+      },
+      {
+        "type": "tension_limit",
+        "stages": 5,
+        "durationBeats": 46,
+        "target": "score_type_1",
+        "condition": "none",
+        "confidence": "Confirmed(type85 grade5(=max5) 上限解放, 発動ログb38/b115と整合)"
+      },
+      {
+        "type": "effect_amplify",
+        "value": 3,
+        "durationBeats": null,
+        "target": "score_type_1",
+        "condition": "none",
+        "confidence": "Confirmed(強化効果を3段階増強: テキスト由来, type26)"
+      }
+    ],
+    "vendor_level_info": {
+      "level": 6,
+      "description": "480%のスコア獲得\nスコアラータイプ1人に5段階テンションUP上限解放効果[46ビート]と強化効果を3段階増強\nスタミナ187消費 CT:50",
+      "triggerId": "",
+      "coolTime": 50,
+      "stamina": 187,
+      "skillDetails": [
+        {
+          "efficacyId": "ef-score_get-4800-chart_dependence",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 0,
+          "duration": null,
+          "skillTarget": null
+        },
+        {
+          "efficacyId": "ef-limit_break_tension_up-5-target-character_type-1-1-46",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 5,
+          "duration": null,
+          "skillTarget": null
+        },
+        {
+          "efficacyId": "ef-strength_effect_value_increase-3-target-character_type-1-1",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 0,
+          "duration": null,
+          "skillTarget": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "sk-ski-05-onep-00-2",
+    "name": "私が恋をするのなら",
+    "lane": 2,
+    "level": 6,
+    "kind": "A",
+    "is_photo": false,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Confirmed(510%)",
+      "Confirmed(強化効果を10延長: テキスト由来, type25 target-vocal_higher-1, 発動ログb86/b144と整合)",
+      "Confirmed(type19 grade9)"
+    ],
+    "vendor_found": true,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "score_get",
+        "powerPermil": 5100,
+        "target": "self",
+        "condition": "none",
+        "durationBeats": null,
+        "confidence": "Confirmed(510%)"
+      },
+      {
+        "type": "effect_extension",
+        "value": 10,
+        "durationBeats": null,
+        "target": "vocal_high_1",
+        "condition": "self_vocal_lane",
+        "confidence": "Confirmed(強化効果を10延長: テキスト由来, type25 target-vocal_higher-1, 発動ログb86/b144と整合)"
+      },
+      {
+        "type": "critical_rate_up",
+        "stages": 9,
+        "durationBeats": 46,
+        "target": "vocal_high_1",
+        "condition": "self_vocal_lane",
+        "confidence": "Confirmed(type19 grade9)"
+      }
+    ],
+    "vendor_level_info": {
+      "level": 6,
+      "description": "510%のスコア獲得\n自身がボーカルレーンの時 ボーカルが高い1人の強化効果を10延長と9段階クリティカル率上昇効果[46ビート]\nスタミナ202消費 CT:50",
+      "triggerId": "",
+      "coolTime": 50,
+      "stamina": 202,
+      "skillDetails": [
+        {
+          "efficacyId": "ef-score_get-5100-chart_dependence",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 0,
+          "duration": null,
+          "skillTarget": null
+        },
+        {
+          "efficacyId": "ef-strength_effect_count_increase-10-target-vocal_higher-1",
+          "triggerId": "tg-position_attribute_vocal",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 0,
+          "duration": null,
+          "skillTarget": null
+        },
+        {
+          "efficacyId": "ef-critical_rate_up-9-target-vocal_higher-1-46",
+          "triggerId": "tg-position_attribute_vocal",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 9,
+          "duration": null,
+          "skillTarget": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "sk-ski-05-onep-00-3",
+    "name": "気持ちを和歌に乗せて",
+    "lane": 2,
+    "level": 5,
+    "kind": "P",
+    "is_photo": false,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Confirmed(type38 grade3, 発動ログb1/b50/b100/b150と整合)",
+      "Confirmed(type56 grade3)"
+    ],
+    "vendor_found": true,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "tension_up",
+        "stages": 3,
+        "durationBeats": 40,
+        "target": "score_type_1",
+        "condition": "none",
+        "confidence": "Confirmed(type38 grade3, 発動ログb1/b50/b100/b150と整合)"
+      },
+      {
+        "type": "vocal_boost",
+        "stages": 3,
+        "durationBeats": 40,
+        "target": "score_type_1",
+        "condition": "none",
+        "confidence": "Confirmed(type56 grade3)"
+      }
+    ],
+    "vendor_level_info": {
+      "level": 5,
+      "description": "スコアラータイプ1人に3段階テンションUP効果[40ビート]と3段階ボーカルブースト効果[40ビート]\nスタミナ262消費 CT:50",
+      "triggerId": "",
+      "coolTime": 50,
+      "stamina": 262,
+      "skillDetails": [
+        {
+          "efficacyId": "ef-tension_up-3-target-character_type-1-1-40",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 3,
+          "duration": null,
+          "skillTarget": null
+        },
+        {
+          "efficacyId": "ef-vocal_boost-3-target-character_type-1-1-40",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 3,
+          "duration": null,
+          "skillTarget": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "sk-chs-05-fest-03-1",
+    "name": "『成宮すず』なのですわ！",
+    "lane": 3,
+    "level": 6,
+    "kind": "SP",
+    "is_photo": false,
+    "has_suspicious_confidence": true,
+    "confidence_texts": [
+      "Confirmed: +6.0%/段（docs-806980235・簡易検証 2026-09-01 確定・参照はボーカル上昇のみ〔超化非参照〕）。旧 T5 フィット(11‰/段・超化込み ref) は誤り —— 再フィット実施",
+      "Confirmed(12%=120‰、基數はレーン累積スコア) + Unknown(type70上限)"
+    ],
+    "vendor_found": true,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "score_get",
+        "powerPermil": 15700,
+        "target": "self",
+        "condition": "none",
+        "durationBeats": null,
+        "scaling": {
+          "ref": "vocal_up_stages",
+          "perStagePermil": 60,
+          "fitted": false
+        },
+        "confidence": "Confirmed: +6.0%/段（docs-806980235・簡易検証 2026-09-01 確定・参照はボーカル上昇のみ〔超化非参照〕）。旧 T5 フィット(11‰/段・超化込み ref) は誤り —— 再フィット実施"
+      },
+      {
+        "type": "score_get_by_score_ratio",
+        "powerPermil": 120,
+        "target": "self",
+        "condition": "none",
+        "durationBeats": null,
+        "confidence": "Confirmed(12%=120‰、基數はレーン累積スコア) + Unknown(type70上限)"
+      }
+    ],
+    "vendor_level_info": {
+      "level": 6,
+      "description": "1570%のスコア獲得、ボーカル上昇状態の段階数が多い程効果上昇\n自身の獲得スコアの12%のスコア獲得\nスタミナ1201消費 ",
+      "triggerId": "",
+      "coolTime": 0,
+      "stamina": 1201,
+      "skillDetails": [
+        {
+          "efficacyId": "ef-score_get_by_status_effect_type_grade-vocal_up-15700-chart_dependence",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 0,
+          "duration": null,
+          "skillTarget": null
+        },
+        {
+          "efficacyId": "ef-score_get_by_score_ratio-120-target-self",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 0,
+          "duration": null,
+          "skillTarget": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "sk-chs-05-fest-03-2",
+    "name": "星見プロ全国ツアーin愛知",
+    "lane": 3,
+    "level": 6,
+    "kind": "A",
+    "is_photo": false,
+    "has_suspicious_confidence": true,
+    "confidence_texts": [
+      "Confirmed: +6.0%/段（docs-806980235・簡易検証 2026-09-01 確定・参照はボーカル上昇のみ〔超化非参照〕）。旧 T5 フィット(3‰/段・超化込み ref) は誤り —— 再フィット実施",
+      "Confirmed(type95 ボーカル上昇超化。【Peing確定 2026-08-31】超化の表記段階数(10段)はダミーで効果は一律+5段階分=+250‰。1段値は vocal_up と同じ50‰・定数 STATUS_UP_EXTREME_PER_STAGE_PERMIL 参照。発動ログb2/b69/b156と整合)",
+      "Confirmed(type50 ef-cool_time_increase-10, [ライブバトルのみ]→通常ライブでは除外)"
+    ],
+    "vendor_found": true,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "score_get",
+        "powerPermil": 4000,
+        "target": "self",
+        "condition": "none",
+        "durationBeats": null,
+        "scaling": {
+          "ref": "vocal_up_stages",
+          "perStagePermil": 60,
+          "fitted": false
+        },
+        "confidence": "Confirmed: +6.0%/段（docs-806980235・簡易検証 2026-09-01 確定・参照はボーカル上昇のみ〔超化非参照〕）。旧 T5 フィット(3‰/段・超化込み ref) は誤り —— 再フィット実施"
+      },
+      {
+        "type": "vocal_up_extreme",
+        "stages": 5,
+        "durationBeats": 36,
+        "target": "self",
+        "condition": "none",
+        "confidence": "Confirmed(type95 ボーカル上昇超化。【Peing確定 2026-08-31】超化の表記段階数(10段)はダミーで効果は一律+5段階分=+250‰。1段値は vocal_up と同じ50‰・定数 STATUS_UP_EXTREME_PER_STAGE_PERMIL 参照。発動ログb2/b69/b156と整合)"
+      },
+      {
+        "type": "ct_increase",
+        "value": 10,
+        "durationBeats": null,
+        "target": "same_lane_other",
+        "condition": "battle_only",
+        "confidence": "Confirmed(type50 ef-cool_time_increase-10, [ライブバトルのみ]→通常ライブでは除外)"
+      }
+    ],
+    "vendor_level_info": {
+      "level": 6,
+      "description": "400%のスコア獲得、ボーカル上昇状態の段階数が多い程効果上昇\n自身にボーカル上昇超化効果[36ビート]\n[ライブバトルのみ]同じレーンの相手のCTを10増加\nスタミナ404消費 CT:30",
+      "triggerId": "",
+      "coolTime": 30,
+      "stamina": 404,
+      "skillDetails": [
+        {
+          "efficacyId": "ef-score_get_by_status_effect_type_grade-vocal_up-4000-chart_dependence",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 0,
+          "duration": null,
+          "skillTarget": null
+        },
+        {
+          "efficacyId": "ef-add_effect_value_vocal_up-10-target-self-36",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 10,
+          "duration": null,
+          "skillTarget": null
+        },
+        {
+          "efficacyId": "ef-cool_time_increase-10-target-opponent_same_position",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 0,
+          "duration": null,
+          "skillTarget": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "sk-chs-05-fest-03-3",
+    "name": "逆襲のドッキリ企画",
+    "lane": 3,
+    "level": 6,
+    "kind": "P",
+    "is_photo": false,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Confirmed(type14 grade7, 発動ログb1/b51/b101/b136と整合)",
+      "Confirmed(type23 ef-fix_stamina_recovery-2560)"
+    ],
+    "vendor_found": true,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "vocal_up",
+        "stages": 7,
+        "durationBeats": 43,
+        "target": "self",
+        "condition": "self_vocal_lane",
+        "confidence": "Confirmed(type14 grade7, 発動ログb1/b51/b101/b136と整合)"
+      },
+      {
+        "type": "stamina_recovery",
+        "value": 2560,
+        "durationBeats": null,
+        "target": "self",
+        "condition": "self_vocal_lane",
+        "confidence": "Confirmed(type23 ef-fix_stamina_recovery-2560)"
+      }
+    ],
+    "vendor_level_info": {
+      "level": 6,
+      "description": "自身がボーカルレーンの時 自身に7段階ボーカル上昇効果[43ビート]とスタミナを2560回復\nスタミナ866消費 CT:50",
+      "triggerId": "tg-position_attribute_vocal",
+      "coolTime": 50,
+      "stamina": 866,
+      "skillDetails": [
+        {
+          "efficacyId": "ef-vocal_up-7-target-self-43",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 7,
+          "duration": null,
+          "skillTarget": null
+        },
+        {
+          "efficacyId": "ef-fix_stamina_recovery-2560-target-self",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 0,
+          "duration": null,
+          "skillTarget": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "sk-ktn-05-wedd-00-1",
+    "name": "花嫁の心得",
+    "lane": 4,
+    "level": 6,
+    "kind": "A",
+    "is_photo": false,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Confirmed(530%)",
+      "Confirmed(type12, 発動ログb23/b80と整合。stage値なし)",
+      "Confirmed(type11 grade8)"
+    ],
+    "vendor_found": true,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "score_get",
+        "powerPermil": 5300,
+        "target": "self",
+        "condition": "none",
+        "durationBeats": null,
+        "confidence": "Confirmed(530%)"
+      },
+      {
+        "type": "combo_continue",
+        "stages": null,
+        "durationBeats": 75,
+        "target": "all",
+        "condition": "none",
+        "confidence": "Confirmed(type12, 発動ログb23/b80と整合。stage値なし)"
+      },
+      {
+        "type": "stamina_cost_down",
+        "stages": 8,
+        "durationBeats": 75,
+        "target": "all",
+        "condition": "none",
+        "confidence": "Confirmed(type11 grade8)"
+      }
+    ],
+    "vendor_level_info": {
+      "level": 6,
+      "description": "530%のスコア獲得\n全員にコンボ継続効果[75ビート]\n全員に8段階消費スタミナ低下効果[75ビート]\nスタミナ187消費 CT:50",
+      "triggerId": "",
+      "coolTime": 50,
+      "stamina": 187,
+      "skillDetails": [
+        {
+          "efficacyId": "ef-score_get-5300-chart_dependence",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 0,
+          "duration": null,
+          "skillTarget": null
+        },
+        {
+          "efficacyId": "ef-combo_continuation-target-all-75",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 0,
+          "duration": null,
+          "skillTarget": null
+        },
+        {
+          "efficacyId": "ef-stamina_consumption_reduction-8-target-all-75",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 8,
+          "duration": null,
+          "skillTarget": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "sk-ktn-05-wedd-00-2",
+    "name": "ドリームウエディング",
+    "lane": 4,
+    "level": 6,
+    "kind": "A",
+    "is_photo": false,
+    "has_suspicious_confidence": true,
+    "confidence_texts": [
+      "Confirmed(550%)",
+      "Confirmed(type27, テキスト由来15。発動ログb106でLane3/5のCT-15を実測(08§2.5))",
+      "T5実測フィット修正(type20=combo_score_up): b107以降のL3ビートが csu=30(cbu 3,177) を要求し全領域 s∈[0.987,1.023] に成立。ccu解釈では critF=4,901 が必要になり b116+の実測と矛盾。csu+5[60b]→26+5=31→上限30(かんしょ combo_score_limit+10)でクランプ、表示30と整合"
+    ],
+    "vendor_found": true,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "score_get",
+        "powerPermil": 5500,
+        "target": "self",
+        "condition": "none",
+        "durationBeats": null,
+        "confidence": "Confirmed(550%)"
+      },
+      {
+        "type": "ct_reduction",
+        "value": 15,
+        "durationBeats": null,
+        "target": "neighbors",
+        "condition": "none",
+        "confidence": "Confirmed(type27, テキスト由来15。発動ログb106でLane3/5のCT-15を実測(08§2.5))"
+      },
+      {
+        "type": "combo_score_up",
+        "stages": 5,
+        "durationBeats": 60,
+        "target": "score_type_1",
+        "condition": "none",
+        "confidence": "T5実測フィット修正(type20=combo_score_up): b107以降のL3ビートが csu=30(cbu 3,177) を要求し全領域 s∈[0.987,1.023] に成立。ccu解釈では critF=4,901 が必要になり b116+の実測と矛盾。csu+5[60b]→26+5=31→上限30(かんしょ combo_score_limit+10)でクランプ、表示30と整合"
+      }
+    ],
+    "vendor_level_info": {
+      "level": 6,
+      "description": "550%のスコア獲得\n隣接するアイドルのCTを15減少\n自身がビジュアルレーンの時 スコアラータイプ2人に5段階クリティカル係数上昇効果[60ビート]\nスタミナ190消費 CT:50",
+      "triggerId": "",
+      "coolTime": 50,
+      "stamina": 190,
+      "skillDetails": [
+        {
+          "efficacyId": "ef-score_get-5500-chart_dependence",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 0,
+          "duration": null,
+          "skillTarget": null
+        },
+        {
+          "efficacyId": "ef-cool_time_reduction-15-target-neighbor",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 0,
+          "duration": null,
+          "skillTarget": null
+        },
+        {
+          "efficacyId": "ef-critical_bonus_permil_up-5-target-character_type-1-2-60",
+          "triggerId": "tg-position_attribute_visual",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 5,
+          "duration": null,
+          "skillTarget": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "sk-ktn-05-wedd-00-3",
+    "name": "結婚への願望",
+    "lane": 4,
+    "level": 5,
+    "kind": "P",
+    "is_photo": false,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Confirmed(type23, テキスト由来3600, 発動ログb1/b40/b80/b120と整合)",
+      "Estimate(値Confirmed: type49 同レーン相手のスタミナ2200消費。定数にスタミナ消費タグが無いため stamina_recovery 負値+condition battle_only で代用表記・通常ライブでは除外)"
+    ],
+    "vendor_found": true,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "stamina_recovery",
+        "value": 3600,
+        "durationBeats": null,
+        "target": "neighbors",
+        "condition": "none",
+        "confidence": "Confirmed(type23, テキスト由来3600, 発動ログb1/b40/b80/b120と整合)"
+      },
+      {
+        "type": "stamina_recovery",
+        "value": -2200,
+        "durationBeats": null,
+        "target": "same_lane_other",
+        "condition": "battle_only",
+        "confidence": "Estimate(値Confirmed: type49 同レーン相手のスタミナ2200消費。定数にスタミナ消費タグが無いため stamina_recovery 負値+condition battle_only で代用表記・通常ライブでは除外)"
+      }
+    ],
+    "vendor_level_info": {
+      "level": 5,
+      "description": "隣接するアイドルのスタミナを3600回復\n[ライブバトルのみ]同じレーンの相手のスタミナを2200消費\nスタミナ273消費 CT:40",
+      "triggerId": "",
+      "coolTime": 40,
+      "stamina": 273,
+      "skillDetails": [
+        {
+          "efficacyId": "ef-fix_stamina_recovery-3600-target-neighbor",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 0,
+          "duration": null,
+          "skillTarget": null
+        },
+        {
+          "efficacyId": "ef-stamina_consumption-2200-target-opponent_same_position",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 0,
+          "duration": null,
+          "skillTarget": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "sk-ski-05-waso-00-1",
+    "name": "殻をやぶる",
+    "lane": 5,
+    "level": 6,
+    "kind": "A",
+    "is_photo": false,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Confirmed(570%)",
+      "Confirmed(type19 grade6 target-vocal-2, 発動ログb30/b128と整合)"
+    ],
+    "vendor_found": true,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "score_get",
+        "powerPermil": 5700,
+        "target": "self",
+        "condition": "none",
+        "durationBeats": null,
+        "confidence": "Confirmed(570%)"
+      },
+      {
+        "type": "critical_rate_up",
+        "stages": 6,
+        "durationBeats": 60,
+        "target": "vocal_type_2",
+        "condition": "none",
+        "confidence": "Confirmed(type19 grade6 target-vocal-2, 発動ログb30/b128と整合)"
+      }
+    ],
+    "vendor_level_info": {
+      "level": 6,
+      "description": "570%のスコア獲得\nボーカルタイプ2人に6段階クリティカル率上昇効果[60ビート]\nスタミナ186消費 CT:50",
+      "triggerId": "",
+      "coolTime": 50,
+      "stamina": 186,
+      "skillDetails": [
+        {
+          "efficacyId": "ef-score_get-5700-chart_dependence",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 0,
+          "duration": null,
+          "skillTarget": null
+        },
+        {
+          "efficacyId": "ef-critical_rate_up-6-target-vocal-2-60",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 6,
+          "duration": null,
+          "skillTarget": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "sk-ski-05-waso-00-2",
+    "name": "アイドルの掟への反抗",
+    "lane": 5,
+    "level": 6,
+    "kind": "A",
+    "is_photo": false,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Confirmed(510%)",
+      "Confirmed(type14 grade6 target-neighbor, 発動ログb60と整合)",
+      "Confirmed(type14 grade4 target-center, 誰かが集目状態の時)"
+    ],
+    "vendor_found": true,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "score_get",
+        "powerPermil": 5100,
+        "target": "self",
+        "condition": "none",
+        "durationBeats": null,
+        "confidence": "Confirmed(510%)"
+      },
+      {
+        "type": "vocal_up",
+        "stages": 6,
+        "durationBeats": 38,
+        "target": "neighbors",
+        "condition": "none",
+        "confidence": "Confirmed(type14 grade6 target-neighbor, 発動ログb60と整合)"
+      },
+      {
+        "type": "vocal_up",
+        "stages": 4,
+        "durationBeats": 38,
+        "target": "center",
+        "condition": "someone_focus",
+        "confidence": "Confirmed(type14 grade4 target-center, 誰かが集目状態の時)"
+      }
+    ],
+    "vendor_level_info": {
+      "level": 6,
+      "description": "510%のスコア獲得\n隣接するアイドルに6段階ボーカル上昇効果[38ビート]\n誰かが集目状態の時 センターに4段階ボーカル上昇効果[38ビート]\nスタミナ173消費 CT:50",
+      "triggerId": "",
+      "coolTime": 50,
+      "stamina": 173,
+      "skillDetails": [
+        {
+          "efficacyId": "ef-score_get-5100-chart_dependence",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 0,
+          "duration": null,
+          "skillTarget": null
+        },
+        {
+          "efficacyId": "ef-vocal_up-6-target-neighbor-38",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 6,
+          "duration": null,
+          "skillTarget": null
+        },
+        {
+          "efficacyId": "ef-vocal_up-4-target-center-38",
+          "triggerId": "tg-someone_status-audience_amount_increase",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 4,
+          "duration": null,
+          "skillTarget": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "sk-ski-05-waso-00-3",
+    "name": "さらけ出す",
+    "lane": 5,
+    "level": 5,
+    "kind": "P",
+    "is_photo": false,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Confirmed(type21 grade9(=max9), 発動ログb1/b60/b106と整合)",
+      "Confirmed(type25, テキスト由来11延長)"
+    ],
+    "vendor_found": true,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "focus",
+        "stages": 9,
+        "durationBeats": 38,
+        "target": "center",
+        "condition": "none",
+        "confidence": "Confirmed(type21 grade9(=max9), 発動ログb1/b60/b106と整合)"
+      },
+      {
+        "type": "effect_extension",
+        "value": 11,
+        "durationBeats": null,
+        "target": "center",
+        "condition": "none",
+        "confidence": "Confirmed(type25, テキスト由来11延長)"
+      }
+    ],
+    "vendor_level_info": {
+      "level": 5,
+      "description": "センターに9段階の集目効果[38ビート]\nセンターの強化効果を11延長\nスタミナ280消費 CT:60",
+      "triggerId": "",
+      "coolTime": 60,
+      "stamina": 280,
+      "skillDetails": [
+        {
+          "efficacyId": "ef-audience_amount_increase-9-target-center-38",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 9,
+          "duration": null,
+          "skillTarget": null
+        },
+        {
+          "efficacyId": "ef-strength_effect_count_increase-11-target-center",
+          "triggerId": "",
+          "efficacyType": null,
+          "efficacyTypeName": "None",
+          "grade": 0,
+          "duration": null,
+          "skillTarget": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "photo-L1-1",
+    "name": "私たちらしく",
+    "lane": 1,
+    "level": 6,
+    "kind": "photo",
+    "is_photo": true,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Confirmed(テキストverified, 発動ログb1/b50/b100/b150と整合)"
+    ],
+    "vendor_found": false,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "score_up",
+        "stages": 3,
+        "durationBeats": 37,
+        "target": "score_type_1",
+        "condition": "none",
+        "confidence": "Confirmed(テキストverified, 発動ログb1/b50/b100/b150と整合)"
+      }
+    ],
+    "vendor_level_info": null
+  },
+  {
+    "id": "photo-L1-2",
+    "name": "屋外プール",
+    "lane": 1,
+    "level": 6,
+    "kind": "photo",
+    "is_photo": true,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Confirmed(テキストverified, 発動ログb2/b51/b101/b151と整合)"
+    ],
+    "vendor_found": false,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "score_up",
+        "stages": 8,
+        "durationBeats": 31,
+        "target": "vocal_type_2",
+        "condition": "none",
+        "confidence": "Confirmed(テキストverified, 発動ログb2/b51/b101/b151と整合)"
+      }
+    ],
+    "vendor_level_info": null
+  },
+  {
+    "id": "photo-L1-3",
+    "name": "おはよう",
+    "lane": 1,
+    "level": 6,
+    "kind": "photo",
+    "is_photo": true,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Confirmed(テキストverified, ライブ中1回のみ→limitPerLive:1, 発動ログb81の1回と整合)"
+    ],
+    "vendor_found": false,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "critical_coeff_up",
+        "stages": 6,
+        "durationBeats": 40,
+        "target": "score_type_1",
+        "condition": "combo>=80",
+        "confidence": "Confirmed(テキストverified, ライブ中1回のみ→limitPerLive:1, 発動ログb81の1回と整合)"
+      }
+    ],
+    "vendor_level_info": null
+  },
+  {
+    "id": "photo-L1-4",
+    "name": null,
+    "lane": 1,
+    "level": 6,
+    "kind": "photo",
+    "is_photo": true,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [],
+    "vendor_found": false,
+    "discrepancies": [],
+    "golden_effects": [],
+    "vendor_level_info": null
+  },
+  {
+    "id": "photo-L2-1",
+    "name": "星見市高台",
+    "lane": 2,
+    "level": 6,
+    "kind": "photo",
+    "is_photo": true,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Confirmed(テキストverified, 発動ログb1/b60/b120とCT則整合)"
+    ],
+    "vendor_found": false,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "vocal_boost",
+        "stages": 4,
+        "durationBeats": 28,
+        "target": "vocal_type_1",
+        "condition": "none",
+        "confidence": "Confirmed(テキストverified, 発動ログb1/b60/b120とCT則整合)"
+      }
+    ],
+    "vendor_level_info": null
+  },
+  {
+    "id": "photo-L2-2",
+    "name": "びっくりした?",
+    "lane": 2,
+    "level": 6,
+    "kind": "photo",
+    "is_photo": true,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Confirmed(テキストverified, 発動ログb2/b52/b102/b152とCT則整合)"
+    ],
+    "vendor_found": false,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "effect_extension",
+        "value": 6,
+        "durationBeats": null,
+        "target": "score_type_1",
+        "condition": "someone_score_up",
+        "confidence": "Confirmed(テキストverified, 発動ログb2/b52/b102/b152とCT則整合)"
+      }
+    ],
+    "vendor_level_info": null
+  },
+  {
+    "id": "photo-L2-3",
+    "name": "みんなでBBQ",
+    "lane": 2,
+    "level": 6,
+    "kind": "photo",
+    "is_photo": true,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Strong estimate(テキストverified。target=「対象1人」型指定なし。実測では常にスコアラー白石千紗へ付与。CT則から b48/b97/b147 を本スキルと同定)"
+    ],
+    "vendor_found": false,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "effect_extension",
+        "value": 7,
+        "durationBeats": null,
+        "target": "single",
+        "condition": "someone_skill_success_up",
+        "confidence": "Strong estimate(テキストverified。target=「対象1人」型指定なし。実測では常にスコアラー白石千紗へ付与。CT則から b48/b97/b147 を本スキルと同定)"
+      }
+    ],
+    "vendor_level_info": null
+  },
+  {
+    "id": "photo-L2-4",
+    "name": "明るく君を照らしたい",
+    "lane": 2,
+    "level": 6,
+    "kind": "photo",
+    "is_photo": true,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Strong estimate(テキストverified。target=「対象1人」型指定なし。実測では常にスコアラー白石千紗へ付与。CT則から b3/b47/b93/b138 を本スキルと同定)"
+    ],
+    "vendor_found": false,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "effect_extension",
+        "value": 6,
+        "durationBeats": null,
+        "target": "single",
+        "condition": "someone_focus",
+        "confidence": "Strong estimate(テキストverified。target=「対象1人」型指定なし。実測では常にスコアラー白石千紗へ付与。CT則から b3/b47/b93/b138 を本スキルと同定)"
+      }
+    ],
+    "vendor_level_info": null
+  },
+  {
+    "id": "photo-L3-1",
+    "name": null,
+    "lane": 3,
+    "level": 6,
+    "kind": "photo",
+    "is_photo": true,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [],
+    "vendor_found": false,
+    "discrepancies": [],
+    "golden_effects": [],
+    "vendor_level_info": null
+  },
+  {
+    "id": "photo-L3-2",
+    "name": "かけがえのない二人",
+    "lane": 3,
+    "level": 6,
+    "kind": "photo",
+    "is_photo": true,
+    "has_suspicious_confidence": true,
+    "confidence_texts": [
+      "T5実測フィット(16%=160‰: b47/b97/b132のポップ(万単位truncation)が pow=200 では r≈805 になり [950,1050] 不成立、160 では r≈992-1014 に成立。テキスト表記20%との食い違いは要再確認)",
+      "Confirmed(自身の強化効果を5延長, テキストverified)"
+    ],
+    "vendor_found": false,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "score_get",
+        "powerPermil": 160,
+        "target": "self",
+        "condition": "someone_critical_coeff_up",
+        "durationBeats": null,
+        "confidence": "T5実測フィット(16%=160‰: b47/b97/b132のポップ(万単位truncation)が pow=200 では r≈805 になり [950,1050] 不成立、160 では r≈992-1014 に成立。テキスト表記20%との食い違いは要再確認)"
+      },
+      {
+        "type": "effect_extension",
+        "value": 5,
+        "durationBeats": null,
+        "target": "self",
+        "condition": "someone_critical_coeff_up",
+        "confidence": "Confirmed(自身の強化効果を5延長, テキストverified)"
+      }
+    ],
+    "vendor_level_info": null
+  },
+  {
+    "id": "photo-L3-3",
+    "name": null,
+    "lane": 3,
+    "level": 6,
+    "kind": "photo",
+    "is_photo": true,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [],
+    "vendor_found": false,
+    "discrepancies": [],
+    "golden_effects": [],
+    "vendor_level_info": null
+  },
+  {
+    "id": "photo-L3-4",
+    "name": null,
+    "lane": 3,
+    "level": 6,
+    "kind": "photo",
+    "is_photo": true,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [],
+    "vendor_found": false,
+    "discrepancies": [],
+    "golden_effects": [],
+    "vendor_level_info": null
+  },
+  {
+    "id": "photo-L4-1",
+    "name": "それぞれの決意",
+    "lane": 4,
+    "level": 6,
+    "kind": "photo",
+    "is_photo": true,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Confirmed(テキストverified, 発動ログb47/b97/b147とCT則整合)"
+    ],
+    "vendor_found": false,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "skill_success_up",
+        "stages": 2,
+        "durationBeats": 30,
+        "target": "score_type_1",
+        "condition": "someone_critical_coeff_up",
+        "confidence": "Confirmed(テキストverified, 発動ログb47/b97/b147とCT則整合)"
+      }
+    ],
+    "vendor_level_info": null
+  },
+  {
+    "id": "photo-L4-2",
+    "name": "パークアリーナ埼玉",
+    "lane": 4,
+    "level": 6,
+    "kind": "photo",
+    "is_photo": true,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Confirmed(テキストverified, 発動ログb1/b50/b100/b150と整合)"
+    ],
+    "vendor_found": false,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "a_skill_score_up",
+        "stages": 7,
+        "durationBeats": 39,
+        "target": "vocal_type_3",
+        "condition": "none",
+        "confidence": "Confirmed(テキストverified, 発動ログb1/b50/b100/b150と整合)"
+      }
+    ],
+    "vendor_level_info": null
+  },
+  {
+    "id": "photo-L4-3",
+    "name": "平気平気！",
+    "lane": 4,
+    "level": 6,
+    "kind": "photo",
+    "is_photo": true,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Confirmed(テキストverified, ライブ中1回のみ→limitPerLive:1, 発動ログb51の1回と整合)"
+    ],
+    "vendor_found": false,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "critical_coeff_up",
+        "stages": 6,
+        "durationBeats": 50,
+        "target": "score_type_1",
+        "condition": "combo>=50",
+        "confidence": "Confirmed(テキストverified, ライブ中1回のみ→limitPerLive:1, 発動ログb51の1回と整合)"
+      }
+    ],
+    "vendor_level_info": null
+  },
+  {
+    "id": "photo-L4-4",
+    "name": "もっと強くなれるね",
+    "lane": 4,
+    "level": 6,
+    "kind": "photo",
+    "is_photo": true,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Confirmed(25%のスコア獲得, テキストverified, ライブ中1回のみ)",
+      "Confirmed(テキストverified, 発動ログb81の1回と整合)"
+    ],
+    "vendor_found": false,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "score_get",
+        "powerPermil": 250,
+        "target": "self",
+        "condition": "combo>=80",
+        "durationBeats": null,
+        "confidence": "Confirmed(25%のスコア獲得, テキストverified, ライブ中1回のみ)"
+      },
+      {
+        "type": "critical_coeff_up",
+        "stages": 3,
+        "durationBeats": 38,
+        "target": "neighbors",
+        "condition": "combo>=80",
+        "confidence": "Confirmed(テキストverified, 発動ログb81の1回と整合)"
+      }
+    ],
+    "vendor_level_info": null
+  },
+  {
+    "id": "photo-L5-1",
+    "name": "ふつつかものですが",
+    "lane": 5,
+    "level": 6,
+    "kind": "photo",
+    "is_photo": true,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Confirmed(40%=4000‰, マスタ sk-phot-exchange-pvp-5-01 ef-score_get-400 と同定, 発動ログb1/b70/b125と整合)"
+    ],
+    "vendor_found": false,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "score_get",
+        "powerPermil": 400,
+        "target": "self",
+        "condition": "none",
+        "durationBeats": null,
+        "confidence": "Confirmed(40%=4000‰, マスタ sk-phot-exchange-pvp-5-01 ef-score_get-400 と同定, 発動ログb1/b70/b125と整合)"
+      }
+    ],
+    "vendor_level_info": null
+  },
+  {
+    "id": "photo-L5-2",
+    "name": "HAPPY BIRTHDAY",
+    "lane": 5,
+    "level": 6,
+    "kind": "photo",
+    "is_photo": true,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Confirmed(40%=4000‰, photo-L5-1と同定スキル, 発動ログb2/b71/b126と整合)"
+    ],
+    "vendor_found": false,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "score_get",
+        "powerPermil": 400,
+        "target": "self",
+        "condition": "none",
+        "durationBeats": null,
+        "confidence": "Confirmed(40%=4000‰, photo-L5-1と同定スキル, 発動ログb2/b71/b126と整合)"
+      }
+    ],
+    "vendor_level_info": null
+  },
+  {
+    "id": "photo-L5-3",
+    "name": "パークアリーナ埼玉",
+    "lane": 5,
+    "level": 6,
+    "kind": "photo",
+    "is_photo": true,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Confirmed(85%=8500‰, テキストverified, 発動ログb3/b68/b118, ポップ比85/40=2.125↔実測2.127(09§6))",
+      "Confirmed(ボーカルタイプ1人の強化効果を2段階増強, テキストverified)"
+    ],
+    "vendor_found": false,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "score_get",
+        "powerPermil": 850,
+        "target": "self",
+        "condition": "self_vocal_lane",
+        "durationBeats": null,
+        "confidence": "Confirmed(85%=8500‰, テキストverified, 発動ログb3/b68/b118, ポップ比85/40=2.125↔実測2.127(09§6))"
+      },
+      {
+        "type": "effect_amplify",
+        "value": 2,
+        "durationBeats": null,
+        "target": "vocal_type_1",
+        "condition": "self_vocal_lane",
+        "confidence": "Confirmed(ボーカルタイプ1人の強化効果を2段階増強, テキストverified)"
+      }
+    ],
+    "vendor_level_info": null
+  },
+  {
+    "id": "photo-L5-4",
+    "name": "お姉ちゃん",
+    "lane": 5,
+    "level": 6,
+    "kind": "photo",
+    "is_photo": true,
+    "has_suspicious_confidence": false,
+    "confidence_texts": [
+      "Confirmed(45%=4500‰, テキストverified, ライブ中1回のみ→limitPerLive:1, 発動ログb101(100コンボ成立)と整合)",
+      "Confirmed(スコアラータイプ1人の強化効果を1段階増強, テキストverified)"
+    ],
+    "vendor_found": false,
+    "discrepancies": [],
+    "golden_effects": [
+      {
+        "type": "score_get",
+        "powerPermil": 450,
+        "target": "self",
+        "condition": "combo>=100",
+        "durationBeats": null,
+        "confidence": "Confirmed(45%=4500‰, テキストverified, ライブ中1回のみ→limitPerLive:1, 発動ログb101(100コンボ成立)と整合)"
+      },
+      {
+        "type": "effect_amplify",
+        "value": 1,
+        "durationBeats": null,
+        "target": "score_type_1",
+        "condition": "combo>=100",
+        "confidence": "Confirmed(スコアラータイプ1人の強化効果を1段階増強, テキストverified)"
+      }
+    ],
+    "vendor_level_info": null
+  }
+]

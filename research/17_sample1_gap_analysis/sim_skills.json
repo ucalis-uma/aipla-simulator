@@ -75,7 +75,7 @@
      {
       "type": "effect_amplify",
       "target": "all",
-      "condition": "none",
+      "condition": "self_vocal_lane",
       "durationBeats": null,
       "value": 3
      }
@@ -95,14 +95,14 @@
      {
       "type": "effect_amplify",
       "target": "neighbors",
-      "condition": "none",
+      "condition": "self_vocal_lane",
       "durationBeats": null,
       "value": 1
      },
      {
       "type": "vocal_up",
       "target": "self",
-      "condition": "none",
+      "condition": "self_vocal_lane",
       "durationBeats": 36,
       "stages": 3
      }
@@ -208,6 +208,12 @@
       "condition": "none",
       "durationBeats": 34,
       "stages": 5
+     },
+     {
+      "type": "effect_passing",
+      "target": "vocal_type_1",
+      "condition": "none",
+      "durationBeats": null
      }
     ]
    },
@@ -255,7 +261,7 @@
    "critical": 0
   },
   "scoreBonusPct": {
-   "beat": 428,
+   "beat": 253,
    "active": 70,
    "special": 217,
    "passive": 0
@@ -588,7 +594,8 @@
       "target": "center",
       "condition": "none",
       "durationBeats": 34,
-      "stages": 3
+      "stages": 3,
+      "confidence": "Unknown(効果行トリガー未対応: tg-someone_status-audience_amount_increase)"
      }
     ]
    },

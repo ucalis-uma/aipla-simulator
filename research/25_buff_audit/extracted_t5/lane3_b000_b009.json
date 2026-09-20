@@ -1,0 +1,451 @@
+[
+  {
+    "beat": 0,
+    "effects": []
+  },
+  {
+    "beat": 1,
+    "effects": [
+      {
+        "id": "combo_score_up",
+        "name": "コンボスコア上昇",
+        "stage": 6
+      },
+      {
+        "id": "combo_score_limit",
+        "name": "コンボスコア上昇上限開放",
+        "stage": 10
+      },
+      {
+        "id": "score_up",
+        "name": "スコア上昇",
+        "stage": 3
+      },
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 7
+      },
+      {
+        "id": "tension_up",
+        "name": "テンションUP",
+        "stage": 3
+      },
+      {
+        "id": "vocal_boost",
+        "name": "ボーカルブースト",
+        "stage": 7
+      },
+      {
+        "id": "focus",
+        "name": "集目",
+        "stage": 9
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 7
+      }
+    ]
+  },
+  {
+    "beat": 2,
+    "effects": [
+      {
+        "id": "combo_score_up",
+        "name": "コンボスコア上昇",
+        "stage": 6
+      },
+      {
+        "id": "combo_score_limit",
+        "name": "コンボスコア上昇上限開放",
+        "stage": 10
+      },
+      {
+        "id": "score_up",
+        "name": "スコア上昇",
+        "stage": 11
+      },
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 7
+      },
+      {
+        "id": "tension_up",
+        "name": "テンションUP",
+        "stage": 3
+      },
+      {
+        "id": "vocal_boost",
+        "name": "ボーカルブースト",
+        "stage": 7
+      },
+      {
+        "id": "focus",
+        "name": "集目",
+        "stage": 9
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 7
+      },
+      {
+        "id": "vocal_up_extreme",
+        "name": "ボーカル上昇超化",
+        "stage": 10
+      }
+    ]
+  },
+  {
+    "beat": 3,
+    "effects": [
+      {
+        "id": "combo_score_up",
+        "name": "コンボスコア上昇",
+        "stage": 8
+      },
+      {
+        "id": "combo_score_limit",
+        "name": "コンボスコア上昇上限開放",
+        "stage": 10
+      },
+      {
+        "id": "score_up",
+        "name": "スコア上昇",
+        "stage": 13
+      },
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 9
+      },
+      {
+        "id": "tension_up",
+        "name": "テンションUP",
+        "stage": 5
+      },
+      {
+        "id": "vocal_boost",
+        "name": "ボーカルブースト",
+        "stage": 9
+      },
+      {
+        "id": "focus",
+        "name": "集目",
+        "stage": 10
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 9
+      },
+      {
+        "id": "vocal_up_extreme",
+        "name": "ボーカル上昇超化",
+        "stage": 10
+      }
+    ]
+  },
+  {
+    "beat": 4,
+    "effects": [
+      {
+        "id": "combo_score_up",
+        "name": "コンボスコア上昇",
+        "stage": 8
+      },
+      {
+        "id": "combo_score_limit",
+        "name": "コンボスコア上昇上限開放",
+        "stage": 10
+      },
+      {
+        "id": "score_up",
+        "name": "スコア上昇",
+        "stage": 13
+      },
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 9
+      },
+      {
+        "id": "tension_up",
+        "name": "テンションUP",
+        "stage": 5
+      },
+      {
+        "id": "vocal_boost",
+        "name": "ボーカルブースト",
+        "stage": 9
+      },
+      {
+        "id": "focus",
+        "name": "集目",
+        "stage": 10
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 9
+      },
+      {
+        "id": "vocal_up_extreme",
+        "name": "ボーカル上昇超化",
+        "stage": 10
+      }
+    ]
+  },
+  {
+    "beat": 5,
+    "effects": [
+      {
+        "id": "combo_score_up",
+        "name": "コンボスコア上昇",
+        "stage": 8
+      },
+      {
+        "id": "combo_score_limit",
+        "name": "コンボスコア上昇上限開放",
+        "stage": 10
+      },
+      {
+        "id": "score_up",
+        "name": "スコア上昇",
+        "stage": 13
+      },
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 9
+      },
+      {
+        "id": "tension_up",
+        "name": "テンションUP",
+        "stage": 5
+      },
+      {
+        "id": "vocal_boost",
+        "name": "ボーカルブースト",
+        "stage": 9
+      },
+      {
+        "id": "focus",
+        "name": "集目",
+        "stage": 10
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 9
+      },
+      {
+        "id": "vocal_up_extreme",
+        "name": "ボーカル上昇超化",
+        "stage": 10
+      }
+    ]
+  },
+  {
+    "beat": 6,
+    "effects": [
+      {
+        "id": "combo_score_up",
+        "name": "コンボスコア上昇",
+        "stage": 8
+      },
+      {
+        "id": "combo_score_limit",
+        "name": "コンボスコア上昇上限開放",
+        "stage": 10
+      },
+      {
+        "id": "score_up",
+        "name": "スコア上昇",
+        "stage": 13
+      },
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 9
+      },
+      {
+        "id": "tension_up",
+        "name": "テンションUP",
+        "stage": 5
+      },
+      {
+        "id": "vocal_boost",
+        "name": "ボーカルブースト",
+        "stage": 9
+      },
+      {
+        "id": "focus",
+        "name": "集目",
+        "stage": 10
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 9
+      },
+      {
+        "id": "vocal_up_extreme",
+        "name": "ボーカル上昇超化",
+        "stage": 10
+      }
+    ]
+  },
+  {
+    "beat": 7,
+    "effects": [
+      {
+        "id": "combo_score_up",
+        "name": "コンボスコア上昇",
+        "stage": 8
+      },
+      {
+        "id": "combo_score_limit",
+        "name": "コンボスコア上昇上限開放",
+        "stage": 10
+      },
+      {
+        "id": "score_up",
+        "name": "スコア上昇",
+        "stage": 13
+      },
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 9
+      },
+      {
+        "id": "tension_up",
+        "name": "テンションUP",
+        "stage": 5
+      },
+      {
+        "id": "vocal_boost",
+        "name": "ボーカルブースト",
+        "stage": 9
+      },
+      {
+        "id": "focus",
+        "name": "集目",
+        "stage": 10
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 9
+      },
+      {
+        "id": "vocal_up_extreme",
+        "name": "ボーカル上昇超化",
+        "stage": 10
+      }
+    ]
+  },
+  {
+    "beat": 8,
+    "effects": [
+      {
+        "id": "combo_score_up",
+        "name": "コンボスコア上昇",
+        "stage": 8
+      },
+      {
+        "id": "combo_score_limit",
+        "name": "コンボスコア上昇上限開放",
+        "stage": 10
+      },
+      {
+        "id": "score_up",
+        "name": "スコア上昇",
+        "stage": 13
+      },
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 9
+      },
+      {
+        "id": "tension_up",
+        "name": "テンションUP",
+        "stage": 5
+      },
+      {
+        "id": "vocal_boost",
+        "name": "ボーカルブースト",
+        "stage": 9
+      },
+      {
+        "id": "focus",
+        "name": "集目",
+        "stage": 10
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 9
+      },
+      {
+        "id": "vocal_up_extreme",
+        "name": "ボーカル上昇超化",
+        "stage": 10
+      }
+    ]
+  },
+  {
+    "beat": 9,
+    "effects": [
+      {
+        "id": "combo_score_up",
+        "name": "コンボスコア上昇",
+        "stage": 8
+      },
+      {
+        "id": "combo_score_limit",
+        "name": "コンボスコア上昇上限開放",
+        "stage": 10
+      },
+      {
+        "id": "score_up",
+        "name": "スコア上昇",
+        "stage": 13
+      },
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 9
+      },
+      {
+        "id": "tension_up",
+        "name": "テンションUP",
+        "stage": 5
+      },
+      {
+        "id": "vocal_boost",
+        "name": "ボーカルブースト",
+        "stage": 9
+      },
+      {
+        "id": "focus",
+        "name": "集目",
+        "stage": 10
+      },
+      {
+        "id": "vocal_up",
+        "name": "ボーカル上昇",
+        "stage": 9
+      },
+      {
+        "id": "vocal_up_extreme",
+        "name": "ボーカル上昇超化",
+        "stage": 10
+      }
+    ]
+  }
+]

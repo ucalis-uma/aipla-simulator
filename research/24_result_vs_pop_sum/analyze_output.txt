@@ -1,0 +1,39 @@
+===== T5 (qt-daily-003-19) =====
+L1: A=21231893 B∈[20920465, 21412900] gap=0.307% → OK: A∈[B_min,B_max]
+L2: A=53435162 B∈[52939339, 54260495] gap=-0.308% → OK: A∈[B_min,B_max]
+L3: A=17398054223 B∈[17331588625, 17545197900] gap=-0.232% → OK: A∈[B_min,B_max]
+L4: A=23863258 B∈[23470450, 24010410] gap=0.515% → OK: A∈[B_min,B_max]
+L5: A=32547478 B∈[31691000, 32004800] gap=2.149% → NG: A > B_max（超過 542,678）
+hidden b3: excess=24841167 発動記録なし
+hidden b48: excess=1397982 発動記録なし
+hidden b68: excess=46050 発動記録なし
+hidden b71: excess=34396 発動記録なし
+hidden b82: excess=133962 発動記録なし
+hidden b97: excess=2259386 発動記録なし
+hidden b102: excess=251947 発動記録なし
+hidden b125: excess=5765 発動記録なし
+hidden b132: excess=3908337 発動記録なし
+===== S1 (qt-area-1-001) =====
+L1: A=11593657 B∈[11388355, 11768990] gap=0.129% → OK: A∈[B_min,B_max]
+L2: A=6108813 B∈[5908795, 6225295] gap=0.684% → OK: A∈[B_min,B_max]
+L3: A=84938328 B∈[84776600, 85192500] gap=-0.054% → OK: A∈[B_min,B_max]
+L4: A=5893074 B∈[5804700, 6049780] gap=-0.580% → OK: A∈[B_min,B_max]
+L5: A=8003641 B∈[7813145, 8154395] gap=0.248% → OK: A∈[B_min,B_max]
+hidden b2: excess=60559 発動記録なし
+===== S2 (qt-tower-680) =====
+L1: A=6415040 B∈[6366684, 6482584] gap=-0.150% → OK: A∈[B_min,B_max]
+L2: A=4386772 B∈[4379100, 4394400] gap=0.001% → OK: A∈[B_min,B_max]
+L3: A=49841012 B∈[49639985, 50215380] gap=-0.174% → OK: A∈[B_min,B_max]
+L4: A=12237899 B∈[11995225, 12397640] gap=0.339% → OK: A∈[B_min,B_max]
+L5: A=4851660 B∈[4769370, 4947640] gap=-0.141% → OK: A∈[B_min,B_max]
+hidden b2: excess=72678 発動記録なし
+===== S3 (qt-ex-tower-005-045) =====
+L1: A=5931931 B∈[5862585, 6076665] gap=-0.635% → OK: A∈[B_min,B_max]
+L2: A=9859761 B∈[9799245, 10063530] gap=-0.726% → OK: A∈[B_min,B_max]
+L3: A=18344645 B∈[15844775, 16358390] gap=12.227% → NG: A > B_max（超過 1,986,255）
+L4: A=35714608 B∈[35599456, 36287936] gap=-0.641% → OK: A∈[B_min,B_max]
+L5: A=9560444 B∈[9484523, 10117863] gap=-2.518% → OK: A∈[B_min,B_max]
+hidden b2: excess=2109287 発動記録なし
+hidden b63: excess=53934 発動記録なし
+hidden b71: excess=38847 発動記録なし
+hidden b141: excess=54732 発動記録なし

@@ -104,16 +104,14 @@ describe("CLI myPhotos/photoEquip 解決（Phase 8-B9）", () => {
     expect(r.stderr).not.toContain("[warn]");
   });
 
-  it("T5 サンプル（myPhotos なし）は確定値 2,580,038,995 のまま（type36/B2/引力改定後）", () => {
+  it("T5 サンプル（myPhotos なし）は確定値 2,580,397,520 のまま（Phase 14 改ざん復元・Decay適正化後）", () => {
     const out = execFileSync(
       "npx",
       ["tsx", path.join(repoRoot, "src/cli/simulate.ts"), "--input", "examples/t5-sample.json", "--n", "0", "--crit-rate", "0"],
       { encoding: "utf-8", cwd: repoRoot, shell: true },
     );
-    // 【2026-09-01】type36（+6%/段・voc_up のみ）・B2（docs gid=0）・ファン引力（docs 引力式）改定。
-    // 旧 2,436,373,427（3.0‰/11.0‰・vue 込み参照）→ … → 4,219,776,723 → 2,604,945,234。
-    // ★ t5_solver（乱数列再導出）完了後に再更新。
-    expect(JSON.parse(out).confirmed.totalScore).toBe(2580038995);
+    // 【2026-09-21 Phase 14】琴乃A(ccu)/かけがえのない二人(20%)復元・実効N-1 Decay適正化後確定値。
+    expect(JSON.parse(out).confirmed.totalScore).toBe(2580397520);
   });
 
   it("frames ステータスのみの myPhotos も photos 側へ統合されスコアに反映される（Phase 8-B10）", () => {

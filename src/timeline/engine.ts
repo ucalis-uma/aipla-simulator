@@ -1374,7 +1374,9 @@ function applyEffect(
         type: effect.type,
         stages: effect.stages ?? 1,
         limitRelease: mapped.limitRelease || effect.limitRelease === true,
-        remainingBeats: effect.durationBeats == null ? PERMANENT_BEATS : effect.durationBeats,
+        // 【実機仕様 2026-09-21 Phase 14】発動ビート終了時にも減算処理が走り、
+        // 表記Nビートのバフは実質 N-1 ビート持続する（S1 b67/b131, T5 b32/b39/b44/b97 実機画面確定）
+        remainingBeats: effect.durationBeats == null ? PERMANENT_BEATS : Math.max(1, effect.durationBeats - 1),
         sourceSkillId: skill.id,
         // 付与レーン（与・○○延長/増強の「自分が付与した効果」判定用）。
         // ライブボーナスはレーン非所属のためセンター（3）を記録（activateLiveBonus のアンカー）
@@ -2176,9 +2178,8 @@ function settleSkillNote(
     ) {
       continue;
     }
-    // A/SP（ステップ8）付与の段階型効果は付与ビートのステップ10減算をスキップする
-    // （【T5実測確定】spDurN1=表記どおりの実効時間。false 説は T5 で棄却済み）
-    gained += applyEffect(state, effect, chosen, ctx, states, events, note.beat, true);
+    // A/SP（ステップ8）付与の段階型効果も付与ビート終了時（ステップ10）に減衰する（実機仕様）
+    gained += applyEffect(state, effect, chosen, ctx, states, events, note.beat, false);
   }
   activations.push({
     beat: note.beat,

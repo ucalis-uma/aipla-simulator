@@ -1,0 +1,196 @@
+[
+  {
+    "beat": 0,
+    "effects": []
+  },
+  {
+    "beat": 1,
+    "effects": [
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 7
+      }
+    ]
+  },
+  {
+    "beat": 2,
+    "effects": [
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 7
+      }
+    ]
+  },
+  {
+    "beat": 3,
+    "effects": [
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 7
+      }
+    ]
+  },
+  {
+    "beat": 4,
+    "effects": [
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 7
+      }
+    ]
+  },
+  {
+    "beat": 5,
+    "effects": [
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 7
+      }
+    ]
+  },
+  {
+    "beat": 6,
+    "effects": [
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 7
+      }
+    ]
+  },
+  {
+    "beat": 7,
+    "effects": [
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 7
+      }
+    ]
+  },
+  {
+    "beat": 8,
+    "effects": [
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 7
+      }
+    ]
+  },
+  {
+    "beat": 9,
+    "effects": [
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 7
+      }
+    ]
+  },
+  {
+    "beat": 10,
+    "effects": [
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 7
+      }
+    ]
+  },
+  {
+    "beat": 11,
+    "effects": [
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 7
+      }
+    ]
+  },
+  {
+    "beat": 12,
+    "effects": [
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 7
+      }
+    ]
+  },
+  {
+    "beat": 13,
+    "effects": [
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 7
+      }
+    ]
+  },
+  {
+    "beat": 14,
+    "effects": [
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 7
+      }
+    ]
+  },
+  {
+    "beat": 15,
+    "effects": [
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 7
+      }
+    ]
+  },
+  {
+    "beat": 16,
+    "effects": [
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 7
+      }
+    ]
+  },
+  {
+    "beat": 17,
+    "effects": [
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 7
+      }
+    ]
+  },
+  {
+    "beat": 18,
+    "effects": [
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 7
+      }
+    ]
+  },
+  {
+    "beat": 19,
+    "effects": [
+      {
+        "id": "a_skill_score_up",
+        "name": "Aスキルスコア上昇",
+        "stage": 7
+      }
+    ]
+  }
+]

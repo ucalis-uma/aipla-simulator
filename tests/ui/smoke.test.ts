@@ -86,7 +86,8 @@ describe("単一HTML UI スモーク", () => {
     expect((document.querySelector("#results") as HTMLElement).hidden).toBe(false);
     const kpi = document.querySelector("#kpi-root")!.textContent ?? "";
     expect(kpi).toContain("確定値");
-    expect(kpi).toContain("2,446,158,294");
+    // 【2026-09-21 Phase 14】琴乃A(ccu)/かけがえのない二人(20%)復元・実効N-1 Decay適正化後のUI確定値: 2,446,493,589
+    expect(kpi).toContain("2,446,493,589");
     // レーン別内訳 5 行
     expect(document.querySelectorAll("#lane-table tbody tr").length).toBe(5);
     // タイムライン 156 ビート（計算式展開行を除く）
@@ -128,7 +129,7 @@ describe("単一HTML UI スモーク", () => {
     runs.value = "10";
     (document.querySelector("#btn-run") as HTMLButtonElement).click();
     expect((document.querySelector("#status")!.textContent ?? "").startsWith("完了")).toBe(true);
-    expect(document.querySelector("#kpi-root")!.textContent ?? "").toContain("2,446,158,294");
+    expect(document.querySelector("#kpi-root")!.textContent ?? "").toContain("2,446,493,589");
     // ファンファクターを 1000‰（ボーナスなし）へ手打ちで変更
     const fan = document.querySelector<HTMLInputElement>("#g-fan")!;
     fan.value = "1000";
@@ -136,7 +137,7 @@ describe("単一HTML UI スモーク", () => {
     expect(document.querySelector("#g-fan-hint")!.textContent).toContain("+0.0%");
     (document.querySelector("#btn-run") as HTMLButtonElement).click();
     expect((document.querySelector("#status")!.textContent ?? "").startsWith("完了")).toBe(true);
-    // ファンボーナスを消すと確定値は必ず下がる（1620‰ 基準の 2,446,158,294 より低い）
+    // ファンボーナスを消すと確定値は必ず下がる（1620‰ 基準の 2,446,493,589 より低い）
     const confirmedText =
       document.querySelector("#kpi-root .kpi-value.confirmed")!.textContent ?? "";
     const m = /^([\d.]+)(億|万)$/.exec(confirmedText);
@@ -1291,8 +1292,7 @@ describe("単一HTML UI スモーク", () => {
     (document.querySelector<HTMLInputElement>("#g-runs")!).value = "10";
     (document.querySelector("#btn-run") as HTMLButtonElement).click();
     const kpi = document.querySelector("#kpi-root")!.textContent ?? "";
-    // S1 UI 確定値（2026-09-04 サンプル3実測確定: フォトの同一 beat_score は重複せず最大値のみ適用されるため
-    // L3 麻奈のフォト beat_score 17.5%+19.3% が max(17.5%, 19.3%)=19.3% に改定され 114,102 系 → 112,864 系に変化）
-    expect(kpi).toMatch(/112,864,\d{3}/);
+    // 【2026-09-21 Phase 14】Decay適正化（実効N-1ビート）に伴い 112,864 系 → 112,623 系に変化
+    expect(kpi).toMatch(/112,623,\d{3}/);
   });
 });

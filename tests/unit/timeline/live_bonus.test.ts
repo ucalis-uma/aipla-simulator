@@ -153,7 +153,7 @@ describe("ライブボーナスの発動順序（research/16 §1）", () => {
       id: "lb-test",
       ct: 50,
       effects: [
-        { type: "score_up", stages: 4, durationBeats: 2, target: "all", condition: "none" },
+        { type: "score_up", stages: 4, durationBeats: 3, target: "all", condition: "none" },
       ],
     });
     const res = simulateTimeline(input([note(1), note(2), note(3)], { liveBonusSkills: [lb] }));

@@ -417,12 +417,12 @@
      "confidence": "Confirmed(type27, テキスト由来15。発動ログb106でLane3/5のCT-15を実測(08§2.5))"
     },
     {
-     "type": "combo_score_up",
+     "type": "critical_coeff_up",
      "stages": 5,
      "durationBeats": 60,
-     "target": "score_type_1",
-     "condition": "none",
-     "confidence": "T5実測フィット修正(type20=combo_score_up): b107以降のL3ビートが csu=30(cbu 3,177) を要求し全領域 s∈[0.987,1.023] に成立。ccu解釈では critF=4,901 が必要になり b116+の実測と矛盾。csu+5[60b]→26+5=31→上限30(かんしょ combo_score_limit+10)でクランプ、表示30と整合"
+     "target": "score_type_2",
+     "condition": "self_visual_lane",
+     "confidence": "Confirmed(vendor/Skill.json マスタ定義準拠: 自身がビジュアルレーンの時 スコアラータイプ2人に5段階クリティカル係数上昇効果[60ビート])"
     }
    ]
   },
@@ -750,11 +750,11 @@
    "effects": [
     {
      "type": "score_get",
-     "powerPermil": 160,
+     "powerPermil": 200,
      "target": "self",
      "condition": "someone_critical_coeff_up",
      "durationBeats": null,
-     "confidence": "T5実測フィット(16%=160‰: b47/b97/b132のポップ(万単位truncation)が pow=200 では r≈805 になり [950,1050] 不成立、160 では r≈992-1014 に成立。テキスト表記20%との食い違いは要再確認)"
+     "confidence": "Confirmed(20%=200‰, テキストverified)"
     },
     {
      "type": "effect_extension",
