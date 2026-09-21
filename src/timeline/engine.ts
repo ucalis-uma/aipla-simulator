@@ -1504,20 +1504,20 @@ function applyEffect(
       }
       // 【T5実測確定】延長は「延長可能（残り<永久）な全インスタンス」へ加算
       // （longest 単一インスタンス説は L3 ビート系列の破綻で棄却・research/12 §T5-2b）
-      // 【2026-09-01 サンプル1 実測で修正】残り 0（期限切れ・処理順の端）は延長しない。
-      // サンプル1: b136 過去の私へ が rem=0 のテンションに +7 して b143 まで残存させる誤り
-      // （実測のテンションは b135 で終了・b136 以降は 0 = 二重延長にならない）。
+      // 【2026-09-21 S1解明】発動ビート終了時（ステップ10）に remainingBeats が 1→0 に減衰した
+      // 同ビート満了バフも、ステップ11（後半）の延長スキル（例: S1 b60 すず P3 センター7延長）の
+      // 対象となる（rem=0 に +7 で 7 となり、翌ビート以降 b61〜b67 まで残存・実機画面完全一致）。
+      // 前ビート以前に満了したバフはステップ1で除去済みのため rem>=0 で同ビート満了バフのみが安全に延長される。
       // 【2026-09-04 サンプル3】継続回復の予約（scheduledRecoveries）も延長対象
-      // （S3 のんびり: さらけ出す b13/b73 の +7 で回復窓が 36→43b に延びる実測。
-      // 延長は「全強化効果」= バフインスタンスと回復予約の両方。rem=0 除外は共通）。
+      // （S3 のんびり: さらけ出す b13/b73 の +7 で回復窓が 36→43b に延びる実測）。
       for (const target of resolveTargets(effect.target, self, states, triggerLanes)) {
         for (const active of target.effects) {
-          if (active.remainingBeats > 0 && active.remainingBeats < PERMANENT_BEATS) {
+          if (active.remainingBeats >= 0 && active.remainingBeats < PERMANENT_BEATS) {
             active.remainingBeats += value;
           }
         }
         for (const recovery of target.scheduledRecoveries) {
-          if (recovery.remainingBeats > 0) {
+          if (recovery.remainingBeats >= 0) {
             recovery.remainingBeats += value;
           }
         }

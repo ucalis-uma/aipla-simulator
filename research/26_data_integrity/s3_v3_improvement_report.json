@@ -1,0 +1,39 @@
+{
+  "v2": {
+    "total_comparisons": 1666,
+    "match_count": 1470,
+    "discrepancy_count": 196,
+    "match_rate_pct": 88.24,
+    "category_counts": {
+      "AMPLIFY_OR_OVERLAP_ON_BEAT": 7,
+      "PHASE_LAG_ACTIVATION": 40,
+      "EXTREME_DISPLAY_VS_EFFECTIVE": 85,
+      "DECAY_TIMING_LAG": 63,
+      "BUFF_STAGE_MISMATCH": 1
+    }
+  },
+  "v3": {
+    "total_comparisons": 1677,
+    "match_count": 1530,
+    "discrepancy_count": 147,
+    "match_rate_pct": 91.23,
+    "category_counts": {
+      "AMPLIFY_OR_OVERLAP_ON_BEAT": 6,
+      "PHASE_LAG_ACTIVATION": 49,
+      "EXTREME_DISPLAY_VS_EFFECTIVE": 85,
+      "BUFF_STAGE_MISMATCH": 4,
+      "DECAY_TIMING_LAG": 3
+    }
+  },
+  "delta": {
+    "match_count": 60,
+    "discrepancies": -49,
+    "match_rate_pct": 2.99,
+    "resolved_count": 60,
+    "resolved_by_category": {
+      "DECAY_TIMING_LAG": 58,
+      "BUFF_STAGE_MISMATCH": 1,
+      "AMPLIFY_OR_OVERLAP_ON_BEAT": 1
+    }
+  }
+}

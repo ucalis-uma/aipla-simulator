@@ -1,0 +1,27 @@
+{
+  "timestamp": "2026-09-20T19:28:12.958Z",
+  "engineModel": "Phase 14 (Effective N-1 Decay & Restored Master Skills)",
+  "samples": {
+    "S1": {
+      "stage": "qt-area-1-001",
+      "chart": "chart-hsm-006-001",
+      "beatsCount": 176,
+      "neutralTotalScore": 57671105,
+      "replayTotalScore": 116846821
+    },
+    "S2": {
+      "stage": "qt-tower-680",
+      "chart": "chart-sun-004-001",
+      "beatsCount": 167,
+      "neutralTotalScore": 43118707,
+      "replayTotalScore": 74895810
+    },
+    "S3": {
+      "stage": "qt-ex-tower-005-045",
+      "chart": "chart-thrx-004-001",
+      "beatsCount": 169,
+      "neutralTotalScore": 65954705,
+      "replayTotalScore": 78485270
+    }
+  }
+}

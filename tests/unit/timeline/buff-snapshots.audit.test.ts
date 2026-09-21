@@ -196,6 +196,25 @@ describe("Buff Snapshot Stage Audit (S1 / T5 / S3)", () => {
       expect(snap(b131, 2).combo_score_up).toBe(6);
       expect(snap(b133, 2).combo_score_up).toBe(6);
     });
+
+    it("b60-b68: b60 すずP3（センター7延長）により莉央A1バフが延長され、b61-b67で維持、b68で消滅すること", () => {
+      const res = runS1();
+      const b61 = res.beats.find((b) => b.beat === 61)!;
+      const b65 = res.beats.find((b) => b.beat === 65)!;
+      const b67 = res.beats.find((b) => b.beat === 67)!;
+      const b68 = res.beats.find((b) => b.beat === 68)!;
+      // b61-b65: 莉央A1バフ(cr4, vb4) + すずA1(cr6) + フォト(vb3) = cr10, vb7
+      expect(snap(b61, 2).critical_rate_up).toBe(10);
+      expect(snap(b61, 2).vocal_boost).toBe(7);
+      expect(snap(b65, 2).critical_rate_up).toBe(10);
+      expect(snap(b65, 2).vocal_boost).toBe(7);
+      // b67: こころA1(+3増強)後 = cr13, vb10
+      expect(snap(b67, 2).critical_rate_up).toBe(13);
+      expect(snap(b67, 2).vocal_boost).toBe(10);
+      // b68: 莉央A1延長バフが期限切れ消滅 = cr9, vb6
+      expect(snap(b68, 2).critical_rate_up).toBe(9);
+      expect(snap(b68, 2).vocal_boost).toBe(6);
+    });
   });
 
   describe("T5 (qt-daily-003-19 / chart-hsm-004-001)", () => {
@@ -364,6 +383,12 @@ describe("Buff Snapshot Stage Audit (S1 / T5 / S3)", () => {
       // b42: L4 visual_up_extreme 5, critical_coeff_up 10
       expect(snap(b42, 3).visual_up_extreme).toBe(5);
       expect(snap(b42, 3).critical_coeff_up).toBe(10);
+    });
+
+    it("b125: すずA2の条件行（tg-someone_status-audience_amount_increase）不発により L3 vocal_up が 0 であること", () => {
+      const res = runS3();
+      const b125 = res.beats.find((b) => b.beat === 125)!;
+      expect(snap(b125, 2).vocal_up).toBe(0);
     });
   });
 });

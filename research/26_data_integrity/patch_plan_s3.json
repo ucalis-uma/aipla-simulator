@@ -1,0 +1,680 @@
+{
+  "b024_L3": {
+    "beat": 24,
+    "lane": "3",
+    "existing_count": 5,
+    "to_add": [
+      {
+        "name": "集目",
+        "stage": 10,
+        "confidence": 1.0
+      },
+      {
+        "name": "スコア上昇",
+        "stage": 7,
+        "confidence": 1.0
+      }
+    ]
+  },
+  "b025_L3": {
+    "beat": 25,
+    "lane": "3",
+    "existing_count": 5,
+    "to_add": [
+      {
+        "name": "集目",
+        "stage": 10,
+        "confidence": 1.0
+      },
+      {
+        "name": "スコア上昇",
+        "stage": 7,
+        "confidence": 1.0
+      }
+    ]
+  },
+  "b026_L3": {
+    "beat": 26,
+    "lane": "3",
+    "existing_count": 5,
+    "to_add": [
+      {
+        "name": "集目",
+        "stage": 10,
+        "confidence": 1.0
+      },
+      {
+        "name": "スコア上昇",
+        "stage": 7,
+        "confidence": 1.0
+      }
+    ]
+  },
+  "b027_L3": {
+    "beat": 27,
+    "lane": "3",
+    "existing_count": 5,
+    "to_add": [
+      {
+        "name": "集目",
+        "stage": 10,
+        "confidence": 1.0
+      },
+      {
+        "name": "スコア上昇",
+        "stage": 7,
+        "confidence": 1.0
+      }
+    ]
+  },
+  "b028_L3": {
+    "beat": 28,
+    "lane": "3",
+    "existing_count": 5,
+    "to_add": [
+      {
+        "name": "集目",
+        "stage": 10,
+        "confidence": 1.0
+      },
+      {
+        "name": "スコア上昇",
+        "stage": 7,
+        "confidence": 1.0
+      }
+    ]
+  },
+  "b029_L3": {
+    "beat": 29,
+    "lane": "3",
+    "existing_count": 5,
+    "to_add": [
+      {
+        "name": "集目",
+        "stage": 10,
+        "confidence": 1.0
+      },
+      {
+        "name": "スコア上昇",
+        "stage": 7,
+        "confidence": 1.0
+      }
+    ]
+  },
+  "b030_L3": {
+    "beat": 30,
+    "lane": "3",
+    "existing_count": 6,
+    "to_add": [
+      {
+        "name": "ボーカル上昇",
+        "stage": 3,
+        "confidence": 1.0
+      }
+    ]
+  },
+  "b031_L3": {
+    "beat": 31,
+    "lane": "3",
+    "existing_count": 6,
+    "to_add": [
+      {
+        "name": "ボーカル上昇",
+        "stage": 3,
+        "confidence": 1.0
+      }
+    ]
+  },
+  "b050_L3": {
+    "beat": 50,
+    "lane": "3",
+    "existing_count": 5,
+    "to_add": [
+      {
+        "name": "集目",
+        "stage": 10,
+        "confidence": 1.0
+      },
+      {
+        "name": "クリティカル率上昇",
+        "stage": 5,
+        "confidence": 0.952
+      }
+    ]
+  },
+  "b051_L3": {
+    "beat": 51,
+    "lane": "3",
+    "existing_count": 5,
+    "to_add": [
+      {
+        "name": "集目",
+        "stage": 10,
+        "confidence": 1.0
+      },
+      {
+        "name": "クリティカル率上昇",
+        "stage": 5,
+        "confidence": 0.953
+      }
+    ]
+  },
+  "b052_L3": {
+    "beat": 52,
+    "lane": "3",
+    "existing_count": 5,
+    "to_add": [
+      {
+        "name": "集目",
+        "stage": 10,
+        "confidence": 1.0
+      },
+      {
+        "name": "クリティカル率上昇",
+        "stage": 5,
+        "confidence": 0.952
+      }
+    ]
+  },
+  "b053_L3": {
+    "beat": 53,
+    "lane": "3",
+    "existing_count": 5,
+    "to_add": [
+      {
+        "name": "集目",
+        "stage": 10,
+        "confidence": 1.0
+      },
+      {
+        "name": "クリティカル率上昇",
+        "stage": 5,
+        "confidence": 0.953
+      }
+    ]
+  },
+  "b054_L3": {
+    "beat": 54,
+    "lane": "3",
+    "existing_count": 5,
+    "to_add": [
+      {
+        "name": "集目",
+        "stage": 10,
+        "confidence": 1.0
+      },
+      {
+        "name": "クリティカル率上昇",
+        "stage": 5,
+        "confidence": 0.952
+      }
+    ]
+  },
+  "b055_L3": {
+    "beat": 55,
+    "lane": "3",
+    "existing_count": 5,
+    "to_add": [
+      {
+        "name": "集目",
+        "stage": 10,
+        "confidence": 1.0
+      },
+      {
+        "name": "クリティカル率上昇",
+        "stage": 5,
+        "confidence": 0.953
+      }
+    ]
+  },
+  "b056_L3": {
+    "beat": 56,
+    "lane": "3",
+    "existing_count": 5,
+    "to_add": [
+      {
+        "name": "集目",
+        "stage": 10,
+        "confidence": 1.0
+      },
+      {
+        "name": "クリティカル率上昇",
+        "stage": 5,
+        "confidence": 0.952
+      }
+    ]
+  },
+  "b057_L3": {
+    "beat": 57,
+    "lane": "3",
+    "existing_count": 5,
+    "to_add": [
+      {
+        "name": "集目",
+        "stage": 10,
+        "confidence": 1.0
+      },
+      {
+        "name": "クリティカル率上昇",
+        "stage": 5,
+        "confidence": 0.953
+      }
+    ]
+  },
+  "b058_L3": {
+    "beat": 58,
+    "lane": "3",
+    "existing_count": 5,
+    "to_add": [
+      {
+        "name": "集目",
+        "stage": 10,
+        "confidence": 1.0
+      },
+      {
+        "name": "クリティカル率上昇",
+        "stage": 5,
+        "confidence": 0.952
+      }
+    ]
+  },
+  "b059_L3": {
+    "beat": 59,
+    "lane": "3",
+    "existing_count": 5,
+    "to_add": [
+      {
+        "name": "集目",
+        "stage": 10,
+        "confidence": 1.0
+      },
+      {
+        "name": "クリティカル率上昇",
+        "stage": 5,
+        "confidence": 0.953
+      }
+    ]
+  },
+  "b060_L3": {
+    "beat": 60,
+    "lane": "3",
+    "existing_count": 5,
+    "to_add": [
+      {
+        "name": "集目",
+        "stage": 10,
+        "confidence": 1.0
+      },
+      {
+        "name": "クリティカル率上昇",
+        "stage": 5,
+        "confidence": 0.952
+      }
+    ]
+  },
+  "b061_L3": {
+    "beat": 61,
+    "lane": "3",
+    "existing_count": 5,
+    "to_add": [
+      {
+        "name": "集目",
+        "stage": 10,
+        "confidence": 1.0
+      },
+      {
+        "name": "クリティカル率上昇",
+        "stage": 5,
+        "confidence": 0.952
+      }
+    ]
+  },
+  "b062_L3": {
+    "beat": 62,
+    "lane": "3",
+    "existing_count": 5,
+    "to_add": [
+      {
+        "name": "集目",
+        "stage": 10,
+        "confidence": 1.0
+      },
+      {
+        "name": "クリティカル率上昇",
+        "stage": 5,
+        "confidence": 0.953
+      }
+    ]
+  },
+  "b063_L3": {
+    "beat": 63,
+    "lane": "3",
+    "existing_count": 5,
+    "to_add": [
+      {
+        "name": "集目",
+        "stage": 10,
+        "confidence": 1.0
+      },
+      {
+        "name": "クリティカル率上昇",
+        "stage": 5,
+        "confidence": 0.952
+      }
+    ]
+  },
+  "b064_L3": {
+    "beat": 64,
+    "lane": "3",
+    "existing_count": 5,
+    "to_add": [
+      {
+        "name": "集目",
+        "stage": 10,
+        "confidence": 1.0
+      },
+      {
+        "name": "クリティカル率上昇",
+        "stage": 5,
+        "confidence": 0.952
+      }
+    ]
+  },
+  "b065_L3": {
+    "beat": 65,
+    "lane": "3",
+    "existing_count": 5,
+    "to_add": [
+      {
+        "name": "クリティカル率上昇",
+        "stage": 5,
+        "confidence": 0.955
+      },
+      {
+        "name": "ボーカル上昇",
+        "stage": 7,
+        "confidence": 0.99
+      }
+    ]
+  },
+  "b066_L3": {
+    "beat": 66,
+    "lane": "3",
+    "existing_count": 5,
+    "to_add": [
+      {
+        "name": "クリティカル率上昇",
+        "stage": 5,
+        "confidence": 0.956
+      },
+      {
+        "name": "ボーカル上昇",
+        "stage": 7,
+        "confidence": 0.99
+      }
+    ]
+  },
+  "b024_L4": {
+    "beat": 24,
+    "lane": "4",
+    "existing_count": 6,
+    "to_add": [
+      {
+        "name": "ボーカル上昇",
+        "stage": 5,
+        "confidence": 1.0
+      },
+      {
+        "name": "ボーカルブースト",
+        "stage": 5,
+        "confidence": 0.876
+      }
+    ]
+  },
+  "b025_L4": {
+    "beat": 25,
+    "lane": "4",
+    "existing_count": 6,
+    "to_add": [
+      {
+        "name": "ボーカル上昇",
+        "stage": 5,
+        "confidence": 1.0
+      },
+      {
+        "name": "ボーカルブースト",
+        "stage": 5,
+        "confidence": 0.876
+      }
+    ]
+  },
+  "b026_L4": {
+    "beat": 26,
+    "lane": "4",
+    "existing_count": 6,
+    "to_add": [
+      {
+        "name": "ボーカル上昇",
+        "stage": 5,
+        "confidence": 1.0
+      },
+      {
+        "name": "ボーカルブースト",
+        "stage": 5,
+        "confidence": 0.876
+      }
+    ]
+  },
+  "b027_L4": {
+    "beat": 27,
+    "lane": "4",
+    "existing_count": 6,
+    "to_add": [
+      {
+        "name": "ボーカル上昇",
+        "stage": 5,
+        "confidence": 1.0
+      },
+      {
+        "name": "ボーカルブースト",
+        "stage": 5,
+        "confidence": 0.876
+      }
+    ]
+  },
+  "b028_L4": {
+    "beat": 28,
+    "lane": "4",
+    "existing_count": 6,
+    "to_add": [
+      {
+        "name": "ボーカル上昇",
+        "stage": 5,
+        "confidence": 1.0
+      },
+      {
+        "name": "ボーカルブースト",
+        "stage": 5,
+        "confidence": 0.876
+      }
+    ]
+  },
+  "b053_L4": {
+    "beat": 53,
+    "lane": "4",
+    "existing_count": 6,
+    "to_add": [
+      {
+        "name": "スキル成功率上昇",
+        "stage": 3,
+        "confidence": 1.0
+      }
+    ]
+  },
+  "b054_L4": {
+    "beat": 54,
+    "lane": "4",
+    "existing_count": 6,
+    "to_add": [
+      {
+        "name": "スキル成功率上昇",
+        "stage": 3,
+        "confidence": 1.0
+      }
+    ]
+  },
+  "b055_L4": {
+    "beat": 55,
+    "lane": "4",
+    "existing_count": 6,
+    "to_add": [
+      {
+        "name": "スキル成功率上昇",
+        "stage": 3,
+        "confidence": 1.0
+      }
+    ]
+  },
+  "b056_L4": {
+    "beat": 56,
+    "lane": "4",
+    "existing_count": 6,
+    "to_add": [
+      {
+        "name": "ボーカルブースト",
+        "stage": 5,
+        "confidence": 0.851
+      }
+    ]
+  },
+  "b060_L4": {
+    "beat": 60,
+    "lane": "4",
+    "existing_count": 6,
+    "to_add": [
+      {
+        "name": "Aスキルスコア上昇",
+        "stage": 2,
+        "confidence": 0.983
+      },
+      {
+        "name": "ボーカル上昇",
+        "stage": 7,
+        "confidence": 1.0
+      }
+    ]
+  },
+  "b062_L4": {
+    "beat": 62,
+    "lane": "4",
+    "existing_count": 6,
+    "to_add": [
+      {
+        "name": "ビジュアルブースト",
+        "stage": 3,
+        "confidence": 0.986
+      }
+    ]
+  },
+  "b063_L4": {
+    "beat": 63,
+    "lane": "4",
+    "existing_count": 6,
+    "to_add": [
+      {
+        "name": "Aスキルスコア上昇",
+        "stage": 2,
+        "confidence": 0.983
+      },
+      {
+        "name": "スタミナ継続回復",
+        "stage": 3,
+        "confidence": 0.982
+      }
+    ]
+  },
+  "b064_L4": {
+    "beat": 64,
+    "lane": "4",
+    "existing_count": 6,
+    "to_add": [
+      {
+        "name": "ビジュアルブースト",
+        "stage": 3,
+        "confidence": 0.986
+      }
+    ]
+  },
+  "b065_L4": {
+    "beat": 65,
+    "lane": "4",
+    "existing_count": 6,
+    "to_add": [
+      {
+        "name": "ビジュアルブースト",
+        "stage": 3,
+        "confidence": 0.986
+      }
+    ]
+  },
+  "b066_L4": {
+    "beat": 66,
+    "lane": "4",
+    "existing_count": 6,
+    "to_add": [
+      {
+        "name": "ビジュアルブースト",
+        "stage": 3,
+        "confidence": 0.986
+      }
+    ]
+  },
+  "b067_L4": {
+    "beat": 67,
+    "lane": "4",
+    "existing_count": 6,
+    "to_add": [
+      {
+        "name": "ビジュアルブースト",
+        "stage": 3,
+        "confidence": 0.986
+      }
+    ]
+  },
+  "b068_L4": {
+    "beat": 68,
+    "lane": "4",
+    "existing_count": 6,
+    "to_add": [
+      {
+        "name": "ビジュアルブースト",
+        "stage": 3,
+        "confidence": 0.986
+      }
+    ]
+  },
+  "b069_L4": {
+    "beat": 69,
+    "lane": "4",
+    "existing_count": 6,
+    "to_add": [
+      {
+        "name": "ビジュアルブースト",
+        "stage": 3,
+        "confidence": 0.986
+      }
+    ]
+  },
+  "b071_L4": {
+    "beat": 71,
+    "lane": "4",
+    "existing_count": 6,
+    "to_add": [
+      {
+        "name": "ビジュアルブースト",
+        "stage": 3,
+        "confidence": 0.986
+      }
+    ]
+  }
+}

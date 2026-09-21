@@ -1,0 +1,144 @@
+{
+  "timestamp": "2026-09-21",
+  "description": "Comparison between Old Model (Phase 13-B) and New Model (Phase 14 Post-Decay Optimization)",
+  "samples": {
+    "S1": {
+      "total_comparisons": {
+        "old": 1747,
+        "new": 1709
+      },
+      "match_count": {
+        "old": 1596,
+        "new": 1615,
+        "delta": 19
+      },
+      "match_rate_pct": {
+        "old": 91.36,
+        "new": 94.5,
+        "delta": 3.14
+      },
+      "discrepancies": {
+        "old": 151,
+        "new": 94,
+        "delta": -57
+      },
+      "decay_timing_lag": {
+        "old": 54,
+        "new": 14,
+        "delta": -40
+      },
+      "phase_lag_activation": {
+        "old": 79,
+        "new": 80,
+        "delta": 1
+      },
+      "stage_mismatch": {
+        "old": 5,
+        "new": 0,
+        "delta": -5
+      },
+      "extreme_display": {
+        "old": 0,
+        "new": 0,
+        "delta": 0
+      },
+      "amplify_or_overlap": {
+        "old": 13,
+        "new": 0,
+        "delta": -13
+      }
+    },
+    "S2": {
+      "total_comparisons": {
+        "old": 1303,
+        "new": 1367
+      },
+      "match_count": {
+        "old": 0,
+        "new": 1227,
+        "delta": 1227
+      },
+      "match_rate_pct": {
+        "old": 0.0,
+        "new": 89.76,
+        "delta": 89.76
+      },
+      "discrepancies": {
+        "old": 1303,
+        "new": 140,
+        "delta": -1163
+      },
+      "decay_timing_lag": {
+        "old": 0,
+        "new": 0,
+        "delta": 0
+      },
+      "phase_lag_activation": {
+        "old": 0,
+        "new": 30,
+        "delta": 30
+      },
+      "stage_mismatch": {
+        "old": 0,
+        "new": 0,
+        "delta": 0
+      },
+      "extreme_display": {
+        "old": 0,
+        "new": 36,
+        "delta": 36
+      },
+      "amplify_or_overlap": {
+        "old": 0,
+        "new": 0,
+        "delta": 0
+      }
+    },
+    "S3": {
+      "total_comparisons": {
+        "old": 1757,
+        "new": 1677
+      },
+      "match_count": {
+        "old": 1445,
+        "new": 1530,
+        "delta": 85
+      },
+      "match_rate_pct": {
+        "old": 82.24,
+        "new": 91.23,
+        "delta": 8.99
+      },
+      "discrepancies": {
+        "old": 312,
+        "new": 147,
+        "delta": -165
+      },
+      "decay_timing_lag": {
+        "old": 153,
+        "new": 3,
+        "delta": -150
+      },
+      "phase_lag_activation": {
+        "old": 40,
+        "new": 51,
+        "delta": 11
+      },
+      "stage_mismatch": {
+        "old": 13,
+        "new": 4,
+        "delta": -9
+      },
+      "extreme_display": {
+        "old": 83,
+        "new": 85,
+        "delta": 2
+      },
+      "amplify_or_overlap": {
+        "old": 23,
+        "new": 4,
+        "delta": -19
+      }
+    }
+  }
+}

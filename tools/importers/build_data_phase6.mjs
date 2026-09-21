@@ -871,6 +871,15 @@ function parseSkillLevel(skill, stats, level = null, kindOverride = null) {
       // （vocal/dance/visual_down のいずれかが有効）。
       return { condition: "self_down_group", note: null };
     }
+    if (triggerId.startsWith("tg-someone_status-")) {
+      // 【S3解明 2026-09-21】効果行単位の「誰かが X 状態の時」（例: すず A2 の tg-someone_status-audience_amount_increase）
+      const status = triggerId.slice("tg-someone_status-".length);
+      const t = STATUS_TRIGGER_TO_TYPE[status];
+      if (t !== undefined) {
+        return { condition: `someone_${t}`, note: null };
+      }
+      return { condition: null, note: "trigger:" + triggerId };
+    }
     return { condition: null, note: "trigger:" + triggerId };
   };
 

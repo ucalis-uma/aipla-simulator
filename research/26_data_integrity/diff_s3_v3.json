@@ -1,0 +1,1488 @@
+{
+  "sample": "S3_v3",
+  "summary": {
+    "total_comparisons": 1677,
+    "match_count": 1530,
+    "discrepancy_count": 147,
+    "match_rate_pct": 91.23,
+    "category_counts": {
+      "AMPLIFY_OR_OVERLAP_ON_BEAT": 6,
+      "PHASE_LAG_ACTIVATION": 49,
+      "EXTREME_DISPLAY_VS_EFFECTIVE": 85,
+      "BUFF_STAGE_MISMATCH": 4,
+      "DECAY_TIMING_LAG": 3
+    }
+  },
+  "diffs": [
+    {
+      "sample": "S3",
+      "beat": 1,
+      "lane": 3,
+      "key": "focus",
+      "measured_stage": 7,
+      "sim_stage": 10,
+      "diff": 3,
+      "note": "AMPLIFY_OR_OVERLAP_ON_BEAT: Activation on b1 (['sk-ski-05-waso-00-3', 'uph-uph-lane3-1', 'sk-rei-05-fest-01-3', 'uph-uph-lane2-1', 'sk-ktn-05-fest-02-2', 'uph-uph-lane1-1', 'sk-mhk-05-poli-00-2', 'uph-uph-lane5-1', 'sk-live-lba-passive_skill-060']); measured stage 7 vs sim stage 10"
+    },
+    {
+      "sample": "S3",
+      "beat": 1,
+      "lane": 3,
+      "key": "score_up",
+      "measured_stage": 0,
+      "sim_stage": 7,
+      "diff": 7,
+      "note": "AMPLIFY_OR_OVERLAP_ON_BEAT: Activation on b1 (['sk-ski-05-waso-00-3', 'uph-uph-lane3-1', 'sk-rei-05-fest-01-3', 'uph-uph-lane2-1', 'sk-ktn-05-fest-02-2', 'uph-uph-lane1-1', 'sk-mhk-05-poli-00-2', 'uph-uph-lane5-1', 'sk-live-lba-passive_skill-060']); measured stage 0 vs sim stage 7"
+    },
+    {
+      "sample": "S3",
+      "beat": 1,
+      "lane": 4,
+      "key": "score_up",
+      "measured_stage": 0,
+      "sim_stage": 2,
+      "diff": 2,
+      "note": "AMPLIFY_OR_OVERLAP_ON_BEAT: Activation on b1 (['sk-ski-05-waso-00-3', 'uph-uph-lane3-1', 'sk-rei-05-fest-01-3', 'uph-uph-lane2-1', 'sk-ktn-05-fest-02-2', 'uph-uph-lane1-1', 'sk-mhk-05-poli-00-2', 'uph-uph-lane5-1', 'sk-live-lba-passive_skill-060']); measured stage 0 vs sim stage 2"
+    },
+    {
+      "sample": "S3",
+      "beat": 1,
+      "lane": 4,
+      "key": "visual_boost",
+      "measured_stage": 3,
+      "sim_stage": 6,
+      "diff": 3,
+      "note": "AMPLIFY_OR_OVERLAP_ON_BEAT: Activation on b1 (['sk-ski-05-waso-00-3', 'uph-uph-lane3-1', 'sk-rei-05-fest-01-3', 'uph-uph-lane2-1', 'sk-ktn-05-fest-02-2', 'uph-uph-lane1-1', 'sk-mhk-05-poli-00-2', 'uph-uph-lane5-1', 'sk-live-lba-passive_skill-060']); measured stage 3 vs sim stage 6"
+    },
+    {
+      "sample": "S3",
+      "beat": 2,
+      "lane": 2,
+      "key": "critical_rate_up",
+      "measured_stage": 5,
+      "sim_stage": 0,
+      "diff": -5,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b2 (acts=['uph-uph-lane3-2', 'sk-ktn-05-fest-02-3', 'sk-mhk-05-poli-00-3', 'uph-uph-lane5-3', 'sk-ski-05-waso-00-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 2,
+      "lane": 3,
+      "key": "a_skill_score_up",
+      "measured_stage": 0,
+      "sim_stage": 2,
+      "diff": 2,
+      "note": "AMPLIFY_OR_OVERLAP_ON_BEAT: Activation on b2 (['uph-uph-lane3-2', 'sk-ktn-05-fest-02-3', 'sk-mhk-05-poli-00-3', 'uph-uph-lane5-3', 'sk-ski-05-waso-00-1']); measured stage 0 vs sim stage 2"
+    },
+    {
+      "sample": "S3",
+      "beat": 3,
+      "lane": 4,
+      "key": "skill_success_up",
+      "measured_stage": 6,
+      "sim_stage": 3,
+      "diff": -3,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b3 (acts=['sk-rei-05-fest-01-3', 'uph-uph-lane5-4']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 3,
+      "lane": 4,
+      "key": "visual_up",
+      "measured_stage": 11,
+      "sim_stage": 7,
+      "diff": -4,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b3 (acts=['sk-rei-05-fest-01-3', 'uph-uph-lane5-4']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 4,
+      "lane": 1,
+      "key": "vocal_boost",
+      "measured_stage": 5,
+      "sim_stage": 0,
+      "diff": -5,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b4 (acts=['sk-rui-05-fest-01-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 4,
+      "lane": 3,
+      "key": "vocal_boost",
+      "measured_stage": 5,
+      "sim_stage": 0,
+      "diff": -5,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b4 (acts=['sk-rui-05-fest-01-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 13,
+      "lane": 4,
+      "key": "visual_boost",
+      "measured_stage": 9,
+      "sim_stage": 6,
+      "diff": -3,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b13 (acts=['sk-ski-05-waso-00-3', 'uph-uph-lane3-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 14,
+      "lane": 1,
+      "key": "critical_coeff_up",
+      "measured_stage": 6,
+      "sim_stage": 0,
+      "diff": -6,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b14 (acts=['sk-rei-05-fest-01-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 14,
+      "lane": 4,
+      "key": "critical_coeff_up",
+      "measured_stage": 10,
+      "sim_stage": 4,
+      "diff": -6,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b14 (acts=['sk-rei-05-fest-01-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 14,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 0,
+      "diff": -10,
+      "note": "PHASE_LAG_ACTIVATION: Activated on current beat; measured reflects POST-activation, sim reflects PRE-activation"
+    },
+    {
+      "sample": "S3",
+      "beat": 15,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 16,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 17,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 18,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 19,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 20,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 21,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 22,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 23,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 24,
+      "lane": 2,
+      "key": "vocal_up",
+      "measured_stage": 5,
+      "sim_stage": 0,
+      "diff": -5,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b24 (acts=['sk-ski-05-waso-00-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 24,
+      "lane": 3,
+      "key": "vocal_up",
+      "measured_stage": 3,
+      "sim_stage": 0,
+      "diff": -3,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b24 (acts=['sk-ski-05-waso-00-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 24,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 24,
+      "lane": 4,
+      "key": "vocal_boost",
+      "measured_stage": 5,
+      "sim_stage": 0,
+      "diff": -5,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b24 (acts=['sk-ski-05-waso-00-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 24,
+      "lane": 4,
+      "key": "vocal_up",
+      "measured_stage": 5,
+      "sim_stage": 0,
+      "diff": -5,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b24 (acts=['sk-ski-05-waso-00-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 25,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 25,
+      "lane": 4,
+      "key": "vocal_boost",
+      "measured_stage": 5,
+      "sim_stage": 0,
+      "diff": -5,
+      "note": "BUFF_STAGE_MISMATCH: Measured 5 vs Sim 0 (diff=-5)"
+    },
+    {
+      "sample": "S3",
+      "beat": 26,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 26,
+      "lane": 4,
+      "key": "vocal_boost",
+      "measured_stage": 5,
+      "sim_stage": 0,
+      "diff": -5,
+      "note": "BUFF_STAGE_MISMATCH: Measured 5 vs Sim 0 (diff=-5)"
+    },
+    {
+      "sample": "S3",
+      "beat": 27,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 27,
+      "lane": 4,
+      "key": "vocal_boost",
+      "measured_stage": 5,
+      "sim_stage": 0,
+      "diff": -5,
+      "note": "BUFF_STAGE_MISMATCH: Measured 5 vs Sim 0 (diff=-5)"
+    },
+    {
+      "sample": "S3",
+      "beat": 28,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 28,
+      "lane": 4,
+      "key": "vocal_boost",
+      "measured_stage": 5,
+      "sim_stage": 0,
+      "diff": -5,
+      "note": "BUFF_STAGE_MISMATCH: Measured 5 vs Sim 0 (diff=-5)"
+    },
+    {
+      "sample": "S3",
+      "beat": 29,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 30,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 31,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 32,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 33,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 34,
+      "lane": 1,
+      "key": "vocal_boost",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b34 (acts=['sk-rui-05-fest-01-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 34,
+      "lane": 3,
+      "key": "vocal_boost",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b34 (acts=['sk-rui-05-fest-01-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 34,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 35,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 36,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 37,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 38,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 39,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 40,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 41,
+      "lane": 2,
+      "key": "a_skill_score_up",
+      "measured_stage": 2,
+      "sim_stage": 0,
+      "diff": -2,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b41 (acts=['sk-mhk-05-poli-00-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 41,
+      "lane": 3,
+      "key": "a_skill_score_up",
+      "measured_stage": 2,
+      "sim_stage": 0,
+      "diff": -2,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b41 (acts=['sk-mhk-05-poli-00-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 41,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 41,
+      "lane": 5,
+      "key": "a_skill_score_up",
+      "measured_stage": 2,
+      "sim_stage": 0,
+      "diff": -2,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b41 (acts=['sk-mhk-05-poli-00-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 42,
+      "lane": 1,
+      "key": "critical_coeff_up",
+      "measured_stage": 12,
+      "sim_stage": 6,
+      "diff": -6,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b42 (acts=['sk-rei-05-fest-01-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 42,
+      "lane": 4,
+      "key": "critical_coeff_up",
+      "measured_stage": 16,
+      "sim_stage": 10,
+      "diff": -6,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b42 (acts=['sk-rei-05-fest-01-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 42,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 44,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 45,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 46,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 47,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 48,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 49,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 50,
+      "lane": 2,
+      "key": "vocal_up",
+      "measured_stage": 12,
+      "sim_stage": 5,
+      "diff": -7,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b50 (acts=['sk-rui-05-fest-01-3', 'sk-ktn-05-fest-02-2', 'sk-mhk-05-poli-00-2', 'uph-uph-lane5-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 50,
+      "lane": 3,
+      "key": "score_up",
+      "measured_stage": 7,
+      "sim_stage": 0,
+      "diff": -7,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b50 (acts=['sk-rui-05-fest-01-3', 'sk-ktn-05-fest-02-2', 'sk-mhk-05-poli-00-2', 'uph-uph-lane5-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 50,
+      "lane": 4,
+      "key": "score_up",
+      "measured_stage": 2,
+      "sim_stage": 0,
+      "diff": -2,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b50 (acts=['sk-rui-05-fest-01-3', 'sk-ktn-05-fest-02-2', 'sk-mhk-05-poli-00-2', 'uph-uph-lane5-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 50,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 51,
+      "lane": 1,
+      "key": "visual_up",
+      "measured_stage": 4,
+      "sim_stage": 0,
+      "diff": -4,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b51 (acts=['sk-ktn-05-fest-02-1', 'sk-rui-05-fest-01-3', 'sk-ktn-05-fest-02-3', 'uph-uph-lane5-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 51,
+      "lane": 4,
+      "key": "critical_coeff_up",
+      "measured_stage": 11,
+      "sim_stage": 6,
+      "diff": -5,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b51 (acts=['sk-ktn-05-fest-02-1', 'sk-rui-05-fest-01-3', 'sk-ktn-05-fest-02-3', 'uph-uph-lane5-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 51,
+      "lane": 4,
+      "key": "visual_up",
+      "measured_stage": 7,
+      "sim_stage": 0,
+      "diff": -7,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b51 (acts=['sk-ktn-05-fest-02-1', 'sk-rui-05-fest-01-3', 'sk-ktn-05-fest-02-3', 'uph-uph-lane5-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 51,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 52,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 53,
+      "lane": 4,
+      "key": "skill_success_up",
+      "measured_stage": 3,
+      "sim_stage": 0,
+      "diff": -3,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b53 (acts=['uph-uph-lane5-3', 'sk-rei-05-fest-01-3', 'sk-rui-05-fest-01-3', 'uph-uph-lane5-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 53,
+      "lane": 4,
+      "key": "visual_up",
+      "measured_stage": 11,
+      "sim_stage": 7,
+      "diff": -4,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b53 (acts=['uph-uph-lane5-3', 'sk-rei-05-fest-01-3', 'sk-rui-05-fest-01-3', 'uph-uph-lane5-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 53,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 54,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 55,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 56,
+      "lane": 4,
+      "key": "skill_success_up",
+      "measured_stage": 0,
+      "sim_stage": 3,
+      "diff": 3,
+      "note": "DECAY_TIMING_LAG: Buff expired in measured 1-2 beats earlier than sim"
+    },
+    {
+      "sample": "S3",
+      "beat": 56,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 56,
+      "lane": 4,
+      "key": "vocal_boost",
+      "measured_stage": 5,
+      "sim_stage": 0,
+      "diff": -5,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b56 (acts=['uph-uph-lane5-3', 'sk-rui-05-fest-01-3', 'uph-uph-lane5-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 57,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 58,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 59,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 60,
+      "lane": 4,
+      "key": "a_skill_score_up",
+      "measured_stage": 2,
+      "sim_stage": 0,
+      "diff": -2,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b60 (acts=['uph-uph-lane5-3', 'sk-rui-05-fest-01-2', 'uph-uph-lane2-1', 'uph-uph-lane1-1', 'uph-uph-lane5-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 60,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 60,
+      "lane": 4,
+      "key": "vocal_up",
+      "measured_stage": 7,
+      "sim_stage": 0,
+      "diff": -7,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b60 (acts=['uph-uph-lane5-3', 'sk-rui-05-fest-01-2', 'uph-uph-lane2-1', 'uph-uph-lane1-1', 'uph-uph-lane5-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 61,
+      "lane": 4,
+      "key": "skill_success_up",
+      "measured_stage": 6,
+      "sim_stage": 3,
+      "diff": -3,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b61 (acts=['uph-uph-lane5-3', 'sk-live-lba-passive_skill-060', 'sk-rei-05-fest-01-3', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane5-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 61,
+      "lane": 4,
+      "key": "visual_boost",
+      "measured_stage": 0,
+      "sim_stage": 3,
+      "diff": 3,
+      "note": "AMPLIFY_OR_OVERLAP_ON_BEAT: Activation on b61 (['uph-uph-lane5-3', 'sk-live-lba-passive_skill-060', 'sk-rei-05-fest-01-3', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane5-3']); measured stage 0 vs sim stage 3"
+    },
+    {
+      "sample": "S3",
+      "beat": 61,
+      "lane": 4,
+      "key": "visual_up",
+      "measured_stage": 15,
+      "sim_stage": 11,
+      "diff": -4,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b61 (acts=['uph-uph-lane5-3', 'sk-live-lba-passive_skill-060', 'sk-rei-05-fest-01-3', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane5-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 61,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 62,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 63,
+      "lane": 4,
+      "key": "a_skill_score_up",
+      "measured_stage": 2,
+      "sim_stage": 0,
+      "diff": -2,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b63 (acts=['sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane5-3', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane5-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 63,
+      "lane": 4,
+      "key": "visual_boost",
+      "measured_stage": 0,
+      "sim_stage": 3,
+      "diff": 3,
+      "note": "DECAY_TIMING_LAG: Buff expired in measured 1-2 beats earlier than sim"
+    },
+    {
+      "sample": "S3",
+      "beat": 63,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 64,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 65,
+      "lane": 3,
+      "key": "vocal_up",
+      "measured_stage": 7,
+      "sim_stage": 3,
+      "diff": -4,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b65 (acts=['sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 65,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 66,
+      "lane": 3,
+      "key": "vocal_up",
+      "measured_stage": 7,
+      "sim_stage": 3,
+      "diff": -4,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b66 (acts=['sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 66,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 67,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 68,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 69,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 70,
+      "lane": 4,
+      "key": "visual_boost",
+      "measured_stage": 0,
+      "sim_stage": 3,
+      "diff": 3,
+      "note": "DECAY_TIMING_LAG: Buff expired in measured 1-2 beats earlier than sim"
+    },
+    {
+      "sample": "S3",
+      "beat": 70,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 71,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 73,
+      "lane": 3,
+      "key": "focus",
+      "measured_stage": 10,
+      "sim_stage": 6,
+      "diff": -4,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b73 (acts=['sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'sk-ski-05-waso-00-3', 'uph-uph-lane3-1', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane1-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 73,
+      "lane": 4,
+      "key": "visual_boost",
+      "measured_stage": 6,
+      "sim_stage": 3,
+      "diff": -3,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b73 (acts=['sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'sk-ski-05-waso-00-3', 'uph-uph-lane3-1', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane1-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 79,
+      "lane": 2,
+      "key": "critical_rate_up",
+      "measured_stage": 5,
+      "sim_stage": 0,
+      "diff": -5,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b79 (acts=['sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane1-1', 'sk-ski-05-waso-00-1', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane1-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 79,
+      "lane": 3,
+      "key": "critical_rate_up",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b79 (acts=['sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane1-1', 'sk-ski-05-waso-00-1', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane1-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 81,
+      "lane": 1,
+      "key": "critical_coeff_up",
+      "measured_stage": 6,
+      "sim_stage": 0,
+      "diff": -6,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b81 (acts=['sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane1-1', 'sk-rei-05-fest-01-2', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane1-1', 'sk-mhk-05-poli-00-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 81,
+      "lane": 4,
+      "key": "critical_coeff_up",
+      "measured_stage": 11,
+      "sim_stage": 5,
+      "diff": -6,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b81 (acts=['sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane1-1', 'sk-rei-05-fest-01-2', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane1-1', 'sk-mhk-05-poli-00-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 81,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 0,
+      "diff": -10,
+      "note": "PHASE_LAG_ACTIVATION: Activated on current beat; measured reflects POST-activation, sim reflects PRE-activation"
+    },
+    {
+      "sample": "S3",
+      "beat": 82,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 83,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 84,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 85,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 86,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 87,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 88,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 89,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 90,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 91,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 92,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 93,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 94,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 95,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 96,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 97,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 98,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 99,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 100,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 101,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 102,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 103,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 104,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 105,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 106,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 107,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 108,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 109,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 110,
+      "lane": 4,
+      "key": "visual_up_extreme",
+      "measured_stage": 10,
+      "sim_stage": 5,
+      "diff": -5,
+      "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
+    },
+    {
+      "sample": "S3",
+      "beat": 123,
+      "lane": 2,
+      "key": "vocal_up",
+      "measured_stage": 5,
+      "sim_stage": 0,
+      "diff": -5,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b123 (acts=['sk-rei-05-fest-01-3', 'uph-uph-lane2-1', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane1-1', 'sk-mhk-05-poli-00-2', 'sk-mhk-05-poli-00-3', 'uph-uph-lane5-1', 'uph-uph-lane5-3', 'sk-ski-05-waso-00-2', 'sk-rei-05-fest-01-3', 'uph-uph-lane2-1', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane1-1', 'sk-mhk-05-poli-00-2', 'sk-mhk-05-poli-00-3', 'uph-uph-lane5-1', 'uph-uph-lane5-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 123,
+      "lane": 4,
+      "key": "vocal_up",
+      "measured_stage": 5,
+      "sim_stage": 0,
+      "diff": -5,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b123 (acts=['sk-rei-05-fest-01-3', 'uph-uph-lane2-1', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane1-1', 'sk-mhk-05-poli-00-2', 'sk-mhk-05-poli-00-3', 'uph-uph-lane5-1', 'uph-uph-lane5-3', 'sk-ski-05-waso-00-2', 'sk-rei-05-fest-01-3', 'uph-uph-lane2-1', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane1-1', 'sk-mhk-05-poli-00-2', 'sk-mhk-05-poli-00-3', 'uph-uph-lane5-1', 'uph-uph-lane5-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 133,
+      "lane": 3,
+      "key": "focus",
+      "measured_stage": 7,
+      "sim_stage": 0,
+      "diff": -7,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b133 (acts=['sk-rei-05-fest-01-3', 'uph-uph-lane2-1', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane1-1', 'sk-mhk-05-poli-00-2', 'sk-mhk-05-poli-00-3', 'uph-uph-lane5-1', 'uph-uph-lane5-3', 'sk-rui-05-fest-01-2', 'sk-ski-05-waso-00-3', 'uph-uph-lane3-1', 'sk-rei-05-fest-01-3', 'uph-uph-lane2-1', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane1-1', 'sk-mhk-05-poli-00-2', 'sk-mhk-05-poli-00-3', 'uph-uph-lane5-1', 'uph-uph-lane5-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 133,
+      "lane": 4,
+      "key": "visual_boost",
+      "measured_stage": 3,
+      "sim_stage": 0,
+      "diff": -3,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b133 (acts=['sk-rei-05-fest-01-3', 'uph-uph-lane2-1', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane1-1', 'sk-mhk-05-poli-00-2', 'sk-mhk-05-poli-00-3', 'uph-uph-lane5-1', 'uph-uph-lane5-3', 'sk-rui-05-fest-01-2', 'sk-ski-05-waso-00-3', 'uph-uph-lane3-1', 'sk-rei-05-fest-01-3', 'uph-uph-lane2-1', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane1-1', 'sk-mhk-05-poli-00-2', 'sk-mhk-05-poli-00-3', 'uph-uph-lane5-1', 'uph-uph-lane5-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 169,
+      "lane": 2,
+      "key": "critical_rate_up",
+      "measured_stage": 5,
+      "sim_stage": 0,
+      "diff": -5,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b169 (acts=['sk-rei-05-fest-01-3', 'uph-uph-lane2-1', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane1-1', 'sk-mhk-05-poli-00-2', 'sk-mhk-05-poli-00-3', 'uph-uph-lane5-1', 'uph-uph-lane5-3', 'sk-ski-05-waso-00-1', 'sk-rei-05-fest-01-3', 'uph-uph-lane2-1', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane1-1', 'sk-mhk-05-poli-00-2', 'sk-mhk-05-poli-00-3', 'uph-uph-lane5-1', 'uph-uph-lane5-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    },
+    {
+      "sample": "S3",
+      "beat": 169,
+      "lane": 3,
+      "key": "critical_rate_up",
+      "measured_stage": 5,
+      "sim_stage": 0,
+      "diff": -5,
+      "note": "PHASE_LAG_ACTIVATION: Activated on b169 (acts=['sk-rei-05-fest-01-3', 'uph-uph-lane2-1', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane1-1', 'sk-mhk-05-poli-00-2', 'sk-mhk-05-poli-00-3', 'uph-uph-lane5-1', 'uph-uph-lane5-3', 'sk-ski-05-waso-00-1', 'sk-rei-05-fest-01-3', 'uph-uph-lane2-1', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane1-1', 'sk-mhk-05-poli-00-2', 'sk-mhk-05-poli-00-3', 'uph-uph-lane5-1', 'uph-uph-lane5-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+    }
+  ]
+}
