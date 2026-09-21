@@ -103,9 +103,18 @@ S3 の DECAY_TIMING_LAG 41件中38件を占める b125 怜P（ボーカル上昇
 S1 b61〜b67 のクリ率/Voブースト4段食い違い（12件）の解明・是正を行う。
 
 prompts/extract-s2-measured-buffs.md
-は サンプル2（S2）実測バフ自動抽出 & 突合セッション用の引継ぎプロンプト（2026-09-21 作成）。
+は サンプル2（S2）実測バフ自動抽出 & 突合セッション用の引継ぎプロンプト（2026-09-21 作成・完了）。
 effects が空配列だった S2 の実機スクショ（全167ビート×全5レーン）から OpenCV 列スキャンマッチングで
 バフ一覧を高精度自動抽出し、measured_data_v3.json を新規作成して S2 初のバフ突合と Decay 検証を完了させる。
 
+prompts/implement-unhandled-skill-triggers.md
+は未対応条件トリガーの包括的実装プロンプト（2026-09-21 作成・ステップA）。
+マスタインポーター（build_data_phase6.mjs）で Unknown となり無条件発動（condition: none）に
+fallback していた全条件トリガー（自身状態 tg-status-*、スタミナ比率、配置 center/most_left/most_right、
+コンボ以下等）を包括的に実装し、無条件発動バグを根絶する。
 
-
+prompts/fix-remaining-buff-mismatches.md
+は実測バフ不一致の修正プロンプト（2026-09-21 作成・ステップB）。
+LLM直接画像分析により特定された S3 のボーカルブースト5段誤認（実体はビジュアルブースト3段）のパッチ除去、
+T5 の L3 ボーカルブースト 3段不足（20段 vs 17段）、S1 の L1 ボーカル上昇 8ビート連続 Decay Lag（b136〜b143）
+等のシミュレータ/実測データ不一致を解消する。

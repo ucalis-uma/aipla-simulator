@@ -470,6 +470,8 @@ const STATUS_TRIGGER_TO_TYPE = {
   audience_amount_increase: "focus",
   audience_amount_reduction: "stealth",
   stamina_consumption_reduction: "stamina_cost_down",
+  stamina_consumption_increase: "stamina_cost_up",
+  combo_continuation: "combo_continue",
 };
 
 /** ユニット人数条件（tg-more_than_character_count-<unit>-<N>）で engine が解釈できる unit */
@@ -847,32 +849,69 @@ function parseSkillLevel(skill, stats, level = null, kindOverride = null) {
    */
   const triggerConditionOf = (triggerId, stats) => {
     if (triggerId === "") return { condition: null, note: null };
+    // レーン属性条件
     if (triggerId.startsWith("tg-position_attribute_vocal")) return { condition: "self_vocal_lane", note: null };
     if (triggerId.startsWith("tg-position_attribute_visual")) return { condition: "self_visual_lane", note: null };
     if (triggerId.startsWith("tg-position_attribute_dance")) return { condition: "self_dance_lane", note: null };
-    if (triggerId.startsWith("tg-someone_status_group-")) {
-      // 【サンプル2実測確定 2026-09-02】誰かが 低下効果グループ 状態の時（憧れていた青春）。
-      // 編成に低下効果（vocal/dance/visual_down・stealth 等）が無いと不発。実測: サンプル2 では
-      // 低下効果なし → 全編不発（P発動ログに憧れていた青春なし・L1 P 予算を本当は起きてたが独占）。
-      // 低下効果状態の判定には弱点型の無効バフが必要だが効果系が現データに無いため、
-      // someone_vocal_down / someone_dance_down / someone_visual_down の OR 相当を
-      // 個別効果行の condition として展開せず「someone_down_group」条件として engine で評価する。
-      return { condition: "someone_down_group", note: null };
+    // 配置レーン条件
+    if (triggerId === "tg-center") return { condition: "self_center", note: null };
+    if (triggerId === "tg-most_left") return { condition: "self_most_left", note: null };
+    if (triggerId === "tg-most_right") return { condition: "self_most_right", note: null };
+    // 低下効果グループ
+    if (triggerId.startsWith("tg-someone_status_group-")) return { condition: "someone_down_group", note: null };
+    if (triggerId.startsWith("tg-status_group-")) return { condition: "self_down_group", note: null };
+    // 段階数条件（誰かの状態がN段階以上）
+    {
+      const m = /^tg-someone_status_effect_grade_higher_([a-z_]+)\s*-(\d+)$/.exec(triggerId);
+      if (m) {
+        const st = STATUS_TRIGGER_TO_TYPE[m[1]] ?? m[1];
+        return { condition: `someone_${st}>=${m[2]}`, note: null };
+      }
+    }
+    // スタミナ割合条件
+    {
+      const m = /^tg-stamina_higher-(\d+)$/.exec(triggerId);
+      if (m) return { condition: `stamina>=${m[1]}`, note: null };
     }
     {
-      // 誰かがスタミナ N% 以下（tg-someone_stamina_lower-N・engine の someone_stamina<=N と同一規約）
+      const m = /^tg-stamina_lower-(\d+)$/.exec(triggerId);
+      if (m) return { condition: `stamina<=${m[1]}`, note: null };
+    }
+    {
       const m = /^tg-someone_stamina_lower-(\d+)$/.exec(triggerId);
       if (m) return { condition: `someone_stamina<=${m[1]}`, note: null };
     }
-    if (triggerId.startsWith("tg-status_group-")) {
-      // 【2026-09-02 確定】自身が低下効果状態の時（「一生懸命、金魚すくい」の 2 行目 =
-      // 説明文「自身が低下効果状態の時 全員に…」。tg-someone_status_group-* との差分は
-      // 主語のみ（自身 vs 誰か）で、低下効果グループの判定は同一
-      // （vocal/dance/visual_down のいずれかが有効）。
-      return { condition: "self_down_group", note: null };
+    // コンボ条件
+    {
+      const m = /^tg-combo_less_equal-(\d+)$/.exec(triggerId);
+      if (m) return { condition: `combo<=${m[1]}`, note: null };
     }
+    {
+      const m = /^tg-combo-(\d+)$/.exec(triggerId);
+      if (m) return { condition: `combo>=${m[1]}`, note: null };
+    }
+    // 編成人数・キャラ条件（ユニットおよび単体キャラ）
+    {
+      const m = /^tg-more_than_character_count-([a-z_]+)-(\d+)$/.exec(triggerId);
+      if (m) return { condition: `count_${m[1]}>=${m[2]}`, note: null };
+    }
+    // 行動直前・タイミング条件
+    if (triggerId === "tg-before_special_skill_by_someone") return { condition: "someone_before_special", note: null };
+    if (triggerId === "tg-before_special_skill") return { condition: "self_before_special", note: null };
+    if (triggerId === "tg-before_active_skill_by_someone") return { condition: "someone_before_active", note: null };
+    if (triggerId === "tg-after_active_skill_by_opponent_someone") return { condition: "battle_only", note: null };
+    if (triggerId === "tg-before_critical_by_someone") return { condition: "critical_timing", note: null };
+    // 自身の状態
+    if (triggerId.startsWith("tg-status-")) {
+      const status = triggerId.slice("tg-status-".length);
+      const t = STATUS_TRIGGER_TO_TYPE[status];
+      if (t !== undefined) {
+        return { condition: `status_${t}`, note: null };
+      }
+      return { condition: null, note: "trigger:" + triggerId };
+    }
+    // 誰かの状態
     if (triggerId.startsWith("tg-someone_status-")) {
-      // 【S3解明 2026-09-21】効果行単位の「誰かが X 状態の時」（例: すず A2 の tg-someone_status-audience_amount_increase）
       const status = triggerId.slice("tg-someone_status-".length);
       const t = STATUS_TRIGGER_TO_TYPE[status];
       if (t !== undefined) {
@@ -880,6 +919,19 @@ function parseSkillLevel(skill, stats, level = null, kindOverride = null) {
       }
       return { condition: null, note: "trigger:" + triggerId };
     }
+    // バトル専用
+    if (triggerId.startsWith("tg-opponent") || triggerId.startsWith("tg-battle")) {
+      return { condition: "battle_only", note: null };
+    }
+    // 楽曲限定
+    if (triggerId.startsWith("tg-music-")) {
+      return { condition: "music_limited", note: "music-limited:" + triggerId };
+    }
+    // 回復・ビート・クリティカル時
+    if (triggerId === "tg-someone_recovered") return { condition: "someone_recovered", note: null };
+    if (triggerId === "tg-beat") return { condition: "none", note: null };
+    if (triggerId === "tg-critical") return { condition: "critical_timing", note: null };
+
     return { condition: null, note: "trigger:" + triggerId };
   };
 
@@ -922,47 +974,13 @@ function parseSkillLevel(skill, stats, level = null, kindOverride = null) {
   const triggerId = String(lv.triggerId ?? "");
   let condition = "none";
   let conditionalNote = null;
-  {
-    // スキル単位トリガー（従来の if 連鎖を triggerConditionOf へ統合・-opponent 等を維持）
-    if (triggerId.startsWith("tg-music-")) {
-      conditionalNote = "music-limited:" + triggerId;
-    } else if (triggerId.startsWith("tg-opponent") || triggerId.startsWith("tg-battle")) {
-      condition = "battle_only";
-    } else if (triggerId.startsWith("tg-combo-")) {
-      const n = Number(triggerId.slice("tg-combo-".length));
-      condition = `combo>=${n}`;
-    } else if (triggerId === "tg-someone_recovered") {
-      condition = "someone_recovered";
-    } else if (triggerId.startsWith("tg-someone_status-")) {
-      // 「誰かが X 状態の時」→ 後半発動の someone_<type> 条件（自レーン含む）
-      const status = triggerId.slice("tg-someone_status-".length);
-      const t = STATUS_TRIGGER_TO_TYPE[status];
-      condition = t === undefined ? "none" : `someone_${t}`;
-      if (t === undefined) conditionalNote = "trigger:" + triggerId;
-    } else if (triggerId.startsWith("tg-more_than_character_count-")) {
-      // 編成のユニット人数条件（静的成立: L3→L2→L4→L1→L5 以外のビート依存がないため前半発動）
-      const rest = triggerId.slice("tg-more_than_character_count-".length);
-      const m = /^([a-z_]+)-(\d+)$/.exec(rest);
-      if (m && KNOWN_UNIT_GROUPS.has(m[1])) {
-        condition = `count_${m[1]}>=${m[2]}`;
-      } else {
-        conditionalNote = "trigger:" + triggerId;
-      }
-    } else if (triggerId === "tg-before_special_skill_by_someone") {
-      // 【サンプル1実測確定 2026-09-01】誰かがSPスキル発動前（かっこいい宇宙人さん 等）。
-      // SP ノート到来ビートの前半（SP 精算前）に、SP ノートのレーンへ事前バフする。
-      // engine の someone_before_special 条件（SP ノートのレーンが SP スキル発動可の
-      // とき成立・target "trigger" で SP レーンを解決）で前半発動する。
-      condition = "someone_before_special";
-    } else {
-      // 【サンプル2実測確定 2026-09-02】tg-position_attribute_* / tg-someone_status_group-*
-      // 等の共通写像（効果行単位と同一テーブル）。未対応は無条件扱い + 要検証タグ。
-      const common = triggerConditionOf(triggerId, stats);
-      if (common.condition !== null) {
-        condition = common.condition;
-      } else if (common.note !== null) {
-        conditionalNote = common.note;
-      }
+  if (triggerId !== "") {
+    const common = triggerConditionOf(triggerId, stats);
+    if (common.condition !== null) {
+      condition = common.condition;
+    }
+    if (common.note !== null) {
+      conditionalNote = common.note;
     }
   }
   // スキル単位のトリガー条件を effect 行へ伝播する（engine は effect 行の condition で

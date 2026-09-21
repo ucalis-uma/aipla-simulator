@@ -684,7 +684,9 @@ function isFirstPhaseCondition(condition: EffectCondition): boolean {
   return (
     condition === "none" ||
     condition === "battle_only" ||
-    condition === "someone_before_special"
+    condition === "someone_before_special" ||
+    condition === "self_before_special" ||
+    condition === "someone_before_active"
   );
 }
 
@@ -1074,21 +1076,6 @@ function evaluateCondition(
       const n = Number(condition.slice("combo<=".length));
       return { ok: ctx.globalCombo.value <= n, triggerLanes: [] };
     }
-    case "count_liz>=1":
-    case "count_moon>=1":
-    case "count_sun>=1":
-    case "count_pajm>=1":
-    case "count_leader>=1":
-    case "count_tri>=1":
-    case "count_thrx>=1": {
-      const m = /^count_([a-z_]+)>=(\d+)$/.exec(condition);
-      const unit = m?.[1] ?? "";
-      const n = Number(m?.[2] ?? 1);
-      const members = UNIT_MEMBERS[unit] ?? [];
-      const formed = ctx.input.formationCharacterIds ?? [];
-      const count = members.filter((id) => formed.includes(id)).length;
-      return { ok: count >= n, triggerLanes: [] };
-    }
     // 固定メンバー（golden 由来・EffectType と同型の汎用解釈に統合済み）
     case "someone_focus":
       return someone("focus");
@@ -1171,9 +1158,75 @@ function evaluateCondition(
           (s.staminaCost == null || spState.stamina >= s.staminaCost),
       );
       return { ok: ready, triggerLanes: ready ? [spLane] : [] };
-    }    default: {
+    }
+    case "self_before_special": {
+      // 自身がSPスキル発動前（tg-before_special_skill）。
+      // 現在ビートのノートが自レーンの SP ノートで、自身が SP スキルを発動できる状態の時成立。
+      const note = ctx.currentNote;
+      if (note === null || note.noteType !== 3 || note.position < 1 || note.position > 5) {
+        return { ok: false, triggerLanes: [] };
+      }
+      const spLane: LaneNumber = POSITION_TO_LANE[note.position - 1]!;
+      if (selfLane === null || spLane !== selfLane) {
+        return { ok: false, triggerLanes: [] };
+      }
+      const spState = self();
+      if (spState === undefined) {
+        return { ok: false, triggerLanes: [] };
+      }
+      const ready = spState.input.skills.some(
+        (s) =>
+          s.kind === "SP" &&
+          (s.ct == null || (spState.skillCt.get(s.id) ?? 0) === 0) &&
+          (s.staminaCost == null || spState.stamina >= s.staminaCost),
+      );
+      return { ok: ready, triggerLanes: ready ? [spLane] : [] };
+    }
+    case "someone_before_active": {
+      // 誰かがAスキル発動前（tg-before_active_skill_by_someone）。
+      // 現在ビートのノートが A ノート（noteType 2）で、そのレーンが A スキルを発動できる状態の時成立。
+      const note = ctx.currentNote;
+      if (note === null || note.noteType !== 2 || note.position < 1 || note.position > 5) {
+        return { ok: false, triggerLanes: [] };
+      }
+      const aLane: LaneNumber = POSITION_TO_LANE[note.position - 1]!;
+      const aState = states.find((s) => s.input.lane === aLane);
+      if (aState === undefined) {
+        return { ok: false, triggerLanes: [] };
+      }
+      const ready = aState.input.skills.some(
+        (s) =>
+          s.kind === "A" &&
+          (s.ct == null || (aState.skillCt.get(s.id) ?? 0) === 0) &&
+          (s.staminaCost == null || aState.stamina >= s.staminaCost),
+      );
+      return { ok: ready, triggerLanes: ready ? [aLane] : [] };
+    }
+    default: {
       // 動的パターン: status_<BuffKey>（自レーンが X 状態）/ stamina>=N / stamina<=N /
-      // someone_stamina<=N / combo<=N（テーブル外の数値）
+      // someone_stamina<=N / combo<=N / count_<unit/char>>=N / someone_<status>>=N
+      const mCount = /^count_([a-z_]+)>=(\d+)$/.exec(condition);
+      if (mCount && mCount[1] !== undefined && mCount[2] !== undefined) {
+        const key = mCount[1];
+        const n = Number(mCount[2]);
+        const members: readonly string[] = UNIT_MEMBERS[key] ?? [`char-${key}`];
+        const formed: readonly string[] = ctx.input.formationCharacterIds ?? [];
+        const count = members.filter((id: string) => formed.includes(id)).length;
+        return { ok: count >= n, triggerLanes: [] };
+      }
+      const mSomeoneGrade = /^someone_([a-z_]+)>=(\d+)$/.exec(condition);
+      if (mSomeoneGrade) {
+        const status = mSomeoneGrade[1] as BuffKey;
+        const grade = Number(mSomeoneGrade[2]);
+        const lanes = states
+          .filter((s) => {
+            const snap = snapshotOf(s);
+            const val = (snap as Record<string, number>)[status] ?? 0;
+            return val >= grade;
+          })
+          .map((s) => s.input.lane);
+        return { ok: lanes.length > 0, triggerLanes: lanes };
+      }
       const mStatus = /^status_([a-z_]+)$/.exec(condition);
       if (mStatus) {
         const lane = self();

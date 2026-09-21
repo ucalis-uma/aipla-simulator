@@ -195,14 +195,8 @@ export type EffectCondition =
    * 2 行目「自身が低下効果状態の時」。someone_down_group の主語違い）。
    */
   | "self_down_group"
-  /** 編成にユニットメンバーが N 人以上（tg-more_than_character_count-<unit>-<N>） */
-  | "count_liz>=1"
-  | "count_moon>=1"
-  | "count_sun>=1"
-  | "count_pajm>=1"
-  | "count_leader>=1"
-  | "count_tri>=1"
-  | "count_thrx>=1"
+  /** 編成にユニットメンバーまたは指定キャラが N 人以上（tg-more_than_character_count-<unit/char>-<N>） */
+  | `count_${string}>=${number}`
   // ---- Phase 8-B2（フォトスキルのマスタ準拠条件・engine 拡張）----
   /** 自レーンがダンス色（tg-position_attribute_dance） */
   | "self_dance_lane"
@@ -224,6 +218,12 @@ export type EffectCondition =
   | `combo<=${number}`
   /** 誰かがスタミナ N% 以下（tg-someone_stamina_lower-N） */
   | `someone_stamina<=${number}`
+  /** 誰かの状態が N 段階以上（tg-someone_status_effect_grade_higher_<type>-<N>） */
+  | `someone_${string}>=${number}`
+  /** 自身のSPスキル発動前（tg-before_special_skill） */
+  | "self_before_special"
+  /** 誰かのAスキル発動前（tg-before_active_skill_by_someone） */
+  | "someone_before_active"
   /**
    * 【Estimate: 常時発動近似】楽曲限定（tg-music-*）/ クリティカル発動時（tg-critical）/
    * 誰かがSP発動前（tg-before_special_skill_by_someone）/ 集目段数条件（tg-fan_engage_higher-N）/
