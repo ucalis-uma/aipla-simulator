@@ -63,7 +63,7 @@ import type {
 const PERMANENT_BEATS = 1_000_000_000;
 
 /** レーンの可変状態（research/13 §2） */
-interface LaneState {
+export interface LaneState {
   readonly input: LaneInput;
   /** 最大スタミナ（=デッキスタミナ。回復はここでクランプ・実測 order9 で確認） */
   readonly maxStamina: number;
@@ -79,6 +79,20 @@ interface LaneState {
   combo: number;
   /** このレーンに付与されたアクティブ効果（付与先=このレーン） */
   effects: ActiveEffect[];
+  /**
+   * 【2026-09-21 Phase 14-F・T5実測確定】前ビート終了時（ステップ10）に満了
+   * （remainingBeats=0）したインスタンスの退避先。ビート開始時に effects から
+   * ここへ移し、当ビートの終了まで 1 ビートだけ保持する。
+   * 実機仕様: 満了直後のビートに発動した延長効果（effect_extension）は
+   * この直前満了インスタンスも対象に含め、復活させる
+   * （T5 b86: sk-ski-05-onep-00-2「私が恋をするのなら」の vocal_high_1 +10 延長が
+   *   b85 終了時に満了した photo-L2-1「星見市高台」の vocal_boost 4段を復活。
+   *   実機は b86〜b99 でボーカルブースト 20段を表示し続けた＝復活がないと 17 になり矛盾。
+   *   S3 b60 の「同ビート満了バフも延長対象」（rem=0 に +7）の規則を、
+   *   満了ビートの**翌ビートに発動した延長**（ステップ7/8 側）へ一般化したもの）。
+   * 集計（aggregateBuffs/snapshotOf）には一切含まれない（復活時のみ effects に戻る）。
+   */
+  expiredThisBeat: ActiveEffect[];
   /** 継続型スタミナ回復/ダメージ（ステップ10で処理・research/13 §6） */
   scheduledRecoveries: Array<{ value: number; remainingBeats: number }>;
   /** skillId → 残CT（0=使用可） */
@@ -191,6 +205,7 @@ export function simulateTimeline(input: SimulateInput): TimelineResult {
     scoreCumAtSkillStart: 0,
     combo: 0,
     effects: [],
+    expiredThisBeat: [],
     scheduledRecoveries: [],
     skillCt: new Map<string, number>(),
     limitUsed: new Map<string, number>(),
@@ -227,7 +242,10 @@ function processBeat(
   ctx.currentNote = note;
 
   // ビート開始: 前ビートのステップ10で remaining が 0 になった効果を除去（§2）
+  // 【Phase 14-F】満了インスタンスは破棄せず expiredThisBeat へ退避（LaneState 参照）:
+  // 当ビートの延長効果が直前満了インスタンスを復活させうる（T5 b86 実測確定）。
   for (const state of states) {
+    state.expiredThisBeat = state.effects.filter((e) => e.remainingBeats <= 0);
     state.effects = state.effects.filter((e) => e.remainingBeats > 0);
     state.usedThisBeat.clear();
   }
@@ -263,6 +281,19 @@ function processBeat(
     }
   } else {
     settleSkillNote(note, ctx, states, activations, events);
+  }
+
+  // ---- 満了インスタンスの除去パス（ステップ8後・ステップ10前）----
+  // 【2026-09-21 Phase 14-F・T5/S1 実測確定】直前満了インスタンス（expiredThisBeat）の
+  // 延長復活が有効なのはステップ7/8（P前半・A/SP）の延長のみ:
+  // - T5 b86: L2 A（ステップ8）の +10 延長が b85 終了時満了の photo vb4段を復活（実機 vb=20 持続）
+  // - S1 b136: L2 P（ステップ11）の +7 延長は b135 終了時満了の vocal_up 3段を復活**しない**
+  //   （実機は b136 で消滅）。ステップ11 からは直前満了インスタンスが見えない。
+  // したがって除去パスはステップ8直後に置き、ステップ11 の延長は
+  // 「当ビートのステップ10で満了したインスタンス」（effects 内の rem=0）のみを対象とする
+  // （S3 b60 規則・従来どおり）。
+  for (const state of states) {
+    state.expiredThisBeat = [];
   }
 
   // ---- ステップ9: 全スキル・フォト・ライブボーナスの CT −1 ----
@@ -311,6 +342,9 @@ function processBeat(
   for (const state of orderedStates(states)) {
     activatePhaseSkills(state, "last", ctx, states, activations, events, beat);
   }
+
+  // 【デバッグ専用】ビート処理完了時点の内部バフインスタンス観測フック（types.ts 参照）
+  ctx.input.effectInspector?.(beat, states);
 
   const beatTrace: BeatTrace = {
     beat,
@@ -690,6 +724,44 @@ function isFirstPhaseCondition(condition: EffectCondition): boolean {
   );
 }
 
+/**
+ * 【2026-09-21 S1実測確定】ライブ中に値が変わらない静的条件（レーン属性・配置・編成人数・
+ * 楽曲限定等）。スキル単位トリガー無条件（マスタ levels[].triggerId=""）の P/フォトで
+ * 効果行条件がすべて静的なものは「前半発動タイプ」（S1 こころP「ゆらゆらドボーン！」:
+ * 実機で b1 にボーカル上昇が表示され、発動間隔が gap 49/50/50 = 前半発動の CT モデルと一致。
+ * 対照: 逆襲のドッキリ企画はスキル単位が tg-position_attribute_vocal のため後半発動・
+ * gap 50/50/35。スキル単位と効果行単位のトリガーは別物として扱う）。
+ */
+function isStaticLiveCondition(condition: EffectCondition): boolean {
+  return (
+    condition === "none" ||
+    condition === "battle_only" ||
+    condition === "self_vocal_lane" ||
+    condition === "self_visual_lane" ||
+    condition === "self_dance_lane" ||
+    condition === "self_center" ||
+    condition === "self_most_left" ||
+    condition === "self_most_right" ||
+    condition === "music_limited" ||
+    condition.startsWith("count_")
+  );
+}
+
+/**
+ * スキル単位ゲート評価から除外するタイミング系条件（2026-09-21）。
+ * 「A/SP 発動前」「クリティカル発動時」は発動窓が位相（前半/後半）と直交する特殊条件で、
+ * 後半では意味を持たないため、従来どおり行側の評価（isFirstPhaseCondition 等）に委ねる
+ * 【要追加実測: スキル単位がタイミング系のスキル（sk-rei-05-onep-00-2 等）の実機挙動】。
+ */
+function isTimingGateCondition(condition: EffectCondition): boolean {
+  return (
+    condition === "someone_before_special" ||
+    condition === "self_before_special" ||
+    condition === "someone_before_active" ||
+    condition === "critical_timing"
+  );
+}
+
 /** フォト装着制限（<サポータータイプのみ> 等）の判定。未知の制約文字列は制約なし扱い */
 export function restrictionAllows(restriction: string, role: LaneInput["role"]): boolean {
   const want: LaneInput["role"] | undefined =
@@ -738,13 +810,49 @@ function activatePhaseSkills(
     if (skill.restriction != null && !restrictionAllows(skill.restriction, state.input.role)) {
       continue; // 装着制限不一致（トレース省略・常時不発スキルのため毎ビート出ない）
     }
+    // 【2026-09-21 ユーザー確定（挙動確認済み）】スキル単位トリガー（SkillDef.condition =
+    // マスタ levels[].triggerId・スキルテキストの「1行目に条件＋改行」構造に相当）は、
+    // 効果行の条件とは別に**スキル全体の発動ゲート**として機能する: 不成立なら行条件の
+    // 成立如何にかかわらず発動しない（祭りに光る一番星 千紗 P「一生懸命、金魚すくい」
+    // sk-chs-05-yukt-00-2: 1行目「自身がビジュアルレーンの時」は3行目「自身が低下効果
+    // 状態の時 …」にも掛かり、ビジュアルレーン以外では不発）。
+    // 行独立評価（rowsHoldAny / 行ごとの適用可否）は「発動時にどの行を適用するか」の
+    // 規則として存続する（発動可否 = スキル単位ゲート / 行適用 = 行条件 の2層構造）。
+    // condition === "none"/undefined はゲートなし（無条件スキル・golden/フォト従来経路）。
+    // タイミング系は isTimingGateCondition で除外し従来の行側評価に委ねる。
+    if (
+      skill.condition !== undefined &&
+      skill.condition !== "none" &&
+      !isTimingGateCondition(skill.condition)
+    ) {
+      const gate = evaluateCondition(skill.condition, state.input.lane, states, ctx);
+      if (!gate.ok) {
+        continue; // スキル単位トリガー不成立 → 行条件の成立如何にかかわらず不発
+      }
+    }
     // 【2026-09-02 ユーザー確定・2026-09-03 サンプル3で修正】無条件行（none）を 1 つでも持つ
     // P/フォトは「前発動」タイプ: CT0 で自動発動する（祭り千紗 P3 = 1行目無条件+2行目条件式 が b1 発動）。
     // 全行条件式のスキルは「後発動」（条件成立まで後半で待つ・優 P3 = 不発の根拠）。
     // battle_only 行は通常ライブで適用不能のため無条件扱いしない（S3 L2「誰も知らない雲の向こうへ」
     // [combo>=50, battle_only] が b1 前半発動して limit=1 を消費し b50 発動を潰す誤りを修正。
     // T5「結婚への願望」[none, battle_only] は none 行があるため前発動のまま不変）。
-    const isUnconditional = skill.effects.some((e) => e.condition === "none");
+    const hasNoneRow = skill.effects.some((e) => e.condition === "none");
+    // 【2026-09-21 S1実測確定】スキル単位トリガー（SkillDef.condition = マスタ
+    // levels[].triggerId 由来）が無条件（triggerId 空 → "none"）かつ効果行条件が
+    // すべて静的（isStaticLiveCondition: レーン属性・配置・編成人数等・ライブ中不変）
+    // なら、無条件行を持たなくても「前半発動タイプ」として扱う
+    // （S1 こころP「ゆらゆらドボーン！」sk-kkr-05-mizg-02-3: スキル単位 triggerId 空・
+    // 効果行は両方 tg-position_attribute_vocal 由来の self_vocal_lane のみ →
+    // 実機 b1 にボーカル上昇が表示され発動ビート 1/50/100/149 = 前半発動の
+    // gap CT−1 系列と一致。旧実装は無条件行なし → 後半発動 b1/b51/b101/… で1ビートズレ）。
+    // 対照: スキル単位条件付き（過去の私へ = tg-combo-80 → 実測 b136 のみ後半発動、
+    // 逆襲のドッキリ企画 = tg-position_attribute_vocal → 後半・gap 50/50/35）は
+    // 従来どおり後半タイプ（condition ≠ "none" では本節は発火しない）。
+    // condition undefined（golden/フォト等の従来経路）は効果行ベース判定のみにフォールバック。
+    const isUnconditional =
+      hasNoneRow ||
+      (skill.condition === "none" &&
+        skill.effects.every((e) => isStaticLiveCondition(e.condition)));
     const hasBeforeSpecial = skill.effects.some((e) => e.condition === "someone_before_special");
     // 条件を満たしたレーン（target="trigger" の解決用・Phase 8-B5）。
     // 行ごとの条件は tryActivate 内で個別評価するため、ここでは
@@ -960,11 +1068,16 @@ function conditionsHold(
 }
 
 /**
- * 【2026-09-02 ユーザー確定】条件のみのスキル（後発動）の行独立評価:
+ * 【2026-09-02 ユーザー確定・2026-09-21 一部訂正】条件のみのスキル（後発動）の行独立評価:
  * いずれか 1 行でも条件成立なら ok（=発動可）。成立しなかった行は適用時に
  * スキップされる（applyEffect 呼び出し側の行フィルタ参照）。
- * 根拠: 祭り千紗 P2「一生懸命、金魚すくい」の 2 行目（スキル成功率上昇）は
- * 1 行目（ビジュアルレーン条件）に**非依存**で発動する（ユーザー実測）。
+ * 根拠: 祭り千紗 P「一生懸命、金魚すくい」（sk-chs-05-yukt-00-2）の 2 行目
+ * （スキル成功率上昇）は 1 行目（ビジュアルレーン条件）とは独立に**適用可否**が
+ * 決まる（ユーザー実測）。
+ * 【2026-09-21 訂正】ただし発動そのものはスキル単位トリガー（1行目条件）がゲートする:
+ * ビジュアルレーン以外では 2 行目条件が成立してもスキル自体は不発（同ユーザーが
+ * 挙動確認済み）。ゲートは activatePhaseSkills 冒頭で評価されるため、ここに到達する
+ * 時点でスキル単位条件は成立済み（または非設定 = golden/フォト従来経路）である。
  * battle_only は通常ライブで除外（P3a 仕様）。
  */
 function rowsHoldAny(
@@ -1266,6 +1379,13 @@ function evaluateCondition(
       if (mComboLE) {
         return { ok: ctx.globalCombo.value <= Number(mComboLE[1]), triggerLanes: [] };
       }
+      // コンボが N 以上（上記 case に列挙していない任意 N のフォールバック）。
+      // 【2026-09-21】既存データは 50/80/100 のみ（case 側で処理されるため T5 ゴールデン不変）。
+      // テストや新規マスタ値で未知の N が来たときに暗黙 false になるのを防ぐ（combo<=N と同じ流儀）。
+      const mComboGE = /^combo>=(\d+)$/.exec(condition);
+      if (mComboGE) {
+        return { ok: ctx.globalCombo.value >= Number(mComboGE[1]), triggerLanes: [] };
+      }
       // ビート時、N%の確率で（やる気士docs 専用フォト「ビート時、10%確率で」等）。
       // 発動試行（後半ビート）ごとに抽選。確定値ランは NeutralRng.nextFloat()=0 で常に成立
       //（既存の確率/成功率ゲートと同じ「全抽選成立」規約・T5 ゴールデンはこの条件を未使用で不変）
@@ -1560,7 +1680,15 @@ function applyEffect(
       // 【2026-09-21 S1解明】発動ビート終了時（ステップ10）に remainingBeats が 1→0 に減衰した
       // 同ビート満了バフも、ステップ11（後半）の延長スキル（例: S1 b60 すず P3 センター7延長）の
       // 対象となる（rem=0 に +7 で 7 となり、翌ビート以降 b61〜b67 まで残存・実機画面完全一致）。
-      // 前ビート以前に満了したバフはステップ1で除去済みのため rem>=0 で同ビート満了バフのみが安全に延長される。
+      // 【2026-09-21 Phase 14-F・T5実測確定】さらに、**前ビート終了時に満了した**インスタンス
+      // （expiredThisBeat・ビート開始時に effects から除去済みのもの）も延長対象とし、
+      // 加算後に残り 1 以上なら effects へ復帰させる（T5 b86: L2 A「私が恋をするのなら」
+      // vocal_high_1 +10 が b85 終了時満了の photo-L2-1 vocal_boost 4段を復活させ、
+      // 実機表示 vb=20 の b86〜b99 持続と一致。復活インスタンスは当ビートの
+      // ステップ10 で通常どおり減衰する）。
+      // ただし expiredThisBeat はステップ8直後の除去パスでクリアされるため、
+      // この復活はステップ7/8（P前半・A/SP）の延長でのみ起こる。ステップ11（P後半）の
+      // 延長は直前満了インスタンスを復活させない（S1 b136 実測・processBeat 参照）。
       // 【2026-09-04 サンプル3】継続回復の予約（scheduledRecoveries）も延長対象
       // （S3 のんびり: さらけ出す b13/b73 の +7 で回復窓が 36→43b に延びる実測）。
       for (const target of resolveTargets(effect.target, self, states, triggerLanes)) {
@@ -1568,6 +1696,20 @@ function applyEffect(
           if (active.remainingBeats >= 0 && active.remainingBeats < PERMANENT_BEATS) {
             active.remainingBeats += value;
           }
+        }
+        if (target.expiredThisBeat.length > 0) {
+          const stillExpired: ActiveEffect[] = [];
+          for (const expired of target.expiredThisBeat) {
+            // 満了インスタンスの remainingBeats は 0（PERMANENT は満了し得ない）。
+            // 延長後に 1 以上になるものだけ復活（= 延長値が 0 以下なら復活しない）
+            if (expired.remainingBeats + value > 0) {
+              expired.remainingBeats += value;
+              target.effects.push(expired);
+            } else {
+              stillExpired.push(expired);
+            }
+          }
+          target.expiredThisBeat = stillExpired;
         }
         for (const recovery of target.scheduledRecoveries) {
           if (recovery.remainingBeats >= 0) {

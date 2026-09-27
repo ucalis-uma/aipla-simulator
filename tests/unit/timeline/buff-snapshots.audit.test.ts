@@ -253,8 +253,9 @@ describe("Buff Snapshot Stage Audit (S1 / T5 / S3)", () => {
 
     it("T5 ゴールデンの総スコアと主要ビートのバフ段数が整合していること", () => {
       const res = runT5();
-      // 【2026-09-21 Phase 14】琴乃A(ccu)/かけがえのない二人(20%)復元・実効N-1 Decay適正化後確定値
-      expect(res.totalScore).toBe(17516522572);
+      // 【2026-09-27 Phase 14-F 採用で更新】前ビート満了バフの延長復活を実装した新確定値
+      // （旧 17,516,522,572）。根拠は research/26_data_integrity/phase14f_revival_audit.md
+      expect(res.totalScore).toBe(17521599508);
 
       const b3 = res.beats.find((b) => b.beat === 3)!;
       expect(snap(b3, 2).vocal_up_extreme).toBe(5);

@@ -1440,11 +1440,24 @@ function buildSkillsLevels(skillRows, cardRows, stats) {
       continue;
     }
     const levels = [];
+    // 【2026-09-21 S1実測確定】スキル単位トリガー条件（levels[].triggerId 由来・
+    // parseSkillLevel が効果行への伝播前に確定する condition）をスキルエントリの
+    // tc（条件テーブル番号）として保存する。engine は SkillDef.condition として受け取り、
+    // P/フォトの前半/後半発動タイプ判定に使う（triggerId 空 = "none" かつ効果行条件が
+    // すべて静的 → 前半発動タイプ。S1 ゆらゆらドボーン！の b1 発動・gap 49/50/49 の根拠）。
+    // triggerId は全 2043 スキルでレベル間不変を検証済み。変動時は先頭レベル採用 + 計上。
+    let skillCondIdx = -1;
     for (const lv of sk.levels ?? []) {
       const parsed = parseSkillLevel(sk, stats, lv.level);
       if (parsed === null) {
         parseFail += 1;
         continue;
+      }
+      const cIdx = idxOf(conditions, parsed.condition ?? "none");
+      if (skillCondIdx < 0) {
+        skillCondIdx = cIdx;
+      } else if (skillCondIdx !== cIdx) {
+        stats.skillTriggerLevelVaries += 1;
       }
       const row = {
         req: lv.requiredCardLevel ?? 0,
@@ -1458,12 +1471,14 @@ function buildSkillsLevels(skillRows, cardRows, stats) {
       if (parsed.limitPerLive != null) row.lim = parsed.limitPerLive;
       levels.push(row);
     }
-    skills.push({
+    const entry = {
       id: String(sk.id),
       kind: CATEGORY_TO_KIND[num(sk.categoryType, sk.id)],
       name: String(sk.name ?? sk.id),
       levels,
-    });
+    };
+    if (skillCondIdx >= 0) entry.tc = skillCondIdx;
+    skills.push(entry);
   }
   return { types, targets, conditions, skills, parseFail };
 }
@@ -1499,6 +1514,8 @@ async function main() {
     accessoriesNoParam: 0,
     photosMissingSkill: new Set(),
     photosUnsupportedAbility: new Set(),
+    /** スキル単位 triggerId がレベル間で変動したスキル数（0 前提・変動時は先頭レベル採用） */
+    skillTriggerLevelVaries: 0,
   };
 
   const charts = buildCharts(chartRows);
@@ -1570,6 +1587,11 @@ async function main() {
     `unlocks: スキル枠解放 [${unlocks.skillSlotUnlockLevels}]・フォト枠解放 [${unlocks.photoSlotUnlockLevels}]・スキルLv要求表 ${Object.keys(unlocks.skillLevelRequirements).length} 枠`,
   );
   console.log(`skills_levels: ${skillsLevels.skills.length} スキル × Lv1-6（型 ${skillsLevels.types.length}/対象 ${skillsLevels.targets.length}/条件 ${skillsLevels.conditions.length}・解析失敗 ${skillsLevels.parseFail}）`);
+  if (stats.skillTriggerLevelVaries > 0) {
+    console.error(
+      `[warn] スキル単位 triggerId がレベル間で変動: ${stats.skillTriggerLevelVaries} スキル（tc は先頭レベル採用）`,
+    );
+  }
   console.log(`photos: ${photosMaster.length} 枚（スキル付き ${photosMaster.filter((p) => p.skills.length > 0).length}・撮影キャラ付き ${photosMaster.filter((p) => p.focusCharacterId).length}）・フォトスキル ${Object.keys(photoSkillsById).length} 種`);
   console.log(`未対応効果名: ${stats.unsupportedEffects.size} 種`);
   console.log(`未対応ターゲット: ${stats.unsupportedTargets.size} 種`);

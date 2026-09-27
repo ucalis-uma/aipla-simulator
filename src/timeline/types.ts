@@ -164,6 +164,8 @@ export type EffectCondition =
   | "combo>=100"
   // ---- Phase 9（ライブボーナス等のトリガー tg-someone_status-* / tg-combo-90 / 編成人数）----
   | "combo>=90"
+  /** コンボが N 以上（任意 N・engine は case 列挙外を正規表現フォールバックで評価） */
+  | `combo>=${number}`
   | "someone_critical_rate_up"
   | "someone_beat_score_up"
   | "someone_a_skill_score_up"
@@ -364,6 +366,19 @@ export interface SkillDef {
   probabilityPermil?: number;
   /** ライブ中の発動回数上限（1=「ライブ中1回のみ」。null は上限なし） */
   limitPerLive?: number | null;
+  /**
+   * 【2026-09-21 S1実測確定】スキル単位の発動トリガー条件（マスタ levels[].triggerId 由来）。
+   * P/フォトの前半/後半タイプ判定に使用する:
+   * - "none"（マスタで triggerId 空）かつ効果行条件がすべて静的（レーン属性・配置・
+   *   編成人数等・ライブ中不変）→ 前半発動タイプ（b1 開幕ウェーブで発動し、
+   *   発動間隔は gap CT−1 系列になる。S1 こころP「ゆらゆらドボーン！」: 実機の b1 表示 +
+   *   発動間隔 49/50/50 と完全一致）。
+   * - それ以外（スキル単位条件付き: 逆襲のドッキリ企画 = スキル単位 tg-position_attribute_vocal
+   *   → 後半発動・gap 50/50/35、過去の私へ = tg-combo-80 → 後半）→ 従来どおり後半タイプ。
+   * undefined = データなし（golden/フォト等の従来経路）→ 従来の効果行ベース判定にフォールバック。
+   * ※ 効果行の条件（SkillEffect.condition）は行ごとの適用可否ゲートとして従来どおり機能する。
+   */
+  condition?: EffectCondition;
   effects: SkillEffect[];
 }
 
@@ -521,6 +536,13 @@ export interface SimulateInput {
    * ライブボーナスのユニット人数条件（count_liz>=1 等）の判定に使用。
    */
   formationCharacterIds?: readonly string[];
+  /**
+   * 【デバッグ専用・2026-09-21】ビート処理完了後（ステップ11終了時点）に内部の
+   * バフインスタンス状態（sourceSkillId・残りビート付き）を観測するフック。
+   * 実測突合ツール（tools/）専用。省略時は何もしない（本番計算へ一切影響しない）。
+   * 注意: states はエンジン内部の可変状態への参照（観測時にコピーして使うこと）。
+   */
+  effectInspector?: (beat: number, states: readonly import("./engine.js").LaneState[]) => void;
 }
 
 /** 発動1件のトレース（T4: 発動ログとの突合用） */

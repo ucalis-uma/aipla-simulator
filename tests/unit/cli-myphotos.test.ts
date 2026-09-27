@@ -104,14 +104,15 @@ describe("CLI myPhotos/photoEquip 解決（Phase 8-B9）", () => {
     expect(r.stderr).not.toContain("[warn]");
   });
 
-  it("T5 サンプル（myPhotos なし）は確定値 2,580,397,520 のまま（Phase 14 改ざん復元・Decay適正化後）", () => {
+  it("T5 サンプル（myPhotos なし）は確定値 2,581,114,209（Phase 14-F 満了バフ復活の採用後）", () => {
     const out = execFileSync(
       "npx",
       ["tsx", path.join(repoRoot, "src/cli/simulate.ts"), "--input", "examples/t5-sample.json", "--n", "0", "--crit-rate", "0"],
       { encoding: "utf-8", cwd: repoRoot, shell: true },
     );
-    // 【2026-09-21 Phase 14】琴乃A(ccu)/かけがえのない二人(20%)復元・実効N-1 Decay適正化後確定値。
-    expect(JSON.parse(out).confirmed.totalScore).toBe(2580397520);
+    // 【2026-09-27 Phase 14-F 採用で更新】前ビート満了バフの延長復活を実装した新確定値
+    // （旧 2,580,397,520）。根拠: research/26_data_integrity/phase14f_revival_audit.md
+    expect(JSON.parse(out).confirmed.totalScore).toBe(2581114209);
   });
 
   it("frames ステータスのみの myPhotos も photos 側へ統合されスコアに反映される（Phase 8-B10）", () => {

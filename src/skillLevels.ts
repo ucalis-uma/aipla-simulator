@@ -61,6 +61,13 @@ export interface SkillLevelsEntry {
   id: string;
   kind: SkillDef["kind"];
   name: string;
+  /**
+   * 【2026-09-21 S1実測確定】スキル単位トリガー条件の条件テーブル番号
+   * （マスタ levels[].triggerId 由来・全レベル共通であることを全 2043 スキルで検証済み。
+   * triggerId 空 = "none"）。旧データ（フィールド欠落）は undefined = データなし
+   * → engine は従来の効果行ベース判定にフォールバックする。
+   */
+  tc?: number;
   levels: PackedLevel[];
 }
 
@@ -116,7 +123,7 @@ export function decodeSkillLevel(
     if (e.cf !== undefined) out.confidence = e.cf;
     return out;
   });
-  return {
+  const def: SkillDef = {
     id: entry.id,
     name: entry.name,
     kind: entry.kind,
@@ -128,6 +135,12 @@ export function decodeSkillLevel(
     limitPerLive: row.lim ?? null,
     effects,
   };
+  // スキル単位トリガー条件（tc 欠落の旧データは undefined のまま = データなし）
+  const skillCondition = entry.tc !== undefined ? data.conditions[entry.tc] : undefined;
+  if (skillCondition !== undefined) {
+    def.condition = skillCondition as SkillEffect["condition"];
+  }
+  return def;
 }
 
 /**

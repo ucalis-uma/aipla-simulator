@@ -57,8 +57,10 @@ describe("UI pipeline（build_ui.mjs と同一のデータ形状）", () => {
       rng: new NeutralRng(),
       criticalProvider: () => false,
     });
-    // 【2026-09-21 Phase 14】改ざん復元（琴乃A ccu/かけがえのない二人 20%）・実効N-1 Decay適正化に伴う新確定値: 2,580,397,520
-    expect(res.totalScore).toBe(2580397520);
+    // 【2026-09-27 Phase 14-F 採用で更新】前ビート満了バフの延長復活を実装した新確定値
+    // （旧 2,580,397,520・改ざん復元＋実効N-1 Decay適正化に伴う値）。
+    // 根拠: research/26_data_integrity/phase14f_revival_audit.md
+    expect(res.totalScore).toBe(2581114209);
     expect(laneBreakdown(res.beats)).toHaveLength(5);
   });
 

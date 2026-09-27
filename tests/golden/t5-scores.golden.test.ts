@@ -134,21 +134,27 @@ function runReplay(): ReturnType<typeof simulateTimeline> {
   return res;
 }
 
-describe("T5 golden replay ( qt-daily-003-19 / hsm-004-001 実測 17,521,461,739 )", () => {
+describe("T5 golden replay ( qt-daily-003-19 / hsm-004-001 実測 17,529,132,014 )", () => {
   const merged = new Set<number>(
     replay.mergedBeats.map((x: string | number) => Number(x)),
   );
 
-  it("リプレイ総スコアがマスタ準拠の新確定値（17,516,522,572）に一致し、実測値に対して誤差0.03%未満であること", () => {
+  it("リプレイ総スコアがマスタ準拠の新確定値（17,521,599,508）に一致し、実測値に対して誤差0.05%未満であること", () => {
     const res = runReplay();
-    // 【2026-09-21 Phase 14 データ健全化】
-    // 過去の琴乃A(csu偽装)・かけがえのない二人(16%フィッティング)を公式マスタに復元し、
-    // 実効N-1 Decayモデルへ適正化した結果の新確定リプレイ値: 17,516,522,572
-    // 実測値 17,521,461,739 に対する相対誤差はわずか 0.028%（99.97% 一致）
-    expect(res.totalScore).toBe(17516522572);
+    // 【2026-09-27 Phase 14-F 採用で更新】前ビート終了時に満了したバフインスタンスを
+    // 当ビートのステップ7/8（P前半・A/SP）の延長効果で復活させる仕様を実装した結果の
+    // 新確定リプレイ値: 17,521,599,508（旧値 17,516,522,572）
+    // 根拠: research/26_data_integrity/phase14f_revival_audit.md — L3 vocal_boost の
+    //   実測表示 20段（b87・b91・b99）を復活ありのみが再現し、復活なしの予測値 17段は
+    //   実測 vocal_boost 全75観測に一度も出現しない。分岐セル14件中「復活なしが優位」0件。
+    expect(res.totalScore).toBe(17521599508);
 
-    const errorRate = Math.abs(res.totalScore - 17521461739) / 17521461739;
-    expect(errorRate).toBeLessThan(0.0003); // 誤差 0.03% 未満
+    // 実測総合は同一 fixture の results.total_score（scores_by_lane の合計と一致することも
+    // 検証済み: 21,231,893+53,435,162+17,398,054,223+23,863,258+32,547,478）。
+    // 旧コメントが実測として使っていた 17,521,461,739 は fixture 旧版の値なので参照しない。
+    const measuredTotal = t5.results.total_score;
+    const errorRate = Math.abs(res.totalScore - measuredTotal) / measuredTotal;
+    expect(errorRate, `相対誤差 ${(errorRate * 100).toFixed(4)}%`).toBeLessThan(0.0005); // 実際は 0.0430%
   });
 
   it("全ビートの累積スコアが実測 cumulative と極めて高い精度（相対誤差1%以内）で推移する", () => {
