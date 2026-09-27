@@ -3193,6 +3193,9 @@ Phase 14-F 採用後の現況（`npx vitest run` 504 passed / 1 skipped、`npm r
 golden: replay 17,521,599,508 / confirmed 2,581,114,209）を前提に、優先度順に整理した残課題。
 各項目の引継ぎは `prompts/phase15-followups.md` を使う。
 
+> **【2026-09-27 下旬セッションで 15-1 / 15-2 / 15-3 / 15-5 は完了】**（下記「Phase 15-1 / 15-2 / 15-3 / 15-5」節）。
+> 残りは **15-4**（14-F の S1 単独寄与トレース）と **15-6**（S4 再撮影・要ユーザー確認）のみ。
+
 | # | 残課題 | 現状の証拠・出発点 |
 |---|---|---|
 | 15-1 | **S1 b136 付近の「Step 11 では満了バフが復活しない」仮定の実測検証**（Phase 14-F 宿題） | 実装コメント側の根拠に依存しており、S1 b136 単独の独立検証が未実施。`samples_decay_audit.md` §4.2 の S1 L1 vocal_up 消失を再確認 → `phase14f_revival_audit.md` §6 手順 A に従い measured/sim セルを直接照合 |
@@ -3207,3 +3210,84 @@ golden: replay 17,521,599,508 / confirmed 2,581,114,209）を前提に、優先�
   差分の符号と件数で説明できること（`phase14f_revival_audit.md` §5-3 の失敗教訓）。
 - 実測側ファイル（`aipura_nox/サンプル*/`）の既存データは変更・削除しない（修復は追記のみ）。
 - `tools/debug_s1_l1_vocalup.ts`（S1 b136 の延長・消滅を直接確認できる監査ツール）を残置。
+
+---
+
+## Phase 15-1 / 15-2 / 15-3 / 15-5（2026-09-27 セッション: Step 11 非復活の一次確定・一致率定義の3層化・UI再ビルド）
+
+### 完了条件と結果
+
+| # | 完了条件 | 結果 |
+|---|---|---|
+| 15-1 | Step 11 が満了バフを復活させないことを engine 自己説明以外で確定 | **現行モデル 14/14 セル一致・復活模型 0/14** → 手順 A クローズ |
+| 15-2 | PHASE_LAG_ACTIVATION の方針を決定しクローズ | **①監査側許容**（engine は PRE 維持）を決定・実装 |
+| 15-3 | 表示仕様・単位系のセルを明示リストで除外（黙示 skip 作らない） | `display_spec_rules.json` v1 を作成、両監査スクリプトが読む形で実装 |
+| 15-5 | UI 再ビルド + スモーク 43 件通過 + golden 更新根拠の記録 | 4,454KB 再ビルド / 43 passed / 3 箇所更新 |
+| 全件 | `npx vitest run` / `npm run typecheck` 不退行 | **504 passed / 1 skipped（41 ファイル）**・typecheck 0 エラー（T5 golden 4 値は無変更） |
+
+### 15-1: 専用監査ツール `tools/audit_s1_b136_step11.ts`（新規）
+
+`ctx.input.effectInspector`（14-E で追加したステップ11後の検証フック）を全ビートに拡張し、
+`buffStats[key].instances[].remainingBeats` をレーン別に記録して「復活」を直接観測する。
+`NAME_TO_BUFF_KEY` で実測表示名（ボーカル上昇 等）と内部キーを対応付け、
+`window_rows`（実測 / sim / 差分）を JSON に落とす。console は ASCII のみ（PowerShell cp932 対策）。
+
+**対照実験**（engine を一時編集して除去パスをステップ11後へ移動 → `--label _step11revival` で trace 取得 → **即復元**）:
+
+| 観測 | 現行（復活なし） | 復活模型 | 実測 |
+|---|---|---|---|
+| b136 開始時 `rem=0` のインスタンス | L1 `vocal_up` 3段 / L3 `tension_up` 6段 | 0→7 に復活 | 表示されない |
+| b137–b143 の 14 セル（2レーン×7ビート） | **14 一致** | 0 一致（14 不整合） | 0 |
+| 乱数中立トータル | 122,635,627 | 133,595,840（**+8.94%**） | — |
+
+b136 で莉央 P3 Lv2 の全員延長は生存 13 本に正しく到達（rem +6 = 延長7 − 減衰1）していたため、
+分岐は「満了本を復活させるか」の一点に分離でき、**ステップ11は復活させない**で確定。
+証拠: `research/26_data_integrity/phase14f_revival_audit_appendix.md`、
+`s1_b136_step11_audit.json` / `s1_b136_step11_audit_step11revival.json`。
+`fresh vs canonical trace` の差分セルは現行 16 / 復活模型 23（audit 実行系の RNG 整合に由来する別問題。
+主目的の復活判定には影響しないが 15-4 で追う）。
+
+### 15-2 / 15-3: 一致率の3層定義（`research/25_buff_audit/match_rate_definition.md`）
+
+`display_spec_rules.json`（v1）を定義元として作成し、`audit_tiers.py` 経由で
+`run_audit_v3.py`（T5）と `26_data_integrity/run_audit_post_decay.py`（S1/S2/S3）が読む構成にした。
+diff の各セルに `rule_id` / `tier`、summary に `tiers`（strict/adjusted/residual + `rule_hit_counts`）を追加。
+**strict の数値定義は変えていない**（過去レポートとそのまま比較可能）。
+
+| サンプル | セル | strict | adjusted | **residual** | 内訳（rule_hit） |
+|---|---:|---|---|---:|---|
+| S1 | 1,695 | 95.75% | 100.0% | **0** | 位相 72 |
+| S2 | 1,367 | 89.76% | 100.0% | **0** | 超化 36 / SP永続 74 / 位相 30 |
+| S3 | 1,668 | 91.73% | 100.0% | **0** | 超化 85 / 位相 53 |
+| T5 | 3,411 | 78.83% | 100.0% | **0** | フラグ単位 653 / 位相 69 |
+
+- **`combo_continue` 653件は「段数の相違」ではなかった**：実測は有無のみ（stage=null）。
+  **表示の有無**で照合し直して全セル一致。有無が食い違えば `FLAG_PRESENCE_MISMATCH` として
+  residual に落とす設計なので、検証自体は厳密化している。
+- 14-D まで S1/S2 に 140 件あった `RESIDUAL_AMPLIFY_STACKING` は 14-F で消滅済み（rules JSON に
+  「再出現したら 14-F の退行扱い」と注記）。
+- `known_anomalies.json` は作らず、rules JSON がその役割を持つ（PLAN.md §16 の趣旨は満たす）。
+
+### 15-5: 単一HTML UI 再ビルドと golden 更新
+
+`node tools/build_ui.mjs` → `npx vitest run tests/ui`。14-E/14-F がバンドルに反映され
+`tests/ui/smoke.test.ts` の 3 アサートが落ちたため更新（**入力は同一、差分はエンジンbundleのみ**）:
+
+| 箇所 | 旧 | 新 |
+|---|---|---|
+| T5 プリセット確定値（2箇所） | 2,446,493,589 | **2,447,170,546**（+0.0277%） |
+| 設定 JSON import ケース | 112,623,系 | **112,669,861**（+0.04%） |
+
+符号・magnitude が 14-F の T5 寄与（+0.029%）と符合することを確認済み。
+`prompts/continue-session.md` §2 の「旧エンジン値」注記を新値へ更新した。
+
+### 変更ファイル
+
+- 新規: `tools/audit_s1_b136_step11.ts` / `research/25_buff_audit/{audit_tiers.py,display_spec_rules.json,match_rate_definition.md}` / `research/26_data_integrity/phase14f_revival_audit_appendix.md` / `s1_b136_step11_audit*.json`
+- 変更: `research/25_buff_audit/run_audit_v3.py` / `research/26_data_integrity/run_audit_post_decay.py`（tier 分類）/ `diff_*_v2.*`, `diff_t5_v3.*`（`rule_id`/`tier`/`summary.tiers` 追加・段数値は無変化）/ `tests/ui/smoke.test.ts` / `PLAN.md` §14 / `prompts/{phase15-followups,continue-session}.md` / `research/25_buff_audit/audit_summary.md`
+- engine・data・golden は**無変更**（`git status` に `src/` の差分なし）
+
+### 残課題（次セッション）
+
+- **15-4**: 14-F の S1 単独寄与トレース（手順 B）。上記の audit trace 差分 16 セルの原因もここで切り分ける。
+- **15-6**: S4 再撮影（aipura_nox 側・ライブチケット消費のため着手前にユーザー確認必須）。

@@ -24,3 +24,4 @@ src-tauri/gen/
 
 tools/backfill/out/
 scratch/
+__pycache__/

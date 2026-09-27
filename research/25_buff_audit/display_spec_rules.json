@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "updated": "2026-09-27",
+  "decided_by": "Phase 15-2（撮影/sim 位相ポリシー） / Phase 15-3（表示仕様・永続SP・フラグ単位の明示除外）",
+  "definition_doc": "research/25_buff_audit/match_rate_definition.md",
+  "policy": {
+    "strict": "段数の完全一致のみを一致とする旧来定義。後方互換のため match_rate_pct に保持（T5 78.8% / S1 95.75% など既存レポートと同じ顔で比較できる）",
+    "adjusted": "strict の不一致セルのうち、ゲーム表示仕様・段数の単位系・撮影とスナップショットの位相で説明がつくものを一致に含めた値。以後の監査の主指標（residual 率）はここから導出する",
+    "residual": "adjusted でも説明できないセル = 真の不一致。Phase 16 の減少対象はこれのみ（黙示 skip 禁止・PLAN.md §16）",
+    "rule": "explainer は必ず下の rules[].id のいずれかに分類し、未分類 = residual とする（『Explanation Required』を破棄しない）"
+  },
+  "flag_keys": [
+    "combo_continue",
+    "tension_limit",
+    "combo_score_limit",
+    "critical_coeff_limit",
+    "visual_limit",
+    "stamina_continuous_recovery",
+    "stealth"
+  ],
+  "rules": [
+    {
+      "id": "FLAG_PRESENCE",
+      "tier": "explained_unit",
+      "label": "段数を持たないフラグ系バフ（単位系）",
+      "tags": ["FLAG_NOT_STAGED"],
+      "condition": "buff_key が flag_keys に含まれ、実測側に同名エントリ（stage=null）が記録されている",
+      "comparison": "presence",
+      "evidence": "measured_data のコンボ継続等は stage=null（有無のみ記録）。sim は段数ではなくフラグ保持のため、段数一致判定は構造的に成立しない。T5 では sim>0 / 実測は SPECIAL_EFFECTS 側へ分離記録のため 653 セルが機械的に不一致化していた（=単位の不一致であって段数の相違ではない）"
+    },
+    {
+      "id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
+      "label": "超化の別建て表示（表示10段 / 実効+5段）",
+      "tags": ["EXTREME_DISPLAY_VS_EFFECTIVE", "EXTREME_DISPLAY_SPEC"],
+      "condition": "extreme 系キーで measured=10 かつ sim=5",
+      "evidence": "ゲームUIは超化を単独10段として表示し、スコア計算への寄与は+5段。simは実効段数を返す（T5 audit_summary.md 既知の不一致パターン1）"
+    },
+    {
+      "id": "CRITICAL_COEFF_MERGE",
+      "tier": "explained_display_spec",
+      "label": "クリティカル係数上昇の超化合算表示",
+      "tags": ["CRITICAL_COEFF_MERGE"],
+      "condition": "critical_coeff_up で measured=5 / sim=10（+5）",
+      "evidence": "simはクリティカル係数上昇超化（+5段）を critical_coeff_up に合算するが、実測UIは別建て表示（audit_summary.md 既知の不一致パターン2）"
+    },
+    {
+      "id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
+      "label": "SPスキル永続バフの常時表示",
+      "tags": ["PERSISTENT_SP_BUFF"],
+      "condition": "focus 等で measured=常時1 / sim=条件成立ビートのみ1",
+      "evidence": "集目SPは実測では全ビート表示、simは『スコアアップ発動ビートのみ』設定（audit_summary.md 既知の不一致パターン3）"
+    },
+    {
+      "id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
+      "label": "発動ビートの位相（実測=POST / sim=PRE）",
+      "tags": ["PHASE_LAG_ACTIVATION"],
+      "condition": "当該ビートにsim側の発動があり、実測段数がsim段数より発動分だけ大きい",
+      "accepted_policy": "①監査側の許容（エンジン側 PRE 保持を維持）。スクショはスキル発動後に撮影されるため POST を映す。sim输出をPOSTに寄せるとスコア計算（発動ビートからの適用）と乖離するため、表示位相として明示計上し真の不一致からは外す。判定は strict（不一致として件数を表示）＋adjusted（一致に含める）の二重計上で可視化する",
+      "evidence": "S1 b130 L4 combo_score_up（実測6/sim0・sim側b130発動記録あり）ほか、T5 で202セル"
+    },
+    {
+      "id": "PHASE_LAG_DECAY",
+      "tier": "explained_display_phase",
+      "label": "満了ビートの位相（実測=POST(0) / sim=PRE(+段)）",
+      "tags": ["DECAY_TIMING_LAG"],
+      "condition": "満了直後ビートで sim 段数が実測（=0）より保持数分だけ大きい",
+      "evidence": "S1 b136 L1 vocal_up（実測0/sim3・Phase 15-1 でステップ11復活でないことを一次実測14セルで確定）ほか、T5 で21セル"
+    },
+    {
+      "id": "RESIDUAL",
+      "tier": "residual",
+      "label": "未説明（真の不一致）",
+      "tags": ["BUFF_STAGE_MISMATCH", "AMPLIFY_OR_OVERLAP_ON_BEAT", "AMBIGUOUS_DISPLAY_NAME", "MISSING_MEASURED_EFFECTS", "FLAG_PRESENCE_MISMATCH", "UNCLASSIFIED"],
+      "note": "RESIDUAL_AMPLIFY_STACKING は Phase 14-F（expiredThisBeat 復活）で解消済みのため、以後の再実行では出現しないはず。出現した場合は14-Fの退行として扱う"
+    }
+  ]
+}

@@ -9,9 +9,9 @@
 |---|---|
 | T5 golden（replay 総合・`t5-scores.golden.test.ts`） | **17,521,599,508**（実測 17,529,132,014 に対し誤差 0.043%） |
 | T5 golden（confirmed・`cli-myphotos` / `ui-pipeline` / `buff-snapshots.audit`） | **2,581,114,209** |
-| バフ監査一致率 | S1 95.75% / S2 89.76% / S3 91.73% / T5 2,689/3,411（78.8%） |
+| バフ監査一致率 | **3層定義に更新**（`research/25_buff_audit/match_rate_definition.md`）。strict: S1 95.75% / S2 89.76% / S3 91.73% / T5 78.83% → **adjusted: 4サンプルとも100%・residual 0件** |
 | テスト | `npx vitest run` **504 passed / 1 skipped**（41 ファイル）、`npm run typecheck` 0エラー |
-| 単一HTML UI | `dist/aipura_simulator.html` は **2026-09-21 ビルド（Phase 14-D 時点）＝旧エンジン**。要再ビルド（15-5） |
+| 単一HTML UI | `dist/aipura_simulator.html` は **2026-09-27 再ビルド済み（14-E/14-F 反映・4,454KB）**。UI確定値 golden は `2,447,170,546` / `112,669,861`（旧 2,446,493,589 / 112,623,系） |
 
 基準値の根拠: `research/12_implementation_log.md` Phase 14-F、`research/26_data_integrity/phase14f_revival_audit.md`。
 **この 2 値を変えたくなった場合は、まず §規律 を読むこと**（スコア合わせのフィッティングは禁止）。
@@ -39,7 +39,15 @@
 
 ## 1. 残課題（優先度順）
 
-### 15-1（最重要）S1 b136 における「Step 11 では満了バフが復活しない」仮定の独立検証
+### 15-1 S1 b136 における「Step 11 では満了バフが復活しない」仮定の独立検証 ✅完了(2026-09-27)
+
+**完了記録**: 専用ツール `tools/audit_s1_b136_step11.ts`（新規）で作成した対照2本
+（`s1_b136_step11_audit.json` / `s1_b136_step11_audit_step11revival.json`）により、
+**現行モデル（Step 11 は満了バフを復活させない）が b137〜b143 の一次実測 14 セルすべてと一致、
+復活模型は 0/14**（実測 0 のセルに 3段・6段が立つ／中立スコアも +8.94% 膨らむ）と確定。
+手順 A はクローズ。詳細と再現手順は `research/26_data_integrity/phase14f_revival_audit_appendix.md`。
+対照実験で一時的に engine を編集したが、取得後に復元済み（`git status` に engine の差分なし）。
+
 Phase 14-F の `expiredThisBeat` 復活は Step 7/8 だけを対象にし、Step 11（同ビート満了バフ延長）は
 対象外にしている。この境界は **実装コメントの記述に依存**しており、S1 b136 の実測セルで直接
 裏取りしていない（`phase14f_revival_audit.md` §6 手順 A が未実施）。
@@ -61,13 +69,30 @@ Phase 14-F の `expiredThisBeat` 復活は Step 7/8 だけを対象にし、Step
 満了インスタンスを復活させていないことが測れていれば、`phase14f_revival_audit.md` §6 手順 A を
 「実施済み」に更新してクローズしてよい。engine の行番号は動くので `expiredThisBeat` で検索すること。
 
-### 15-2 PHASE_LAG_ACTIVATION の方針決定（S1 72 / S2 30 / S3 53 件＋T5 多数）
+### 15-2 PHASE_LAG_ACTIVATION の方針決定 ✅完了(2026-09-27・①採用)
+
+**決定**: ①**監査側で許容**（エンジン側は PRE 保持を維持）。③（sim の位相を POST に寄せる）は不採用。
+理由はスコア計算の発動→加算順と表示値の意味が二重にずれるため。詳細は
+`research/25_buff_audit/match_rate_definition.md` §3。
+実装は 3 層定義の **adjusted 層**として行い、位相セルは `explained_display_phase` に明示計上した
+（S1 72 / S2 30 / S3 53 / T5 69 = 合計 224 セル）。規則は `display_spec_rules.json` の
+`PHASE_LAG_ACTIVATION` / `PHASE_LAG_DECAY`（黙示 skip ではなく JSON 側の明示リスト）。
+
 発動ビートのセルで measured=即時反映・sim=翌ビート反映となる差。実装上は意図的（バフは発動ビートの
 スコアに反映され、表示は翌ビート）だが、監査では「不一致」として計上され続けている。
 → ①監査側で許容（表示位相の別カテゴリへ整理）②sim の snapshot 発行を1ビート早める ③実測の撮影位相を再定義
 のいずれかを選んで**クローズ**する。決定は `research/25_buff_audit/` の監査スクリプトと md に記録。
 
-### 15-3 EXTREME_DISPLAY_VS_EFFECTIVE / PERSISTENT_SP_BUFF の扱い（表示系）
+### 15-3 EXTREME_DISPLAY_VS_EFFECTIVE / PERSISTENT_SP_BUFF の扱い ✅完了(2026-09-27・文書化＋明示除外)
+
+**決定**: エンジンで模倣せず**文書化して明示除外**。除外リストは
+`research/25_buff_audit/display_spec_rules.json`（v1・規則ごとに condition と evidence を持つ）。
+`known_anomalies.json` は未作成で、同等の役割をこの rules JSON が担う（コード側に黙示 skip なし／
+どの規則にも入らないセルは `UNCLASSIFIED` として residual に残る設計）。
+ヒット数: 超化表示 S2 36 + S3 85 / SP永続表示 S2 74 / フラグ単位 T5 653（＝`combo_continue` は
+**段数ではなく表示の有無で照合**し、有無が食い違えば `FLAG_PRESENCE_MISMATCH` として residual に落とす。
+T5 は 653 セルすべて有無一致＝真の不一致 0）。
+
 S3 `visual_up_extreme` L4 = 87件、S2 `sp_skill_score_up` L3 = 74件、S2 `PERSISTENT_SP_BUFF` = 74件が dominant。
 表示仕様（上限 clamp・非表示バフ）側の問題でエンジン修正の余地は小さいとみられる。
 → **文書化して監査除外リストに入れる**か、エンジンで模倣するかの判断。除外する場合は
@@ -78,7 +103,17 @@ S2/S3 は HEAD/採用後でバフスナップショット差分 0セルを確認
 消えているため、14-F 単独の寄与を単独トレースで示せていない（`phase14f_revival_audit.md` §6 手順 B）。
 → HEAD と 14-F 採用後で S1 のみ trace を突き合わせ、差分セルを全件列挙してメモ化。
 
-### 15-5 単一HTML UI の再ビルド（旧エンジンが配布されている状態の解消）
+### 15-5 単一HTML UI の再ビルド ✅完了(2026-09-27)
+
+`node tools/build_ui.mjs`（4,454KB）→ `npx vitest run tests/ui` **43 passed**。
+エンジン変更（14-E/14-F）が UI バンドルに反映され、UI 確定値 golden が動いたため
+`tests/ui/smoke.test.ts` の 3 箇所を更新（入力・撮影条件は同一で差分はエンジン側のみの寄与）:
+
+| 箇所 | 旧（2026-09-21 ビルド） | 新（2026-09-27 ビルド） |
+|---|---|---|
+| T5 プリセット確定値 | 2,446,493,589 | **2,447,170,546**（+0.0277%・14-F の T5 寄与 +0.029% と同符号同 magnitude） |
+| 設定 JSON import ケース | 112,623,系 | **112,669,861**（+0.04%） |
+
 ```
 node tools/build_ui.mjs && npx vitest run tests/ui
 ```

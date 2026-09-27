@@ -86,8 +86,11 @@ describe("単一HTML UI スモーク", () => {
     expect((document.querySelector("#results") as HTMLElement).hidden).toBe(false);
     const kpi = document.querySelector("#kpi-root")!.textContent ?? "";
     expect(kpi).toContain("確定値");
-    // 【2026-09-21 Phase 14】琴乃A(ccu)/かけがえのない二人(20%)復元・実効N-1 Decay適正化後のUI確定値: 2,446,493,589
-    expect(kpi).toContain("2,446,493,589");
+    // 【2026-09-27 Phase 15-5】dist 再ビルドで Phase 14-E（スキル単位トリガー）/ 14-F（満了バフ延長復活
+    //   expiredThisBeat）が UI バンドルに反映されたため 2,446,493,589 → 2,447,170,546（+0.0277%）。
+    //   14-F の T5 replay への寄与（+0.029%）と同符号・同 magnitude で、差分はエンジン側のみの寄与。
+    //   （旧値は 2026-09-21 Phase 14-D ビルド時点の確定値: 琴乃A(ccu)/かけがえのない二人(20%)復元・実効N-1 Decay適正化後）
+    expect(kpi).toContain("2,447,170,546");
     // レーン別内訳 5 行
     expect(document.querySelectorAll("#lane-table tbody tr").length).toBe(5);
     // タイムライン 156 ビート（計算式展開行を除く）
@@ -129,7 +132,8 @@ describe("単一HTML UI スモーク", () => {
     runs.value = "10";
     (document.querySelector("#btn-run") as HTMLButtonElement).click();
     expect((document.querySelector("#status")!.textContent ?? "").startsWith("完了")).toBe(true);
-    expect(document.querySelector("#kpi-root")!.textContent ?? "").toContain("2,446,493,589");
+    // 【2026-09-27 Phase 15-5】dist 再ビルド（14-E/14-F 反映）に伴う新確定値（旧 2,446,493,589）
+    expect(document.querySelector("#kpi-root")!.textContent ?? "").toContain("2,447,170,546");
     // ファンファクターを 1000‰（ボーナスなし）へ手打ちで変更
     const fan = document.querySelector<HTMLInputElement>("#g-fan")!;
     fan.value = "1000";
@@ -1293,6 +1297,8 @@ describe("単一HTML UI スモーク", () => {
     (document.querySelector("#btn-run") as HTMLButtonElement).click();
     const kpi = document.querySelector("#kpi-root")!.textContent ?? "";
     // 【2026-09-21 Phase 14】Decay適正化（実効N-1ビート）に伴い 112,864 系 → 112,623 系に変化
-    expect(kpi).toMatch(/112,623,\d{3}/);
+    // 【2026-09-27 Phase 15-5】dist 再ビルド（14-E/14-F 反映）で 112,623 系 → 112,669,861（+0.04%）。
+    //   入力（import 設定）は同一で、差分はエンジン側のみの寄与（T5 プリセットと同符号・同 magnitude）
+    expect(kpi).toContain("112,669,861");
   });
 });

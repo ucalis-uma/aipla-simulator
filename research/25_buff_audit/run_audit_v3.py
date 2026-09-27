@@ -5,6 +5,12 @@ import sys
 
 sys.stdout.reconfigure(encoding='utf-8')
 
+# Phase 15-2 / 15-3: 一致率の tier 分類（research/25_buff_audit/display_spec_rules.json が単一の定義元）
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from audit_tiers import build_rules, classify, empty_counters, finalize  # noqa: E402
+
+RULES, TAG2TIER, FLAG_KEYS = build_rules()
+
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 OUT_DIR = os.path.join(REPO_ROOT, "research", "25_buff_audit")
 os.makedirs(OUT_DIR, exist_ok=True)
@@ -119,6 +125,10 @@ def audit_sample(sample_name, meas_path, sim_path, notes_count):
     total_comparisons = 0
     match_count = 0
     discrepancy_count = 0
+    # Phase 15-2/15-3: tier 分類用の累積（strict の数値定義は変えない）
+    flag_seen = set()          # 実測側に「表示あり」と記録されたフラグ系 (beat, lane, key)
+    explained = empty_counters()
+    rule_counts = {}
     
     max_beat = notes_count
     if sim_beats:
@@ -153,6 +163,7 @@ def audit_sample(sample_name, meas_path, sim_path, notes_count):
                     bkey = NAME_TO_BUFF_KEY[ename]
                     m_by_key[bkey] = m_by_key.get(bkey, 0) + (stage if stage is not None else 0)
                 elif ename in SPECIAL_EFFECTS:
+                    flag_seen.add((beat, lane_num, SPECIAL_EFFECTS[ename]))
                     special_records.append({
                         "beat": beat,
                         "lane": lane_num,
@@ -190,6 +201,23 @@ def audit_sample(sample_name, meas_path, sim_path, notes_count):
                 else:
                     discrepancy_count += 1
                     reason = classify_diff_reason(sample_name, beat, lane_num, key, m_val, s_val, sim_beats, meas_tl)
+                    # ---- Phase 15-2/15-3: 不一致セルを tier に分類（黙示 skip 禁止）----
+                    rule_id, tier = classify(key, reason, FLAG_KEYS, TAG2TIER)
+                    if rule_id == "FLAG_PRESENCE":
+                        # 段数ではなく「表示の有無」で照合する（実測は stage=null のため）
+                        m_has = (beat, lane_num, key) in flag_seen
+                        s_has = s_val > 0
+                        if m_has == s_has:
+                            tier = "explained_unit"
+                            reason = f"FLAG_NOT_STAGED: {key} は段数なしフラグ（presence match: measured={'有' if m_has else '無'} / sim={'有' if s_has else '無'}）"
+                        else:
+                            rule_id, tier = "FLAG_PRESENCE_MISMATCH", "residual"
+                            reason = f"FLAG_PRESENCE_MISMATCH: {key} の表示有無が不一致（measured={'有' if m_has else '無'} / sim={'有' if s_has else '無'}）"
+                    if tier == "residual":
+                        rule_id = rule_id if rule_id != "FLAG_PRESENCE" else "UNCLASSIFIED"
+                    else:
+                        explained[tier] = explained.get(tier, 0) + 1
+                    rule_counts[rule_id] = rule_counts.get(rule_id, 0) + 1
                     diff_records.append({
                         "sample": sample_name,
                         "beat": beat,
@@ -198,9 +226,15 @@ def audit_sample(sample_name, meas_path, sim_path, notes_count):
                         "measured_stage": m_val,
                         "sim_stage": s_val,
                         "diff": diff,
+                        "rule_id": rule_id,
+                        "tier": tier,
                         "note": reason
                     })
 
+    note_counts = {}
+    for d in diff_records:
+        t = d["note"].split(":")[0]
+        note_counts[t] = note_counts.get(t, 0) + 1
     summary = {
         "sample": sample_name,
         "meas_path": meas_path,
@@ -212,13 +246,16 @@ def audit_sample(sample_name, meas_path, sim_path, notes_count):
         "total_comparisons": total_comparisons,
         "match_count": match_count,
         "discrepancy_count": discrepancy_count,
-        "special_effects_count": len(special_records)
+        "special_effects_count": len(special_records),
+        # Phase 15-2/15-3: strict（旧来定義）/ adjusted（主指標）/ residual（真の不一致）の 3 層
+        "tiers": finalize(total_comparisons, match_count, discrepancy_count, explained, rule_counts),
+        "category_counts": dict(sorted(note_counts.items(), key=lambda kv: -kv[1])),
     }
     
     out_suffix = "_v3" if sample_name == "T5" else ""
     csv_file = os.path.join(OUT_DIR, f"diff_{sample_name.lower()}{out_suffix}.csv")
     with open(csv_file, "w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=["sample", "beat", "lane", "key", "measured_stage", "sim_stage", "diff", "note"])
+        writer = csv.DictWriter(f, fieldnames=["sample", "beat", "lane", "key", "measured_stage", "sim_stage", "diff", "rule_id", "tier", "note"])
         writer.writeheader()
         for r in diff_records:
             writer.writerow(r)
@@ -250,3 +287,13 @@ for d in t5_diff:
 print("\nT5 Discrepancy Breakdown by Reason Category:")
 for r, c in sorted(reasons_count.items(), key=lambda x: x[1], reverse=True):
     print(f"  {r}: {c} ({c/len(t5_diff)*100:.1f}%)")
+
+# Phase 15-2/15-3: 3 層定義（strict / adjusted / residual）の確定値
+t = t5_sum["tiers"]
+print("\nT5 Match Rate Definition (Phase 15-2/15-3):")
+print(f"  strict   : {t['strict_match_count']}/{t['total_comparisons']} = {t['strict_match_rate_pct']}% (mismatch {t['strict_mismatch_count']})")
+print(f"  adjusted : {t['adjusted_match_count']}/{t['total_comparisons']} = {t['adjusted_match_rate_pct']}% (explained +{t['explained_match_count']})")
+print(f"  residual : {t['residual_mismatch_count']} cells = {t['residual_rate_pct']}%  <- Phase 16 の削減対象")
+print("  explained tiers:", t["explained_tier_counts"])
+print("  rule hits      :", t["rule_hit_counts"])
+

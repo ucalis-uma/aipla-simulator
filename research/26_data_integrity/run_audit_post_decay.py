@@ -14,6 +14,12 @@ import sys
 
 sys.stdout.reconfigure(encoding='utf-8')
 
+# Phase 15-2 / 15-3: 一致率の tier 分類（定義元は research/25_buff_audit/display_spec_rules.json）
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "25_buff_audit"))
+from audit_tiers import build_rules, classify, empty_counters, finalize  # noqa: E402
+
+RULES, TAG2TIER, FLAG_KEYS = build_rules()
+
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 OUT_DIR_26 = os.path.join(REPO_ROOT, "research", "26_data_integrity")
 OUT_DIR_25 = os.path.join(REPO_ROOT, "research", "25_buff_audit")
@@ -185,6 +191,9 @@ def audit_sample(sample_name, meas_path, sim_path, notes_count):
     match_count = 0
     discrepancy_count = 0
     unobserved_cells = 0
+    # Phase 15-2/15-3: tier 分類用の累積（strict の数値定義は変えない）
+    explained = empty_counters()
+    rule_counts = {}
     
     max_beat = notes_count
     if sim_beats:
@@ -266,7 +275,18 @@ def audit_sample(sample_name, meas_path, sim_path, notes_count):
                 else:
                     discrepancy_count += 1
                     reason = classify_diff_reason(sample_name, beat, lane_num, key, m_val, s_val, sim_beats, meas_tl, special_by_key)
+                    # ---- Phase 15-2/15-3: 不一致セルを tier に分類（黙示 skip 禁止）----
+                    rule_id, tier = classify(key, reason, FLAG_KEYS, TAG2TIER)
+                    if rule_id == "FLAG_PRESENCE":
+                        # 段数ではなく「表示の有無」で照合する（実測は stage=null のため）
+                        flag_agree = (key in special_by_key) == (s_val > 0)
+                        rule_id, tier = ("FLAG_PRESENCE", "explained_unit") if flag_agree else ("FLAG_PRESENCE_MISMATCH", "residual")
+                    if tier != "residual":
+                        explained[tier] = explained.get(tier, 0) + 1
+                    rule_counts[rule_id] = rule_counts.get(rule_id, 0) + 1
                     diff_records.append({
+                        "rule_id": rule_id,
+                        "tier": tier,
                         "sample": sample_name,
                         "beat": beat,
                         "lane": lane_num,
@@ -298,13 +318,16 @@ def audit_sample(sample_name, meas_path, sim_path, notes_count):
         "category_counts": category_counts,
         "unobserved_cells_missing_frames": unobserved_cells,
         "special_effects_count": len(special_records),
+        # Phase 15-2/15-3: strict（旧来定義）/ adjusted（主指標）/ residual（真の不一致）の 3 層
+        "tiers": finalize(total_comparisons, match_count, discrepancy_count, explained, rule_counts),
+        "rule_hit_counts": dict(sorted(rule_counts.items(), key=lambda kv: -kv[1])),
     }
     
     # 26 および 25 の両方に書き出す
     for base_dir in [OUT_DIR_26, OUT_DIR_25]:
         csv_file = os.path.join(base_dir, f"diff_{sample_name.lower()}_v2.csv")
         with open(csv_file, "w", newline="", encoding="utf-8") as f:
-            writer = csv.DictWriter(f, fieldnames=["sample", "beat", "lane", "key", "measured_stage", "sim_stage", "diff", "note"])
+            writer = csv.DictWriter(f, fieldnames=["sample", "beat", "lane", "key", "measured_stage", "sim_stage", "diff", "rule_id", "tier", "note"])
             writer.writeheader()
             for r in diff_records:
                 writer.writerow(r)
@@ -323,6 +346,10 @@ def audit_sample(sample_name, meas_path, sim_path, notes_count):
     if unobserved_cells:
         print(f"  Unobserved cells (missing frames・比較除外): {unobserved_cells}")
     print(f"  Category breakdown: {category_counts}")
+    t = summary["tiers"]
+    print(f"  [strict   ] {t['strict_match_count']}/{t['total_comparisons']} = {t['strict_match_rate_pct']}% (mismatch {t['strict_mismatch_count']})")
+    print(f"  [adjusted ] {t['adjusted_match_count']}/{t['total_comparisons']} = {t['adjusted_match_rate_pct']}% (explained +{t['explained_match_count']}: {t['explained_tier_counts']})")
+    print(f"  [residual ] {t['residual_mismatch_count']} cells = {t['residual_rate_pct']}%  <- Phase 16 の削減対象 / rule_hits={t['rule_hit_counts']}")
     
     return summary, diff_records, special_records
 

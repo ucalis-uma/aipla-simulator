@@ -15,10 +15,37 @@
       "PHASE_LAG_ACTIVATION": 72
     },
     "unobserved_cells_missing_frames": 5,
-    "special_effects_count": 0
+    "special_effects_count": 0,
+    "tiers": {
+      "total_comparisons": 1695,
+      "strict_match_count": 1623,
+      "strict_match_rate_pct": 95.75,
+      "strict_mismatch_count": 72,
+      "adjusted_match_count": 1695,
+      "adjusted_match_rate_pct": 100.0,
+      "explained_match_count": 72,
+      "explained_tier_counts": {
+        "explained_unit": 0,
+        "explained_display_spec": 0,
+        "explained_display_phase": 72,
+        "residual": 0
+      },
+      "rule_hit_counts": {
+        "PHASE_LAG_ACTIVATION": 72
+      },
+      "residual_mismatch_count": 0,
+      "residual_rate_pct": 0.0,
+      "rules_file": "research/25_buff_audit/display_spec_rules.json",
+      "rules_version": 1
+    },
+    "rule_hit_counts": {
+      "PHASE_LAG_ACTIVATION": 72
+    }
   },
   "diffs": [
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 9,
       "lane": 2,
@@ -29,6 +56,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b9 (acts=['sk-ski-05-waso-00-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 9,
       "lane": 3,
@@ -39,6 +68,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b9 (acts=['sk-ski-05-waso-00-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 25,
       "lane": 1,
@@ -49,6 +80,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b25 (acts=['sk-rio-05-fest-01-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 25,
       "lane": 1,
@@ -59,6 +92,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b25 (acts=['sk-rio-05-fest-01-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 25,
       "lane": 3,
@@ -69,6 +104,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b25 (acts=['sk-rio-05-fest-01-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 25,
       "lane": 3,
@@ -79,6 +116,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b25 (acts=['sk-rio-05-fest-01-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 25,
       "lane": 4,
@@ -89,6 +128,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b25 (acts=['sk-rio-05-fest-01-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 25,
       "lane": 4,
@@ -99,6 +140,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b25 (acts=['sk-rio-05-fest-01-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 40,
       "lane": 3,
@@ -109,6 +152,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b40 (acts=['sk-chs-05-hruh-00-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 40,
       "lane": 5,
@@ -119,6 +164,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b40 (acts=['sk-chs-05-hruh-00-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 50,
       "lane": 1,
@@ -129,6 +176,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b50 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 50,
       "lane": 2,
@@ -139,6 +188,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b50 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 50,
       "lane": 3,
@@ -149,6 +200,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b50 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 50,
       "lane": 3,
@@ -159,6 +212,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b50 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 50,
       "lane": 3,
@@ -169,6 +224,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b50 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 50,
       "lane": 3,
@@ -179,6 +236,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b50 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 51,
       "lane": 3,
@@ -189,6 +248,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b51 (acts=['sk-ai-05-fest-00-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 60,
       "lane": 3,
@@ -199,6 +260,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b60 (acts=['uph-uph-l1-4', 'sk-ski-05-waso-00-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 66,
       "lane": 1,
@@ -209,6 +272,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b66 (acts=['sk-kkr-05-mizg-02-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 66,
       "lane": 3,
@@ -219,6 +284,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b66 (acts=['sk-kkr-05-mizg-02-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 66,
       "lane": 3,
@@ -229,6 +296,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b66 (acts=['sk-kkr-05-mizg-02-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 66,
       "lane": 3,
@@ -239,6 +308,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b66 (acts=['sk-kkr-05-mizg-02-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 66,
       "lane": 3,
@@ -249,6 +320,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b66 (acts=['sk-kkr-05-mizg-02-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 82,
       "lane": 2,
@@ -259,6 +332,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b82 (acts=['sk-ski-05-waso-00-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 82,
       "lane": 3,
@@ -269,6 +344,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b82 (acts=['sk-ski-05-waso-00-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 97,
       "lane": 3,
@@ -279,6 +356,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b97 (acts=['sk-chs-05-hruh-00-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 97,
       "lane": 5,
@@ -289,6 +368,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b97 (acts=['sk-chs-05-hruh-00-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 100,
       "lane": 1,
@@ -299,6 +380,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b100 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 100,
       "lane": 2,
@@ -309,6 +392,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b100 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 100,
       "lane": 3,
@@ -319,6 +404,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b100 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 100,
       "lane": 3,
@@ -329,6 +416,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b100 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 100,
       "lane": 3,
@@ -339,6 +428,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b100 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 104,
       "lane": 1,
@@ -349,6 +440,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b104 (acts=['sk-rio-05-fest-01-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 104,
       "lane": 1,
@@ -359,6 +452,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b104 (acts=['sk-rio-05-fest-01-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 104,
       "lane": 3,
@@ -369,6 +464,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b104 (acts=['sk-rio-05-fest-01-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 104,
       "lane": 3,
@@ -379,6 +476,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b104 (acts=['sk-rio-05-fest-01-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 104,
       "lane": 4,
@@ -389,6 +488,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b104 (acts=['sk-rio-05-fest-01-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 104,
       "lane": 4,
@@ -399,6 +500,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b104 (acts=['sk-rio-05-fest-01-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 115,
       "lane": 3,
@@ -409,6 +512,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b115 (acts=['sk-ai-05-fest-00-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 120,
       "lane": 3,
@@ -419,6 +524,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b120 (acts=['uph-uph-l1-4', 'sk-ski-05-waso-00-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 123,
       "lane": 1,
@@ -429,6 +536,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b123 (acts=['sk-kkr-05-mizg-02-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 123,
       "lane": 3,
@@ -439,6 +548,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b123 (acts=['sk-kkr-05-mizg-02-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 123,
       "lane": 3,
@@ -449,6 +560,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b123 (acts=['sk-kkr-05-mizg-02-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 123,
       "lane": 3,
@@ -459,6 +572,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b123 (acts=['sk-kkr-05-mizg-02-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 123,
       "lane": 3,
@@ -469,6 +584,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b123 (acts=['sk-kkr-05-mizg-02-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 130,
       "lane": 3,
@@ -479,6 +596,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b130 (acts=['sk-chs-05-hruh-00-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 130,
       "lane": 5,
@@ -489,6 +608,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b130 (acts=['sk-chs-05-hruh-00-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 136,
       "lane": 1,
@@ -499,6 +620,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b136 (acts=['sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 136,
       "lane": 2,
@@ -509,6 +632,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b136 (acts=['sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 136,
       "lane": 3,
@@ -519,6 +644,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b136 (acts=['sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 136,
       "lane": 4,
@@ -529,6 +656,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b136 (acts=['sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 136,
       "lane": 5,
@@ -539,6 +668,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b136 (acts=['sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 148,
       "lane": 2,
@@ -549,6 +680,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b148 (acts=['sk-ski-05-waso-00-1', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 150,
       "lane": 1,
@@ -559,6 +692,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b150 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 150,
       "lane": 2,
@@ -569,6 +704,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b150 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 150,
       "lane": 2,
@@ -579,6 +716,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b150 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 150,
       "lane": 3,
@@ -589,6 +728,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b150 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 150,
       "lane": 3,
@@ -599,6 +740,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b150 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 150,
       "lane": 3,
@@ -609,6 +752,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b150 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 150,
       "lane": 3,
@@ -619,6 +764,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b150 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 156,
       "lane": 1,
@@ -629,6 +776,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b156 (acts=['sk-rio-05-fest-01-1', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 156,
       "lane": 1,
@@ -639,6 +788,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b156 (acts=['sk-rio-05-fest-01-1', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 156,
       "lane": 3,
@@ -649,6 +800,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b156 (acts=['sk-rio-05-fest-01-1', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 156,
       "lane": 3,
@@ -659,6 +812,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b156 (acts=['sk-rio-05-fest-01-1', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 156,
       "lane": 4,
@@ -669,6 +824,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b156 (acts=['sk-rio-05-fest-01-1', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 156,
       "lane": 4,
@@ -679,6 +836,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b156 (acts=['sk-rio-05-fest-01-1', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 176,
       "lane": 1,
@@ -689,6 +848,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b176 (acts=['sk-kkr-05-mizg-02-1', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 176,
       "lane": 3,
@@ -699,6 +860,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b176 (acts=['sk-kkr-05-mizg-02-1', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 176,
       "lane": 3,
@@ -709,6 +872,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b176 (acts=['sk-kkr-05-mizg-02-1', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 176,
       "lane": 3,
@@ -719,6 +884,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b176 (acts=['sk-kkr-05-mizg-02-1', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 176,
       "lane": 3,
@@ -729,6 +896,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b176 (acts=['sk-kkr-05-mizg-02-1', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S1",
       "beat": 176,
       "lane": 3,

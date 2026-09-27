@@ -17,10 +17,41 @@
       "PERSISTENT_SP_BUFF": 74
     },
     "unobserved_cells_missing_frames": 0,
-    "special_effects_count": 90
+    "special_effects_count": 90,
+    "tiers": {
+      "total_comparisons": 1367,
+      "strict_match_count": 1227,
+      "strict_match_rate_pct": 89.76,
+      "strict_mismatch_count": 140,
+      "adjusted_match_count": 1367,
+      "adjusted_match_rate_pct": 100.0,
+      "explained_match_count": 140,
+      "explained_tier_counts": {
+        "explained_unit": 0,
+        "explained_display_spec": 110,
+        "explained_display_phase": 30,
+        "residual": 0
+      },
+      "rule_hit_counts": {
+        "PERSISTENT_SP_BUFF": 74,
+        "EXTREME_DISPLAY_VS_EFFECTIVE": 36,
+        "PHASE_LAG_ACTIVATION": 30
+      },
+      "residual_mismatch_count": 0,
+      "residual_rate_pct": 0.0,
+      "rules_file": "research/25_buff_audit/display_spec_rules.json",
+      "rules_version": 1
+    },
+    "rule_hit_counts": {
+      "PERSISTENT_SP_BUFF": 74,
+      "EXTREME_DISPLAY_VS_EFFECTIVE": 36,
+      "PHASE_LAG_ACTIVATION": 30
+    }
   },
   "diffs": [
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 1,
       "lane": 3,
@@ -31,6 +62,8 @@
       "note": "PHASE_LAG_ACTIVATION: b1 skill activated; screenshot at b1 is PRE-display, in-game UI displays buff from b2"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 1,
       "lane": 3,
@@ -41,6 +74,8 @@
       "note": "PHASE_LAG_ACTIVATION: b1 skill activated; screenshot at b1 is PRE-display, in-game UI displays buff from b2"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 1,
       "lane": 3,
@@ -51,6 +86,8 @@
       "note": "PHASE_LAG_ACTIVATION: b1 skill activated; screenshot at b1 is PRE-display, in-game UI displays buff from b2"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 5,
       "lane": 3,
@@ -61,6 +98,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b5 (acts=['sk-skr-05-fest-00-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 15,
       "lane": 3,
@@ -71,6 +110,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 16,
       "lane": 3,
@@ -81,6 +122,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 17,
       "lane": 3,
@@ -91,6 +134,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 18,
       "lane": 3,
@@ -101,6 +146,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 19,
       "lane": 3,
@@ -111,6 +158,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 20,
       "lane": 3,
@@ -121,6 +170,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 21,
       "lane": 3,
@@ -131,6 +182,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 22,
       "lane": 3,
@@ -141,6 +194,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 22,
       "lane": 3,
@@ -151,6 +206,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b22 (acts=['sk-hrk-05-sail-00-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 23,
       "lane": 3,
@@ -161,6 +218,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 24,
       "lane": 3,
@@ -171,6 +230,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 25,
       "lane": 3,
@@ -181,6 +242,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 26,
       "lane": 3,
@@ -191,6 +254,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 27,
       "lane": 3,
@@ -201,6 +266,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 27,
       "lane": 3,
@@ -211,6 +278,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b27 (acts=['sk-skr-05-fest-00-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 28,
       "lane": 3,
@@ -221,6 +290,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 29,
       "lane": 3,
@@ -231,6 +302,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 30,
       "lane": 3,
@@ -241,6 +314,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 31,
       "lane": 3,
@@ -251,6 +326,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 32,
       "lane": 3,
@@ -261,6 +338,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 33,
       "lane": 3,
@@ -271,6 +350,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 34,
       "lane": 3,
@@ -281,6 +362,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 35,
       "lane": 3,
@@ -291,6 +374,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 36,
       "lane": 3,
@@ -301,6 +386,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 37,
       "lane": 3,
@@ -311,6 +398,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 38,
       "lane": 3,
@@ -321,6 +410,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 39,
       "lane": 3,
@@ -331,6 +422,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 40,
       "lane": 3,
@@ -341,6 +434,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 41,
       "lane": 3,
@@ -351,6 +446,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 41,
       "lane": 3,
@@ -361,6 +458,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b41 (acts=['sk-rei-05-fest-01-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 42,
       "lane": 3,
@@ -371,6 +470,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 43,
       "lane": 3,
@@ -381,6 +482,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 44,
       "lane": 3,
@@ -391,6 +494,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 50,
       "lane": 3,
@@ -401,6 +506,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b50 (acts=['sk-ktn-05-fest-02-1', 'sk-rei-05-fest-01-3', 'sk-chs-05-fest-00-2', 'sk-ktn-05-fest-02-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 50,
       "lane": 3,
@@ -411,6 +518,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b50 (acts=['sk-ktn-05-fest-02-1', 'sk-rei-05-fest-01-3', 'sk-chs-05-fest-00-2', 'sk-ktn-05-fest-02-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 51,
       "lane": 3,
@@ -421,6 +530,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b51 (acts=['sk-chs-05-fest-00-3', 'sk-ktn-05-fest-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 51,
       "lane": 4,
@@ -431,6 +542,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b51 (acts=['sk-chs-05-fest-00-3', 'sk-ktn-05-fest-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 51,
       "lane": 4,
@@ -441,6 +554,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b51 (acts=['sk-chs-05-fest-00-3', 'sk-ktn-05-fest-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 51,
       "lane": 5,
@@ -451,6 +566,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b51 (acts=['sk-chs-05-fest-00-3', 'sk-ktn-05-fest-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 55,
       "lane": 1,
@@ -461,6 +578,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b55 (acts=['sk-hrk-05-sail-00-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 71,
       "lane": 3,
@@ -471,6 +590,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b71 (acts=['sk-hrk-05-sail-00-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 80,
       "lane": 3,
@@ -481,6 +602,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b80 (acts=['sk-skr-05-fest-00-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 89,
       "lane": 3,
@@ -491,6 +614,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 90,
       "lane": 3,
@@ -501,6 +626,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 91,
       "lane": 3,
@@ -511,6 +638,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 92,
       "lane": 3,
@@ -521,6 +650,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 93,
       "lane": 3,
@@ -531,6 +662,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "EXTREME_DISPLAY_VS_EFFECTIVE",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 94,
       "lane": 3,
@@ -541,6 +674,8 @@
       "note": "EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays separate 'critical_coeff_extreme_10', while simulator models effective +5 stages on critical_coeff_up"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 94,
       "lane": 3,
@@ -551,6 +686,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 95,
       "lane": 3,
@@ -561,6 +698,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 96,
       "lane": 3,
@@ -571,6 +710,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 97,
       "lane": 3,
@@ -581,6 +722,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 98,
       "lane": 3,
@@ -591,6 +734,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 99,
       "lane": 3,
@@ -601,6 +746,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 100,
       "lane": 3,
@@ -611,6 +758,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 101,
       "lane": 3,
@@ -621,6 +770,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 101,
       "lane": 3,
@@ -631,6 +782,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b101 (acts=['sk-chs-05-fest-00-3', 'sk-ktn-05-fest-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 101,
       "lane": 4,
@@ -641,6 +794,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b101 (acts=['sk-chs-05-fest-00-3', 'sk-ktn-05-fest-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 101,
       "lane": 4,
@@ -651,6 +806,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b101 (acts=['sk-chs-05-fest-00-3', 'sk-ktn-05-fest-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 101,
       "lane": 5,
@@ -661,6 +818,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b101 (acts=['sk-chs-05-fest-00-3', 'sk-ktn-05-fest-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 102,
       "lane": 3,
@@ -671,6 +830,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 103,
       "lane": 3,
@@ -681,6 +842,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 104,
       "lane": 3,
@@ -691,6 +854,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 105,
       "lane": 3,
@@ -701,6 +866,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 106,
       "lane": 3,
@@ -711,6 +878,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 107,
       "lane": 3,
@@ -721,6 +890,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 108,
       "lane": 3,
@@ -731,6 +902,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 109,
       "lane": 3,
@@ -741,6 +914,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 110,
       "lane": 1,
@@ -751,6 +926,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b110 (acts=['sk-hrk-05-sail-00-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 110,
       "lane": 3,
@@ -761,6 +938,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 111,
       "lane": 3,
@@ -771,6 +950,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 112,
       "lane": 3,
@@ -781,6 +962,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 113,
       "lane": 3,
@@ -791,6 +974,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 114,
       "lane": 3,
@@ -801,6 +986,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 115,
       "lane": 3,
@@ -811,6 +998,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 116,
       "lane": 3,
@@ -821,6 +1010,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 117,
       "lane": 3,
@@ -831,6 +1022,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 118,
       "lane": 3,
@@ -841,6 +1034,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 119,
       "lane": 3,
@@ -851,6 +1046,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 120,
       "lane": 3,
@@ -861,6 +1058,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 121,
       "lane": 3,
@@ -871,6 +1070,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 122,
       "lane": 3,
@@ -881,6 +1082,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 123,
       "lane": 3,
@@ -891,6 +1094,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 124,
       "lane": 3,
@@ -901,6 +1106,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 125,
       "lane": 3,
@@ -911,6 +1118,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 126,
       "lane": 3,
@@ -921,6 +1130,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 126,
       "lane": 3,
@@ -931,6 +1142,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b126 (acts=['sk-hrk-05-sail-00-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 127,
       "lane": 3,
@@ -941,6 +1154,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 128,
       "lane": 3,
@@ -951,6 +1166,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 129,
       "lane": 3,
@@ -961,6 +1178,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 130,
       "lane": 3,
@@ -971,6 +1190,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 131,
       "lane": 3,
@@ -981,6 +1202,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 132,
       "lane": 3,
@@ -991,6 +1214,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 133,
       "lane": 3,
@@ -1001,6 +1226,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 134,
       "lane": 3,
@@ -1011,6 +1238,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 135,
       "lane": 3,
@@ -1021,6 +1250,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b135 (acts=['sk-skr-05-fest-00-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 135,
       "lane": 3,
@@ -1031,6 +1262,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 136,
       "lane": 3,
@@ -1041,6 +1274,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 137,
       "lane": 3,
@@ -1051,6 +1286,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 138,
       "lane": 3,
@@ -1061,6 +1298,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 139,
       "lane": 3,
@@ -1071,6 +1310,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 140,
       "lane": 3,
@@ -1081,6 +1322,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 141,
       "lane": 3,
@@ -1091,6 +1334,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 142,
       "lane": 3,
@@ -1101,6 +1346,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 143,
       "lane": 3,
@@ -1111,6 +1358,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 144,
       "lane": 3,
@@ -1121,6 +1370,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 145,
       "lane": 3,
@@ -1131,6 +1382,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 146,
       "lane": 3,
@@ -1141,6 +1394,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 147,
       "lane": 3,
@@ -1151,6 +1406,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 148,
       "lane": 3,
@@ -1161,6 +1418,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 149,
       "lane": 3,
@@ -1171,6 +1430,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 150,
       "lane": 3,
@@ -1181,6 +1442,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b150 (acts=['sk-rei-05-fest-01-3', 'sk-chs-05-fest-00-2', 'sk-ktn-05-fest-02-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 150,
       "lane": 3,
@@ -1191,6 +1454,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 150,
       "lane": 3,
@@ -1201,6 +1466,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b150 (acts=['sk-rei-05-fest-01-3', 'sk-chs-05-fest-00-2', 'sk-ktn-05-fest-02-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 151,
       "lane": 3,
@@ -1211,6 +1478,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 151,
       "lane": 3,
@@ -1221,6 +1490,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b151 (acts=['sk-chs-05-fest-00-3', 'sk-ktn-05-fest-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 151,
       "lane": 4,
@@ -1231,6 +1502,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b151 (acts=['sk-chs-05-fest-00-3', 'sk-ktn-05-fest-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 151,
       "lane": 4,
@@ -1241,6 +1514,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b151 (acts=['sk-chs-05-fest-00-3', 'sk-ktn-05-fest-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 151,
       "lane": 5,
@@ -1251,6 +1526,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b151 (acts=['sk-chs-05-fest-00-3', 'sk-ktn-05-fest-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 152,
       "lane": 3,
@@ -1261,6 +1538,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 153,
       "lane": 3,
@@ -1271,6 +1550,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 154,
       "lane": 3,
@@ -1281,6 +1562,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 155,
       "lane": 3,
@@ -1291,6 +1574,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 156,
       "lane": 3,
@@ -1301,6 +1586,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 157,
       "lane": 3,
@@ -1311,6 +1598,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 158,
       "lane": 3,
@@ -1321,6 +1610,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 159,
       "lane": 3,
@@ -1331,6 +1622,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 160,
       "lane": 3,
@@ -1341,6 +1634,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 161,
       "lane": 3,
@@ -1351,6 +1646,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 162,
       "lane": 3,
@@ -1361,6 +1658,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 163,
       "lane": 3,
@@ -1371,6 +1670,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 164,
       "lane": 3,
@@ -1381,6 +1682,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PHASE_LAG_ACTIVATION",
+      "tier": "explained_display_phase",
       "sample": "S2",
       "beat": 165,
       "lane": 1,
@@ -1391,6 +1694,8 @@
       "note": "PHASE_LAG_ACTIVATION: Activated on b165 (acts=['sk-hrk-05-sail-00-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 165,
       "lane": 3,
@@ -1401,6 +1706,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 166,
       "lane": 3,
@@ -1411,6 +1718,8 @@
       "note": "PERSISTENT_SP_BUFF: SP score buff remains on idol after SP note in measured, whereas simulator consumes it"
     },
     {
+      "rule_id": "PERSISTENT_SP_BUFF",
+      "tier": "explained_display_spec",
       "sample": "S2",
       "beat": 167,
       "lane": 3,

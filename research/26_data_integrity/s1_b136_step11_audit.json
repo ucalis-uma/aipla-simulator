@@ -1,0 +1,4383 @@
+{
+  "meta": {
+    "tool": "tools/audit_s1_b136_step11.ts",
+    "purpose": "Phase 15-1: S1 b136 窓 Step 11 非復活仮定の一次実測セル照合",
+    "label": "current-engine",
+    "window": [
+      130,
+      145
+    ],
+    "targetBeat": 136,
+    "sim_neutral_total_score": 122635627,
+    "measured_total_score": 116537513,
+    "fresh_vs_canonical_audit_trace_diff_cells": 16,
+    "p_activations": [
+      "b1[first] L4 sk-chs-05-hruh-00-2",
+      "b1[first] L1 sk-kkr-05-mizg-02-3",
+      "b1[first] L5 sk-ski-05-waso-00-3",
+      "b50[last] L4 sk-chs-05-hruh-00-2",
+      "b50[last] L1 sk-kkr-05-mizg-02-3",
+      "b60[last] L5 sk-ski-05-waso-00-3",
+      "b100[last] L4 sk-chs-05-hruh-00-2",
+      "b100[last] L1 sk-kkr-05-mizg-02-3",
+      "b120[last] L5 sk-ski-05-waso-00-3",
+      "b136[last] L2 sk-rio-05-fest-01-3",
+      "b143[first] L4 sk-chs-05-hruh-00-3",
+      "b150[last] L4 sk-chs-05-hruh-00-2",
+      "b150[last] L1 sk-kkr-05-mizg-02-3"
+    ]
+  },
+  "expired_candidates_at_target_beat_start": [
+    {
+      "lane": 1,
+      "type": "vocal_up",
+      "stages": 3,
+      "remainingBeats": 0,
+      "sourceSkillId": "sk-kkr-05-mizg-02-3"
+    },
+    {
+      "lane": 3,
+      "type": "tension_up",
+      "stages": 6,
+      "remainingBeats": 0,
+      "sourceSkillId": "sk-chs-05-hruh-00-2"
+    }
+  ],
+  "target_beat_extension_hits": [
+    {
+      "lane": 1,
+      "type": "vocal_boost",
+      "stages": 3,
+      "remainingBeats": 10,
+      "sourceSkillId": "sk-rio-05-fest-01-1",
+      "prevRemainingBeats": 4,
+      "remDelta": 6
+    },
+    {
+      "lane": 1,
+      "type": "critical_rate_up",
+      "stages": 4,
+      "remainingBeats": 10,
+      "sourceSkillId": "sk-rio-05-fest-01-1",
+      "prevRemainingBeats": 4,
+      "remDelta": 6
+    },
+    {
+      "lane": 1,
+      "type": "vocal_boost",
+      "stages": 4,
+      "remainingBeats": 24,
+      "sourceSkillId": "sk-kkr-05-mizg-02-1",
+      "prevRemainingBeats": 18,
+      "remDelta": 6
+    },
+    {
+      "lane": 2,
+      "type": "critical_rate_up",
+      "stages": 6,
+      "remainingBeats": 7,
+      "sourceSkillId": "sk-ski-05-waso-00-1",
+      "prevRemainingBeats": 1,
+      "remDelta": 6
+    },
+    {
+      "lane": 3,
+      "type": "critical_rate_up",
+      "stages": 6,
+      "remainingBeats": 14,
+      "sourceSkillId": "sk-ski-05-waso-00-1",
+      "prevRemainingBeats": 8,
+      "remDelta": 6
+    },
+    {
+      "lane": 3,
+      "type": "vocal_boost",
+      "stages": 6,
+      "remainingBeats": 17,
+      "sourceSkillId": "sk-rio-05-fest-01-1",
+      "prevRemainingBeats": 11,
+      "remDelta": 6
+    },
+    {
+      "lane": 3,
+      "type": "critical_rate_up",
+      "stages": 7,
+      "remainingBeats": 17,
+      "sourceSkillId": "sk-rio-05-fest-01-1",
+      "prevRemainingBeats": 11,
+      "remDelta": 6
+    },
+    {
+      "lane": 3,
+      "type": "focus",
+      "stages": 13,
+      "remainingBeats": 41,
+      "sourceSkillId": "sk-ai-05-fest-00-2",
+      "prevRemainingBeats": 35,
+      "remDelta": 6
+    },
+    {
+      "lane": 3,
+      "type": "focus",
+      "stages": 7,
+      "remainingBeats": 28,
+      "sourceSkillId": "sk-ski-05-waso-00-3",
+      "prevRemainingBeats": 22,
+      "remDelta": 6
+    },
+    {
+      "lane": 3,
+      "type": "combo_score_up",
+      "stages": 6,
+      "remainingBeats": 27,
+      "sourceSkillId": "sk-chs-05-hruh-00-1",
+      "prevRemainingBeats": 21,
+      "remDelta": 6
+    },
+    {
+      "lane": 4,
+      "type": "vocal_boost",
+      "stages": 3,
+      "remainingBeats": 10,
+      "sourceSkillId": "sk-rio-05-fest-01-1",
+      "prevRemainingBeats": 4,
+      "remDelta": 6
+    },
+    {
+      "lane": 4,
+      "type": "critical_rate_up",
+      "stages": 4,
+      "remainingBeats": 10,
+      "sourceSkillId": "sk-rio-05-fest-01-1",
+      "prevRemainingBeats": 4,
+      "remDelta": 6
+    },
+    {
+      "lane": 5,
+      "type": "combo_score_up",
+      "stages": 6,
+      "remainingBeats": 27,
+      "sourceSkillId": "sk-chs-05-hruh-00-1",
+      "prevRemainingBeats": 21,
+      "remDelta": 6
+    }
+  ],
+  "verdict": [
+    {
+      "lane": 1,
+      "buffKey": "vocal_up",
+      "stages": 3,
+      "sourceSkillId": "sk-kkr-05-mizg-02-3",
+      "expired_at_end_of_beat": 135,
+      "measured_cells": [
+        {
+          "beat": 136,
+          "measured_stage_lag0": 0,
+          "measured_stage_lag1": 0,
+          "sim_instance_present_current": false
+        },
+        {
+          "beat": 137,
+          "measured_stage_lag0": 0,
+          "measured_stage_lag1": 0,
+          "sim_instance_present_current": false
+        },
+        {
+          "beat": 138,
+          "measured_stage_lag0": 0,
+          "measured_stage_lag1": 0,
+          "sim_instance_present_current": false
+        },
+        {
+          "beat": 139,
+          "measured_stage_lag0": 0,
+          "measured_stage_lag1": 0,
+          "sim_instance_present_current": false
+        },
+        {
+          "beat": 140,
+          "measured_stage_lag0": 0,
+          "measured_stage_lag1": 0,
+          "sim_instance_present_current": false
+        },
+        {
+          "beat": 141,
+          "measured_stage_lag0": 0,
+          "measured_stage_lag1": 0,
+          "sim_instance_present_current": false
+        },
+        {
+          "beat": 142,
+          "measured_stage_lag0": 0,
+          "measured_stage_lag1": 0,
+          "sim_instance_present_current": false
+        },
+        {
+          "beat": 143,
+          "measured_stage_lag0": 0,
+          "measured_stage_lag1": 0,
+          "sim_instance_present_current": false
+        },
+        {
+          "beat": 144,
+          "measured_stage_lag0": 0,
+          "measured_stage_lag1": 0,
+          "sim_instance_present_current": false
+        }
+      ],
+      "tally_lag0": {
+        "revive": 0,
+        "noRevive": 6
+      },
+      "tally_lag1": {
+        "revive": 0,
+        "noRevive": 6
+      }
+    },
+    {
+      "lane": 3,
+      "buffKey": "tension_up",
+      "stages": 6,
+      "sourceSkillId": "sk-chs-05-hruh-00-2",
+      "expired_at_end_of_beat": 135,
+      "measured_cells": [
+        {
+          "beat": 136,
+          "measured_stage_lag0": 0,
+          "measured_stage_lag1": 0,
+          "sim_instance_present_current": false
+        },
+        {
+          "beat": 137,
+          "measured_stage_lag0": 0,
+          "measured_stage_lag1": 0,
+          "sim_instance_present_current": false
+        },
+        {
+          "beat": 138,
+          "measured_stage_lag0": 0,
+          "measured_stage_lag1": 0,
+          "sim_instance_present_current": false
+        },
+        {
+          "beat": 139,
+          "measured_stage_lag0": 0,
+          "measured_stage_lag1": 0,
+          "sim_instance_present_current": false
+        },
+        {
+          "beat": 140,
+          "measured_stage_lag0": 0,
+          "measured_stage_lag1": 0,
+          "sim_instance_present_current": false
+        },
+        {
+          "beat": 141,
+          "measured_stage_lag0": 0,
+          "measured_stage_lag1": 0,
+          "sim_instance_present_current": false
+        },
+        {
+          "beat": 142,
+          "measured_stage_lag0": 0,
+          "measured_stage_lag1": 0,
+          "sim_instance_present_current": false
+        },
+        {
+          "beat": 143,
+          "measured_stage_lag0": 0,
+          "measured_stage_lag1": 0,
+          "sim_instance_present_current": false
+        },
+        {
+          "beat": 144,
+          "measured_stage_lag0": 0,
+          "measured_stage_lag1": 0,
+          "sim_instance_present_current": false
+        }
+      ],
+      "tally_lag0": {
+        "revive": 0,
+        "noRevive": 6
+      },
+      "tally_lag1": {
+        "revive": 0,
+        "noRevive": 6
+      }
+    }
+  ],
+  "window_rows": [
+    {
+      "beat": 130,
+      "lane": 1,
+      "sim": {
+        "vocal_up": 3,
+        "vocal_boost": 7,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_up": 3,
+        "vocal_boost": 7,
+        "critical_rate_up": 4
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 1,
+          "type": "vocal_up",
+          "stages": 3,
+          "remainingBeats": 5,
+          "sourceSkillId": "sk-kkr-05-mizg-02-3"
+        },
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 9,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 9,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 4,
+          "remainingBeats": 23,
+          "sourceSkillId": "sk-kkr-05-mizg-02-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 130,
+      "lane": 2,
+      "sim": {
+        "critical_rate_up": 6
+      },
+      "measured": {
+        "critical_rate_up": 6
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 2,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 6,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 130,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 6,
+        "tension_up": 6,
+        "combo_score_up": 10,
+        "critical_rate_up": 13,
+        "focus": 10
+      },
+      "measured": {
+        "critical_rate_up": 13,
+        "combo_score_up": 16,
+        "tension_up": 6,
+        "vocal_boost": 9,
+        "focus": 10
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 13,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 10,
+          "remainingBeats": 0,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "tension_up",
+          "stages": 6,
+          "remainingBeats": 5,
+          "sourceSkillId": "sk-chs-05-hruh-00-2"
+        },
+        {
+          "lane": 3,
+          "type": "vocal_boost",
+          "stages": 6,
+          "remainingBeats": 16,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 7,
+          "remainingBeats": 16,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 13,
+          "remainingBeats": 40,
+          "sourceSkillId": "sk-ai-05-fest-00-2"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 7,
+          "remainingBeats": 27,
+          "sourceSkillId": "sk-ski-05-waso-00-3"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 26,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 130,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 4,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 9,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 9,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        }
+      ],
+      "activations": [
+        "sk-chs-05-hruh-00-1(kind=A,phase=main)"
+      ]
+    },
+    {
+      "beat": 130,
+      "lane": 5,
+      "sim": {},
+      "measured": {
+        "combo_score_up": 6
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 26,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 131,
+      "lane": 1,
+      "sim": {
+        "vocal_up": 3,
+        "vocal_boost": 7,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_up": 3,
+        "vocal_boost": 7,
+        "critical_rate_up": 4
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 1,
+          "type": "vocal_up",
+          "stages": 3,
+          "remainingBeats": 4,
+          "sourceSkillId": "sk-kkr-05-mizg-02-3"
+        },
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 8,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 8,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 4,
+          "remainingBeats": 22,
+          "sourceSkillId": "sk-kkr-05-mizg-02-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 131,
+      "lane": 2,
+      "sim": {
+        "critical_rate_up": 6
+      },
+      "measured": {
+        "critical_rate_up": 6
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 2,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 5,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 131,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 6,
+        "tension_up": 6,
+        "combo_score_up": 6,
+        "critical_rate_up": 13,
+        "focus": 10
+      },
+      "measured": {
+        "critical_rate_up": 13,
+        "tension_up": 6,
+        "vocal_boost": 9,
+        "focus": 10,
+        "combo_score_up": 6
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 12,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "tension_up",
+          "stages": 6,
+          "remainingBeats": 4,
+          "sourceSkillId": "sk-chs-05-hruh-00-2"
+        },
+        {
+          "lane": 3,
+          "type": "vocal_boost",
+          "stages": 6,
+          "remainingBeats": 15,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 7,
+          "remainingBeats": 15,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 13,
+          "remainingBeats": 39,
+          "sourceSkillId": "sk-ai-05-fest-00-2"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 7,
+          "remainingBeats": 26,
+          "sourceSkillId": "sk-ski-05-waso-00-3"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 25,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 131,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 4,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 8,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 8,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 131,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 6
+      },
+      "measured": {
+        "combo_score_up": 6
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 25,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 132,
+      "lane": 1,
+      "sim": {
+        "vocal_up": 3,
+        "vocal_boost": 7,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_up": 3,
+        "vocal_boost": 7,
+        "critical_rate_up": 4
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 1,
+          "type": "vocal_up",
+          "stages": 3,
+          "remainingBeats": 3,
+          "sourceSkillId": "sk-kkr-05-mizg-02-3"
+        },
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 7,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 7,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 4,
+          "remainingBeats": 21,
+          "sourceSkillId": "sk-kkr-05-mizg-02-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 132,
+      "lane": 2,
+      "sim": {
+        "critical_rate_up": 6
+      },
+      "measured": {
+        "critical_rate_up": 6
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 2,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 4,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 132,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 6,
+        "tension_up": 6,
+        "combo_score_up": 6,
+        "critical_rate_up": 13,
+        "focus": 10
+      },
+      "measured": {
+        "critical_rate_up": 13,
+        "tension_up": 6,
+        "vocal_boost": 9,
+        "focus": 10,
+        "combo_score_up": 6
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 11,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "tension_up",
+          "stages": 6,
+          "remainingBeats": 3,
+          "sourceSkillId": "sk-chs-05-hruh-00-2"
+        },
+        {
+          "lane": 3,
+          "type": "vocal_boost",
+          "stages": 6,
+          "remainingBeats": 14,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 7,
+          "remainingBeats": 14,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 13,
+          "remainingBeats": 38,
+          "sourceSkillId": "sk-ai-05-fest-00-2"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 7,
+          "remainingBeats": 25,
+          "sourceSkillId": "sk-ski-05-waso-00-3"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 24,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 132,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 4,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 7,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 7,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 132,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 6
+      },
+      "measured": {
+        "combo_score_up": 6
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 24,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 133,
+      "lane": 1,
+      "sim": {
+        "vocal_up": 3,
+        "vocal_boost": 7,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_up": 3,
+        "vocal_boost": 7,
+        "critical_rate_up": 4
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 1,
+          "type": "vocal_up",
+          "stages": 3,
+          "remainingBeats": 2,
+          "sourceSkillId": "sk-kkr-05-mizg-02-3"
+        },
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 6,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 6,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 4,
+          "remainingBeats": 20,
+          "sourceSkillId": "sk-kkr-05-mizg-02-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 133,
+      "lane": 2,
+      "sim": {
+        "critical_rate_up": 6
+      },
+      "measured": {
+        "critical_rate_up": 6
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 2,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 3,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 133,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 6,
+        "tension_up": 6,
+        "combo_score_up": 6,
+        "critical_rate_up": 13,
+        "focus": 10
+      },
+      "measured": {
+        "critical_rate_up": 13,
+        "tension_up": 6,
+        "vocal_boost": 9,
+        "focus": 10,
+        "combo_score_up": 6
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 10,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "tension_up",
+          "stages": 6,
+          "remainingBeats": 2,
+          "sourceSkillId": "sk-chs-05-hruh-00-2"
+        },
+        {
+          "lane": 3,
+          "type": "vocal_boost",
+          "stages": 6,
+          "remainingBeats": 13,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 7,
+          "remainingBeats": 13,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 13,
+          "remainingBeats": 37,
+          "sourceSkillId": "sk-ai-05-fest-00-2"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 7,
+          "remainingBeats": 24,
+          "sourceSkillId": "sk-ski-05-waso-00-3"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 23,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 133,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 4,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 6,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 6,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 133,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 6
+      },
+      "measured": {
+        "combo_score_up": 6
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 23,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 134,
+      "lane": 1,
+      "sim": {
+        "vocal_up": 3,
+        "vocal_boost": 7,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_up": 3,
+        "vocal_boost": 7,
+        "critical_rate_up": 4
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 1,
+          "type": "vocal_up",
+          "stages": 3,
+          "remainingBeats": 1,
+          "sourceSkillId": "sk-kkr-05-mizg-02-3"
+        },
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 5,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 5,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 4,
+          "remainingBeats": 19,
+          "sourceSkillId": "sk-kkr-05-mizg-02-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 134,
+      "lane": 2,
+      "sim": {
+        "critical_rate_up": 6
+      },
+      "measured": {
+        "critical_rate_up": 6
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 2,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 2,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 134,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 6,
+        "tension_up": 6,
+        "combo_score_up": 6,
+        "critical_rate_up": 13,
+        "focus": 10
+      },
+      "measured": {
+        "critical_rate_up": 13,
+        "tension_up": 6,
+        "vocal_boost": 9,
+        "focus": 10,
+        "combo_score_up": 6
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 9,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "tension_up",
+          "stages": 6,
+          "remainingBeats": 1,
+          "sourceSkillId": "sk-chs-05-hruh-00-2"
+        },
+        {
+          "lane": 3,
+          "type": "vocal_boost",
+          "stages": 6,
+          "remainingBeats": 12,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 7,
+          "remainingBeats": 12,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 13,
+          "remainingBeats": 36,
+          "sourceSkillId": "sk-ai-05-fest-00-2"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 7,
+          "remainingBeats": 23,
+          "sourceSkillId": "sk-ski-05-waso-00-3"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 22,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 134,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 4,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 5,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 5,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 134,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 6
+      },
+      "measured": {
+        "combo_score_up": 6
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 22,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 135,
+      "lane": 1,
+      "sim": {
+        "vocal_up": 3,
+        "vocal_boost": 7,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_up": 3,
+        "vocal_boost": 7,
+        "critical_rate_up": 4
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 1,
+          "type": "vocal_up",
+          "stages": 3,
+          "remainingBeats": 0,
+          "sourceSkillId": "sk-kkr-05-mizg-02-3"
+        },
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 4,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 4,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 4,
+          "remainingBeats": 18,
+          "sourceSkillId": "sk-kkr-05-mizg-02-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 135,
+      "lane": 2,
+      "sim": {
+        "critical_rate_up": 6
+      },
+      "measured": {
+        "critical_rate_up": 6
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 2,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 1,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 135,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 6,
+        "tension_up": 6,
+        "combo_score_up": 6,
+        "critical_rate_up": 13,
+        "focus": 10
+      },
+      "measured": {
+        "critical_rate_up": 13,
+        "tension_up": 6,
+        "vocal_boost": 9,
+        "focus": 10,
+        "combo_score_up": 6
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 8,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "tension_up",
+          "stages": 6,
+          "remainingBeats": 0,
+          "sourceSkillId": "sk-chs-05-hruh-00-2"
+        },
+        {
+          "lane": 3,
+          "type": "vocal_boost",
+          "stages": 6,
+          "remainingBeats": 11,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 7,
+          "remainingBeats": 11,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 13,
+          "remainingBeats": 35,
+          "sourceSkillId": "sk-ai-05-fest-00-2"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 7,
+          "remainingBeats": 22,
+          "sourceSkillId": "sk-ski-05-waso-00-3"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 21,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 135,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 4,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 4,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 4,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 135,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 6
+      },
+      "measured": {
+        "combo_score_up": 6
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 21,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 136,
+      "lane": 1,
+      "sim": {
+        "vocal_boost": 7,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 7,
+        "critical_rate_up": 4,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 10,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 10,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 4,
+          "remainingBeats": 24,
+          "sourceSkillId": "sk-kkr-05-mizg-02-1"
+        },
+        {
+          "lane": 1,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 51,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 136,
+      "lane": 2,
+      "sim": {
+        "critical_rate_up": 6
+      },
+      "measured": {
+        "critical_rate_up": 6,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 2,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 7,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        },
+        {
+          "lane": 2,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 51,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": [
+        "sk-rio-05-fest-01-3(kind=P,phase=last)"
+      ]
+    },
+    {
+      "beat": 136,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 6,
+        "combo_score_up": 6,
+        "critical_rate_up": 13,
+        "focus": 10
+      },
+      "measured": {
+        "critical_rate_up": 13,
+        "vocal_boost": 9,
+        "focus": 10,
+        "combo_score_up": 9
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 14,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "vocal_boost",
+          "stages": 6,
+          "remainingBeats": 17,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 7,
+          "remainingBeats": 17,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 13,
+          "remainingBeats": 41,
+          "sourceSkillId": "sk-ai-05-fest-00-2"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 7,
+          "remainingBeats": 28,
+          "sourceSkillId": "sk-ski-05-waso-00-3"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 27,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 51,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 136,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 4,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 10,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 10,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 51,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 136,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 6
+      },
+      "measured": {
+        "combo_score_up": 9
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 27,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        },
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 51,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 137,
+      "lane": 1,
+      "sim": {
+        "vocal_boost": 7,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 7,
+        "critical_rate_up": 4,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 9,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 9,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 4,
+          "remainingBeats": 23,
+          "sourceSkillId": "sk-kkr-05-mizg-02-1"
+        },
+        {
+          "lane": 1,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 50,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 137,
+      "lane": 2,
+      "sim": {
+        "combo_score_up": 3,
+        "critical_rate_up": 6
+      },
+      "measured": {
+        "critical_rate_up": 6,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 2,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 6,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        },
+        {
+          "lane": 2,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 50,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 137,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 6,
+        "combo_score_up": 9,
+        "critical_rate_up": 13,
+        "focus": 10
+      },
+      "measured": {
+        "critical_rate_up": 13,
+        "vocal_boost": 9,
+        "focus": 10,
+        "combo_score_up": 9
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 13,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "vocal_boost",
+          "stages": 6,
+          "remainingBeats": 16,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 7,
+          "remainingBeats": 16,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 13,
+          "remainingBeats": 40,
+          "sourceSkillId": "sk-ai-05-fest-00-2"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 7,
+          "remainingBeats": 27,
+          "sourceSkillId": "sk-ski-05-waso-00-3"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 26,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 50,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 137,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 4,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 9,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 9,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 50,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 137,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 9
+      },
+      "measured": {
+        "combo_score_up": 9
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 26,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        },
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 50,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 138,
+      "lane": 1,
+      "sim": {
+        "vocal_boost": 7,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 7,
+        "critical_rate_up": 4,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 8,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 8,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 4,
+          "remainingBeats": 22,
+          "sourceSkillId": "sk-kkr-05-mizg-02-1"
+        },
+        {
+          "lane": 1,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 49,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 138,
+      "lane": 2,
+      "sim": {
+        "combo_score_up": 3,
+        "critical_rate_up": 6
+      },
+      "measured": {
+        "critical_rate_up": 6,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 2,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 5,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        },
+        {
+          "lane": 2,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 49,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 138,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 6,
+        "combo_score_up": 9,
+        "critical_rate_up": 13,
+        "focus": 10
+      },
+      "measured": {
+        "critical_rate_up": 13,
+        "vocal_boost": 9,
+        "focus": 10,
+        "combo_score_up": 9
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 12,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "vocal_boost",
+          "stages": 6,
+          "remainingBeats": 15,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 7,
+          "remainingBeats": 15,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 13,
+          "remainingBeats": 39,
+          "sourceSkillId": "sk-ai-05-fest-00-2"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 7,
+          "remainingBeats": 26,
+          "sourceSkillId": "sk-ski-05-waso-00-3"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 25,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 49,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 138,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 4,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 8,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 8,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 49,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 138,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 9
+      },
+      "measured": {
+        "combo_score_up": 9
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 25,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        },
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 49,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 139,
+      "lane": 1,
+      "sim": {
+        "vocal_boost": 7,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 7,
+        "critical_rate_up": 4,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 7,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 7,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 4,
+          "remainingBeats": 21,
+          "sourceSkillId": "sk-kkr-05-mizg-02-1"
+        },
+        {
+          "lane": 1,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 48,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 139,
+      "lane": 2,
+      "sim": {
+        "combo_score_up": 3,
+        "critical_rate_up": 6
+      },
+      "measured": {
+        "critical_rate_up": 6,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 2,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 4,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        },
+        {
+          "lane": 2,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 48,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 139,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 6,
+        "combo_score_up": 9,
+        "critical_rate_up": 13,
+        "focus": 10
+      },
+      "measured": {
+        "critical_rate_up": 13,
+        "vocal_boost": 9,
+        "focus": 10,
+        "combo_score_up": 9
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 11,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "vocal_boost",
+          "stages": 6,
+          "remainingBeats": 14,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 7,
+          "remainingBeats": 14,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 13,
+          "remainingBeats": 38,
+          "sourceSkillId": "sk-ai-05-fest-00-2"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 7,
+          "remainingBeats": 25,
+          "sourceSkillId": "sk-ski-05-waso-00-3"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 24,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 48,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 139,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 4,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 7,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 7,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 48,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 139,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 9
+      },
+      "measured": {
+        "combo_score_up": 9
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 24,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        },
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 48,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 140,
+      "lane": 1,
+      "sim": {
+        "vocal_boost": 7,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 7,
+        "critical_rate_up": 4,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 6,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 6,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 4,
+          "remainingBeats": 20,
+          "sourceSkillId": "sk-kkr-05-mizg-02-1"
+        },
+        {
+          "lane": 1,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 47,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 140,
+      "lane": 2,
+      "sim": {
+        "combo_score_up": 3,
+        "critical_rate_up": 6
+      },
+      "measured": {
+        "critical_rate_up": 6,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 2,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 3,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        },
+        {
+          "lane": 2,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 47,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 140,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 6,
+        "combo_score_up": 9,
+        "critical_rate_up": 13,
+        "focus": 10
+      },
+      "measured": {
+        "critical_rate_up": 13,
+        "vocal_boost": 9,
+        "focus": 10,
+        "combo_score_up": 9
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 10,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "vocal_boost",
+          "stages": 6,
+          "remainingBeats": 13,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 7,
+          "remainingBeats": 13,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 13,
+          "remainingBeats": 37,
+          "sourceSkillId": "sk-ai-05-fest-00-2"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 7,
+          "remainingBeats": 24,
+          "sourceSkillId": "sk-ski-05-waso-00-3"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 23,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 47,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 140,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 4,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 6,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 6,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 47,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 140,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 9
+      },
+      "measured": {
+        "combo_score_up": 9
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 23,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        },
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 47,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 141,
+      "lane": 1,
+      "sim": {
+        "vocal_boost": 7,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 7,
+        "critical_rate_up": 4,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 5,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 5,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 4,
+          "remainingBeats": 19,
+          "sourceSkillId": "sk-kkr-05-mizg-02-1"
+        },
+        {
+          "lane": 1,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 46,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 141,
+      "lane": 2,
+      "sim": {
+        "combo_score_up": 3,
+        "critical_rate_up": 6
+      },
+      "measured": {
+        "critical_rate_up": 6,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 2,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 2,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        },
+        {
+          "lane": 2,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 46,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 141,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 6,
+        "combo_score_up": 9,
+        "critical_rate_up": 13,
+        "focus": 10
+      },
+      "measured": {
+        "critical_rate_up": 13,
+        "vocal_boost": 9,
+        "focus": 10,
+        "combo_score_up": 9
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 9,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "vocal_boost",
+          "stages": 6,
+          "remainingBeats": 12,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 7,
+          "remainingBeats": 12,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 13,
+          "remainingBeats": 36,
+          "sourceSkillId": "sk-ai-05-fest-00-2"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 7,
+          "remainingBeats": 23,
+          "sourceSkillId": "sk-ski-05-waso-00-3"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 22,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 46,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 141,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 4,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 5,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 5,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 46,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 141,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 9
+      },
+      "measured": {
+        "combo_score_up": 9
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 22,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        },
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 46,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 142,
+      "lane": 1,
+      "sim": {
+        "vocal_boost": 7,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 7,
+        "critical_rate_up": 4,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 4,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 4,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 4,
+          "remainingBeats": 18,
+          "sourceSkillId": "sk-kkr-05-mizg-02-1"
+        },
+        {
+          "lane": 1,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 45,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 142,
+      "lane": 2,
+      "sim": {
+        "combo_score_up": 3,
+        "critical_rate_up": 6
+      },
+      "measured": {
+        "critical_rate_up": 6,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 2,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 1,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        },
+        {
+          "lane": 2,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 45,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 142,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 6,
+        "combo_score_up": 9,
+        "critical_rate_up": 13,
+        "focus": 10
+      },
+      "measured": {
+        "critical_rate_up": 13,
+        "vocal_boost": 9,
+        "focus": 10,
+        "combo_score_up": 9
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 8,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "vocal_boost",
+          "stages": 6,
+          "remainingBeats": 11,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 7,
+          "remainingBeats": 11,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 13,
+          "remainingBeats": 35,
+          "sourceSkillId": "sk-ai-05-fest-00-2"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 7,
+          "remainingBeats": 22,
+          "sourceSkillId": "sk-ski-05-waso-00-3"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 21,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 45,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 142,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 4,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 4,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 4,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 45,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 142,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 9
+      },
+      "measured": {
+        "combo_score_up": 9
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 21,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        },
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 45,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 143,
+      "lane": 1,
+      "sim": {
+        "vocal_boost": 7,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 7,
+        "critical_rate_up": 4,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 3,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 3,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 4,
+          "remainingBeats": 17,
+          "sourceSkillId": "sk-kkr-05-mizg-02-1"
+        },
+        {
+          "lane": 1,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 44,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 143,
+      "lane": 2,
+      "sim": {
+        "combo_score_up": 3,
+        "critical_rate_up": 6
+      },
+      "measured": {
+        "critical_rate_up": 6,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 2,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 0,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        },
+        {
+          "lane": 2,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 44,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 143,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 6,
+        "sp_skill_score_up": 2,
+        "combo_score_up": 9,
+        "critical_rate_up": 20,
+        "focus": 10
+      },
+      "measured": {
+        "critical_rate_up": 20,
+        "vocal_boost": 9,
+        "focus": 10,
+        "combo_score_up": 9,
+        "sp_skill_score_up": 2
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 7,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "vocal_boost",
+          "stages": 6,
+          "remainingBeats": 10,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 7,
+          "remainingBeats": 10,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 13,
+          "remainingBeats": 34,
+          "sourceSkillId": "sk-ai-05-fest-00-2"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 7,
+          "remainingBeats": 21,
+          "sourceSkillId": "sk-ski-05-waso-00-3"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 20,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 44,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        },
+        {
+          "lane": 3,
+          "type": "sp_skill_score_up",
+          "stages": 2,
+          "remainingBeats": 997,
+          "sourceSkillId": "sk-chs-05-hruh-00-3"
+        },
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 7,
+          "remainingBeats": 37,
+          "sourceSkillId": "sk-chs-05-hruh-00-3"
+        }
+      ],
+      "activations": [
+        "sk-ai-05-fest-00-1(kind=SP,phase=main)"
+      ]
+    },
+    {
+      "beat": 143,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 4,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 3,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 3,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 44,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": [
+        "sk-chs-05-hruh-00-3(kind=P,phase=first)"
+      ]
+    },
+    {
+      "beat": 143,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 9
+      },
+      "measured": {
+        "combo_score_up": 9
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 20,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        },
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 44,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 144,
+      "lane": 1,
+      "sim": {
+        "vocal_boost": 7,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 7,
+        "critical_rate_up": 4,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 2,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 2,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 4,
+          "remainingBeats": 16,
+          "sourceSkillId": "sk-kkr-05-mizg-02-1"
+        },
+        {
+          "lane": 1,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 43,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 144,
+      "lane": 2,
+      "sim": {
+        "combo_score_up": 3
+      },
+      "measured": {
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 2,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 43,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 144,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 6,
+        "sp_skill_score_up": 2,
+        "combo_score_up": 9,
+        "critical_rate_up": 20,
+        "focus": 10
+      },
+      "measured": {
+        "critical_rate_up": 20,
+        "vocal_boost": 9,
+        "focus": 10,
+        "combo_score_up": 9,
+        "sp_skill_score_up": 2
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 6,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "vocal_boost",
+          "stages": 6,
+          "remainingBeats": 9,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 7,
+          "remainingBeats": 9,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 13,
+          "remainingBeats": 33,
+          "sourceSkillId": "sk-ai-05-fest-00-2"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 7,
+          "remainingBeats": 20,
+          "sourceSkillId": "sk-ski-05-waso-00-3"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 19,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 43,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        },
+        {
+          "lane": 3,
+          "type": "sp_skill_score_up",
+          "stages": 2,
+          "remainingBeats": 996,
+          "sourceSkillId": "sk-chs-05-hruh-00-3"
+        },
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 7,
+          "remainingBeats": 36,
+          "sourceSkillId": "sk-chs-05-hruh-00-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 144,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 4,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 2,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 2,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 43,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 144,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 9
+      },
+      "measured": {
+        "combo_score_up": 9
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 19,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        },
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 43,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 145,
+      "lane": 1,
+      "sim": {
+        "vocal_boost": 7,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 7,
+        "critical_rate_up": 4,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 1,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 1,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 1,
+          "type": "vocal_boost",
+          "stages": 4,
+          "remainingBeats": 15,
+          "sourceSkillId": "sk-kkr-05-mizg-02-1"
+        },
+        {
+          "lane": 1,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 42,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 145,
+      "lane": 2,
+      "sim": {
+        "combo_score_up": 3
+      },
+      "measured": {
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 2,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 42,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 145,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 6,
+        "sp_skill_score_up": 2,
+        "combo_score_up": 9,
+        "critical_rate_up": 20,
+        "focus": 10
+      },
+      "measured": {
+        "critical_rate_up": 20,
+        "vocal_boost": 9,
+        "focus": 10,
+        "combo_score_up": 9,
+        "sp_skill_score_up": 2
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 6,
+          "remainingBeats": 5,
+          "sourceSkillId": "sk-ski-05-waso-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "vocal_boost",
+          "stages": 6,
+          "remainingBeats": 8,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 7,
+          "remainingBeats": 8,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 13,
+          "remainingBeats": 32,
+          "sourceSkillId": "sk-ai-05-fest-00-2"
+        },
+        {
+          "lane": 3,
+          "type": "focus",
+          "stages": 7,
+          "remainingBeats": 19,
+          "sourceSkillId": "sk-ski-05-waso-00-3"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 18,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        },
+        {
+          "lane": 3,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 42,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        },
+        {
+          "lane": 3,
+          "type": "sp_skill_score_up",
+          "stages": 2,
+          "remainingBeats": 995,
+          "sourceSkillId": "sk-chs-05-hruh-00-3"
+        },
+        {
+          "lane": 3,
+          "type": "critical_rate_up",
+          "stages": 7,
+          "remainingBeats": 35,
+          "sourceSkillId": "sk-chs-05-hruh-00-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 145,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      },
+      "measured": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4,
+        "combo_score_up": 3
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 4,
+          "type": "vocal_boost",
+          "stages": 3,
+          "remainingBeats": 1,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "critical_rate_up",
+          "stages": 4,
+          "remainingBeats": 1,
+          "sourceSkillId": "sk-rio-05-fest-01-1"
+        },
+        {
+          "lane": 4,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 42,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    },
+    {
+      "beat": 145,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 9
+      },
+      "measured": {
+        "combo_score_up": 9
+      },
+      "measured_unmapped": [],
+      "sim_frame_missing": false,
+      "instances": [
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 6,
+          "remainingBeats": 18,
+          "sourceSkillId": "sk-chs-05-hruh-00-1"
+        },
+        {
+          "lane": 5,
+          "type": "combo_score_up",
+          "stages": 3,
+          "remainingBeats": 42,
+          "sourceSkillId": "sk-rio-05-fest-01-3"
+        }
+      ],
+      "activations": []
+    }
+  ],
+  "canonical_audit_trace_snapshots": [
+    {
+      "beat": 130,
+      "lane": 1,
+      "sim": {
+        "vocal_up": 3,
+        "vocal_boost": 7,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 130,
+      "lane": 2,
+      "sim": {
+        "critical_rate_up": 6
+      }
+    },
+    {
+      "beat": 130,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 9,
+        "tension_up": 6,
+        "combo_score_up": 10,
+        "critical_rate_up": 13,
+        "focus": 10
+      }
+    },
+    {
+      "beat": 130,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 130,
+      "lane": 5,
+      "sim": {}
+    },
+    {
+      "beat": 131,
+      "lane": 1,
+      "sim": {
+        "vocal_up": 3,
+        "vocal_boost": 7,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 131,
+      "lane": 2,
+      "sim": {
+        "critical_rate_up": 6
+      }
+    },
+    {
+      "beat": 131,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 9,
+        "tension_up": 6,
+        "combo_score_up": 6,
+        "critical_rate_up": 13,
+        "focus": 10
+      }
+    },
+    {
+      "beat": 131,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 131,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 6
+      }
+    },
+    {
+      "beat": 132,
+      "lane": 1,
+      "sim": {
+        "vocal_up": 3,
+        "vocal_boost": 7,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 132,
+      "lane": 2,
+      "sim": {
+        "critical_rate_up": 6
+      }
+    },
+    {
+      "beat": 132,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 9,
+        "tension_up": 6,
+        "combo_score_up": 6,
+        "critical_rate_up": 13,
+        "focus": 10
+      }
+    },
+    {
+      "beat": 132,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 132,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 6
+      }
+    },
+    {
+      "beat": 133,
+      "lane": 1,
+      "sim": {
+        "vocal_up": 3,
+        "vocal_boost": 7,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 133,
+      "lane": 2,
+      "sim": {
+        "critical_rate_up": 6
+      }
+    },
+    {
+      "beat": 133,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 9,
+        "tension_up": 6,
+        "combo_score_up": 6,
+        "critical_rate_up": 13,
+        "focus": 10
+      }
+    },
+    {
+      "beat": 133,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 133,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 6
+      }
+    },
+    {
+      "beat": 134,
+      "lane": 1,
+      "sim": {
+        "vocal_up": 3,
+        "vocal_boost": 7,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 134,
+      "lane": 2,
+      "sim": {
+        "critical_rate_up": 6
+      }
+    },
+    {
+      "beat": 134,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 9,
+        "tension_up": 6,
+        "combo_score_up": 6,
+        "critical_rate_up": 13,
+        "focus": 10
+      }
+    },
+    {
+      "beat": 134,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 134,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 6
+      }
+    },
+    {
+      "beat": 135,
+      "lane": 1,
+      "sim": {
+        "vocal_up": 3,
+        "vocal_boost": 7,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 135,
+      "lane": 2,
+      "sim": {
+        "critical_rate_up": 6
+      }
+    },
+    {
+      "beat": 135,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 9,
+        "tension_up": 6,
+        "combo_score_up": 6,
+        "critical_rate_up": 13,
+        "focus": 10
+      }
+    },
+    {
+      "beat": 135,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 135,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 6
+      }
+    },
+    {
+      "beat": 136,
+      "lane": 1,
+      "sim": {
+        "vocal_boost": 7,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 136,
+      "lane": 2,
+      "sim": {
+        "critical_rate_up": 6
+      }
+    },
+    {
+      "beat": 136,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 9,
+        "combo_score_up": 6,
+        "critical_rate_up": 13,
+        "focus": 10
+      }
+    },
+    {
+      "beat": 136,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 136,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 6
+      }
+    },
+    {
+      "beat": 137,
+      "lane": 1,
+      "sim": {
+        "vocal_boost": 7,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 137,
+      "lane": 2,
+      "sim": {
+        "combo_score_up": 3,
+        "critical_rate_up": 6
+      }
+    },
+    {
+      "beat": 137,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 9,
+        "combo_score_up": 9,
+        "critical_rate_up": 13,
+        "focus": 10
+      }
+    },
+    {
+      "beat": 137,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 137,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 9
+      }
+    },
+    {
+      "beat": 138,
+      "lane": 1,
+      "sim": {
+        "vocal_boost": 7,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 138,
+      "lane": 2,
+      "sim": {
+        "combo_score_up": 3,
+        "critical_rate_up": 6
+      }
+    },
+    {
+      "beat": 138,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 9,
+        "combo_score_up": 9,
+        "critical_rate_up": 13,
+        "focus": 10
+      }
+    },
+    {
+      "beat": 138,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 138,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 9
+      }
+    },
+    {
+      "beat": 139,
+      "lane": 1,
+      "sim": {
+        "vocal_boost": 7,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 139,
+      "lane": 2,
+      "sim": {
+        "combo_score_up": 3,
+        "critical_rate_up": 6
+      }
+    },
+    {
+      "beat": 139,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 9,
+        "combo_score_up": 9,
+        "critical_rate_up": 13,
+        "focus": 10
+      }
+    },
+    {
+      "beat": 139,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 139,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 9
+      }
+    },
+    {
+      "beat": 140,
+      "lane": 1,
+      "sim": {
+        "vocal_boost": 7,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 140,
+      "lane": 2,
+      "sim": {
+        "combo_score_up": 3,
+        "critical_rate_up": 6
+      }
+    },
+    {
+      "beat": 140,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 9,
+        "combo_score_up": 9,
+        "critical_rate_up": 13,
+        "focus": 10
+      }
+    },
+    {
+      "beat": 140,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 140,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 9
+      }
+    },
+    {
+      "beat": 141,
+      "lane": 1,
+      "sim": {
+        "vocal_boost": 7,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 141,
+      "lane": 2,
+      "sim": {
+        "combo_score_up": 3,
+        "critical_rate_up": 6
+      }
+    },
+    {
+      "beat": 141,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 9,
+        "combo_score_up": 9,
+        "critical_rate_up": 13,
+        "focus": 10
+      }
+    },
+    {
+      "beat": 141,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 141,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 9
+      }
+    },
+    {
+      "beat": 142,
+      "lane": 1,
+      "sim": {
+        "vocal_boost": 7,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 142,
+      "lane": 2,
+      "sim": {
+        "combo_score_up": 3,
+        "critical_rate_up": 6
+      }
+    },
+    {
+      "beat": 142,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 9,
+        "combo_score_up": 9,
+        "critical_rate_up": 13,
+        "focus": 10
+      }
+    },
+    {
+      "beat": 142,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 142,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 9
+      }
+    },
+    {
+      "beat": 143,
+      "lane": 1,
+      "sim": {
+        "vocal_boost": 7,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 143,
+      "lane": 2,
+      "sim": {
+        "combo_score_up": 3,
+        "critical_rate_up": 6
+      }
+    },
+    {
+      "beat": 143,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 9,
+        "sp_skill_score_up": 2,
+        "combo_score_up": 9,
+        "critical_rate_up": 20,
+        "focus": 10
+      }
+    },
+    {
+      "beat": 143,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 143,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 9
+      }
+    },
+    {
+      "beat": 144,
+      "lane": 1,
+      "sim": {
+        "vocal_boost": 7,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 144,
+      "lane": 2,
+      "sim": {
+        "combo_score_up": 3
+      }
+    },
+    {
+      "beat": 144,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 9,
+        "sp_skill_score_up": 2,
+        "combo_score_up": 9,
+        "critical_rate_up": 20,
+        "focus": 10
+      }
+    },
+    {
+      "beat": 144,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 144,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 9
+      }
+    },
+    {
+      "beat": 145,
+      "lane": 1,
+      "sim": {
+        "vocal_boost": 7,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 145,
+      "lane": 2,
+      "sim": {
+        "combo_score_up": 3
+      }
+    },
+    {
+      "beat": 145,
+      "lane": 3,
+      "sim": {
+        "vocal_boost": 9,
+        "sp_skill_score_up": 2,
+        "combo_score_up": 9,
+        "critical_rate_up": 20,
+        "focus": 10
+      }
+    },
+    {
+      "beat": 145,
+      "lane": 4,
+      "sim": {
+        "vocal_boost": 3,
+        "combo_score_up": 3,
+        "critical_rate_up": 4
+      }
+    },
+    {
+      "beat": 145,
+      "lane": 5,
+      "sim": {
+        "combo_score_up": 9
+      }
+    }
+  ],
+  "fresh_vs_canonical_audit_trace_diffs": [
+    "b130 L3: fresh={\"vocal_boost\":6,\"tension_up\":6,\"combo_score_up\":10,\"critical_rate_up\":13,\"focus\":10} canonical={\"vocal_boost\":9,\"tension_up\":6,\"combo_score_up\":10,\"critical_rate_up\":13,\"focus\":10}",
+    "b131 L3: fresh={\"vocal_boost\":6,\"tension_up\":6,\"combo_score_up\":6,\"critical_rate_up\":13,\"focus\":10} canonical={\"vocal_boost\":9,\"tension_up\":6,\"combo_score_up\":6,\"critical_rate_up\":13,\"focus\":10}",
+    "b132 L3: fresh={\"vocal_boost\":6,\"tension_up\":6,\"combo_score_up\":6,\"critical_rate_up\":13,\"focus\":10} canonical={\"vocal_boost\":9,\"tension_up\":6,\"combo_score_up\":6,\"critical_rate_up\":13,\"focus\":10}",
+    "b133 L3: fresh={\"vocal_boost\":6,\"tension_up\":6,\"combo_score_up\":6,\"critical_rate_up\":13,\"focus\":10} canonical={\"vocal_boost\":9,\"tension_up\":6,\"combo_score_up\":6,\"critical_rate_up\":13,\"focus\":10}",
+    "b134 L3: fresh={\"vocal_boost\":6,\"tension_up\":6,\"combo_score_up\":6,\"critical_rate_up\":13,\"focus\":10} canonical={\"vocal_boost\":9,\"tension_up\":6,\"combo_score_up\":6,\"critical_rate_up\":13,\"focus\":10}",
+    "b135 L3: fresh={\"vocal_boost\":6,\"tension_up\":6,\"combo_score_up\":6,\"critical_rate_up\":13,\"focus\":10} canonical={\"vocal_boost\":9,\"tension_up\":6,\"combo_score_up\":6,\"critical_rate_up\":13,\"focus\":10}",
+    "b136 L3: fresh={\"vocal_boost\":6,\"combo_score_up\":6,\"critical_rate_up\":13,\"focus\":10} canonical={\"vocal_boost\":9,\"combo_score_up\":6,\"critical_rate_up\":13,\"focus\":10}",
+    "b137 L3: fresh={\"vocal_boost\":6,\"combo_score_up\":9,\"critical_rate_up\":13,\"focus\":10} canonical={\"vocal_boost\":9,\"combo_score_up\":9,\"critical_rate_up\":13,\"focus\":10}",
+    "b138 L3: fresh={\"vocal_boost\":6,\"combo_score_up\":9,\"critical_rate_up\":13,\"focus\":10} canonical={\"vocal_boost\":9,\"combo_score_up\":9,\"critical_rate_up\":13,\"focus\":10}",
+    "b139 L3: fresh={\"vocal_boost\":6,\"combo_score_up\":9,\"critical_rate_up\":13,\"focus\":10} canonical={\"vocal_boost\":9,\"combo_score_up\":9,\"critical_rate_up\":13,\"focus\":10}",
+    "b140 L3: fresh={\"vocal_boost\":6,\"combo_score_up\":9,\"critical_rate_up\":13,\"focus\":10} canonical={\"vocal_boost\":9,\"combo_score_up\":9,\"critical_rate_up\":13,\"focus\":10}",
+    "b141 L3: fresh={\"vocal_boost\":6,\"combo_score_up\":9,\"critical_rate_up\":13,\"focus\":10} canonical={\"vocal_boost\":9,\"combo_score_up\":9,\"critical_rate_up\":13,\"focus\":10}",
+    "b142 L3: fresh={\"vocal_boost\":6,\"combo_score_up\":9,\"critical_rate_up\":13,\"focus\":10} canonical={\"vocal_boost\":9,\"combo_score_up\":9,\"critical_rate_up\":13,\"focus\":10}",
+    "b143 L3: fresh={\"vocal_boost\":6,\"sp_skill_score_up\":2,\"combo_score_up\":9,\"critical_rate_up\":20,\"focus\":10} canonical={\"vocal_boost\":9,\"sp_skill_score_up\":2,\"combo_score_up\":9,\"critical_rate_up\":20,\"focus\":10}",
+    "b144 L3: fresh={\"vocal_boost\":6,\"sp_skill_score_up\":2,\"combo_score_up\":9,\"critical_rate_up\":20,\"focus\":10} canonical={\"vocal_boost\":9,\"sp_skill_score_up\":2,\"combo_score_up\":9,\"critical_rate_up\":20,\"focus\":10}",
+    "b145 L3: fresh={\"vocal_boost\":6,\"sp_skill_score_up\":2,\"combo_score_up\":9,\"critical_rate_up\":20,\"focus\":10} canonical={\"vocal_boost\":9,\"sp_skill_score_up\":2,\"combo_score_up\":9,\"critical_rate_up\":20,\"focus\":10}"
+  ]
+}

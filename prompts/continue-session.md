@@ -40,9 +40,11 @@ IDOLY PRIDE（アイプラ）ライブスコア計算機の**開発を引き継�
    - T5 リプレイ値（`tests/golden/t5-scores.golden.test.ts`）: **17,521,599,508**
      （実測 17,529,132,014 に対し誤差 **−0.043%**。Phase 14-D までの 17,516,522,572 は旧値）
    - CLI/UI 確定値（乱数中立・crit なし）: **2,581,114,209**（旧値 2,580,397,520）
-   - 単一 HTML UI 確定値（T5 初期編成・`tests/ui/smoke.test.ts`）: **2,446,493,589**
-     ※ これは `dist/aipura_simulator.html`（2026-09-21 = Phase 14-D ビルド＝**旧エンジン**）の値。
-     `node tools/build_ui.mjs` で再ビルドすると変わるため、再ビルド時にスモーク側も更新する
+   - 単一 HTML UI 確定値（T5 初期編成・`tests/ui/smoke.test.ts`）: **2,447,170,546**
+     ※ 2026-09-27 に `node tools/build_ui.mjs` で再ビルド済み（Phase 14-E/14-F 反映）。
+     旧値は 2,446,493,589（2026-09-21 = Phase 14-D ビルド＝旧エンジン）。設定 JSON import
+     ケースは 112,669,861（旧 112,623,系）。**UI を再ビルドしたら必ず `npx vitest run tests/ui`
+     を回してこの 2 値を照合する**（差分はエンジンのみ由来か、必ず符号と magnitude を説明すること）
      （手順: `prompts/phase15-followups.md` 15-5）
    - **変更根拠なしにこの値を動かさない**。スコアが動いた場合はまずバフセルの符号・件数で
      説明を試みる（`research/26_data_integrity/phase14f_revival_audit.md` §5-3 がその教訓）
