@@ -1,4 +1,4 @@
-# 12. 実装ログ（Implementation Log）
+﻿# 12. 実装ログ（Implementation Log）
 
 - 目的: フェーズごとの実装記録・決定事項・発見事項を時系列で記録する（PLAN.md §14 に対応）
 
@@ -3066,3 +3066,144 @@ cells_final_{T5,S1,S2,S3}.json・summary.json・rounding_test.mjs・unit_test2.m
 
 
 
+
+
+---
+
+## Phase 14-E（2026-09-21 完了）— ステップB-1: S1実測確定「スキル単位トリガー条件による P/フォト前半発動タイプ判定」+ effectInspector デバッグフック
+
+### 1. 確定事実（S1 実測・発動ログ 33 件との突合）
+- **P/フォトの前半/後半発動タイプは「効果行」ではなく「スキル単位トリガー」
+  （マスタ `levels[].triggerId`）で決まる**:
+  - S1 L1 こころ P「ゆらゆらドボーン！」（`sk-kkr-05-mizg-02-3`・Lv3）: スキル単位
+    triggerId は空、効果行は 2 行とも `tg-position_attribute_vocal` 由来の
+    `self_vocal_lane`（静的）。旧実装は「無条件行（none）なし → 後発動」のため
+    b1/b51/b101/… の後半発動となり、実測（**b1 開幕発動**・1/50/100/149）と
+    1 ビートズレていた。実機では b1 にボーカル上昇が表示される（開幕 P 4 連発・
+    research/12 §7-6「b1 のダッシュ L1/L4/L5」）。
+  - 対照: S1 L2「過去の私へ」（`sk-rio-05-fest-01-3`）はスキル単位 `tg-combo-80`
+    → 後半発動（実測 b136 のみ・不変）。逆襲のドッキリ企画はスキル単位
+    `tg-position_attribute_vocal` → 後半・gap 50/50/35。
+  - ルール: **スキル単位トリガー無条件（triggerId 空 → `condition: "none"`）かつ
+    効果行条件がすべて静的（レーン属性・配置・編成人数等・ライブ中不変）なら、
+    無条件行を持たなくても前半発動タイプ**（b1 開幕ウェーブ発動・発動間隔は
+    gap CT−1 系列）。スキル単位条件付きは従来どおり後半タイプ。
+    効果行の条件は行ごとの適用可否ゲートとして従来どおり機能する。
+
+### 2. 実装
+- `src/timeline/types.ts`: `SkillDef.condition?: EffectCondition`（スキル単位
+  トリガー条件。undefined = golden/フォト等の従来経路 → 効果行ベース判定に
+  フォールバック）/ `SimulateInput.effectInspector`（デバッグ専用フック:
+  ビート処理完了後に内部バフインスタンス状態を観測。実測突合ツール専用）。
+- `src/timeline/engine.ts`:
+  - `LaneState` を export（フックの型として参照）。
+  - `isStaticLiveCondition` 追加（none/battle_only/self_*_lane/self_center/
+    self_most_left/self_most_right/music_limited/count_*）。
+  - `activatePhaseSkills`: `isUnconditional` を
+    `hasNoneRow || (skill.condition === "none" && 全効果行が静的)` に拡張。
+    `condition` 非 none または undefined のスキルは挙動不変。
+  - ステップ11（後半 P 発動）完了後に `ctx.input.effectInspector?.(beat, states)` を呼出。
+- `src/skillLevels.ts`: `SkillLevelsEntry.tc`（スキル単位トリガーの条件テーブル
+  番号）を追加し `decodeSkillLevel` で `SkillDef.condition` を復元。
+  triggerId は全 2043 スキルでレベル間不変を vendor/Skill.json で検証済み（0 変動）。
+- `tools/importers/build_data_phase6.mjs`: `buildSkillsLevels` が `tc` を出力
+  （レベル間変動時は先頭レベル採用 + `stats.skillTriggerLevelVaries` に計上・警告）。
+- `data/skills_levels.json` 再生成（`npm run build:data:ext`）。**tc 以外の
+  セマンティック差分 0 件**（全 1482 スキル × 全レベルの効果行・CT・コストを
+  旧ファイルと機械比較済み）。
+- `tools/debug_s1_l1_vocalup.ts`: effectInspector 版に刷新（インスタンス単位の
+  sourceSkillId・残りビートを直接観測 + P スキル発動ログ出力）。
+
+### 3. 検証結果
+- **S1 P スキル発動（sim）**: L1 ゆらゆらドボーン b1[first]/b50/b100/b150、
+  L4 SOS団のマスコット第二号（`sk-chs-05-hruh-00-2`）b1[first]/b50/b100/b150、
+  L5 さらけ出す本音（`sk-ski-05-waso-00-3`）b1[first]/b60/b120、
+  L2 過去の私へ b136 のみ[後半] — 実測 1/50/100/149・b136 と一致
+  （b149 はバナー表示抑制アーティファクトで真の発動は b150・research/12 §7-6 確定済み）。
+- **フリップ対象の全数調査**: 全 P スキルで後半→前半に分類が変わるのは
+  「ゆらゆらドボーン！」と「第1王女は発明家」（`sk-rio-05-trbl-00-2`・実測デッキ
+  未使用）の 2 種のみ。**S2/S3 トレースはバイト単位で不変**（再ダンプで確認）。
+- **S1 実測バフ突合**（`run_audit_post_decay.py`）: 一致率 **93.77% → 95.53%**
+  （1623/1699）、`DECAY_TIMING_LAG` 7 → **4 件**、不一致 76 件に減少
+  （残は PHASE_LAG_ACTIVATION 72 = 発動ビートの PRE/POST 表示位相差が主）。
+- S1 スコア再現: 実測 116,537,513 vs Sim Replay 116,829,040（+0.25%）。
+- **T5 ゴールデン不変**: `t5-scores.golden.test.ts` 4/4（総スコア 2,580,397,520）・
+  監査ゴールデン 17,516,522,572 ともに不変（golden スキルは condition 未付与のため
+  従来判定へフォールバック）。
+- `npm run typecheck`（root/ui）: **0 エラー**。
+- `npx vitest run`: **全 39 ファイル 494 passed / 1 skipped（全件 PASS 維持）**。
+  ※ この数値は Phase 14-E 時点のもので、直後の **Phase 14-F 採用で golden 4 値が更新され、
+  現在は 全 41 ファイル 504 passed / 1 skipped**（下記 Phase 14-F 参照）。
+
+---
+
+## Phase 14-F（2026-09-27 検証・採用）— 前ビート満了バフの延長復活（`expiredThisBeat`）
+
+### 1. 経緯
+Phase 14-E（スキル単位トリガー）の検証中に、`src/timeline/engine.ts` へ同仕様が
+**無記録のまま実装済み**であることが判明した（`tests/unit/timeline/extension-revival.test.ts`
+も未追跡）。T5 ゴールデン 4 箇所を +5,076,936 動かす変更のため、スコアの近さではなく
+**実測表示バフ段数**で採用可否を判定した → **採用**。
+詳細な証拠は `research/26_data_integrity/phase14f_revival_audit.md`。
+
+### 2. 仕様（実装済み・`engine.ts`）
+- ビート開始時、`remainingBeats <= 0` のインスタンスを破棄せず `LaneState.expiredThisBeat` に退避
+- **当ビートのステップ7/8（P 前半・A/SP）の延長/増強のみ**が退避分を復活できる
+  （延長値が正しく、復活後の `remainingBeats` が 1 以上になるものだけ）
+- 除去パスはステップ8直後。**ステップ11（後半 P）の延長は直前満了インスタンスを見られない**
+  （S1 b136 の実測で不復活が確定しているため。この窓の単独監査は未実施＝宿題）
+
+### 3. 検証（`audit_phase14f_revival.mjs` = v1 / `audit_phase14f_divergence.mjs` = v2）
+- ON/OFF の `buffSnapshots` 分岐セルは T5 で **14 セル**（全て b87–b100・L3・vocal_boost）
+  - 実測表示 20 段（b87・b91・b99）→ **ON のみ再現**（OFF は 17 段）＝ **ON 支持 3 / OFF 支持 0**
+  - 残り 11 ビートは表示リストに当該アイコンが写らず識別不能（17 でも 20 でもない）
+- 実測 vocal_boost 段数の出現分布 `{5:8,9:10,11:3,12:2,15:1,19:6,20:33,21:3,24:1,25:9}`
+  → **OFF 予測の 17 は全 75 観測に一度も出現しない**。ON 予測の 20 は最頻値
+- v1（表示セル 713・lag1 許容）: ON 237 / OFF 234 一致、差分 3 セル全て ON 支持
+- **S2・S3 は buffSnapshots の分岐 0 セル**（14-F は実データ上で局所的＝全域を緩める改変でない）
+- 既存監査一致率（HEAD → 作業ツリー、14-E との合成値）: S1 94.50%→95.75%、
+  S2 89.76%→89.76%、S3 91.23%→91.73%（分岐 0・分母の `missing_frames` 除外のみ）、
+  T5 2675/3411 → 2689/3411
+- 交絡排除: revival 部だけを無効化すると T5 golden が HEAD 期待値で 4/4 完全一致
+  → 本監査の差分は 14-F のみの寄与であることを確認
+
+### 4. ゴールデン更新（4 箇所）
+| 箇所 | 旧 | 新 |
+|---|---|---|
+| `t5-scores.golden.test.ts`（replay 総合） | 17,516,522,572 | **17,521,599,508** |
+| `buff-snapshots.audit.test.ts`（T5 総合） | 17,516,522,572 | **17,521,599,508** |
+| `cli-myphotos.test.ts`（T5 confirmed） | 2,580,397,520 | **2,581,114,209** |
+| `sim/ui-pipeline.test.ts`（T5 総合） | 2,580,397,520 | **2,581,114,209** |
+
+- 実測 17,529,132,014（`scores_by_lane` の合計と一致を検証済み）に対する相対誤差は
+  −0.0719% → **−0.0430%** に改善。
+- 是正: `t5-scores.golden.test.ts` の誤差計算が fixture 旧版の実測値 17,521,461,739 を
+  参照していた（実測総合は 17,529,132,014）。`t5.results.total_score` 参照に修正し、
+  閾値 0.001% は実測に対して成立しないため 0.05% に是正した。
+
+### 5. 検証結果
+- `npx vitest run`: **全 41 ファイル 504 passed / 1 skipped（全件 PASS）**
+- `npm run typecheck`: **0 エラー**
+- 追加テスト: `tests/unit/timeline/extension-revival.test.ts`（3 件）＝ ①ステップ7/8 は復活する
+  ②ステップ11 は復活しない ③復活は延長値が正のときのみ（S3 b60 型は effects 内 rem=0 対象）
+
+## Phase 15（2026-09-27 時点の残課題一覧）— 次期セッションの作業候補
+
+Phase 14-F 採用後の現況（`npx vitest run` 504 passed / 1 skipped、`npm run typecheck` 0エラー、
+golden: replay 17,521,599,508 / confirmed 2,581,114,209）を前提に、優先度順に整理した残課題。
+各項目の引継ぎは `prompts/phase15-followups.md` を使う。
+
+| # | 残課題 | 現状の証拠・出発点 |
+|---|---|---|
+| 15-1 | **S1 b136 付近の「Step 11 では満了バフが復活しない」仮定の実測検証**（Phase 14-F 宿題） | 実装コメント側の根拠に依存しており、S1 b136 単独の独立検証が未実施。`samples_decay_audit.md` §4.2 の S1 L1 vocal_up 消失を再確認 → `phase14f_revival_audit.md` §6 手順 A に従い measured/sim セルを直接照合 |
+| 15-2 | **PHASE_LAG_ACTIVATION の扱い決定**（S1 72 / S2 30 / S3 53 / T5 多数） | 発動ビートの表示が measured=即時反映・sim=翌ビート反映の差。Phase 13-B 以降「監査上の分類」として残しており、①監査側の許容（現行）②sim の snapshot 発行を1ビート早める③実測の撮影位相を再定義、のいずれかで**方針を決めてクローズ**する |
+| 15-3 | **EXTREME_DISPLAY_VS_EFFECTIVE / PERSISTENT_SP_BUFF**（S3 `visual_up_extreme` L4 87件、S2 `sp_skill_score_up` L3 74件・`PERSISTENT_SP_BUFF` 74件） | 表示系（上限 clamp・表示されないバフ）の問題。S1/S3/S2 不一致の大半を占め、実装で消せる余地は小さい。**「表示仕様」として文書化して監査除外リストへ移すか、エンジン側で模倣するか**の判断が必要 |
+| 15-4 | **Phase 14-F の S1/S3 単独寄与の分離** | S2/S3 は差分 0セルを確認済みだが、S1 は HEAD と Phase 14-F 双方で b136 前後が消えているため 14-F 単独の寄与を単独トレースで示せていない（`phase14f_revival_audit.md` §6 手順 B） |
+| 15-5 | **単一HTML UI の再ビルド** | `dist/aipura_simulator.html` が 2026-09-21 ビルド（Phase 14-D 時点）で、Phase 14-E/F のエンジン変更が未反映。Phase 14 完結時に一度しか再ビルドしていない |
+| 15-6 | **S4 再撮影と取り込み** | `prompts/rollback-recapture-sample4.md`・`research/22_sample4_rollback/progress.md`（13-B 相当の S4 版）が未実施のまま停止中。レーン別スコアポップ記録必須（AGENTS.md） |
+
+### 規律（再掲・過去に失敗したため）
+- **スコア合わせのための `rands` 再取得・再フィッティングは禁止**。スコアが動いたことは
+  差分の符号と件数で説明できること（`phase14f_revival_audit.md` §5-3 の失敗教訓）。
+- 実測側ファイル（`aipura_nox/サンプル*/`）の既存データは変更・削除しない（修復は追記のみ）。
+- `tools/debug_s1_l1_vocalup.ts`（S1 b136 の延長・消滅を直接確認できる監査ツール）を残置。

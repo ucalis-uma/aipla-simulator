@@ -6118,10 +6118,6 @@
             {
               "name": "ボーカル上昇",
               "stage": 5
-            },
-            {
-              "name": "ボーカルブースト",
-              "stage": 5
             }
           ],
           "banner_skill": null,
@@ -6323,10 +6319,6 @@
             {
               "name": "ボーカル上昇",
               "stage": 5
-            },
-            {
-              "name": "ボーカルブースト",
-              "stage": 5
             }
           ],
           "banner_skill": null,
@@ -6518,10 +6510,6 @@
             },
             {
               "name": "ボーカル上昇",
-              "stage": 5
-            },
-            {
-              "name": "ボーカルブースト",
               "stage": 5
             }
           ],
@@ -6717,10 +6705,6 @@
             {
               "name": "ボーカル上昇",
               "stage": 5
-            },
-            {
-              "name": "ボーカルブースト",
-              "stage": 5
             }
           ],
           "banner_skill": null,
@@ -6915,10 +6899,6 @@
             },
             {
               "name": "ボーカル上昇",
-              "stage": 5
-            },
-            {
-              "name": "ボーカルブースト",
               "stage": 5
             }
           ],
@@ -29710,5 +29690,31 @@
     }
   },
   "version": "v3",
-  "description": "Sample 3 with scroll pane (_2.PNG) buffs merged for Lane 3 & Lane 4"
+  "description": "Sample 3 with scroll pane (_2.PNG) buffs merged for Lane 3 & Lane 4",
+  "unobserved_effects": [
+    {
+      "beat": 56,
+      "lane": 4,
+      "key": "skill_success_up",
+      "reason": "スクロール2頁目の走査不成立（折りたたみ直下の行が未捕捉）。b53-55/b57-60 で3段が連続"
+    },
+    {
+      "beat": 61,
+      "lane": 4,
+      "key": "visual_boost",
+      "reason": "beat_061_2.PNG がライブボーナスバナー撮影フレームで効果リスト非表示。b62 で3段確認"
+    },
+    {
+      "beat": 63,
+      "lane": 4,
+      "key": "visual_boost",
+      "reason": "beat_063_2.PNG が miho P スキル発動パネル撮影フレームで L4 効果リスト非表示"
+    },
+    {
+      "beat": 70,
+      "lane": 4,
+      "key": "visual_boost",
+      "reason": "beat_070_2.PNG が miho A スキル FAIL（スタミナ不足）パネル撮影フレームで効果ペイン空"
+    }
+  ]
 }

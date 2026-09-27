@@ -423,11 +423,13 @@
         "name": "ボーカル上昇",
         "stage": 5,
         "confidence": 1.0
-      },
+      }
+    ],
+    "removed_entries": [
       {
         "name": "ボーカルブースト",
         "stage": 5,
-        "confidence": 0.876
+        "reason": "OCR誤認（confidence 0.876）。実機スクショ beat_025.PNG/_2.PNG にボーカルブースト行なし。すずA2「アイドルの掟への反抗」マスタ定義にも vocal_boost 行なし（Phase 14-F）"
       }
     ]
   },
@@ -440,11 +442,13 @@
         "name": "ボーカル上昇",
         "stage": 5,
         "confidence": 1.0
-      },
+      }
+    ],
+    "removed_entries": [
       {
         "name": "ボーカルブースト",
         "stage": 5,
-        "confidence": 0.876
+        "reason": "OCR誤認（confidence 0.876）。実機スクショ beat_025.PNG/_2.PNG にボーカルブースト行なし。すずA2「アイドルの掟への反抗」マスタ定義にも vocal_boost 行なし（Phase 14-F）"
       }
     ]
   },
@@ -457,11 +461,13 @@
         "name": "ボーカル上昇",
         "stage": 5,
         "confidence": 1.0
-      },
+      }
+    ],
+    "removed_entries": [
       {
         "name": "ボーカルブースト",
         "stage": 5,
-        "confidence": 0.876
+        "reason": "OCR誤認（confidence 0.876）。実機スクショ beat_025.PNG/_2.PNG にボーカルブースト行なし。すずA2「アイドルの掟への反抗」マスタ定義にも vocal_boost 行なし（Phase 14-F）"
       }
     ]
   },
@@ -474,11 +480,13 @@
         "name": "ボーカル上昇",
         "stage": 5,
         "confidence": 1.0
-      },
+      }
+    ],
+    "removed_entries": [
       {
         "name": "ボーカルブースト",
         "stage": 5,
-        "confidence": 0.876
+        "reason": "OCR誤認（confidence 0.876）。実機スクショ beat_025.PNG/_2.PNG にボーカルブースト行なし。すずA2「アイドルの掟への反抗」マスタ定義にも vocal_boost 行なし（Phase 14-F）"
       }
     ]
   },
@@ -491,11 +499,13 @@
         "name": "ボーカル上昇",
         "stage": 5,
         "confidence": 1.0
-      },
+      }
+    ],
+    "removed_entries": [
       {
         "name": "ボーカルブースト",
         "stage": 5,
-        "confidence": 0.876
+        "reason": "OCR誤認（confidence 0.876）。実機スクショ beat_025.PNG/_2.PNG にボーカルブースト行なし。すずA2「アイドルの掟への反抗」マスタ定義にも vocal_boost 行なし（Phase 14-F）"
       }
     ]
   },

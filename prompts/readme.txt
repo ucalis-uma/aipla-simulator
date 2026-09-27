@@ -118,3 +118,11 @@ prompts/fix-remaining-buff-mismatches.md
 LLM直接画像分析により特定された S3 のボーカルブースト5段誤認（実体はビジュアルブースト3段）のパッチ除去、
 T5 の L3 ボーカルブースト 3段不足（20段 vs 17段）、S1 の L1 ボーカル上昇 8ビート連続 Decay Lag（b136〜b143）
 等のシミュレータ/実測データ不一致を解消する。
+
+prompts/phase15-followups.md
+は Phase 15 引継ぎプロンプト（2026-09-27 作成・Phase 14-F 採用直後の残課題）。
+出発点の確定値（T5 replay 17,521,599,508 / confirmed 2,581,114,209・504 tests）と現行監査の
+残不一致内訳を明記した上で、15-1 S1 b136 の「Step 11 では満了バフが復活しない」仮定の独立検証、
+15-2 PHASE_LAG_ACTIVATION の方針決定、15-3 EXTREME_DISPLAY / PERSISTENT_SP_BUFF / T5 FLAG_NOT_STAGED
+（combo_continue 653件）の扱い、15-4 14-F の S1 単独寄与の分離トレース、15-5 単一HTML UI 再ビルド、
+15-6 S4 再撮影（着手前にユーザー確認必須）を優先度順に並べたチェックリスト。

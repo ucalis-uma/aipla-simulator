@@ -39,7 +39,7 @@ Phase 14 において、過去の開発エージェントによるスキルデ�
    - 分析レポート [`research/26_data_integrity/samples_decay_audit.md`](file:///c:/Users/umaro/Documents/アイプラ/research/26_data_integrity/samples_decay_audit.md) を出力する。
 4. **テストスイートの健全性保証**:
    - `npm run typecheck` エラー 0
-   - `npx vitest run` 全件 PASS（485 passed 維持）
+   - `npx vitest run` 全件 PASS（作成時は 485 passed 維持・**2026-09-27 Phase 14-F 以降は 504 passed / 1 skipped**）
 
 ---
 

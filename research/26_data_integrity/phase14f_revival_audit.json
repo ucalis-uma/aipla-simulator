@@ -1,0 +1,132 @@
+{
+ "summary": {
+  "generated": "2026-09-27",
+  "purpose": "Phase 14-F expiredThisBeat 復活仕様の実測突合（T5・表示バフ段数）",
+  "total_score": {
+   "revival_on": 17521599508,
+   "revival_off": 17516522572,
+   "measured": 17529132014
+  },
+  "buff_display_comparisons": 713,
+  "match_with_lag1": {
+   "revival_on": 237,
+   "revival_off": 234
+  },
+  "match_rate_pct": {
+   "revival_on": 33.24,
+   "revival_off": 32.819
+  },
+  "per_buff": {
+   "vocal_up": {
+    "comparisons": 152,
+    "on": 35,
+    "off": 35
+   },
+   "skill_success_up": {
+    "comparisons": 117,
+    "on": 57,
+    "off": 57
+   },
+   "critical_coeff_up": {
+    "comparisons": 121,
+    "on": 48,
+    "off": 48
+   },
+   "focus": {
+    "comparisons": 154,
+    "on": 17,
+    "off": 17
+   },
+   "vocal_boost": {
+    "comparisons": 76,
+    "on": 49,
+    "off": 46
+   },
+   "combo_score_up": {
+    "comparisons": 93,
+    "on": 31,
+    "off": 31
+   }
+  },
+  "differing_cases": 3
+ },
+ "differing": [
+  {
+   "beat": 87,
+   "lane": 3,
+   "buff": "vocal_boost",
+   "measured": 20,
+   "sim_on": 20,
+   "sim_off": 17,
+   "better": "ON"
+  },
+  {
+   "beat": 91,
+   "lane": 3,
+   "buff": "vocal_boost",
+   "measured": 20,
+   "sim_on": 20,
+   "sim_off": 17,
+   "better": "ON"
+  },
+  {
+   "beat": 99,
+   "lane": 3,
+   "buff": "vocal_boost",
+   "measured": 20,
+   "sim_on": 20,
+   "sim_off": 17,
+   "better": "ON"
+  }
+ ],
+ "b80_b100_vocal_boost": [
+  {
+   "beat": 80,
+   "L3": {
+    "measured": 20,
+    "sim_on": 20,
+    "sim_off": 20
+   }
+  },
+  {
+   "beat": 84,
+   "L3": {
+    "measured": 5,
+    "sim_on": 20,
+    "sim_off": 20
+   }
+  },
+  {
+   "beat": 87,
+   "L3": {
+    "measured": 20,
+    "sim_on": 20,
+    "sim_off": 17
+   }
+  },
+  {
+   "beat": 91,
+   "L3": {
+    "measured": 20,
+    "sim_on": 20,
+    "sim_off": 17
+   }
+  },
+  {
+   "beat": 97,
+   "L3": {
+    "measured": 5,
+    "sim_on": 20,
+    "sim_off": 17
+   }
+  },
+  {
+   "beat": 99,
+   "L3": {
+    "measured": 20,
+    "sim_on": 20,
+    "sim_off": 17
+   }
+  }
+ ]
+}

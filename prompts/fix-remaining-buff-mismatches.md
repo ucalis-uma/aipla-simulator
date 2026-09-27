@@ -1,5 +1,17 @@
 # プロンプト：実測バフ不一致の修正（LLM画像精査に基づくS3/T5/S1健全化）
 
+> **[2026-09-27 状態・結果]** 本プロンプトの §3 完了条件は**すべて満たされた**（2026-09-27 時点の
+> 監査成果物で機械確認: 全サンプルの diff に `BUFF_STAGE_MISMATCH` / `AMPLIFY_OR_OVERLAP` /
+> `DECAY_TIMING_LAG` は 0 件）。
+> 1. S3 の 5段誤認パッチ → 除去済み（`patch_plan_s3.json` / `apply_patch_s3.py` / `fix_patch_plan_s3.py`）
+> 2. T5 L3 の 3段不足（17→20段）→ **Phase 14-F（満了バフの延長復活 `expiredThisBeat`）** で解消。
+>    証拠と採否の判定根拠は `research/26_data_integrity/phase14f_revival_audit.md`
+> 3. S1 b136〜b143 の延長過剰 → 現状 lag 0件で解消。ただし「ステップ11では復活させない」境界の
+>    単独検証は未実施（→ `prompts/phase15-followups.md` 15-1）
+> 4. S3 開幕（b1/b2/b61）の重複合算 → AMPLIFY_OR_OVERLAP は消滅（b1 focus は PHASE_LAG 扱いに整理）
+> ※ 完了条件にあった「T5 ゴールデンスコア不変」は 14-F 採用により **17,521,599,508 / 2,581,114,209 へ更新**
+>   （実測 17,529,132,014 に対し −0.043%・誤差閾値 0.05%）。実装ログ: `research/12` Phase 14-E/14-F。
+
 ## 1. 目的と背景
 前セッションまでのバフ突合において表面化していた不一致のうち、LLM自身の直接画像分析により以下の事実が確定した：
 1. **S3 Lane 4 b25〜b28 (`BUFF_STAGE_MISMATCH` 4件)**:

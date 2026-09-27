@@ -118,6 +118,24 @@ def classify_diff_reason(sample_name, beat, lane, key, m_val, s_val, sim_beats, 
         if prev_s is not None and prev_s > 0:
             return "DECAY_TIMING_LAG: Buff expired in sim earlier than measured"
 
+    # 6.5 【Phase 14-F / 2026-09-21】発動ビートの表示位相差（実測が Sim より 1 ビート遅れる方向）
+    # 実機スクショは発動演出完了前（PRE）に撮影され、当該バフ行は翌ビートの表示で追いつく。
+    # 既存ルール（§5 の m>s・b1 特殊）は「実測が先行（POST）」方向のみを扱うため、
+    # その対称形として m<s かつ 翌ビートの実測値が Sim 現値に一致する場合を本カテゴリに分類する。
+    # 実例（S3 開幕・いずれも実測の翌ビート値 = Sim 現値を確認済み）:
+    #   b1 L3 focus 7vs10（実測 b2 で 10）・b1 L4 visual_boost 3vs6（実測 b2 で 6）・
+    #   b2 L3 a_skill_score_up 0vs2（実測 b3 で 2）。
+    if m_val < s_val and curr_acts:
+        next_m = 0
+        mb_next2 = meas_tl.get(beat + 1, {})
+        lanes_next2 = mb_next2.get("lanes", {})
+        l_obj2 = lanes_next2.get(str(lane)) or lanes_next2.get(f"lane{lane}", {})
+        for eff in l_obj2.get("effects", []):
+            if NAME_TO_BUFF_KEY.get(eff.get("name")) == key:
+                next_m += eff.get("stage", 0) or 0
+        if next_m == s_val:
+            return f"PHASE_LAG_ACTIVATION: Activated on b{beat} (acts={[a.get('skillId') for a in curr_acts]}); measured screenshot is PRE-display and catches up at b{beat + 1} (m[{beat + 1}]={next_m}=sim[{beat}])"
+
     # 7. Amplification or overlap difference
     if curr_acts:
         return f"AMPLIFY_OR_OVERLAP_ON_BEAT: Activation on b{beat} ({[a.get('skillId') for a in curr_acts]}); measured stage {m_val} vs sim stage {s_val}"
@@ -138,11 +156,35 @@ def audit_sample(sample_name, meas_path, sim_path, notes_count):
     meas_tl = {b["beat"]: b for b in meas_data.get("timeline", [])} if meas_data else {}
     sim_beats = {b["beat"]: b for b in sim_data.get("beats", [])} if sim_data else {}
     
+    # 【2026-09-21】撮影フレーム欠落（missing_frames）のセルは「未観測」として比較から除外する
+    # （research/12 §7-6 の規律「未観測 = 0 ではなく不確実」に従う。S1 の b121 L5 / b149 L5 /
+    # b154 L2 の DECAY_TIMING_LAG 4 件は、実はいずれもフレーム欠落セルであり、前後ビートでは
+    # 実測と Sim が一致していたことが判明したことへの対応）。
+    missing_cells = set()
+    if meas_data:
+        for mf in meas_data.get("missing_frames", []) or []:
+            try:
+                missing_cells.add((int(mf.get("beat")), int(str(mf.get("lane", "")).replace("lane", ""))))
+            except (TypeError, ValueError):
+                continue
+
+    # 【2026-09-21 Phase 14-F】キー単位の観測不能セル（apply_patch_s3.py §3.5 参照）。
+    # 実機スクショの遷移フレーム（ライブボーナスバナー・他アイドルのスキルパネル等）で
+    # 該当バフ行が写っていない (beat, lane, key) を比較から除外する（0 扱いしない）。
+    unobserved_keys = set()
+    if meas_data:
+        for ue in meas_data.get("unobserved_effects", []) or []:
+            try:
+                unobserved_keys.add((int(ue.get("beat")), int(ue.get("lane")), str(ue.get("key"))))
+            except (TypeError, ValueError):
+                continue
+    
     diff_records = []
     special_records = []
     total_comparisons = 0
     match_count = 0
     discrepancy_count = 0
+    unobserved_cells = 0
     
     max_beat = notes_count
     if sim_beats:
@@ -158,6 +200,11 @@ def audit_sample(sample_name, meas_path, sim_path, notes_count):
             lane_num = lane_idx + 1
             lane_str = str(lane_num)
             lane_key = f"lane{lane_num}"
+            
+            # フレーム欠落セルは未観測のため比較しない（実測 0 扱いでの偽不一致を防ぐ）
+            if (beat, lane_num) in missing_cells:
+                unobserved_cells += 1
+                continue
             
             m_effects = []
             if mb and "lanes" in mb:
@@ -204,6 +251,10 @@ def audit_sample(sample_name, meas_path, sim_path, notes_count):
                     keys_to_check.add(k)
                     
             for key in sorted(keys_to_check):
+                # キー単位の観測不能セルは比較しない（遷移フレーム撮影による偽不一致を防ぐ）
+                if (beat, lane_num, key) in unobserved_keys:
+                    unobserved_cells += 1
+                    continue
                 total_comparisons += 1
                 m_val = m_by_key.get(key, 0)
                 s_val = s_snap.get(key, 0)
@@ -245,6 +296,7 @@ def audit_sample(sample_name, meas_path, sim_path, notes_count):
         "match_rate_pct": round((match_count / total_comparisons * 100), 2) if total_comparisons > 0 else 0,
         "discrepancy_count": discrepancy_count,
         "category_counts": category_counts,
+        "unobserved_cells_missing_frames": unobserved_cells,
         "special_effects_count": len(special_records),
     }
     
@@ -268,6 +320,8 @@ def audit_sample(sample_name, meas_path, sim_path, notes_count):
     print(f"  Total comparisons: {total_comparisons}")
     print(f"  Matches: {match_count} ({summary['match_rate_pct']}%)")
     print(f"  Discrepancies: {discrepancy_count}")
+    if unobserved_cells:
+        print(f"  Unobserved cells (missing frames・比較除外): {unobserved_cells}")
     print(f"  Category breakdown: {category_counts}")
     
     return summary, diff_records, special_records

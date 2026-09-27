@@ -1,0 +1,160 @@
+{
+ "summary": {
+  "generated": "2026-09-27",
+  "purpose": "revival ON/OFF の buffSnapshots 分岐セル全ての実測表示突合",
+  "total_score": {
+   "revival_on": 17521599508,
+   "revival_off": 17516522572,
+   "measured": 17529132014
+  },
+  "score_error_pct": {
+   "revival_on": -0.043,
+   "revival_off": -0.0719
+  },
+  "display_capture_coverage": {
+   "lane_cells": 785,
+   "captured": 785
+  },
+  "divergent_cells": 14,
+  "verdict": {
+   "on_support": 3,
+   "off_support": 0,
+   "both": 0,
+   "neither": 11,
+   "not_captured": 0
+  },
+  "lag1_sensitivity_on_divergent": {
+   "on": 0,
+   "off": 0,
+   "neither": 3
+  }
+ },
+ "cells": [
+  {
+   "beat": 87,
+   "lane": 3,
+   "buff": "vocal_boost",
+   "sim_on": 20,
+   "sim_off": 17,
+   "measured": 20,
+   "support": "on"
+  },
+  {
+   "beat": 88,
+   "lane": 3,
+   "buff": "vocal_boost",
+   "sim_on": 20,
+   "sim_off": 17,
+   "measured": null,
+   "support": "neither"
+  },
+  {
+   "beat": 89,
+   "lane": 3,
+   "buff": "vocal_boost",
+   "sim_on": 20,
+   "sim_off": 17,
+   "measured": null,
+   "support": "neither"
+  },
+  {
+   "beat": 90,
+   "lane": 3,
+   "buff": "vocal_boost",
+   "sim_on": 20,
+   "sim_off": 17,
+   "measured": null,
+   "support": "neither"
+  },
+  {
+   "beat": 91,
+   "lane": 3,
+   "buff": "vocal_boost",
+   "sim_on": 20,
+   "sim_off": 17,
+   "measured": 20,
+   "support": "on"
+  },
+  {
+   "beat": 92,
+   "lane": 3,
+   "buff": "vocal_boost",
+   "sim_on": 20,
+   "sim_off": 17,
+   "measured": null,
+   "support": "neither"
+  },
+  {
+   "beat": 93,
+   "lane": 3,
+   "buff": "vocal_boost",
+   "sim_on": 20,
+   "sim_off": 17,
+   "measured": null,
+   "support": "neither"
+  },
+  {
+   "beat": 94,
+   "lane": 3,
+   "buff": "vocal_boost",
+   "sim_on": 20,
+   "sim_off": 17,
+   "measured": null,
+   "support": "neither"
+  },
+  {
+   "beat": 95,
+   "lane": 3,
+   "buff": "vocal_boost",
+   "sim_on": 20,
+   "sim_off": 17,
+   "measured": null,
+   "support": "neither"
+  },
+  {
+   "beat": 96,
+   "lane": 3,
+   "buff": "vocal_boost",
+   "sim_on": 20,
+   "sim_off": 17,
+   "measured": null,
+   "support": "neither"
+  },
+  {
+   "beat": 97,
+   "lane": 3,
+   "buff": "vocal_boost",
+   "sim_on": 20,
+   "sim_off": 17,
+   "measured": 5,
+   "support": "neither"
+  },
+  {
+   "beat": 98,
+   "lane": 3,
+   "buff": "vocal_boost",
+   "sim_on": 20,
+   "sim_off": 17,
+   "measured": null,
+   "support": "neither"
+  },
+  {
+   "beat": 99,
+   "lane": 3,
+   "buff": "vocal_boost",
+   "sim_on": 20,
+   "sim_off": 17,
+   "measured": 20,
+   "support": "on"
+  },
+  {
+   "beat": 100,
+   "lane": 3,
+   "buff": "vocal_boost",
+   "sim_on": 20,
+   "sim_off": 17,
+   "measured": null,
+   "support": "neither"
+  }
+ ]
+}

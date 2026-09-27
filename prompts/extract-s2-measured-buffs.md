@@ -1,5 +1,9 @@
 # extract-s2-measured-buffs.md — サンプル2（S2）実測バフ自動抽出 & 突合指示書
 
+> **[2026-09-27 状態]** 完了済みプロンプト（`measured_data_s2_v3.json` 生成・S2 初のバフ突合まで達成）。
+> 最後の完了条件に書く「485 passed」は当時の値で、現行は **504 passed / 1 skipped**
+> （T5 confirmed 2,581,114,209・replay 17,521,599,508）。次の入口は `prompts/phase15-followups.md`。
+
 このプロンプトは、**サンプル2（S2: タワー680 / qt-tower-680）の実機スクショからバフ一覧を自動抽出し、measured_data_v3.json を生成してバフ突合を行うセッション**用の指示書である。
 
 作業開始前に必ず `AGENTS.md`（データ規律・テスト保証・終了規律）を読むこと。

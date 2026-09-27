@@ -36,19 +36,29 @@ IDOLY PRIDE（アイプラ）ライブスコア計算機の**開発を引き継�
    試すこと（未発動スキルも card_id から機械的に導出できる。BWIKI 由来データの数値利用は禁止）
 2. **千分率整数演算**: パーミル計算は必ず `src/rounding.ts` 経由（`mulPermil` / `floorDiv` /
    `pctToPermil`）。**`Math.floor` 等の直書き禁止**。丸め位置は at-end
-3. **不変条件（T5 ゴールデン・2026-09-21 Phase 14 更新）**:
-   - T5 リプレイ値（マスタ準拠・実効N-1 Decay）: **17,516,522,572**（実測 17,521,461,739 に対し誤差 0.028% / 99.97% 一致）
-   - UI/CLI 確定値（乱数中立・crit なし）: **2,580,397,520**
-   - 単一 HTML UI 確定値（T5 初期編成）: **2,446,493,589**
-   - エンジン・ビルダーを触ったら必ずこの確定値が維持されていることを確認する。
-     確認コマンド: `npx tsx src/cli/simulate.ts --input examples/t5-sample.json --n 0 --crit-rate 0`
-4. **テスト維持**: 現状 **485 passed / 1 skipped**（全38ファイル）。全テスト・typecheck を壊さない
+3. **不変条件（T5 ゴールデン・2026-09-27 Phase 14-F 更新）**:
+   - T5 リプレイ値（`tests/golden/t5-scores.golden.test.ts`）: **17,521,599,508**
+     （実測 17,529,132,014 に対し誤差 **−0.043%**。Phase 14-D までの 17,516,522,572 は旧値）
+   - CLI/UI 確定値（乱数中立・crit なし）: **2,581,114,209**（旧値 2,580,397,520）
+   - 単一 HTML UI 確定値（T5 初期編成・`tests/ui/smoke.test.ts`）: **2,446,493,589**
+     ※ これは `dist/aipura_simulator.html`（2026-09-21 = Phase 14-D ビルド＝**旧エンジン**）の値。
+     `node tools/build_ui.mjs` で再ビルドすると変わるため、再ビルド時にスモーク側も更新する
+     （手順: `prompts/phase15-followups.md` 15-5）
+   - **変更根拠なしにこの値を動かさない**。スコアが動いた場合はまずバフセルの符号・件数で
+     説明を試みる（`research/26_data_integrity/phase14f_revival_audit.md` §5-3 がその教訓）
+   - 確認コマンド: `npx tsx src/cli/simulate.ts --input examples/t5-sample.json --n 0 --crit-rate 0`
+4. **テスト維持**: 現状 **504 passed / 1 skipped**（全41ファイル）。全テスト・typecheck を壊さない
 5. **データの変更は importer 経由**: `data/` の生成物（`unlocks.json` / `skills_levels.json` /
    `photos_master.json` 等）を直接編集しない。`npm run build:data:ext` で再生成する
 6. UI へのデータ埋め込みは `tools/build_ui.mjs`（`SimSourceData` に乗るものは `data` 内に、
    UI 専用はトップレベルに置く。**Phase 8-B4 の skillLevels 未伝播バグ**の教訓）
 
 ## 現状サマリ（2026-09-21 時点・Phase 14 完了）
+
+> **[2026-09-27 追記]** Phase 14-D 以降に **14-E（スキル単位トリガー条件 `condition` の復元）と
+> 14-F（前ビート満了バフの延長復活 `expiredThisBeat`）が完了**し、T5 基準値が変わった（上の
+> §3 参照）。変更内容と証拠は `research/12_implementation_log.md` の Phase 14-E / 14-F / Phase 15 節、
+> 次の作業の入口は `prompts/phase15-followups.md`。下のサマリは 09-21 時点の記述のまま残してある。
 
 - **Phase 14 データ健全化・バフ減衰モデル適正化完了**:
   1. `data/skills_golden.json` 内のスキル改ざん（琴乃A `sk-ktn-05-wedd-00-2` の csu 偽装、かけがえのない二人 `photo-L3-2` の 16% フィッティング）を公式マスタ・一次テキスト通りに完全復元。

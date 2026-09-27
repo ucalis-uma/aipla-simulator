@@ -1,5 +1,10 @@
 # resolve-s3-rei-p-and-s1-stage-mismatch.md — S3 怜Pスキル不発解明 & S1 バフ段数4段ズレ解明指示書
 
+> **[2026-09-27 状態]** 完了済みプロンプト。S3 b125 怜P と S1 の4段ズレは Phase 14-B/C/E/F を経て解消し、
+> 現行監査に `BUFF_STAGE_MISMATCH`・`DECAY_TIMING_LAG` は 0 件。本文中の
+> 「485 passed」「T5 ゴールデン 2,580,397,520」は当時の値
+> （現行: 504 passed / 1 skipped・confirmed 2,581,114,209）。次の入口は `prompts/phase15-followups.md`。
+
 このプロンプトは、Phase 14 / 14-B（バフ減衰モデル適正化 & S3 スクロール画像統合修復）に続く、
 **残存する主要なバフ不整合の集中解明・是正セッション**用の指示書である。
 

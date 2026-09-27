@@ -227,6 +227,14 @@ Phase 14 において、過去の開発エージェントによるスキルデ�
 | **S3** (qt-ex-tower-005-045) | 79,411,389 | 78,532,475 | -878,914 | **-1.11%** | 65,998,190 |
 | **T5** (qt-daily-003-19) | 17,521,461,739 | 17,516,522,572 | -4,939,167 | **-0.028%** | 2,580,397,520 |
 
+> **[2026-09-27 注記]** 上の表は **Phase 14-D（2026-09-21）時点の値**。Phase 14-F（満了バフの延長復活）
+> 採用により T5 は **replay 17,521,599,508 / confirmed 2,581,114,209** へ更新された（実測総合は
+> `tests/golden/fixtures/t5_measured.json` の **17,529,132,014** で、上の列にある 17,521,461,739 は
+> golden テストが旧版で参照していた値。誤差計算は 17,529,132,014 基準へ是正済み）。
+> S1/S2/S3 の値は 14-F 適用後も再取得が必要なら `python research/26_data_integrity/run_audit_post_decay.py`
+> で再生成される（現行のトレース値は `research/26_data_integrity/samples_trace_summary.json`）。
+> 根拠: `research/12_implementation_log.md` Phase 14-F・`research/26_data_integrity/phase14f_revival_audit.md`。
+
 ### 4.2 評価と知見
 
 1. **極めて高い再現精度**:
