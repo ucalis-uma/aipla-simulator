@@ -8,8 +8,8 @@
     "sim_present": true,
     "max_beat": 156,
     "total_comparisons": 3411,
-    "match_count": 2675,
-    "discrepancy_count": 736,
+    "match_count": 2689,
+    "discrepancy_count": 722,
     "special_effects_count": 1043
   },
   "diffs": [
@@ -3756,16 +3756,6 @@
     {
       "sample": "T5",
       "beat": 87,
-      "lane": 3,
-      "key": "vocal_boost",
-      "measured_stage": 20,
-      "sim_stage": 17,
-      "diff": -3,
-      "note": "BUFF_STAGE_MISMATCH: Measured 20 vs Sim 17 (diff=-3)"
-    },
-    {
-      "sample": "T5",
-      "beat": 87,
       "lane": 4,
       "key": "combo_continue",
       "measured_stage": 0,
@@ -3816,16 +3806,6 @@
     {
       "sample": "T5",
       "beat": 88,
-      "lane": 3,
-      "key": "vocal_boost",
-      "measured_stage": 20,
-      "sim_stage": 17,
-      "diff": -3,
-      "note": "BUFF_STAGE_MISMATCH: Measured 20 vs Sim 17 (diff=-3)"
-    },
-    {
-      "sample": "T5",
-      "beat": 88,
       "lane": 4,
       "key": "combo_continue",
       "measured_stage": 0,
@@ -3876,16 +3856,6 @@
     {
       "sample": "T5",
       "beat": 89,
-      "lane": 3,
-      "key": "vocal_boost",
-      "measured_stage": 20,
-      "sim_stage": 17,
-      "diff": -3,
-      "note": "BUFF_STAGE_MISMATCH: Measured 20 vs Sim 17 (diff=-3)"
-    },
-    {
-      "sample": "T5",
-      "beat": 89,
       "lane": 4,
       "key": "combo_continue",
       "measured_stage": 0,
@@ -3936,16 +3906,6 @@
     {
       "sample": "T5",
       "beat": 90,
-      "lane": 3,
-      "key": "vocal_boost",
-      "measured_stage": 20,
-      "sim_stage": 17,
-      "diff": -3,
-      "note": "BUFF_STAGE_MISMATCH: Measured 20 vs Sim 17 (diff=-3)"
-    },
-    {
-      "sample": "T5",
-      "beat": 90,
       "lane": 4,
       "key": "combo_continue",
       "measured_stage": 0,
@@ -3996,16 +3956,6 @@
     {
       "sample": "T5",
       "beat": 91,
-      "lane": 3,
-      "key": "vocal_boost",
-      "measured_stage": 20,
-      "sim_stage": 17,
-      "diff": -3,
-      "note": "BUFF_STAGE_MISMATCH: Measured 20 vs Sim 17 (diff=-3)"
-    },
-    {
-      "sample": "T5",
-      "beat": 91,
       "lane": 4,
       "key": "combo_continue",
       "measured_stage": 0,
@@ -4056,16 +4006,6 @@
     {
       "sample": "T5",
       "beat": 92,
-      "lane": 3,
-      "key": "vocal_boost",
-      "measured_stage": 20,
-      "sim_stage": 17,
-      "diff": -3,
-      "note": "BUFF_STAGE_MISMATCH: Measured 20 vs Sim 17 (diff=-3)"
-    },
-    {
-      "sample": "T5",
-      "beat": 92,
       "lane": 4,
       "key": "combo_continue",
       "measured_stage": 0,
@@ -4112,16 +4052,6 @@
       "sim_stage": 2,
       "diff": 2,
       "note": "FLAG_NOT_STAGED: combo_continue is a boolean flag without stages (recorded as stage: null in measured)"
-    },
-    {
-      "sample": "T5",
-      "beat": 93,
-      "lane": 3,
-      "key": "vocal_boost",
-      "measured_stage": 20,
-      "sim_stage": 17,
-      "diff": -3,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b93 (acts=['photo-L2-4']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
       "sample": "T5",
@@ -4186,16 +4116,6 @@
     {
       "sample": "T5",
       "beat": 94,
-      "lane": 3,
-      "key": "vocal_boost",
-      "measured_stage": 20,
-      "sim_stage": 17,
-      "diff": -3,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b94 (acts=['sk-yu-05-birt-02-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
-    },
-    {
-      "sample": "T5",
-      "beat": 94,
       "lane": 4,
       "key": "combo_continue",
       "measured_stage": 0,
@@ -4246,16 +4166,6 @@
     {
       "sample": "T5",
       "beat": 95,
-      "lane": 3,
-      "key": "vocal_boost",
-      "measured_stage": 20,
-      "sim_stage": 17,
-      "diff": -3,
-      "note": "BUFF_STAGE_MISMATCH: Measured 20 vs Sim 17 (diff=-3)"
-    },
-    {
-      "sample": "T5",
-      "beat": 95,
       "lane": 4,
       "key": "combo_continue",
       "measured_stage": 0,
@@ -4306,16 +4216,6 @@
     {
       "sample": "T5",
       "beat": 96,
-      "lane": 3,
-      "key": "vocal_boost",
-      "measured_stage": 20,
-      "sim_stage": 17,
-      "diff": -3,
-      "note": "BUFF_STAGE_MISMATCH: Measured 20 vs Sim 17 (diff=-3)"
-    },
-    {
-      "sample": "T5",
-      "beat": 96,
       "lane": 4,
       "key": "combo_continue",
       "measured_stage": 0,
@@ -4366,16 +4266,6 @@
     {
       "sample": "T5",
       "beat": 97,
-      "lane": 3,
-      "key": "vocal_boost",
-      "measured_stage": 20,
-      "sim_stage": 17,
-      "diff": -3,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b97 (acts=['photo-L3-2', 'photo-L4-1', 'photo-L2-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
-    },
-    {
-      "sample": "T5",
-      "beat": 97,
       "lane": 4,
       "key": "combo_continue",
       "measured_stage": 0,
@@ -4426,16 +4316,6 @@
     {
       "sample": "T5",
       "beat": 98,
-      "lane": 3,
-      "key": "vocal_boost",
-      "measured_stage": 20,
-      "sim_stage": 17,
-      "diff": -3,
-      "note": "BUFF_STAGE_MISMATCH: Measured 20 vs Sim 17 (diff=-3)"
-    },
-    {
-      "sample": "T5",
-      "beat": 98,
       "lane": 4,
       "key": "combo_continue",
       "measured_stage": 0,
@@ -4482,16 +4362,6 @@
       "sim_stage": 2,
       "diff": 2,
       "note": "FLAG_NOT_STAGED: combo_continue is a boolean flag without stages (recorded as stage: null in measured)"
-    },
-    {
-      "sample": "T5",
-      "beat": 99,
-      "lane": 3,
-      "key": "vocal_boost",
-      "measured_stage": 20,
-      "sim_stage": 17,
-      "diff": -3,
-      "note": "BUFF_STAGE_MISMATCH: Measured 20 vs Sim 17 (diff=-3)"
     },
     {
       "sample": "T5",
@@ -4571,16 +4441,6 @@
       "measured_stage": 15,
       "sim_stage": 13,
       "diff": -2,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b100 (acts=['sk-yu-05-birt-02-2', 'photo-L1-1', 'photo-L4-2', 'sk-ski-05-onep-00-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
-    },
-    {
-      "sample": "T5",
-      "beat": 100,
-      "lane": 3,
-      "key": "vocal_boost",
-      "measured_stage": 20,
-      "sim_stage": 17,
-      "diff": -3,
       "note": "PHASE_LAG_ACTIVATION: Activated on b100 (acts=['sk-yu-05-birt-02-2', 'photo-L1-1', 'photo-L4-2', 'sk-ski-05-onep-00-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {

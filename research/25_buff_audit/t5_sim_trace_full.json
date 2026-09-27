@@ -1,5 +1,5 @@
 {
-  "totalScore": 17516522572,
+  "totalScore": 17521599508,
   "beats": [
     {
       "beat": 1,
@@ -20194,7 +20194,7 @@
         {
           "lane": 3,
           "sourceKind": "beat",
-          "basicScore": 82019,
+          "basicScore": 86850,
           "skillPowerPermil": 1000,
           "b1Permil": 1860,
           "comboFactorPermil": 1870,
@@ -20202,7 +20202,7 @@
           "isRatioScore": false,
           "randPermil": 1007.3483437298321,
           "critFactorPermil": 4401,
-          "gainedScore": 2236054
+          "gainedScore": 2367759
         },
         {
           "lane": 4,
@@ -20231,7 +20231,7 @@
           "gainedScore": 48952
         }
       ],
-      "gainedScore": 2455262,
+      "gainedScore": 2586967,
       "comboAfter": [
         78,
         79,
@@ -20307,7 +20307,7 @@
         },
         {
           "vocal_up": 20,
-          "vocal_boost": 17,
+          "vocal_boost": 20,
           "vocal_up_extreme": 5,
           "vocal_down": 0,
           "dance_up": 0,
@@ -20429,7 +20429,7 @@
         {
           "lane": 3,
           "sourceKind": "beat",
-          "basicScore": 82019,
+          "basicScore": 86850,
           "skillPowerPermil": 1000,
           "b1Permil": 1860,
           "comboFactorPermil": 1870,
@@ -20437,7 +20437,7 @@
           "isRatioScore": false,
           "randPermil": 1048.3002685543083,
           "critFactorPermil": 4401,
-          "gainedScore": 2326956
+          "gainedScore": 2464016
         },
         {
           "lane": 4,
@@ -20466,7 +20466,7 @@
           "gainedScore": 48952
         }
       ],
-      "gainedScore": 2553086,
+      "gainedScore": 2690146,
       "comboAfter": [
         79,
         80,
@@ -20542,7 +20542,7 @@
         },
         {
           "vocal_up": 20,
-          "vocal_boost": 17,
+          "vocal_boost": 20,
           "vocal_up_extreme": 5,
           "vocal_down": 0,
           "dance_up": 0,
@@ -20664,7 +20664,7 @@
         {
           "lane": 3,
           "sourceKind": "beat",
-          "basicScore": 82019,
+          "basicScore": 86850,
           "skillPowerPermil": 1000,
           "b1Permil": 1860,
           "comboFactorPermil": 1870,
@@ -20672,7 +20672,7 @@
           "isRatioScore": false,
           "randPermil": 971.2890203315529,
           "critFactorPermil": 4401,
-          "gainedScore": 2156011
+          "gainedScore": 2283002
         },
         {
           "lane": 4,
@@ -20701,7 +20701,7 @@
           "gainedScore": 48952
         }
       ],
-      "gainedScore": 2431762,
+      "gainedScore": 2558753,
       "comboAfter": [
         80,
         81,
@@ -20777,7 +20777,7 @@
         },
         {
           "vocal_up": 20,
-          "vocal_boost": 17,
+          "vocal_boost": 20,
           "vocal_up_extreme": 5,
           "vocal_down": 0,
           "dance_up": 0,
@@ -20899,7 +20899,7 @@
         {
           "lane": 3,
           "sourceKind": "beat",
-          "basicScore": 82019,
+          "basicScore": 86850,
           "skillPowerPermil": 1000,
           "b1Permil": 1860,
           "comboFactorPermil": 1870,
@@ -20907,7 +20907,7 @@
           "isRatioScore": false,
           "randPermil": 978.2125823759048,
           "critFactorPermil": 4401,
-          "gainedScore": 2171380
+          "gainedScore": 2299276
         },
         {
           "lane": 4,
@@ -20936,7 +20936,7 @@
           "gainedScore": 48952
         }
       ],
-      "gainedScore": 2385664,
+      "gainedScore": 2513560,
       "comboAfter": [
         81,
         82,
@@ -21012,7 +21012,7 @@
         },
         {
           "vocal_up": 20,
-          "vocal_boost": 17,
+          "vocal_boost": 20,
           "vocal_up_extreme": 5,
           "vocal_down": 0,
           "dance_up": 0,
@@ -21134,7 +21134,7 @@
         {
           "lane": 3,
           "sourceKind": "beat",
-          "basicScore": 82019,
+          "basicScore": 86850,
           "skillPowerPermil": 1000,
           "b1Permil": 1860,
           "comboFactorPermil": 1870,
@@ -21142,7 +21142,7 @@
           "isRatioScore": false,
           "randPermil": 1019.231522079212,
           "critFactorPermil": 4401,
-          "gainedScore": 2262431
+          "gainedScore": 2395691
         },
         {
           "lane": 4,
@@ -21171,7 +21171,7 @@
           "gainedScore": 48952
         }
       ],
-      "gainedScore": 2483648,
+      "gainedScore": 2616908,
       "comboAfter": [
         82,
         83,
@@ -21247,7 +21247,7 @@
         },
         {
           "vocal_up": 20,
-          "vocal_boost": 17,
+          "vocal_boost": 20,
           "vocal_up_extreme": 5,
           "vocal_down": 0,
           "dance_up": 0,
@@ -21369,7 +21369,7 @@
         {
           "lane": 3,
           "sourceKind": "beat",
-          "basicScore": 82019,
+          "basicScore": 86850,
           "skillPowerPermil": 1000,
           "b1Permil": 1860,
           "comboFactorPermil": 1870,
@@ -21377,7 +21377,7 @@
           "isRatioScore": false,
           "randPermil": 997.5584609978122,
           "critFactorPermil": 4401,
-          "gainedScore": 2214323
+          "gainedScore": 2344748
         },
         {
           "lane": 4,
@@ -21406,7 +21406,7 @@
           "gainedScore": 48952
         }
       ],
-      "gainedScore": 2431877,
+      "gainedScore": 2562302,
       "comboAfter": [
         83,
         84,
@@ -21482,7 +21482,7 @@
         },
         {
           "vocal_up": 20,
-          "vocal_boost": 17,
+          "vocal_boost": 20,
           "vocal_up_extreme": 5,
           "vocal_down": 0,
           "dance_up": 0,
@@ -21614,7 +21614,7 @@
         {
           "lane": 3,
           "sourceKind": "beat",
-          "basicScore": 82019,
+          "basicScore": 86850,
           "skillPowerPermil": 1000,
           "b1Permil": 1860,
           "comboFactorPermil": 1870,
@@ -21622,7 +21622,7 @@
           "isRatioScore": false,
           "randPermil": 981.0606089886747,
           "critFactorPermil": 4401,
-          "gainedScore": 2177702
+          "gainedScore": 2305970
         },
         {
           "lane": 4,
@@ -21651,7 +21651,7 @@
           "gainedScore": 48952
         }
       ],
-      "gainedScore": 2392467,
+      "gainedScore": 2520735,
       "comboAfter": [
         84,
         85,
@@ -21727,7 +21727,7 @@
         },
         {
           "vocal_up": 20,
-          "vocal_boost": 17,
+          "vocal_boost": 20,
           "vocal_up_extreme": 5,
           "vocal_down": 0,
           "dance_up": 0,
@@ -21921,7 +21921,7 @@
         },
         {
           "vocal_up": 20,
-          "vocal_boost": 17,
+          "vocal_boost": 20,
           "vocal_up_extreme": 5,
           "vocal_down": 0,
           "dance_up": 0,
@@ -22043,7 +22043,7 @@
         {
           "lane": 3,
           "sourceKind": "beat",
-          "basicScore": 82019,
+          "basicScore": 86850,
           "skillPowerPermil": 1000,
           "b1Permil": 1860,
           "comboFactorPermil": 1870,
@@ -22051,7 +22051,7 @@
           "isRatioScore": false,
           "randPermil": 1045.20198745802,
           "critFactorPermil": 4651,
-          "gainedScore": 2451872
+          "gainedScore": 2596289
         },
         {
           "lane": 4,
@@ -22080,7 +22080,7 @@
           "gainedScore": 48952
         }
       ],
-      "gainedScore": 2677478,
+      "gainedScore": 2821895,
       "comboAfter": [
         86,
         86,
@@ -22156,7 +22156,7 @@
         },
         {
           "vocal_up": 20,
-          "vocal_boost": 17,
+          "vocal_boost": 20,
           "vocal_up_extreme": 5,
           "vocal_down": 0,
           "dance_up": 0,
@@ -22278,7 +22278,7 @@
         {
           "lane": 3,
           "sourceKind": "beat",
-          "basicScore": 82019,
+          "basicScore": 86850,
           "skillPowerPermil": 1000,
           "b1Permil": 1860,
           "comboFactorPermil": 1870,
@@ -22286,7 +22286,7 @@
           "isRatioScore": false,
           "randPermil": 993.2154379391333,
           "critFactorPermil": 4651,
-          "gainedScore": 2329920
+          "gainedScore": 2467154
         },
         {
           "lane": 4,
@@ -22315,7 +22315,7 @@
           "gainedScore": 48952
         }
       ],
-      "gainedScore": 2588221,
+      "gainedScore": 2725455,
       "comboAfter": [
         87,
         87,
@@ -22391,7 +22391,7 @@
         },
         {
           "vocal_up": 20,
-          "vocal_boost": 17,
+          "vocal_boost": 20,
           "vocal_up_extreme": 5,
           "vocal_down": 0,
           "dance_up": 0,
@@ -22490,8 +22490,8 @@
           "skillId": "photo-L3-2",
           "kind": "photo",
           "success": true,
-          "staminaCost": 154,
-          "gainedScore": 2189440
+          "staminaCost": 181,
+          "gainedScore": 2329191
         },
         {
           "beat": 97,
@@ -22542,7 +22542,7 @@
         {
           "lane": 3,
           "sourceKind": "beat",
-          "basicScore": 82019,
+          "basicScore": 86850,
           "skillPowerPermil": 1000,
           "b1Permil": 1860,
           "comboFactorPermil": 1870,
@@ -22550,7 +22550,7 @@
           "isRatioScore": false,
           "randPermil": 1000.0000379239691,
           "critFactorPermil": 4651,
-          "gainedScore": 2345835
+          "gainedScore": 2484007
         },
         {
           "lane": 4,
@@ -22581,7 +22581,7 @@
         {
           "lane": 3,
           "sourceKind": "photo",
-          "basicScore": 2207436,
+          "basicScore": 2348336,
           "skillPowerPermil": 200,
           "b1Permil": 1500,
           "comboFactorPermil": 1870,
@@ -22589,10 +22589,10 @@
           "isRatioScore": false,
           "randPermil": 999.9997896575624,
           "critFactorPermil": 1000,
-          "gainedScore": 2189440
+          "gainedScore": 2329191
         }
       ],
-      "gainedScore": 4743032,
+      "gainedScore": 5020955,
       "comboAfter": [
         88,
         88,
@@ -22603,7 +22603,7 @@
       "staminaAfter": [
         15598,
         8090,
-        18576,
+        18549,
         11024,
         16332
       ],
@@ -22668,7 +22668,7 @@
         },
         {
           "vocal_up": 20,
-          "vocal_boost": 17,
+          "vocal_boost": 20,
           "vocal_up_extreme": 5,
           "vocal_down": 0,
           "dance_up": 0,
@@ -22790,7 +22790,7 @@
         {
           "lane": 3,
           "sourceKind": "beat",
-          "basicScore": 82019,
+          "basicScore": 86850,
           "skillPowerPermil": 1000,
           "b1Permil": 1860,
           "comboFactorPermil": 1870,
@@ -22798,7 +22798,7 @@
           "isRatioScore": false,
           "randPermil": 1000.0000379239691,
           "critFactorPermil": 4651,
-          "gainedScore": 2345835
+          "gainedScore": 2484007
         },
         {
           "lane": 4,
@@ -22827,7 +22827,7 @@
           "gainedScore": 48952
         }
       ],
-      "gainedScore": 2553592,
+      "gainedScore": 2691764,
       "comboAfter": [
         89,
         89,
@@ -22838,7 +22838,7 @@
       "staminaAfter": [
         15598,
         8090,
-        18576,
+        18549,
         11024,
         16332
       ],
@@ -22903,7 +22903,7 @@
         },
         {
           "vocal_up": 20,
-          "vocal_boost": 17,
+          "vocal_boost": 20,
           "vocal_up_extreme": 5,
           "vocal_down": 0,
           "dance_up": 0,
@@ -23025,7 +23025,7 @@
         {
           "lane": 3,
           "sourceKind": "beat",
-          "basicScore": 82019,
+          "basicScore": 86850,
           "skillPowerPermil": 1000,
           "b1Permil": 1860,
           "comboFactorPermil": 1870,
@@ -23033,7 +23033,7 @@
           "isRatioScore": false,
           "randPermil": 1000.0000379239691,
           "critFactorPermil": 4651,
-          "gainedScore": 2345835
+          "gainedScore": 2484007
         },
         {
           "lane": 4,
@@ -23062,7 +23062,7 @@
           "gainedScore": 48952
         }
       ],
-      "gainedScore": 2590254,
+      "gainedScore": 2728426,
       "comboAfter": [
         90,
         90,
@@ -23073,7 +23073,7 @@
       "staminaAfter": [
         15598,
         8090,
-        18576,
+        18549,
         11024,
         16332
       ],
@@ -23138,7 +23138,7 @@
         },
         {
           "vocal_up": 20,
-          "vocal_boost": 17,
+          "vocal_boost": 20,
           "vocal_up_extreme": 5,
           "vocal_down": 0,
           "dance_up": 0,
@@ -23297,7 +23297,7 @@
         {
           "lane": 3,
           "sourceKind": "beat",
-          "basicScore": 82019,
+          "basicScore": 86850,
           "skillPowerPermil": 1000,
           "b1Permil": 1860,
           "comboFactorPermil": 1870,
@@ -23305,7 +23305,7 @@
           "isRatioScore": false,
           "randPermil": 1000.0000379239691,
           "critFactorPermil": 4651,
-          "gainedScore": 2345835
+          "gainedScore": 2484007
         },
         {
           "lane": 4,
@@ -23334,7 +23334,7 @@
           "gainedScore": 48952
         }
       ],
-      "gainedScore": 2553592,
+      "gainedScore": 2691764,
       "comboAfter": [
         91,
         91,
@@ -23345,7 +23345,7 @@
       "staminaAfter": [
         14973,
         7933,
-        18576,
+        18549,
         10018,
         16332
       ],
@@ -23410,7 +23410,7 @@
         },
         {
           "vocal_up": 20,
-          "vocal_boost": 17,
+          "vocal_boost": 20,
           "vocal_up_extreme": 5,
           "vocal_down": 0,
           "dance_up": 0,
@@ -24032,7 +24032,7 @@
           "kind": "SP",
           "success": true,
           "staminaCost": 240,
-          "gainedScore": 15143606601
+          "gainedScore": 15146793842
         }
       ],
       "events": [
@@ -24052,19 +24052,19 @@
         {
           "lane": 3,
           "sourceKind": "SP",
-          "basicScore": 691799842,
+          "basicScore": 692026606,
           "skillPowerPermil": 1000,
           "b1Permil": 3022,
           "comboFactorPermil": 1000,
           "fanFactorPermil": 1000,
           "isRatioScore": true,
-          "ratioBaseCumScore": 5764998690,
+          "ratioBaseCumScore": 5766888385,
           "randPermil": 999.9999997160724,
           "critFactorPermil": 4651,
-          "gainedScore": 9723469536
+          "gainedScore": 9726656777
         }
       ],
-      "gainedScore": 15143606601,
+      "gainedScore": 15146793842,
       "comboAfter": [
         93,
         93,
@@ -37105,8 +37105,8 @@
       "skillId": "photo-L3-2",
       "kind": "photo",
       "success": true,
-      "staminaCost": 154,
-      "gainedScore": 2189440
+      "staminaCost": 181,
+      "gainedScore": 2329191
     },
     {
       "beat": 97,
@@ -37207,7 +37207,7 @@
       "kind": "SP",
       "success": true,
       "staminaCost": 240,
-      "gainedScore": 15143606601
+      "gainedScore": 15146793842
     },
     {
       "beat": 106,

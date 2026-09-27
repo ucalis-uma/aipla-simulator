@@ -3,19 +3,19 @@
     "sample": "S1",
     "stage": "qt-area-1-001",
     "chart": "chart-hsm-006-001",
-    "neutralTotalScore": 57671105,
-    "replayTotalScore": 116846821
+    "neutralTotalScore": 57661616,
+    "replayTotalScore": 116829040
   },
   "laneInputs": [],
-  "simTotal": 116846821,
-  "totalScore": 116846821,
+  "simTotal": 116829040,
+  "totalScore": 116829040,
   "fanFactorPermil": 1002,
   "beats": [
     {
       "beat": 1,
       "noteType": 1,
       "position": 0,
-      "gained": 53082,
+      "gained": 54257,
       "comboAfter": [
         1,
         1,
@@ -43,6 +43,16 @@
         },
         {
           "lane": 1,
+          "skillId": "sk-kkr-05-mizg-02-3",
+          "kind": "P",
+          "phase": "first",
+          "success": true,
+          "failReason": null,
+          "staminaCost": 192,
+          "gainedScore": null
+        },
+        {
+          "lane": 1,
           "skillId": "uph-uph-l1-4",
           "kind": "photo",
           "phase": "first",
@@ -60,23 +70,13 @@
           "failReason": null,
           "staminaCost": 183,
           "gainedScore": null
-        },
-        {
-          "lane": 1,
-          "skillId": "sk-kkr-05-mizg-02-3",
-          "kind": "P",
-          "phase": "last",
-          "success": true,
-          "failReason": null,
-          "staminaCost": 192,
-          "gainedScore": null
         }
       ],
       "events": [
         {
           "lane": 1,
           "sourceKind": "beat",
-          "basicScore": 9750,
+          "basicScore": 10858,
           "skillPowerPermil": 1000,
           "b1Permil": 1060,
           "comboFactorPermil": 1000,
@@ -85,7 +85,7 @@
           "critFactorPermil": 1000,
           "isRatioScore": false,
           "ratioBaseCumScore": null,
-          "gainedScore": 10345
+          "gainedScore": 11520
         },
         {
           "lane": 2,
@@ -146,7 +146,7 @@
       ],
       "buffSnapshots": [
         {
-          "vocal_up": 0,
+          "vocal_up": 3,
           "vocal_boost": 0,
           "vocal_up_extreme": 0,
           "vocal_down": 0,
@@ -8366,7 +8366,7 @@
       "beat": 36,
       "noteType": 1,
       "position": 0,
-      "gained": 114662,
+      "gained": 113312,
       "comboAfter": [
         34,
         35,
@@ -8386,7 +8386,7 @@
         {
           "lane": 1,
           "sourceKind": "beat",
-          "basicScore": 12519,
+          "basicScore": 11412,
           "skillPowerPermil": 1000,
           "b1Permil": 1060,
           "comboFactorPermil": 1150,
@@ -8395,7 +8395,7 @@
           "critFactorPermil": 1000,
           "isRatioScore": false,
           "ratioBaseCumScore": null,
-          "gainedScore": 15275
+          "gainedScore": 13925
         },
         {
           "lane": 2,
@@ -8456,7 +8456,7 @@
       ],
       "buffSnapshots": [
         {
-          "vocal_up": 3,
+          "vocal_up": 0,
           "vocal_boost": 3,
           "vocal_up_extreme": 0,
           "vocal_down": 0,
@@ -11690,7 +11690,7 @@
         48
       ],
       "staminaAfter": [
-        8238,
+        8041,
         8747,
         6933,
         7836,
@@ -11705,6 +11705,16 @@
           "success": true,
           "failReason": null,
           "staminaCost": 185,
+          "gainedScore": null
+        },
+        {
+          "lane": 1,
+          "skillId": "sk-kkr-05-mizg-02-3",
+          "kind": "P",
+          "phase": "last",
+          "success": true,
+          "failReason": null,
+          "staminaCost": 197,
           "gainedScore": null
         }
       ],
@@ -11957,16 +11967,6 @@
           "failReason": null,
           "staminaCost": 182,
           "gainedScore": 10094192
-        },
-        {
-          "lane": 1,
-          "skillId": "sk-kkr-05-mizg-02-3",
-          "kind": "P",
-          "phase": "last",
-          "success": true,
-          "failReason": null,
-          "staminaCost": 197,
-          "gainedScore": null
         }
       ],
       "events": [
@@ -11987,7 +11987,7 @@
       ],
       "buffSnapshots": [
         {
-          "vocal_up": 0,
+          "vocal_up": 3,
           "vocal_boost": 3,
           "vocal_up_extreme": 0,
           "vocal_down": 0,
@@ -12036,7 +12036,7 @@
           "p_skill_score_up": 0,
           "combo_score_up": 0,
           "critical_coeff_up": 0,
-          "critical_rate_up": 5,
+          "critical_rate_up": 6,
           "stamina_cost_down": 0,
           "stamina_cost_up": 0,
           "skill_success_up": 0,
@@ -20168,7 +20168,7 @@
       "beat": 86,
       "noteType": 1,
       "position": 0,
-      "gained": 94850,
+      "gained": 92411,
       "comboAfter": [
         29,
         28,
@@ -20188,7 +20188,7 @@
         {
           "lane": 1,
           "sourceKind": "beat",
-          "basicScore": 13073,
+          "basicScore": 11965,
           "skillPowerPermil": 1000,
           "b1Permil": 1060,
           "comboFactorPermil": 1100,
@@ -20197,7 +20197,7 @@
           "critFactorPermil": 1886,
           "isRatioScore": false,
           "ratioBaseCumScore": null,
-          "gainedScore": 28777
+          "gainedScore": 26338
         },
         {
           "lane": 2,
@@ -20258,7 +20258,7 @@
       ],
       "buffSnapshots": [
         {
-          "vocal_up": 3,
+          "vocal_up": 0,
           "vocal_boost": 4,
           "vocal_up_extreme": 0,
           "vocal_down": 0,
@@ -23492,7 +23492,7 @@
         42
       ],
       "staminaAfter": [
-        7214,
+        7022,
         8747,
         6751,
         7518,
@@ -23507,6 +23507,16 @@
           "success": true,
           "failReason": null,
           "staminaCost": 180,
+          "gainedScore": null
+        },
+        {
+          "lane": 1,
+          "skillId": "sk-kkr-05-mizg-02-3",
+          "kind": "P",
+          "phase": "last",
+          "success": true,
+          "failReason": null,
+          "staminaCost": 192,
           "gainedScore": null
         }
       ],
@@ -23734,7 +23744,7 @@
       "beat": 101,
       "noteType": 1,
       "position": 0,
-      "gained": 115295,
+      "gained": 116706,
       "comboAfter": [
         43,
         42,
@@ -23749,23 +23759,12 @@
         7518,
         8161
       ],
-      "activations": [
-        {
-          "lane": 1,
-          "skillId": "sk-kkr-05-mizg-02-3",
-          "kind": "P",
-          "phase": "last",
-          "success": true,
-          "failReason": null,
-          "staminaCost": 192,
-          "gainedScore": null
-        }
-      ],
+      "activations": [],
       "events": [
         {
           "lane": 1,
           "sourceKind": "beat",
-          "basicScore": 9750,
+          "basicScore": 10858,
           "skillPowerPermil": 1000,
           "b1Permil": 1060,
           "comboFactorPermil": 1200,
@@ -23774,7 +23773,7 @@
           "critFactorPermil": 1000,
           "isRatioScore": false,
           "ratioBaseCumScore": null,
-          "gainedScore": 12414
+          "gainedScore": 13825
         },
         {
           "lane": 2,
@@ -23835,7 +23834,7 @@
       ],
       "buffSnapshots": [
         {
-          "vocal_up": 0,
+          "vocal_up": 3,
           "vocal_boost": 0,
           "vocal_up_extreme": 0,
           "vocal_down": 0,
@@ -23884,7 +23883,7 @@
           "p_skill_score_up": 0,
           "combo_score_up": 0,
           "critical_coeff_up": 0,
-          "critical_rate_up": 5,
+          "critical_rate_up": 6,
           "stamina_cost_down": 0,
           "stamina_cost_up": 0,
           "skill_success_up": 0,
@@ -31986,7 +31985,7 @@
       "beat": 136,
       "noteType": 1,
       "position": 0,
-      "gained": 151953,
+      "gained": 149070,
       "comboAfter": [
         75,
         74,
@@ -32017,7 +32016,7 @@
         {
           "lane": 1,
           "sourceKind": "beat",
-          "basicScore": 14735,
+          "basicScore": 13627,
           "skillPowerPermil": 1000,
           "b1Permil": 1060,
           "comboFactorPermil": 1300,
@@ -32026,7 +32025,7 @@
           "critFactorPermil": 1886,
           "isRatioScore": false,
           "ratioBaseCumScore": null,
-          "gainedScore": 38333
+          "gainedScore": 35450
         },
         {
           "lane": 2,
@@ -32087,7 +32086,7 @@
       ],
       "buffSnapshots": [
         {
-          "vocal_up": 3,
+          "vocal_up": 0,
           "vocal_boost": 7,
           "vocal_up_extreme": 0,
           "vocal_down": 0,
@@ -32237,7 +32236,7 @@
       "beat": 137,
       "noteType": 1,
       "position": 0,
-      "gained": 173815,
+      "gained": 170733,
       "comboAfter": [
         76,
         75,
@@ -32268,7 +32267,7 @@
         {
           "lane": 1,
           "sourceKind": "beat",
-          "basicScore": 14735,
+          "basicScore": 13627,
           "skillPowerPermil": 1000,
           "b1Permil": 1060,
           "comboFactorPermil": 1390,
@@ -32277,7 +32276,7 @@
           "critFactorPermil": 1886,
           "isRatioScore": false,
           "ratioBaseCumScore": null,
-          "gainedScore": 40987
+          "gainedScore": 37905
         },
         {
           "lane": 2,
@@ -32338,7 +32337,7 @@
       ],
       "buffSnapshots": [
         {
-          "vocal_up": 3,
+          "vocal_up": 0,
           "vocal_boost": 7,
           "vocal_up_extreme": 0,
           "vocal_down": 0,
@@ -32488,7 +32487,7 @@
       "beat": 138,
       "noteType": 1,
       "position": 0,
-      "gained": 161775,
+      "gained": 158693,
       "comboAfter": [
         77,
         76,
@@ -32519,7 +32518,7 @@
         {
           "lane": 1,
           "sourceKind": "beat",
-          "basicScore": 14735,
+          "basicScore": 13627,
           "skillPowerPermil": 1000,
           "b1Permil": 1060,
           "comboFactorPermil": 1390,
@@ -32528,7 +32527,7 @@
           "critFactorPermil": 1886,
           "isRatioScore": false,
           "ratioBaseCumScore": null,
-          "gainedScore": 40987
+          "gainedScore": 37905
         },
         {
           "lane": 2,
@@ -32589,7 +32588,7 @@
       ],
       "buffSnapshots": [
         {
-          "vocal_up": 3,
+          "vocal_up": 0,
           "vocal_boost": 7,
           "vocal_up_extreme": 0,
           "vocal_down": 0,
@@ -32739,7 +32738,7 @@
       "beat": 139,
       "noteType": 1,
       "position": 0,
-      "gained": 168071,
+      "gained": 166437,
       "comboAfter": [
         78,
         77,
@@ -32770,7 +32769,7 @@
         {
           "lane": 1,
           "sourceKind": "beat",
-          "basicScore": 14735,
+          "basicScore": 13627,
           "skillPowerPermil": 1000,
           "b1Permil": 1060,
           "comboFactorPermil": 1390,
@@ -32779,7 +32778,7 @@
           "critFactorPermil": 1000,
           "isRatioScore": false,
           "ratioBaseCumScore": null,
-          "gainedScore": 21732
+          "gainedScore": 20098
         },
         {
           "lane": 2,
@@ -32840,7 +32839,7 @@
       ],
       "buffSnapshots": [
         {
-          "vocal_up": 3,
+          "vocal_up": 0,
           "vocal_boost": 7,
           "vocal_up_extreme": 0,
           "vocal_down": 0,
@@ -32990,7 +32989,7 @@
       "beat": 140,
       "noteType": 1,
       "position": 0,
-      "gained": 187326,
+      "gained": 184244,
       "comboAfter": [
         79,
         78,
@@ -33021,7 +33020,7 @@
         {
           "lane": 1,
           "sourceKind": "beat",
-          "basicScore": 14735,
+          "basicScore": 13627,
           "skillPowerPermil": 1000,
           "b1Permil": 1060,
           "comboFactorPermil": 1390,
@@ -33030,7 +33029,7 @@
           "critFactorPermil": 1886,
           "isRatioScore": false,
           "ratioBaseCumScore": null,
-          "gainedScore": 40987
+          "gainedScore": 37905
         },
         {
           "lane": 2,
@@ -33091,7 +33090,7 @@
       ],
       "buffSnapshots": [
         {
-          "vocal_up": 3,
+          "vocal_up": 0,
           "vocal_boost": 7,
           "vocal_up_extreme": 0,
           "vocal_down": 0,
@@ -33241,7 +33240,7 @@
       "beat": 141,
       "noteType": 1,
       "position": 0,
-      "gained": 156031,
+      "gained": 154397,
       "comboAfter": [
         80,
         79,
@@ -33272,7 +33271,7 @@
         {
           "lane": 1,
           "sourceKind": "beat",
-          "basicScore": 14735,
+          "basicScore": 13627,
           "skillPowerPermil": 1000,
           "b1Permil": 1060,
           "comboFactorPermil": 1390,
@@ -33281,7 +33280,7 @@
           "critFactorPermil": 1000,
           "isRatioScore": false,
           "ratioBaseCumScore": null,
-          "gainedScore": 21732
+          "gainedScore": 20098
         },
         {
           "lane": 2,
@@ -33342,7 +33341,7 @@
       ],
       "buffSnapshots": [
         {
-          "vocal_up": 3,
+          "vocal_up": 0,
           "vocal_boost": 7,
           "vocal_up_extreme": 0,
           "vocal_down": 0,
@@ -33492,7 +33491,7 @@
       "beat": 142,
       "noteType": 1,
       "position": 0,
-      "gained": 187326,
+      "gained": 184244,
       "comboAfter": [
         81,
         80,
@@ -33523,7 +33522,7 @@
         {
           "lane": 1,
           "sourceKind": "beat",
-          "basicScore": 14735,
+          "basicScore": 13627,
           "skillPowerPermil": 1000,
           "b1Permil": 1060,
           "comboFactorPermil": 1390,
@@ -33532,7 +33531,7 @@
           "critFactorPermil": 1886,
           "isRatioScore": false,
           "ratioBaseCumScore": null,
-          "gainedScore": 40987
+          "gainedScore": 37905
         },
         {
           "lane": 2,
@@ -33593,7 +33592,7 @@
       ],
       "buffSnapshots": [
         {
-          "vocal_up": 3,
+          "vocal_up": 0,
           "vocal_boost": 7,
           "vocal_up_extreme": 0,
           "vocal_down": 0,
@@ -33822,7 +33821,7 @@
       ],
       "buffSnapshots": [
         {
-          "vocal_up": 3,
+          "vocal_up": 0,
           "vocal_boost": 7,
           "vocal_up_extreme": 0,
           "vocal_down": 0,
@@ -35441,7 +35440,7 @@
         87
       ],
       "staminaAfter": [
-        6172,
+        5973,
         8269,
         6021,
         6973,
@@ -35456,6 +35455,16 @@
           "success": true,
           "failReason": null,
           "staminaCost": 180,
+          "gainedScore": null
+        },
+        {
+          "lane": 1,
+          "skillId": "sk-kkr-05-mizg-02-3",
+          "kind": "P",
+          "phase": "last",
+          "success": true,
+          "failReason": null,
+          "staminaCost": 199,
           "gainedScore": null
         },
         {
@@ -35693,7 +35702,7 @@
       "beat": 151,
       "noteType": 1,
       "position": 0,
-      "gained": 140619,
+      "gained": 142520,
       "comboAfter": [
         88,
         87,
@@ -35710,16 +35719,6 @@
       ],
       "activations": [
         {
-          "lane": 1,
-          "skillId": "sk-kkr-05-mizg-02-3",
-          "kind": "P",
-          "phase": "last",
-          "success": true,
-          "failReason": null,
-          "staminaCost": 199,
-          "gainedScore": null
-        },
-        {
           "lane": 2,
           "skillId": "sk-rio-05-fest-01-3",
           "kind": "P",
@@ -35734,7 +35733,7 @@
         {
           "lane": 1,
           "sourceKind": "beat",
-          "basicScore": 11965,
+          "basicScore": 13073,
           "skillPowerPermil": 1000,
           "b1Permil": 1060,
           "comboFactorPermil": 1390,
@@ -35743,7 +35742,7 @@
           "critFactorPermil": 1000,
           "isRatioScore": false,
           "ratioBaseCumScore": null,
-          "gainedScore": 17646
+          "gainedScore": 19281
         },
         {
           "lane": 2,
@@ -35751,13 +35750,13 @@
           "basicScore": 8347,
           "skillPowerPermil": 1000,
           "b1Permil": 1060,
-          "comboFactorPermil": 1390,
+          "comboFactorPermil": 1420,
           "fanFactorPermil": 1001,
           "randPermil": 1000,
           "critFactorPermil": 1000,
           "isRatioScore": false,
           "ratioBaseCumScore": null,
-          "gainedScore": 12310
+          "gainedScore": 12576
         },
         {
           "lane": 3,
@@ -35804,7 +35803,7 @@
       ],
       "buffSnapshots": [
         {
-          "vocal_up": 0,
+          "vocal_up": 3,
           "vocal_boost": 4,
           "vocal_up_extreme": 0,
           "vocal_down": 0,
@@ -35851,9 +35850,9 @@
           "a_skill_score_up": 0,
           "sp_skill_score_up": 0,
           "p_skill_score_up": 0,
-          "combo_score_up": 3,
+          "combo_score_up": 4,
           "critical_coeff_up": 0,
-          "critical_rate_up": 5,
+          "critical_rate_up": 6,
           "stamina_cost_down": 0,
           "stamina_cost_up": 0,
           "skill_success_up": 0,

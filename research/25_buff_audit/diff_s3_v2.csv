@@ -1,10 +1,10 @@
 sample,beat,lane,key,measured_stage,sim_stage,diff,note
-S3,1,3,focus,7,10,3,"AMPLIFY_OR_OVERLAP_ON_BEAT: Activation on b1 (['sk-ski-05-waso-00-3', 'uph-uph-lane3-1', 'sk-rei-05-fest-01-3', 'uph-uph-lane2-1', 'sk-ktn-05-fest-02-2', 'uph-uph-lane1-1', 'sk-mhk-05-poli-00-2', 'uph-uph-lane5-1', 'sk-live-lba-passive_skill-060']); measured stage 7 vs sim stage 10"
+S3,1,3,focus,7,10,3,"PHASE_LAG_ACTIVATION: Activated on b1 (acts=['sk-ski-05-waso-00-3', 'uph-uph-lane3-1', 'sk-rei-05-fest-01-3', 'uph-uph-lane2-1', 'sk-ktn-05-fest-02-2', 'uph-uph-lane1-1', 'sk-mhk-05-poli-00-2', 'uph-uph-lane5-1', 'sk-live-lba-passive_skill-060']); measured screenshot is PRE-display and catches up at b2 (m[2]=10=sim[1])"
 S3,1,3,score_up,0,7,7,"PHASE_LAG_ACTIVATION: b1 skill activated; screenshot at b1 is PRE-display, in-game UI displays buff from b2"
 S3,1,4,score_up,0,2,2,"PHASE_LAG_ACTIVATION: b1 skill activated; screenshot at b1 is PRE-display, in-game UI displays buff from b2"
-S3,1,4,visual_boost,3,6,3,"AMPLIFY_OR_OVERLAP_ON_BEAT: Activation on b1 (['sk-ski-05-waso-00-3', 'uph-uph-lane3-1', 'sk-rei-05-fest-01-3', 'uph-uph-lane2-1', 'sk-ktn-05-fest-02-2', 'uph-uph-lane1-1', 'sk-mhk-05-poli-00-2', 'uph-uph-lane5-1', 'sk-live-lba-passive_skill-060']); measured stage 3 vs sim stage 6"
+S3,1,4,visual_boost,3,6,3,"PHASE_LAG_ACTIVATION: Activated on b1 (acts=['sk-ski-05-waso-00-3', 'uph-uph-lane3-1', 'sk-rei-05-fest-01-3', 'uph-uph-lane2-1', 'sk-ktn-05-fest-02-2', 'uph-uph-lane1-1', 'sk-mhk-05-poli-00-2', 'uph-uph-lane5-1', 'sk-live-lba-passive_skill-060']); measured screenshot is PRE-display and catches up at b2 (m[2]=6=sim[1])"
 S3,2,2,critical_rate_up,5,0,-5,"PHASE_LAG_ACTIVATION: Activated on b2 (acts=['uph-uph-lane3-2', 'sk-ktn-05-fest-02-3', 'sk-mhk-05-poli-00-3', 'uph-uph-lane5-3', 'sk-ski-05-waso-00-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"
-S3,2,3,a_skill_score_up,0,2,2,"AMPLIFY_OR_OVERLAP_ON_BEAT: Activation on b2 (['uph-uph-lane3-2', 'sk-ktn-05-fest-02-3', 'sk-mhk-05-poli-00-3', 'uph-uph-lane5-3', 'sk-ski-05-waso-00-1']); measured stage 0 vs sim stage 2"
+S3,2,3,a_skill_score_up,0,2,2,"PHASE_LAG_ACTIVATION: Activated on b2 (acts=['uph-uph-lane3-2', 'sk-ktn-05-fest-02-3', 'sk-mhk-05-poli-00-3', 'uph-uph-lane5-3', 'sk-ski-05-waso-00-1']); measured screenshot is PRE-display and catches up at b3 (m[3]=2=sim[2])"
 S3,3,4,skill_success_up,6,3,-3,"PHASE_LAG_ACTIVATION: Activated on b3 (acts=['sk-rei-05-fest-01-3', 'uph-uph-lane5-4']); measured reflects immediately (POST), sim reflects next beat (PRE)"
 S3,3,4,visual_up,11,7,-4,"PHASE_LAG_ACTIVATION: Activated on b3 (acts=['sk-rei-05-fest-01-3', 'uph-uph-lane5-4']); measured reflects immediately (POST), sim reflects next beat (PRE)"
 S3,4,1,vocal_boost,5,0,-5,"PHASE_LAG_ACTIVATION: Activated on b4 (acts=['sk-rui-05-fest-01-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
@@ -25,16 +25,11 @@ S3,23,4,visual_up_extreme,10,5,-5,"EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI disp
 S3,24,2,vocal_up,5,0,-5,"PHASE_LAG_ACTIVATION: Activated on b24 (acts=['sk-ski-05-waso-00-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
 S3,24,3,vocal_up,3,0,-3,"PHASE_LAG_ACTIVATION: Activated on b24 (acts=['sk-ski-05-waso-00-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
 S3,24,4,visual_up_extreme,10,5,-5,"EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
-S3,24,4,vocal_boost,5,0,-5,"PHASE_LAG_ACTIVATION: Activated on b24 (acts=['sk-ski-05-waso-00-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
 S3,24,4,vocal_up,5,0,-5,"PHASE_LAG_ACTIVATION: Activated on b24 (acts=['sk-ski-05-waso-00-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
 S3,25,4,visual_up_extreme,10,5,-5,"EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
-S3,25,4,vocal_boost,5,0,-5,BUFF_STAGE_MISMATCH: Measured 5 vs Sim 0 (diff=-5)
 S3,26,4,visual_up_extreme,10,5,-5,"EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
-S3,26,4,vocal_boost,5,0,-5,BUFF_STAGE_MISMATCH: Measured 5 vs Sim 0 (diff=-5)
 S3,27,4,visual_up_extreme,10,5,-5,"EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
-S3,27,4,vocal_boost,5,0,-5,BUFF_STAGE_MISMATCH: Measured 5 vs Sim 0 (diff=-5)
 S3,28,4,visual_up_extreme,10,5,-5,"EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
-S3,28,4,vocal_boost,5,0,-5,BUFF_STAGE_MISMATCH: Measured 5 vs Sim 0 (diff=-5)
 S3,29,4,visual_up_extreme,10,5,-5,"EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
 S3,30,4,visual_up_extreme,10,5,-5,"EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
 S3,31,4,visual_up_extreme,10,5,-5,"EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
@@ -76,7 +71,6 @@ S3,53,4,visual_up,11,7,-4,"PHASE_LAG_ACTIVATION: Activated on b53 (acts=['uph-up
 S3,53,4,visual_up_extreme,10,5,-5,"EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
 S3,54,4,visual_up_extreme,10,5,-5,"EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
 S3,55,4,visual_up_extreme,10,5,-5,"EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
-S3,56,4,skill_success_up,0,3,3,DECAY_TIMING_LAG: Buff expired in measured 1-2 beats earlier than sim
 S3,56,4,visual_up_extreme,10,5,-5,"EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
 S3,56,4,vocal_boost,5,0,-5,"PHASE_LAG_ACTIVATION: Activated on b56 (acts=['uph-uph-lane5-3', 'sk-rui-05-fest-01-3', 'uph-uph-lane5-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
 S3,57,4,visual_up_extreme,10,5,-5,"EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
@@ -86,12 +80,10 @@ S3,60,4,a_skill_score_up,2,0,-2,"PHASE_LAG_ACTIVATION: Activated on b60 (acts=['
 S3,60,4,visual_up_extreme,10,5,-5,"EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
 S3,60,4,vocal_up,7,0,-7,"PHASE_LAG_ACTIVATION: Activated on b60 (acts=['uph-uph-lane5-3', 'sk-rui-05-fest-01-2', 'uph-uph-lane2-1', 'uph-uph-lane1-1', 'uph-uph-lane5-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
 S3,61,4,skill_success_up,6,3,-3,"PHASE_LAG_ACTIVATION: Activated on b61 (acts=['uph-uph-lane5-3', 'sk-live-lba-passive_skill-060', 'sk-rei-05-fest-01-3', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane5-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
-S3,61,4,visual_boost,0,3,3,"AMPLIFY_OR_OVERLAP_ON_BEAT: Activation on b61 (['uph-uph-lane5-3', 'sk-live-lba-passive_skill-060', 'sk-rei-05-fest-01-3', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane5-3']); measured stage 0 vs sim stage 3"
 S3,61,4,visual_up,15,11,-4,"PHASE_LAG_ACTIVATION: Activated on b61 (acts=['uph-uph-lane5-3', 'sk-live-lba-passive_skill-060', 'sk-rei-05-fest-01-3', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane5-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
 S3,61,4,visual_up_extreme,10,5,-5,"EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
 S3,62,4,visual_up_extreme,10,5,-5,"EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
 S3,63,4,a_skill_score_up,2,0,-2,"PHASE_LAG_ACTIVATION: Activated on b63 (acts=['sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane5-3', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane5-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
-S3,63,4,visual_boost,0,3,3,DECAY_TIMING_LAG: Buff expired in measured 1-2 beats earlier than sim
 S3,63,4,visual_up_extreme,10,5,-5,"EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
 S3,64,4,visual_up_extreme,10,5,-5,"EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
 S3,65,3,vocal_up,7,3,-4,"PHASE_LAG_ACTIVATION: Activated on b65 (acts=['sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
@@ -101,7 +93,6 @@ S3,66,4,visual_up_extreme,10,5,-5,"EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI disp
 S3,67,4,visual_up_extreme,10,5,-5,"EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
 S3,68,4,visual_up_extreme,10,5,-5,"EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
 S3,69,4,visual_up_extreme,10,5,-5,"EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
-S3,70,4,visual_boost,0,3,3,DECAY_TIMING_LAG: Buff expired in measured 1-2 beats earlier than sim
 S3,70,4,visual_up_extreme,10,5,-5,"EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
 S3,71,4,visual_up_extreme,10,5,-5,"EXTREME_DISPLAY_VS_EFFECTIVE: In-game UI displays 10 stages, but simulator engine models effective +5 stages"
 S3,73,3,focus,10,6,-4,"PHASE_LAG_ACTIVATION: Activated on b73 (acts=['sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'sk-ski-05-waso-00-3', 'uph-uph-lane3-1', 'sk-ktn-05-fest-02-2', 'sk-ktn-05-fest-02-3', 'uph-uph-lane1-1']); measured reflects immediately (POST), sim reflects next beat (PRE)"

@@ -7,27 +7,17 @@
     "meas_has_effects": true,
     "sim_present": true,
     "max_beat": 176,
-    "total_comparisons": 1709,
-    "match_count": 1615,
-    "match_rate_pct": 94.5,
-    "discrepancy_count": 94,
+    "total_comparisons": 1695,
+    "match_count": 1623,
+    "match_rate_pct": 95.75,
+    "discrepancy_count": 72,
     "category_counts": {
-      "PHASE_LAG_ACTIVATION": 80,
-      "DECAY_TIMING_LAG": 14
+      "PHASE_LAG_ACTIVATION": 72
     },
+    "unobserved_cells_missing_frames": 5,
     "special_effects_count": 0
   },
   "diffs": [
-    {
-      "sample": "S1",
-      "beat": 1,
-      "lane": 1,
-      "key": "vocal_up",
-      "measured_stage": 3,
-      "sim_stage": 0,
-      "diff": -3,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b1 (acts=['sk-chs-05-hruh-00-2', 'uph-uph-l1-4', 'sk-ski-05-waso-00-3', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
-    },
     {
       "sample": "S1",
       "beat": 9,
@@ -110,16 +100,6 @@
     },
     {
       "sample": "S1",
-      "beat": 36,
-      "lane": 1,
-      "key": "vocal_up",
-      "measured_stage": 0,
-      "sim_stage": 3,
-      "diff": 3,
-      "note": "DECAY_TIMING_LAG: Buff expired in measured 1-2 beats earlier than sim"
-    },
-    {
-      "sample": "S1",
       "beat": 40,
       "lane": 3,
       "key": "combo_score_up",
@@ -146,7 +126,7 @@
       "measured_stage": 3,
       "sim_stage": 0,
       "diff": -3,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b50 (acts=['sk-chs-05-hruh-00-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+      "note": "PHASE_LAG_ACTIVATION: Activated on b50 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
       "sample": "S1",
@@ -156,7 +136,7 @@
       "measured_stage": 6,
       "sim_stage": 5,
       "diff": -1,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b50 (acts=['sk-chs-05-hruh-00-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+      "note": "PHASE_LAG_ACTIVATION: Activated on b50 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
       "sample": "S1",
@@ -166,7 +146,7 @@
       "measured_stage": 7,
       "sim_stage": 6,
       "diff": -1,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b50 (acts=['sk-chs-05-hruh-00-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+      "note": "PHASE_LAG_ACTIVATION: Activated on b50 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
       "sample": "S1",
@@ -176,7 +156,7 @@
       "measured_stage": 10,
       "sim_stage": 9,
       "diff": -1,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b50 (acts=['sk-chs-05-hruh-00-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+      "note": "PHASE_LAG_ACTIVATION: Activated on b50 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
       "sample": "S1",
@@ -186,7 +166,7 @@
       "measured_stage": 3,
       "sim_stage": 0,
       "diff": -3,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b50 (acts=['sk-chs-05-hruh-00-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+      "note": "PHASE_LAG_ACTIVATION: Activated on b50 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
       "sample": "S1",
@@ -196,27 +176,7 @@
       "measured_stage": 4,
       "sim_stage": 3,
       "diff": -1,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b50 (acts=['sk-chs-05-hruh-00-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
-    },
-    {
-      "sample": "S1",
-      "beat": 51,
-      "lane": 1,
-      "key": "vocal_up",
-      "measured_stage": 3,
-      "sim_stage": 0,
-      "diff": -3,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b51 (acts=['sk-ai-05-fest-00-2', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
-    },
-    {
-      "sample": "S1",
-      "beat": 51,
-      "lane": 2,
-      "key": "critical_rate_up",
-      "measured_stage": 6,
-      "sim_stage": 5,
-      "diff": -1,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b51 (acts=['sk-ai-05-fest-00-2', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+      "note": "PHASE_LAG_ACTIVATION: Activated on b50 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
       "sample": "S1",
@@ -226,7 +186,7 @@
       "measured_stage": 10,
       "sim_stage": 0,
       "diff": -10,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b51 (acts=['sk-ai-05-fest-00-2', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+      "note": "PHASE_LAG_ACTIVATION: Activated on b51 (acts=['sk-ai-05-fest-00-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
       "sample": "S1",
@@ -310,16 +270,6 @@
     },
     {
       "sample": "S1",
-      "beat": 86,
-      "lane": 1,
-      "key": "vocal_up",
-      "measured_stage": 0,
-      "sim_stage": 3,
-      "diff": 3,
-      "note": "DECAY_TIMING_LAG: Buff expired in measured 1-2 beats earlier than sim"
-    },
-    {
-      "sample": "S1",
       "beat": 97,
       "lane": 3,
       "key": "combo_score_up",
@@ -346,7 +296,7 @@
       "measured_stage": 3,
       "sim_stage": 0,
       "diff": -3,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b100 (acts=['sk-chs-05-hruh-00-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+      "note": "PHASE_LAG_ACTIVATION: Activated on b100 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
       "sample": "S1",
@@ -356,7 +306,7 @@
       "measured_stage": 6,
       "sim_stage": 5,
       "diff": -1,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b100 (acts=['sk-chs-05-hruh-00-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+      "note": "PHASE_LAG_ACTIVATION: Activated on b100 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
       "sample": "S1",
@@ -366,7 +316,7 @@
       "measured_stage": 7,
       "sim_stage": 6,
       "diff": -1,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b100 (acts=['sk-chs-05-hruh-00-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+      "note": "PHASE_LAG_ACTIVATION: Activated on b100 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
       "sample": "S1",
@@ -376,7 +326,7 @@
       "measured_stage": 6,
       "sim_stage": 5,
       "diff": -1,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b100 (acts=['sk-chs-05-hruh-00-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+      "note": "PHASE_LAG_ACTIVATION: Activated on b100 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
       "sample": "S1",
@@ -386,27 +336,7 @@
       "measured_stage": 3,
       "sim_stage": 0,
       "diff": -3,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b100 (acts=['sk-chs-05-hruh-00-2']); measured reflects immediately (POST), sim reflects next beat (PRE)"
-    },
-    {
-      "sample": "S1",
-      "beat": 101,
-      "lane": 1,
-      "key": "vocal_up",
-      "measured_stage": 3,
-      "sim_stage": 0,
-      "diff": -3,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b101 (acts=['sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
-    },
-    {
-      "sample": "S1",
-      "beat": 101,
-      "lane": 2,
-      "key": "critical_rate_up",
-      "measured_stage": 6,
-      "sim_stage": 5,
-      "diff": -1,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b101 (acts=['sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+      "note": "PHASE_LAG_ACTIVATION: Activated on b100 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
       "sample": "S1",
@@ -487,16 +417,6 @@
       "sim_stage": 3,
       "diff": -3,
       "note": "PHASE_LAG_ACTIVATION: Activated on b120 (acts=['uph-uph-l1-4', 'sk-ski-05-waso-00-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
-    },
-    {
-      "sample": "S1",
-      "beat": 121,
-      "lane": 5,
-      "key": "combo_score_up",
-      "measured_stage": 0,
-      "sim_stage": 6,
-      "diff": 6,
-      "note": "DECAY_TIMING_LAG: Buff expired in measured 1-2 beats earlier than sim"
     },
     {
       "sample": "S1",
@@ -581,16 +501,6 @@
     {
       "sample": "S1",
       "beat": 136,
-      "lane": 1,
-      "key": "vocal_up",
-      "measured_stage": 0,
-      "sim_stage": 3,
-      "diff": 3,
-      "note": "DECAY_TIMING_LAG: Buff expired in measured 1-2 beats earlier than sim"
-    },
-    {
-      "sample": "S1",
-      "beat": 136,
       "lane": 2,
       "key": "combo_score_up",
       "measured_stage": 3,
@@ -630,76 +540,6 @@
     },
     {
       "sample": "S1",
-      "beat": 137,
-      "lane": 1,
-      "key": "vocal_up",
-      "measured_stage": 0,
-      "sim_stage": 3,
-      "diff": 3,
-      "note": "DECAY_TIMING_LAG: Buff expired in measured 1-2 beats earlier than sim"
-    },
-    {
-      "sample": "S1",
-      "beat": 138,
-      "lane": 1,
-      "key": "vocal_up",
-      "measured_stage": 0,
-      "sim_stage": 3,
-      "diff": 3,
-      "note": "DECAY_TIMING_LAG: Buff expired in measured 1-2 beats earlier than sim"
-    },
-    {
-      "sample": "S1",
-      "beat": 139,
-      "lane": 1,
-      "key": "vocal_up",
-      "measured_stage": 0,
-      "sim_stage": 3,
-      "diff": 3,
-      "note": "DECAY_TIMING_LAG: Buff expired in measured 1-2 beats earlier than sim"
-    },
-    {
-      "sample": "S1",
-      "beat": 140,
-      "lane": 1,
-      "key": "vocal_up",
-      "measured_stage": 0,
-      "sim_stage": 3,
-      "diff": 3,
-      "note": "DECAY_TIMING_LAG: Buff expired in measured 1-2 beats earlier than sim"
-    },
-    {
-      "sample": "S1",
-      "beat": 141,
-      "lane": 1,
-      "key": "vocal_up",
-      "measured_stage": 0,
-      "sim_stage": 3,
-      "diff": 3,
-      "note": "DECAY_TIMING_LAG: Buff expired in measured 1-2 beats earlier than sim"
-    },
-    {
-      "sample": "S1",
-      "beat": 142,
-      "lane": 1,
-      "key": "vocal_up",
-      "measured_stage": 0,
-      "sim_stage": 3,
-      "diff": 3,
-      "note": "DECAY_TIMING_LAG: Buff expired in measured 1-2 beats earlier than sim"
-    },
-    {
-      "sample": "S1",
-      "beat": 143,
-      "lane": 1,
-      "key": "vocal_up",
-      "measured_stage": 0,
-      "sim_stage": 3,
-      "diff": 3,
-      "note": "DECAY_TIMING_LAG: Buff expired in measured 1-2 beats earlier than sim"
-    },
-    {
-      "sample": "S1",
       "beat": 148,
       "lane": 2,
       "key": "critical_rate_up",
@@ -710,23 +550,13 @@
     },
     {
       "sample": "S1",
-      "beat": 149,
-      "lane": 5,
-      "key": "combo_score_up",
-      "measured_stage": 0,
-      "sim_stage": 9,
-      "diff": 9,
-      "note": "DECAY_TIMING_LAG: Buff expired in measured 1-2 beats earlier than sim"
-    },
-    {
-      "sample": "S1",
       "beat": 150,
       "lane": 1,
       "key": "vocal_up",
       "measured_stage": 3,
       "sim_stage": 0,
       "diff": -3,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b150 (acts=['sk-chs-05-hruh-00-2', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+      "note": "PHASE_LAG_ACTIVATION: Activated on b150 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
       "sample": "S1",
@@ -736,7 +566,7 @@
       "measured_stage": 4,
       "sim_stage": 3,
       "diff": -1,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b150 (acts=['sk-chs-05-hruh-00-2', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+      "note": "PHASE_LAG_ACTIVATION: Activated on b150 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
       "sample": "S1",
@@ -746,7 +576,7 @@
       "measured_stage": 6,
       "sim_stage": 5,
       "diff": -1,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b150 (acts=['sk-chs-05-hruh-00-2', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+      "note": "PHASE_LAG_ACTIVATION: Activated on b150 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
       "sample": "S1",
@@ -756,7 +586,7 @@
       "measured_stage": 10,
       "sim_stage": 9,
       "diff": -1,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b150 (acts=['sk-chs-05-hruh-00-2', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+      "note": "PHASE_LAG_ACTIVATION: Activated on b150 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
       "sample": "S1",
@@ -766,7 +596,7 @@
       "measured_stage": 3,
       "sim_stage": 2,
       "diff": -1,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b150 (acts=['sk-chs-05-hruh-00-2', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+      "note": "PHASE_LAG_ACTIVATION: Activated on b150 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
       "sample": "S1",
@@ -776,7 +606,7 @@
       "measured_stage": 3,
       "sim_stage": 0,
       "diff": -3,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b150 (acts=['sk-chs-05-hruh-00-2', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
+      "note": "PHASE_LAG_ACTIVATION: Activated on b150 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
       "sample": "S1",
@@ -786,57 +616,7 @@
       "measured_stage": 10,
       "sim_stage": 9,
       "diff": -1,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b150 (acts=['sk-chs-05-hruh-00-2', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
-    },
-    {
-      "sample": "S1",
-      "beat": 151,
-      "lane": 1,
-      "key": "vocal_up",
-      "measured_stage": 3,
-      "sim_stage": 0,
-      "diff": -3,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b151 (acts=['sk-kkr-05-mizg-02-3', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
-    },
-    {
-      "sample": "S1",
-      "beat": 151,
-      "lane": 2,
-      "key": "combo_score_up",
-      "measured_stage": 4,
-      "sim_stage": 3,
-      "diff": -1,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b151 (acts=['sk-kkr-05-mizg-02-3', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
-    },
-    {
-      "sample": "S1",
-      "beat": 151,
-      "lane": 2,
-      "key": "critical_rate_up",
-      "measured_stage": 6,
-      "sim_stage": 5,
-      "diff": -1,
-      "note": "PHASE_LAG_ACTIVATION: Activated on b151 (acts=['sk-kkr-05-mizg-02-3', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
-    },
-    {
-      "sample": "S1",
-      "beat": 154,
-      "lane": 2,
-      "key": "combo_score_up",
-      "measured_stage": 0,
-      "sim_stage": 4,
-      "diff": 4,
-      "note": "DECAY_TIMING_LAG: Buff expired in measured 1-2 beats earlier than sim"
-    },
-    {
-      "sample": "S1",
-      "beat": 154,
-      "lane": 2,
-      "key": "critical_rate_up",
-      "measured_stage": 0,
-      "sim_stage": 6,
-      "diff": 6,
-      "note": "DECAY_TIMING_LAG: Buff expired in measured 1-2 beats earlier than sim"
+      "note": "PHASE_LAG_ACTIVATION: Activated on b150 (acts=['sk-chs-05-hruh-00-2', 'sk-kkr-05-mizg-02-3', 'sk-rio-05-fest-01-3']); measured reflects immediately (POST), sim reflects next beat (PRE)"
     },
     {
       "sample": "S1",
