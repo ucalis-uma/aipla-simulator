@@ -126,3 +126,7 @@ prompts/phase15-followups.md
 15-2 PHASE_LAG_ACTIVATION の方針決定、15-3 EXTREME_DISPLAY / PERSISTENT_SP_BUFF / T5 FLAG_NOT_STAGED
 （combo_continue 653件）の扱い、15-4 14-F の S1 単独寄与の分離トレース、15-5 単一HTML UI 再ビルド、
 15-6 S4 再撮影（着手前にユーザー確認必須）を優先度順に並べたチェックリスト。
+**→ 2026-09-28 更新: 15-1〜15-5 完了。残りは 15-6（S4 再撮影・ライブチケット消費のため要ユーザー確認）のみ。
+15-4 の結論（14-F 単独の差分は S1/S2/S3 で 0 セル、T5 の 14 セルのみ／旧「+0.22pt」推定は撤回）は
+`research/26_data_integrity/phase14f_revival_audit.md` §5–§6 と実装ログ `research/12` Phase 15-4 節。
+再現用の恒久スクリプト: `research/26_data_integrity/audit_phase14f_s1_divergence.mjs`。**

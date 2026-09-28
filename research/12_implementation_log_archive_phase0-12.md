@@ -1,0 +1,2183 @@
+﻿# 12b. 実装ログ アーカイブ（Phase 0〜12 まで・2026-08-29 〜 2026-09-04）
+
+- 本ファイルは `12_implementation_log.md` の **Phase 12 以前**を無修正で移設したもの
+  （2026-09-28 分割時点の旧 1〜2177 行。Phase 0〜12 と、2026-09-04 深夜までの追補まで）。
+- 現行ログ（Phase 13・2026-09-05 以降）: `12_implementation_log.md`
+- `research/12 §5` / `§7〜§9` / `§T5-2b` / `Phase 3b` / `Phase 8-B3` など、**本ファイルを指す旧参照が
+  多数ある**ため、節番号・見出しは分割前から変更していない（参照を実名で直さなくて読める）。
+
+- 目的: フェーズごとの実装記録・決定事項・発見事項を時系列で記録する（PLAN.md §14 に対応）
+
+---
+
+## Phase 0〜1（2026-08-29 完了）
+
+### 完了内容
+- `git init` 済み（コミットはユーザー指示時に実施）
+- スキャフォールド: package.json / tsconfig.json / vitest.config.ts / .gitignore（重い実測画像・vendor/ は除外）
+- **計算コア**（`src/`、依存ゼロ・純粋関数・TypeScript）:
+  - `rounding.ts`: 千分率整数演算（mulPermil / floorDiv / pctToPermil）。浮動小数点直接演算の禁止規律を定義
+  - `kouryu.ts`: 交流Lv累積テーブル（Lv1〜60、Confirmed）
+  - `types.ts`: Card/StatBonus/YellBonus/StaffBonus 等のドメイン型、rarityBonusPermil（☆1=1.00〜☆10=1.45）
+  - `formula/baseStatus.ts`: カード外ステータス式（PLAN.md §3.1 確定式）。**DeckStatusInput.rarity は開花後の現在レアリティを入力**（☆5初期カードの限界突破に対応）
+- **データパイプライン**（`tools/importers/build_data.mjs`、`npm run build:data`）:
+  - vendor/（gitignore）にマスタ生JSONをキャッシュし、`data/` へ9ファイル生成（meta/cards 491枚/card_parameters 780行/staff/stages/qt-daily-003-19/audience_advantage 1000行/combo_advantage/chart-hsm-004-001/yell）
+  - region検証（日本語カード名・music-clb-*・Lv260・qt-daily-003-19）自動実装
+  - 検証: audience 16,000→1,620‰(+62.0%) OK、staff vocal Lv65=29,195 OK
+- **テスト**:
+  - T0 データ健全性（`tests/data-integrity/`）: I-01〜I-16＋v2追加不変条件。**41テスト全グリーン**（1 skipped: 判定内訳の「ノート単位」解釈は実測クリティカル148個と矛盾するため理由明示の上skip）
+  - T3 ゴールデン（`tests/golden/deck-status.golden.test.ts`）: beat 0 の5レーン×4ステータス×{basic, deck}=**40項目が1の位まで完全一致**
+  - 合計: **50 passed / 1 skipped、typecheck ゼロエラー**
+
+### 実装中の発見・決定事項
+1. **【重要】`MusicChartPattern.number` はゲーム内ビート番号ではない**（1..268のグリッド番号）。ビートは「type≠0 のノートの通し番号」として採番するのが正しく、実測A発動16/16・SP=49/103と完全一致で検証済み。`data/charts/chart-hsm-004-001.json` には採番済みの beat を保存（PM検証済み）
+2. T3 のレアリティ: カードの `initialRarity` ではなく編成時の現在レアリティ（開花後）を使う。実測編成は ☆6/☆5/☆10/☆10/☆6
+3. `StaffLevel.advantage` は既に累積値（差分ではない）
+4. I-12 のポップパースに ±1 の切り捨てアーティファクト10セル（b119/L3 等）→ 既知例外リストで回帰固定
+5. b61/L5 のみスタミナ変化に発動ログが紐づかない（b60 の2連発動のフレーム分割表示）→ 例外定数で管理
+6. 交流Lvテーブルは `src/kouryu.ts` に単一実装（data/aijou.json との二重管理は避ける判断）
+
+### 環境メモ
+- Node 24.18 / npm 11.16 / TypeScript 5.x / Vitest 2.1.9 / @types/node 導入済み
+- PowerShell 5.1 で日本語を扱う .ps1 は UTF-8 BOM 必須（research/06 §7 のとおり再確認）。Node の .mjs 推奨
+
+---
+
+## Phase 2（2026-08-29 完了）— スコア式
+
+### 完了内容
+- `src/formula/combo.ts`: コンボファクター（B2）。テーブル7行（data/stages/combo_advantage.json 同期）+ `(1000+基本ボーナス)×(1000+100×段)/1000`【Confirmed】。表記対立（×6.0 vs ×3.0）の判定記録を JSDoc に保存（×3.0説は r≈0.49 で範囲外のため却下）
+- `src/formula/fan.ts`: 来場ファンボーナス（B3）。audience_advantage 1000行の二分探索。16,000→1620‰
+- `src/formula/critical.ts`: クリティカル係数。`1500 + 50×段 + extras‰`（実測 extras=255）
+- `src/formula/scoreEvent.ts`: イベントスコア共通計算。`computeEventScore()` は丸めポリシー2種（"sequential"=各乗算ごと切捨て【Estimate】/ "at-end"=最後 once）を切り替え。巨大積は BigInt フォールバック。T4/T5 でポリシー判定
+- `src/rng/`: ScoreRng 契約 / ReplayRng / MinRng / MaxRng / FixedRng（mulberry32・モンテカルロ用）
+- 単体テスト115件追加 → **合計 165 passed / 1 skipped、typecheck ゼロエラー**
+
+## Phase 3a（2026-08-29 完了）— スキルゴールデンデータ
+
+- `data/skills_golden.json`: カード15+フォト20=35スキル・効果57件。マスタ Skill.json（SkillEfficacy の type/grade）と検証テキスト・発動ログの突合で作成。推測値ゼロ（Unknown は null + confidence タグ）
+- 写像: type36→score_get(+scaling), type70→score_get_by_score_ratio, type80/86/81→a_skill_score_up/combo_score_limit/critical_coeff_limit（limitRelease 形式）等。type36 係数・type70 上限は perStagePermil:null でエンジン側フィッティング待ち
+- Lane3 フォト1/3/4 は画像判読不可（本実測未発火）のため null 記載
+- 検証スクリプト `tools/validate_skills_golden.mjs`
+
+## Phase 3b（2026-08-29 完了）— タイムラインエンジン
+
+### 完了内容
+- `research/13_engine_spec.md`: 実装仕様書（11段階処理順・P前半/後半選択・効果適用・対象解決・トレース要件・推測リスト11項）を先に文書化し、実装はこれに従う方式を採用
+- `src/timeline/types.ts` / `constants.ts`: 契約型と定数（POSITION_TO_LANE=[3,2,4,1,5] 実測21/21一致、IDOL_PRIORITY_ORDER=[4,2,1,3,5]、focus ファンボーナス表等）
+- `src/timeline/buffs.ts`（P3b-1 サブエージェント）: 段数集計（加算+上限クランプ・limit解放→30）・ライブ中ステータス倍率・消費倍率・B1・成功率・focus ファンボーナス。69テスト
+- `src/timeline/engine.ts`（PM直接実装）: `simulateTimeline()`。11段階ビート処理・P前半/後半・効果適用（増強/延長は残りビート最大インスタンス対象【Confirmed】）・対象解決9種・トレース出力
+- テスト15件追加 → **合計 249 passed / 1 skipped、typecheck ゼロエラー**
+
+### 実装中の発見・決定事項
+1. **【重要】CT 内部初期値は CT−1**: research/08 §2.3 の実測系列（act=b1・CT50 → b50 再発動 = gap 49 = CT−1）から、発動時に内部CTを CT−1 に設定しないと最小再使用間隔が CT になってしまう。発動ビート中に（初期化+ステップ9減算で）実質2進むモデルを採用
+2. **前半/後半発動の実効ビート数差は処理順から自動的に成立**: 前半発動→ステップ10で減算→表記−1、後半発動→減算をスキップ→表記どおり（research/01 §4 補足の機構的説明）。残り0の効果はスコア時に無効（翌ビート開始で除去）
+3. **サブエージェント失敗の記録**: P3（全体）×2・P3b-2（engine単体）×1 の計3回が空応答で失敗（成果物ゼロ）。P3b-1（buffs）は成功。→ 仕様書を先にファイル化（research/13）しても engine 単体タスクは失敗したため、PM が直接実装するフォールバックを採用（ユーザー承認済みの方針）。タスク分割の目安: 「1ファイル+テスト」でも出力が大きいと失敗し得る
+4. snapshot 計算はステップ7後（P前半バフをスコアに反映）である必要があった。バグはミニフィクスチャのテストで検出・修正（テスト設計の有効性確認）
+5. 割合型（type70）の基本スコア = 累積総スコア×SkillPower（コンボ/ファン不適用）で実装。累積の厳密な基準（全体 vs レーン別等）は【Unknown】→ T5 の b103 検算で判定
+
+### 残課題（Phase 3c へ）
+- T4: ビート1〜10の発動ログ突合（発動順・対象・効果 multiset・stamina）→ **T4完了（下記）**
+- T5: 全156ビートのスコア検定（Mode R: 乱数中立1000+実測クリティカルフラグ注入、ratio_b ∈ [950,1050] 検定、3点検算 b2/b103/b156）
+- type36 係数フィッティング（skills_golden.json の perStagePermil）
+
+## Phase 3c（2026-08-29 進行中）— ゴールデン接続
+
+### T4 完了（発動ログ・スタミナ突合）
+`tests/golden/t4-activations.golden.test.ts`（+ fixtures/t4_measured.json）: **255 passed / 1 skipped**。
+beat 1〜3 の成功発動15件が (beat, lane, skillId, phase) 順序込みで完全一致、beat 4〜10 は発動ゼロ、
+スタミナは L1/L2/L4/L5 全点1の位一致・L3 は ±300 許容（cutscene とレーン画面の取得タイミング差、
+research/08 §1.4-2）で一致。
+
+#### T4 で確定した仕様（すべて実測由来・engine と research/13 に反映済み）
+1. **A/SPノートは該当レーンのみ挑戦**: chart の position は 1始まりの優先ランク
+   （pos1→L3, pos2→L2, pos3→L4, pos4→L1, pos5→L5）。A/SP 発動 18/18 が一致。
+   旧「全レーン挑戦」説は否定。他レーンは FAIL もコンボ変動もしない
+2. **score_type_1/score_type_2/single はスコアラーレーンに解決**:
+   発動ログの target_idol が全て白石千紗（Scorer）。LaneInput.role を追加。
+   score_type を発動者扱いした旧実装は L2 にテンションが乗りゲート失敗する形で矛盾が顕在化
+3. ~~vocal_type_N は「ボーカル属性レーンのデッキvocal降順」~~ → **訂正（2026-09-01・サンプル1）**:
+   vocal_type_N は「**メンバーのタイプ**（cardType=装着カードの属性）が一致するレーンを
+   **レーン優先度順（L3>L2>L4>L1>L5）**で N 個」。サンプル1 殻をやぶる（ボーカルタイプ2人）→ L3,L2
+   （ダンスレーン L2 のメンバーが対象=レーン属性とは独立・デッキvocal降順 L3,L1 は実測と不一致で棄却）。
+   T5 の vocal_type_3 → [L3,L2,L5] は cardType 基準でも同一順序のため矛盾なし【Confirmed】
+4. **battle_only 行を含むスキルは無条件扱いで前半発動**（order3 結婚への願望）
+5. **P/フォトの発動予算は「1ビートにつき各1回」（前後半合算）**:
+   b2 で L5 が前半にフォト発動済み→条件付きフォト L5-3 は b3 発火（order 11/15）。
+   位相ごと予算説は否定
+6. **スタミナ回復は maxStamina でクランプ**（order9: 18730−866+2560 → 18730）
+7. **成功率の基礎値が100%（メンタル盛り）ならテンション副効果(-1.5%/段)は相殺され100%維持**
+   （実測 stage の skill_success_rate 100%×5 × 全82発動成立）
+8. **CT 内部初期値 = CT−1**（再確認・research/08 §2.3 の gap ≥ CT−1 則と整合）
+
+#### T4 で判明した未解決（T5 へ持ち越し）
+- **ライブ開始時プリバフ（ライブボーナス由来か）の存在**: timeline の効果表示に L3 で
+  vocal_up 17段/stamina_cost_down 12段等が b1 時点から出現。ただし効果表示はスコア詳細
+  画面のキャプチャ混入で値が変動し（focus 9→3→15→23）、信頼できる系列ではない。
+  スコア検証（T5）に直結するため、正しいプリバフ系列の復元が必要
+- L3 b2 のスタミナ Δ432 vs 消費404 の +28 差は取得タイミング差の範囲内として許容
+- 判読不能フォト（L1-4, L3-1/3/4）はシミュレーションから除外（実測でも発動記録なし）
+
+### T5 調査（2026-08-29 進行中）— 全156ビートスコア検定
+
+#### インフラ
+- tools/tmp_t5_extract.mjs で tests/golden/fixtures/t5_measured.json を抽出（timeline 157行: gained/cumulative/stamina/stat/effects/表示ポップ, critical_flags.beats 157, activations 82, results）
+- tests/golden/t5-debug.test.ts: デバッグハーネス（ビート別比診断・レーン別係数フィット・時系列ダンプ）
+- LaneScoreEventTrace に comboFactorPermil/fanFactorPermil/isRatioScore を追加（ソルバー用）
+
+#### エンジン修正（実測確定・コミット済み 6c34fb4）
+1. **上限解放変数型（tension_limit/combo_score_limit/critical_coeff_limit）は段数を加算しない**。
+   解放=上限拡張のみ。根拠: b2 Aスコア検算 — かんしょ combo_score_up 6段+limit10 を16段として
+   計算すると 41.8M（実測 25,578,742 の1.63倍=乱数域外）、6段なら 25.7M（乱数≈995 で整合）。
+2. **effect_amplify は全体で最長残り1インスタンスのみ+N段**（キー毎選択は否定）。
+   根拠: b3 の photo-L5-3 +2 で全キー+2 になる旧実装は L3 の実測 stat（b4 で不変）と矛盾。
+   b3 時点の最長は かんしょ combo_score_up（44b+延長）→ csu+2 のみ。
+   ※ 同一残りビートのタイは付与順が先のものを選ぶ（配列順・実装上の仮定）
+
+#### プリバフ問題の解決（T4 残課題）
+- **ライブ開始プリバフは存在しない**。b1 L3 stat=1,174,168 = 626,223×1.875 = vocal_up 7段(350‰)
+  + vocal_boost 7段(和歌3+Voブースト4=525‰) で完全一致。timeline の効果表示
+  （vocal_up 17, tension_limit 3, critical_coeff_up 7 等の L3 b1 表示）は
+  スコア詳細画面の別時点キャプチャ混入でゴミ → effects 照合は L1/2/4/5 のみに限定。
+
+#### stat_value 列の意味（重要な新発見）
+- timeline の lanes[N].stat_value は**レーンの実ライブ中ステータス**（L1/L2/L4/L5 = デッキ値で不変、
+  L3 のみ vocal バフ込みで変動: M 値 1875→2375(b3)→3750(b68 以降平台上限)）。
+- ただし **b2 のみ例外**: b2 capture = M 2125 でモデル（A発動後 2375）と合わない
+  （スクロール表示のフレーム位相）→ stat_value は絶対アンカーに使わず変化点のみ参考。
+
+#### コンボ表示の確定
+- 表示コンボは **+1/beat 厳密**（b156 の +0 は最終表示の既知例外、最終 155）。
+  **A/SP 成功は表示コンボを増やさない**（16 A+1 SP 成功でも全く跳ねない）。
+  → コンボボーナスの基準値は「ビートノート処理回数」で全レーン共通の可能性が高い
+  （L4 b110 のポップがグローバルコンボ基準と整合。エンジンのレーン別 combo
+  （A/SP 成功 +1・FAIL リセット）は CB ファクター用としては誤り候補 → 次ターン修正検討）。
+
+#### ビートスコアの構造謎（T5 の最重要未解決・次ターン継続）
+レーン別係数フィット（pop = live×A×B1×cb×fan×crit×r、A = w×(λ/N)）の結果:
+- **L1/L2/L5（ボーカル・無バフ）: 現行モデルで乱数レベル一致（sd≈5%）** → 600‰・B1 1360・fan 1620 は正しい
+- **L4（ダンスレーン）: A ≈ 1.33×L1**（b6/b10/b20 で 1.34-1.38 と頑健）→ dance 重み 250‰ では説明不能。
+  候補: (a) このステージの実際の重みが {vocal:600, dance:800}（マスタ JSON の 250 は誤り/別行の可能性・
+  research/03「daily STAGE は変則値」参照）, (b) L4 のイベントが visual(392,347)×600 ベース。
+  b60 以降に反抗 vocal_up 6段（neighbors→L4）で係数が跳ねる（×1.4-1.5 vs 予測1.3）→
+  vocal が絡む構造の証拠だが b104/b105 は伸びておらず確定できず
+- **L3（センター・スコアラー）: A ≈ 0.45×L1 で散らばる**（0.40-0.48・sd 大）。
+  候補: (a) ビートの B1 に score_up が乗らない + ビートの CB に combo_score_up が乗らない
+  （A_3 = 0.0876 となり L1 と完全一致・最有力）, (b) w3 = 250-300。
+  b2 の A スコアでは B1 に a_score_up/score_up/tension が乗うことを確認済み
+  （25.7M↔実測 25.58M・乱数 995）→「A には乗るがビートには乗らない」説と整合するか要検証
+- A/SP/P/フォトイベントは **b2 A で完全検証済み**（CB=(1+0.5)×(1+0.1×6)=1600 で乱数 995）。
+  フォトのスコア獲得は **powerPermil が 10 分の 1**（40%→400、85%→850。マスタ ef-score_get-400 の
+  値がそのまま permil・P3a が×100 した誤り。pop 214.9K/457.2K と 220K/468K が乱数 976/978 で整合）
+  → skills_golden.json の photo score_get powerPermil ÷10 が必要（次ターン実施）
+- b103 SP の +15,145,715,433: 12%×累積(421M)=50M では説明不能。1570%行+type36 スケーリング
+  （vocal_up_stages ≈ 40 段想定・p≈20-30‰/段）+12% 行の合算で説明する仮説 → ソルバーで数値確定
+
+#### クリティカルフラグの性質
+- yellow_lanes/white_lanes/no_pop_lanes = そのビートで**スコアイベントがあったレーン**とその色。
+  ビートノートのビートは全5レーンがポップ、A/SP ビートはオーナーレーン(+フォト発火レーン)のみ。
+  no_pop は遮蔽（イベント自体はスコアに計上されている）→ crit 不確定として扱う。
+  b1/b2 はフレーム混合（b2 に b1 の L4 ポップが混る）で既知異常区域。
+
+#### 次ターンの作業計画
+1. skills_golden.json の photo powerPermil ÷10（4000→400, 8500→850, 4500→450, 2500→250, 2000→200）
+2. A/SP/フォト 27 イベントの離散乱数検定（k=1 の (beat,lane) で r=D/E×1000 が 950-1050 の整数）→
+   バフ進化の検証。type36 フィッティング（b3/b69/b103/b156 の 4 方程式）
+3. ビートスコア構造の確定: L3 の「B1/CB にバフ乗らない」説を b40/b100 で検証、
+   L4 の重み 1.33 を {vocal:600, dance:800} で固定し全ビート再フィット（残差 rand レベル化を目標）
+4. コンボ: グローバルコンボ基準への変更可否を FAIL/コンボ継続と合わせて確定
+5. ソルバー（ビート合計=実測 gained の rand 組み合わせ探索・meet-in-middle）→ 解列を
+   fixtures/t5_replay_rands.json に出力 → T5 テスト（ReplayRng で cumulative 157点完全一致 + 状態照合）
+6. research/13 の §5.1（ビート基本式）・§7（amplify/limit）を新確定事項で更新
+
+### T5 調査2（2026-08-29）— A/SP モデル検証完了・ビート構造は機械フィッターへ
+
+#### フォト powerPermil 修正（コミット済み 0c9feb1）
+photo-L5-1/2: 4000→400, photo-L5-3: 8500→850, photo-L5-4: 4500→450, photo-L4-4: 2500→250, photo-L3-2: 2000→200。
+マスタ ef-score_get-N の N がそのまま permil（40%=400）。P3a がテキスト%×100 した誤り。
+検証: b2/b3 の L5 フォトポップ 214.9K/457.2K ↔ モデル 220K/468K（乱数 976/978）。
+
+#### A/SP 離散乱数検定（16 ビート中 13 A + 1 SP）
+r = pop / E(rand=1000) × 1000 が [950,1050] に入るか:
+- **10/13 の A が完全一致**: b23 L4 r=1022, b30 L5 r=1008, b38 L2 r=1006, b47 L1 r=953,
+  b60 L5 r=977, b86 L2 r=966, b115 L2 r=968, b128 L5 r=963, b136 L1 r=981, b144 L2 r=968
+  → **バフ進化・B1(エール+装備+バフ)・CB((1+base)×(1+0.1×csu))・fan(1620+focus)・crit(1500+extras+50×段)
+  の全モデルが確定**（3-4有効桁の K ポップのみ全て範囲内）
+- 範囲外 3 件は全て 2 有効桁の M ポップ（±2-4% の OCR 丸め/誤読圏）: b80 L4 r=922, b94 L1 r=943, b106 L4 r=1074
+- type36 の 3 件（b69 r=1927, b103 r=1387(両行合計), b156 r=1199）はスケーリング係数のフィッティング対象。
+  b69 の必要倍率 s∈[1.84,2.03]（r±5%込み）だが b156 は s∈[1.08,1.30] と兩立しない
+  → 段数の参照法（vocal_up のみ / extreme のみ / 合算・上限値）と b156 ポップの読み値（+1.7G は 2 桁）
+  を含め機械フィッティングで確定する。b103 は行2(12%×累積)が E の約 8.07B を占め、
+  累積基準は実測 cumulative（421M）を使うべき（sim 中立累積は beatscore 過大で 5.3B になるため）。
+
+#### エンジンの既知残差（次ターン修正）
+1. **ビートスコアに λ/Nbeat 正規化がない**: L1 のフィット A = w×(λ/156) = 0.0874 → w×λ = 13,634
+   （w=600 なら λ=22.7 / w=800 なら λ=17.0 / S1 の λ≈8 なら w≈1700）。S2 の「Vo 3.0%」
+   （=w×λ/156=0.03）と測定 A の 0.0874 は ×2.91 ずれる — B1/fan/cb は denom で除算済みで
+   sd 4.8% に収まっているため、この積 w×λ×B1×fan が確定量。どこに ×2.91 を配分するかは
+   機械フィッターで w/λ/B1 の仮説空間を走らせて確定させる。
+2. **L3 のスナップショット進化が過大**（推定）: b69 の sim basic = live M3450（up+boost ≈ 49 段相当）は
+   実測 stat 軌道（b3 M2375 → b68 以降表示上限 3750）と整合せず。effect_extension を
+   「全インスタンス +N」から「最長 1 インスタンス +N」に変える仮説を最初に試す
+   （research/01 §2.2「増強・延長の対象は最長のものだけ」）。b2 の stat 表示 2125 はフレーム例外、
+   b68 以降は表示上限のため、stat の信頼できるアンカーは b1(1875)・b3(2375)・b38(2750) のみ。
+3. **コンボ CB の基準**: L4 b110 のポップがグローバルコンボ基準と整合（レーン別 combo は
+   A/SP 成功 +1 と FAIL リセットを持つためズレる）。CB・combo>=N 条件とも
+   グローバル（= ビートノート処理回数・表示値）に統一する方向で確定させる。
+
+#### 次ターンの作業計画（機械フィッター）
+1. tests/golden/t5-debug.test.ts を拡張し、仮説グリッド
+   {ext: all|longest} × {cb: レーン別|グローバル} × {beatB1: su/tension あり|なし} ×
+   {w: (600,250,150)|(600,800,150)|(450,600,150)|(600,250,150)+λ別...} × {λ} について
+   全ビート×全レーンのポップ残差の中央値/sd を一括スコア化し、最小の仮説を確定させる。
+   目標: L1-L5 全レーンの A が乱数レベル（sd≈5%）で一定化。
+2. 確定後: type36 フィッティング（b69/b103/b156）、b103 の行分解（12%行は実測累積ベース）。
+3. エンジン修正（λ/N 正規化・ext/combol 方式）→ 単体テスト更新。
+4. ソルバー（ビート合計 = 実測 gained の離散 rand 組合せ探索）→ t5_replay_rands.json 生成。
+5. T5 本テスト: ReplayRng で cumulative 157 点完全一致 + スタミナ/コンボ/レーン別合計照合。
+
+#### 生マスタ Quest.json 確認（vendor/Quest.json）
+qt-daily-003-19 の原値を直接確認: position1-5AttributeType=[2,2,1,2,2]、
+beatVocal/Dance/VisualWeightPermil = **600/250/150**（標準値そのもの・データ抽出誤りではない）。
+全5916ステージの重み組み合わせ分布: 600/250/150 系が3位までで約43%、残りに 200/600/200 等の変則値。
+→ L4 実効重み ≈ 1.33×vocal（=800 相当）は**マスタ値から導出できない** = モデル側の未解明機構
+   （延長/増強の対象選択、重み適用方法、またはポップ帰属の問題）。機械フィッターで確定させる。
+
+### T5 調査フェーズ2b: 仮説グリッドフィッター（決定的進展）
+
+#### 施設
+- engine.ts に一時デバッグトグル追加: `SimulateInput.debugOptions` = { extensionMode: "all"|"longest", comboBasis: "lane"|"global" }（既定=現行動作。T5確定後に削除予定）
+  - effect_extension の longest モード（最長残り1インスタンスのみ延長）と、コンボ係数の global 基準（処理済みビートノート数）を実装
+- tests/golden/t5-debug.test.ts にグリッド比較/統合仮説/λスキャン/L3実効比の4テストを追加（トレース後掛け検証）
+
+#### 確定したこと
+1. **effect_extension = 全インスタンス延長（all）で確定**。longest モードは L3 ビート系列の破綻（buckets 66→234）と type36 の r=6157/14223 で完全否定。
+2. **コンボ基準は lane で不変**。b49 SP FAIL でも L4 のコンボは継続（combo_continue 保護済み）のため lane/global で差が出ない。lane 維持。
+3. **ビート basic は総和式**（最重要）:
+   `basic = vocal×600×liveMult_vocal(レーン) + dance×250 + visual×150`
+   - L1/L2/L4/L5 の A（=pop/(basic×b1×cb×fan×crit)）が **0.0567〜0.0575 に統一**（従来 L4 だけ ×7.7 の例外）
+   - L4/L1 pop比 1.13 の謎が解決。L4 の b60 跳ね(+19%) は 反抗の vocal_up 6（neighbors→L4）が vocal 成分に乗るため
+   - L1 の +9% ドリフトの大半も統合（残りドリフトは僅少）
+4. **ビート B1 = 1000 + 25×score_up + bonus.beat**（su 25‰確定）。
+   - asu(50‰)入りは L2/L5 で median が 0.057→0.047 に下がり否定。テンション入りは L1/L4 で tension=0 のため影響なし（不入で維持）。
+5. **λ = 0.05712〜0.05715**（離散乱数スキャンのプラトー）。8/140 = 0.0571428 と整合。
+   - implied rand が **88%** で |r−round(r)|<1.5 かつ [945,1055] を満たす（L1 115/127, L2 70/85, L4 108/120, L5 111/126）
+   - su 50‰ 説は 80.6% に低下 → 25‰ 確定
+6. **譜面内訳確定**: 156ノート = ビート138 + A16 + SP2。コンボ表示は **全ノート行 +1（FAIL行も含む）**、b156 のみ +0。
+7. ビート行の pop 列には P/フォトの score_get ポップが混入する（L5 b68: ×11 等）。分析時は gainedScore 付き発動ビートを除外必須。
+
+#### 未解決（次ターン最優先）
+- **λ の厳密確定**: 高精度 pop（≥1e6）2サンプルの整数候補交集は空（丸め誤差>候補間隔）。許容を緩める/サンプルを増やして 8/140 か否かを確定。
+- **L3 のみ実効比 0.62〜0.70**（b1×cb が過大）:
+  - 仮説A: ビート B1 から su を除外（b6 で ratio 0.83 を説明）+ csu が sim より 3〜4 段過大（b2 A の +6 が実質 +2? ターゲティング疑い）
+  - 仮説B: d3/v3 デッキ値が過大（Aイベントはvocalのみで検証済みのため dance/visual は未検証）
+  - b39-46 の +40% クラスタは su バフ期限切れタイミング（sim が b45 まで保持、実ゲームは早い）と整合
+  - Aノートビート（b60 r=977 等）では r 一致しているため、スナップショットは A 時点で正しい → ビート間の期限/集計差に絞られている
+- エンジンへの実装（総和 basic + λ）は L3 確定後に一括実施。
+
+#### 数値メモ
+- ノート数: 156（ビート138/A16/SP2）。λ候補: 8/140=0.0571428（140=156-16 の意味は未解明）
+- L3 の csu 段数: sim b6=8 (b2 A +6, b3 フォト +2) / b53+=14。実効は 4-5 / 10 程度か
+- 259→264 テスト（t5-debug 拡張分）。typecheck 0 エラー。
+
+### T5 調査フェーズ2c: エンジンへのビート新式実装
+
+#### エンジン変更（src/timeline/engine.ts settleBeatNote）
+- **ビート基本スコアを総和式+λへ変更**:
+  `basic = floor((vocal×liveMult_vocal×600 + dance×250 + visual×150) × 8 / 140)`
+  - BEAT_LAMBDA_NUM=8 / BEAT_LAMBDA_DEN=140。全レーン3統計混成（A/SPは従来どおり属性単一）。
+- 根拠: L1/L2/L4/L5 の implied 乱数が 88% 離散整合（λ=0.05712-0.057145 プラトー、8/140=0.0571428 が inside）。
+- 単体テスト6本の期待値を新式で更新（4357/5042/6071/7058/7276/4368）。**267 passed + typecheck 0**。
+
+#### スキルマスタ調査（vendor/Skill.json）
+- b1 の P発動の正体: かんしゃ(L1)=スコアラーにcsu5-6段+上限解放10段[25-44b] / 気持ちを和歌に乗せて(L2)=スコアラーにテンション+ブースト2-3段[32-43b] / さらけだし(L5)=センターに集目7-9段[24-45b]+効果延長6-12 / 結婚への願望(L4)=隣接スタミナ回復
+- fest-03-2(L3のA, b2/b69/b156): ①type36スコア行 ②**vocal_up_extreme 10段[36b] self**（goldenは正しくextreme。add_effect_value_vocal_up-10 = 上昇超化のこと）
+- su の出所: photo-L1-1 (su+3[37b]→score_type_1, b1/b50/b100/b150) + photo-L1-2 (su+8, b2/b51/...)
+- L3 スナップショット(su=3→11→3→6→14...)の推移は golden 定義の積分結果として正しそう
+
+#### L3ビート乖離の現状理解（未解決・次ターン最優先）
+- L3 のみ ×0.62-0.70。L3係数グリッド: su=0/asu=0/csu−4 が 26/41 で圧勝（次点15/41）
+- しかし Aイベント b2 は csu=6段で r=995 検算済み → 式の差ではなく**バフ進化の差**（延長の対象/期限）の疑い:
+  - 仮説: さらけだし等の「センターの強化効果を延長」は sim では全効果に効くが、ゲームでは一部
+    （例: photo-L1-1 の su[37b] が b38 で期限切れのはずが sim では延長され b45 まで生存 → b39-46 の +40% クラスタと整合）
+  - csu の −4 は birt(csu6段[25b]) の延長有無で説明可能かも（ゲームでは b26 で切れて photo-L5-3 の +2 のみ → 真値は sim−4 に近い）
+- 実測 stat 列の逆算: b1=×1.875(up7+boost7) / b3=×2.375(+ext10) / b38=×2.75 / b51=+up7(fest-03-3再発火) / b60=×3.675 / b68=表示上限3.75
+  → stat 列は vocal_up/boost/extreme の期限の真値源。これを使って延長セマンティクスを確定させる。
+
+#### 譜面/コンボ確定
+- 156ノート = ビート138 + A16 + SP2。コンボ表示は全ノート行+1（FAIL含む）、b156のみ+0
+- λ=8/140 の「140」の由来: 156−16(A数) = 140 または ビート138+SP2 = 140（どちらかは未確定・式上は定数で差支えない）
+
+#### 次ターン
+1. 延長セマンティクス確定（stat列の期限逆算 + waso/L2-4/L3-2 の延長対象）→ L3 ビートの統合
+2. type36 フィッティング（b69/b103/b156）
+3. ソルバー → t5_replay_rands.json → T5 本テスト（ReplayRng で cumulative 157点完全一致）
+4. research/13 §5.1 更新済み（今回実施）。デバッグトグル(debugOptions)は T5 完了後に削除。
+
+### T5 調査フェーズ3: 発動スケジュール完全一致（2026-08-29）
+
+#### ブレークスルー: CT モデルの完全解読
+実測発動ログ82件の gap 系列を全部説明する CT 則を逆算確定（engine 実装済み）:
+1. **発動時 CT := 満タン**（旧「CT−1 初期化」は誤り。旧モデルは前半発動で gap CT−2 を生み
+   research/08 §2.3 の実測則 gap ≥ CT−1 にすら違反していた）
+2. ステップ9で毎ビート減算 → **前半発動は同ビート内に減算され step11 で再使用可（gap CT−1）、
+   後半発動は減算されず gap CT**
+3. CTが step9 で 0 になったビートの **step11 で発動**（「2回目以降は後半発動」の機構的説明）
+4. ct_reduction は即時 clamp（既存実装どおり）
+
+検証データ（全て本モデルで完全再現）:
+- かんしょ/和歌 (CT50): gap 49/50/50（b1→50→100→150）
+- 結婚への願望 (CT40): 39/40/40
+- 逆襲のドッキリ企画 (CT50・条件付き→常に後半): **50/50/35**（b1→51→101→136）
+- さらけ出す (CT60): **59/46**（b1→60→106）
+- photo-L1-2: 49/50/50、photo-L2-2: 50/50/50、L2-4(CT45): 45/45/45、L5-1/L5-2(CT70): 69→(CT短縮)
+- **逆襲 gap35 と さらけ出す gap46 は b106 ドリームウエディング(wedd-00-2)の隵接 CT−15**
+  （neighbors=L3/L5, research/08 §2.5 実測）で同時に説明 — wedd-00-2 の発火 b106 は実測ログで確認済み
+
+#### 条件評価の確定
+1. **combo>=N はグローバル成功ノート数**（ビートノート +1・A/SP 成功 +1・FAIL は数えない）。
+   実測: L4-3(>=50)@b51・L4-4/L1-3(>=80)@b81・L5-4(>=100)@b101 — レーン別コンボ説は
+   L4-4 が b80 でなく b81 に発火したことで否定
+2. **someone_* は自レーンを含む**。実測: photo-L3-2/photo-L4-1(someone_critical_coeff_up) の
+   b47 発火は birt-02-1 が L3 自身(score_type_2)へ ccu+8 を付与した直後であり、
+   他レーンに ccu が存在しない → 自レーン包含でしか説明できない
+3. **「前半使用可だった無条件を後半除外する永続集合」は存在しない**（旧実装の誤り。
+   b1 でフォト予算を取られた photo-L1-2 が b51 に後半発火=実測と完全一致）。
+   同ビート内の二重発火は予算（P/フォト各1回・前後半合算）で担保
+
+#### レーン処理順（メンタル降順）の較正更新
+本実測編成の真の優先順は **L1 > L3 > L4 > L2 > L5**:
+- b51 後半: L1(photo-L1-2) → L3(fest) → L4(photo-L4-3)
+- b47 後半: L3(photo-L3-2) → L4(photo-L4-1) → L2(photo-L2-3)
+- b3 後半: L2(photo-L2-3) → L5(photo-L5-3)
+（旧較正値は L3 最下位で b47/b51 と矛盾。t4/t5 両ハーネスの CALIBRATED_MENTAL を更新）
+
+#### 実測ログの表示名規則（突合用）
+フォトのログ名は「**最後の効果行の種別**」から導出されるカテゴリ名
+（L3-2=[score_get,extension]→強化効果延長スキル / L5-4=[score_get,amplify]→増強 /
+L4-4=[score_get,ccu]→クリティカル）。スキル名の ～/〜 は全角チルダの表記ゆれ。
+
+#### 成果: 発動スケジュール突合テスト（新設）
+tests/golden/t5-debug.test.ts に「発動スケジュール突合（sim 82 vs 実測 82）」を追加 →
+**82件全て (beat, lane, skill, kind) が順序込みで完全一致**。269 passed / 1 skipped、typecheck 0。
+
+#### L3 ビート乖離の現状
+修正後も L3 実効比 0.62〜0.84（sim の B1 が過大）。su=11（L1-1+L1-2、延長で延命）が
+実測と合わない可能性が最高疑い。次ターン: L3 stat 列（b1=1.875/b3=2.375/b38=2.75/
+b50=2.975/b51=3.325/b60=3.675/b68+=上限3.75）+ b45 の su 低下タイミングを使って
+延長セマンティクス（対象インスタンス範囲）を機械フィッティングで確定する。
+※ stat 列の b50/b51 増分は CT 修正後の発動スケジュール（和歌 b50・fest-03-3 b51）と完全整合済み。
+
+#### 次ターン
+1. L3 延長セマンティクス確定（インスタンス追跡 fitter + stat 列/su 期限の逆算）→ L3 ビート統合
+2. type36 フィッティング（b69/b103/b156）
+3. ソルバー → t5_replay_rands.json → T5 本テスト（ReplayRng で cumulative 157点完全一致）
+
+### T5 調査フェーズ4（2026-08-30）— over-cap 確定・L3 実態解明・ソルバー基盤
+
+#### バフ上限超過（over-cap）仕様の確定・実装（タスク1完了）
+【ユーザー確定 2026-08-30】「バフは上限段数を超えて付与されても内部的には切り捨てず
+超過分を保持する。計算式・見た目で使う値は上限でクランプされるが、後から一部インスタンスの
+期限が切れても内部段数が上限以上であれば上限段数を維持する（19段に+4段→内部23/表示20。
+次ビートで2段切れても内部21/表示20）」。
+- 実装調査の結果、エンジン本体は既にこの挙動（applyEffect は stages を無整形で push、
+  期限切れはインスタンス単位除去、aggregateBuffs が合算後に clamp）であることを確認。
+  修正は JSDoc の旧仕様記述（research/01 §2.2「付与時に無視」）の訂正と回帰テスト追加。
+- buffs.ts: ファイルヘッダ+aggregateBuffs+ActiveEffect の JSDoc を新仕様に更新。
+- buffs.test.ts: 「19+4→表示20」「期限切れ後も20維持（旧仕様なら19）」「limit解放時に
+  内部24が露出（12+12+1limit→25）」の3テスト追加。
+- engine.test.ts: P×2+フォトで 19段[5b]+2段[2b]+2段[3b] を付与し b1-b6 のスナップショット
+  [20,20,20,20,20,0] を検証するエンドツーエンドテスト追加。
+- **273 passed / 1 skipped、typecheck 0 エラー。**
+
+#### L3 ビート残差の実態（fit 窓列挙による）
+tests/golden/t5-l3fit.test.ts（一時ハーネス）で L3 各ビートの実現可能 (su_t, csu_t) 整数ペアを列挙:
+- **photo-L1-2（su+8[31b]）の対象は vocal_type_2 = L2 と L3 の両方**（golden 確認）。
+  L2 のビート fit は su 係数 25‰ を強く要求（su=25 で 70/81、su=0 で 28/81）
+  → su 25‰/段・L1-2 の L2/L3 付与は確定。
+- **L3 ビートは sim の su=11 を受け入れない**（b6-b19 は (su≈0-3, c≈3-4) 窓、b45-46 は
+  (su3, c4) 窓）。一方 **b47/b97 の photo-L3-2 passive イベントは (su3, csu8) / (su14, csu14)
+  で整合**（score_get 系は B1_passive に su 入り・CB 10%/段で sim と一致）。
+- **b132 passive は c≈22 を要求**（sim csu=20）→ b118 の photo-L5-3 増強(+2)が実ゲームでは
+  csu に乗った証拠。sim の「全体最長1インスタンス」増強選択は要修正候補
+  （vocal_type_1 の最長＝csu インスタンス、またはキー単位選択）。
+- **ビートと passive で csu の効き方が矛盾**（b45-46 ビートは c≈3-4、b47 passive は c=8-9）。
+  ビート CB の csu 係数 5%/段説（debugOptions.beatCsuPermil=50）だと b6-b19・b45-46 が_fit_
+  するが b21 以降が崩れる。ビート B1 の su 係数 0 説（beatSuPermil=0）でも同様に部分整合。
+- 実測 pop 列にはフレーム混入汚染がある（b40 L3=863300、b120 L3=3800000、b45 L2/L4 異常等）
+  → pop ベースの fit は汚染ビートの除外が必須。gained/cumulative 列は自己整合
+  （cum差分==gained 157/157・最終=total_score 17,529,132,014）。
+- **gained 列はスキル/フォトのスコアを最大1行後ろに記録する**（b2 の A が b3 行、
+  photo-L3-2 が b47→b48 行。ビートスコアは同時行）。フレーム異常はローカルに総和保存。
+
+#### T5 ソルバー（tests/golden/t5-solver.test.ts・一時）を実装
+- 乱数消費順にトレースイベントを復元し、行単位の gained をターゲットに
+  r∈[950,1050] 整数の厳密一致（Σ computeEventScore(rand)==gained）を解く。
+  行で解けない場合はフレーム異常を考慮し隣接行と統合したリージョン（最大3行）で総和一致。
+- クリティカルフラグ（yellow_lanes）を反映（b4/b5 の L3 は crit: critF≈3151、
+  b156 は crit かつ ccu=30 で critF≈4651）。b103 の割合型行は累積依存のため反復収束。
+- 結果: 55 リージョン中 5 が厳密解。**残りは (a) L3 ビートの系統的過大（×0.60-0.85・
+  全ビートリージョンの s≈0.70-0.79 の主因）、(b) type36 の perStagePermil 未フィッティング
+  （b69 s=1.93・b156 s=1.20・b103 s=1.84）、(c) A/SP 単発イベントの 1-9% の係数誤差
+  （b30 s=1.02・b80 s=0.94・b106 s=1.09 等）に分類される。**
+- L3 ビートの s が buff 推移と連動して変動することから、根本原因は「L3 のビート B1/CB
+  構造またはバフ進化（延長/増強の対象）」である可能性が高い。passive イベントは整合
+  しているため、**ビート固有の係数構造（su/csu/bonus の組み合わせ）の機械探索**が次一手。
+
+#### 次ターン（T5 継続）
+1. L3 ビート構造の確定: (beatSu, beatCsu, bonus.beat 有無, 延長/増強対象) の仮説空間を
+   ソルバーの厳密一致率で評価する（debugOptions を拡張済み: beatSuPermil/beatCsuPermil/
+   extensionMode none 追加）。
+2. 増強（amplify）の対象選択: b118 +2 が csu に乗る実測 → 「vocal_type_1 の最長」または
+   「キー内最長」説をエンジンに実装して検証。
+3. type36: L3 ビート確定後に b69/b156/b103 の 3 方程式で perStagePermil を確定し
+   skills_golden.json へ反映（engine の scaling 実装は済み）。
+4. ソルバー再実行 → t5_replay_rands.json 生成 → T5 本テスト
+   （ReplayRng で total_score 17,529,132,014 完全一致+リージョン照合）を実装。
+
+---
+
+## P3d: T5 ゴールデン完全一致達成（2026-08-30・連続乱数確定）
+
+### 結果
+- **総スコア 17,529,132,014 に 1 の位まで完全一致**（tests/golden/t5-scores.golden.test.ts 4/4 PASS）。
+- **統合リージョンを除く全 119 ビートで累積スコアが実測 cumulative と 1 の位まで一致**（CUMCHECK errors=0）。
+- 統合リージョン 20 区間 36 ビート（b1-3 表示遅延 / b47-51, b68-72, b80-87, b97-98, b101-103, b106-109, b123-124, b130-132, b146-151 のフレーム帰属・ポップ混入ゾーン）もローカル総和で完全一致。
+- ソルバー: tests/golden/t5-solver.test.ts（ビート毎厳密逆算、2 反復で収束、fixtures/t5_replay_rands.json 生成）。
+
+### 本セッションで確定した仕様（【T5確定】）
+1. **スコア乱数は連続値（float, [0.95,1.05]）**。整数パーミル仮定では単一 A スキル 9 イベントの ±0.03% ワobble が説明不能だったが、連続値なら全イベントが成立帯に収まる。computeEventScore の randPermil 検証を非整数許容に変更。
+2. **丸めは at-end（最終 floor のみ）**。sequential（ステップ毎 floor）では crit 係数との二重 floor により約 21.5% の目標値が到達不能になり（b156 で発生）、実測と矛盾。
+3. **フォト行はクリティカル判定の対象外**。b47/b132/b125 のポップが全て非 crit で成立（crit 適用では r≈200-930 で範囲外）。
+4. **b1 は全レーンミス**（LIVE START 直後の取りこぼし）。b1 のポップが全レーン null、かつ b1-3 リージョンの達成帯がミスなしでは不成立（s=0.9491）。missedNotes を SimulateInput に追加。
+5. **b97/b132 の L3 ビートはクリティカル**。フォトポップの遮蔽で critFlags 抽出から欠落していた（b97 を crit 扱いすると領域 97-100 の s=1.158→1.001、b132 で 1.186→1.002）。t5_measured.json に補正。
+6. **wedding A（sk-ktn-05-wedd-00-2）の type20 効果は combo_score_up+5 [60b]**（旧解釈 critical_coeff_up+self_visual_lane 不発は誤り）。b107 以降 csu=min(26+5,30)=30（かんしょ combo_score_limit+10 の上限でクランプ）となり b106-155 の全領域 s∈[0.987,1.023] に成立。旧解釈では critF=4,901 が必要になり b116+ の実測と矛盾。
+7. **type36 スケーリング**: A fest-03-2 は perStage=2.5‰/段（b2/b69/b156 の 3 点フィット、成立帯 [2.37,2.78]）、SP fest-03-1 は perStage=11‰/段（比率行との結合 A×2.68689+667M=15,147M → A≈5,390M、成立帯 p∈[10.9,11.1]）。初版の SP=90 は比率行の結合係数 1.68689 を忘れた誤りだった。
+8. **photo-L3-2 の score_get は 160‰**（テキスト表記 20% と食い違い）。b47/b97/b132 のポップ（万 truncation）から確定。b97 のポップ 330万は誤 OCR（350万なら r=986 で成立）。
+9. **比率行の基準累積はレーン累積+A行加算後**（trace に ratioBaseCumScore を追加。b103 検算 basic=533,472,897=4,445,607,475×0.12）。
+10. **比率行を含むリージョンの逆算は構成的不動点**: 先行乱数を 1000 に固定すると base' が反復に依存しなくなり 1 反復で収束。uniform f 方式は利得 −1.687 の発散振動を生んだ（実測 diff 列が等比 ±1.687 で発散することを確認）。
+11. ポップ表示は **10 万単位 truncation**（390万 = [3.90M, 4.00M) の 100K 幅）。ポップによる r の精密判定は不可で、gained/cumulative が信頼できる。
+12. 残サ: b106-113 は (csu=30) 解釈で領域 106-109 s=1.012 / 110-113 s=0.987 に解決。b97-100 s=1.001 / 130-133 s=1.002。
+
+### 変更ファイル
+- src/formula/scoreEvent.ts: randPermil 検証の非整数許容、multiplySequential/multiplyAtEnd の float 乱数対応
+- src/timeline/engine.ts: missedNotes 対応、フォト行 crit 除外、ratioBaseCumScore トレース追加、type36 スケーリングの素の乗算化
+- src/timeline/types.ts: SimulateInput.missedNotes、LaneScoreEventTrace.ratioBaseCumScore
+- data/skills_golden.json: photo-L3-2 pow 200→160、fest-03-2 perStage=2.5、fest-03-1 perStage=11、wedd-00-2 type20→combo_score_up+5
+- tests/golden/fixtures/t5_measured.json: b97/b132 の critFlags 補正
+- tests/golden/t5-solver.test.ts: 連続乱数ビート毎厳密逆算ソルバー（全面書き換え）
+- tests/golden/fixtures/t5_replay_rands.json: 生成乱数列（連続値 717 イベント分）
+- tests/golden/t5-scores.golden.test.ts: ゴールデンテスト（新規・4 tests）
+
+---
+
+## Phase 4（2026-08-30 完了）— シミュレータ CLI / 単一HTML UI
+
+### 完了内容
+
+#### 1. 共通ビルダー（`src/sim/build.ts`）
+- 編成（verification_data_v2.json と同一スキーマ）+ ステージ + 譜面 + データ源（`SimSourceData`）
+  → `SimulateInput` を構築する CLI/UI/テスト共通モジュール。旧 CLI・ゴールデンテスト・
+  ソルバーに重複していた deck 構築（toStatBonus/yell/scoreBonusPct 等）を単一化
+- **レーン属性の一般化**: 旧実装のハードコード `{1:vocal,...,4:dance,...}` を廃止し、
+  ステージの `laneAttributes`（position 1-5 属性コード）× `POSITION_TO_LANE` から導出
+- `audience` 指定時は `fanBonusPermil` でファンファクターをテーブル引き（16,000→1620‰）
+- `disabledSkillIds` でスキル/フォトを無効化（UI のチェックボックス用）・
+  golden スキルの元カード不一致は警告（`sk-` 接頭辞 ↔ `card-` の正規化比較）
+- `laneBreakdown(beats)`: レーン別 × 種別（beat/A/SP/P/photo）の獲得スコア内訳集計。
+  これに伴い `LaneScoreEventTrace` に `sourceKind` を追加（トレース専用・数値に影響なし）
+
+#### 2. CLI（`src/cli/simulate.ts` 全面書き換え・`npm run simulate`）
+- 出力: **確定値**（NeutralRng=乱数1000固定・critなし・確率ゲート必通過）+ **Monte Carlo 統計**
+  （min/max/mean/median/p10/p90・レーン別 mean）+ **レーン別内訳** + **ビート別タイムライン**
+  （レーン別獲得・発動明細・累積・コンボ・スタミナ・バフスナップショット）
+- オプション: `--n`（MC回数）/ `--crit-rate` / `--seed`（ContinuousRng=mulberry32 で再現可能）/ `--out`
+- 新 RNG: `src/rng/random.ts`（**ContinuousRng**: 連続値 [950,1050] のシード決定論 RNG）と
+  `src/rng/neutral.ts`（**NeutralRng**: 確定値ラン用。nextCritical=true は確率ゲート通過用で
+  クリティカル係数は criticalProvider 側で無効化する構成）
+- `rng/types.ts` の契約 JSDoc を T5 確定（連続値）に更新（FixedRng の離散値は初期フェーズの
+  近似として残置と明記）
+- 確定値（T5編成・rand=1000・critなし）= **2,501,593,723**。実測 17.5B との差はほぼ
+  クリティカル係数（×1.7〜4.65）由来の正しい挙動（実測乱数で crit を無効化しても 2.52B を確認）
+
+#### 3. 単一HTML UI（`ui/` + `tools/build_ui.mjs`・`npm run build:ui`）
+- 成果物: **`dist/aipura_simulator.html`（323KB 単一ファイル）**。esbuild で ui/app.ts
+  （コア src/ をバンドル・49KB）+ data/ JSON（269KB: cards 491 / params 780 / golden skills 35 /
+  audience 1000行 / stage / chart）+ T5実測プリセットを埋め込み、**file:// 直開きで動作**（fetch 不要）
+- 編成設定: 5レーン（カード491件から選択・Lv・開花☆・交流Lv・ロール・メンタル）・
+  スキル/フォトの有効化チェックボックス（効果・CT・消費・確度タグ付き）・
+  フォト/アクセサリのステータス補正 JSON エディタ・スタッフ/エール入力・
+  来場者数（ファンファクター自動表示）・成功率・クリティカル率・MC回数・シード・ミスノート
+- 結果表示: KPI（確定値/期待値/中央値/10-90%/min-max）・**レーン別内訳表**（種別内訳+構成比）・
+  **スコア推移グラフ**（canvas・確定値累積）・**バフ推移ヒートマップ**（レーン×14キー選択・
+  157ビート）・**タイムライン表**（レーン別ポップ・★crit・発動明細）・**確度タグ凡例**
+  （Confirmed/Estimate/Unknown + スキル単位のバッジ）
+- **計算式内訳（2026-09-02 追加）**: タイムライン表の各ビートに「式」ボタン → JHTV5213 型の
+  ユーザー手書き式を再現した内訳を展開（ステータス・A/SPパワー・B1（スコア/Aスコア/テンション段数×
+  段率+フォト+エール=残差）・クリ係数・ファン・コンボボーナス（docs 表+ csu 逆算）・
+  ライブ特徴×乱数・**写真の Aスコア固定値の平坦加算**・割合行はレーン累積×割合%。A/SP の基本値は
+  PRE（自身バフ適用前）。`ui/app.ts` renderEventFormula + `tests/ui/smoke.test.ts` の式展開検証）。
+- 編成 JSON エクスポート（**CLI の --input と同一スキーマで CLI/UI 相互運用**）・インポート・
+  localStorage 保存/復元・T5実測プリセット復元
+- テスト: `tests/unit/sim/ui-pipeline.test.ts`（build_ui と同一のデータ組み立てで確定値一致。
+  **このテストが build_ui.mjs の cards/params/skills のアンラップ漏れバグを検出**）と
+  `tests/ui/smoke.test.ts`（jsdom でビルド成果物を実行: 5レーン描画・491カード・
+  実行→KPI/内訳/タイムライン 156行・確定値 2,501,593,723 一致）
+
+#### 4. クリーンアップ
+- **debugOptions を削除**（T5確定後の撤去計画どおり）: engine.ts は確定値を定数化
+  （`BEAT_CB_CSU_PERMIL=11.5` / `BEAT_CB_CSU_AMP_PERMIL=57.5` を export、
+  延長=all・増強=perKey(vue対象外)・ビートB1の su=25‰（b1Permil から仮説パラメータ引数を削除）・
+  ビートCB基準=表示コンボ・A/SP付与の減算スキップ=true）。`SimulateInput.debugOptions` と
+  `beatNotesProcessed`（comboBasis=global 用で未使用）を削除
+- 一時診断ファイルの整理:
+  - `tests/golden/t5-debug.test.ts`（14テスト）と `fixtures/t5_report.json` を削除
+  - `tests/golden/t5-solver.test.ts` → **`tools/t5_solver.ts` に移行**（`npm run solve:t5`。
+    共有ビルダー使用。収束確認: 2 反復・okBeats=119/155・diff=0・fixture 再生成）
+  - `t5-scores.golden.test.ts` を共有ビルダー経由に書き換え（レーン内訳整合テスト追加）
+- ゴールデン（17,529,132,014 一致）は t5-scores で維持
+
+### 検証結果
+- **293 passed / 1 skipped、`tsc --noEmit`（root）と `tsc -p ui` ともにゼロエラー**
+- CLI: `npm run simulate -- --input examples/t5-sample.json --n 50 --seed 3` で
+  確定値 2,501,593,723 / MC mean 2,505,668,406（n=50）を出力
+- UI: jsdom スモーク 3 テストでレンダリング・実行・値一致を確認
+
+### 設計メモ
+- 確定値ランの NeutralRng は nextCritical()=true を返す（確率/成功率ゲート<100% のスキルを
+  「必ず成立」として確定値に含めるため）。クリティカル係数は criticalProvider=()=>false で別系統に無効化
+- UI のデータ埋め込みは `<script type="application/json">` + `<` の `\u003c` エスケープ
+  （`</script>` 混入対策）。アプリ JS は esbuild IIFE でインライン
+- CLI/UI は `deck`/`stage`/`chart`/`missedNotes`/`mentalOverride`/`disabledSkillIds`/`critRate` の
+  共通スキーマで相互運用（UI エクスポート → CLI 実行が可能）
+
+### 残課題（次フェーズ候補）
+1. クリティカル率式の解明（`critRate` は確率パラメータのまま。ccu と戦闘値の関係）
+2. 他楽曲/他編成への拡張（skills_golden.json は実測 5 カード分のみ。マスタ skillDetails の
+   変換パーサー拡張が必要）
+3. UI のフォト/アクセサリ個別フォーム化（現在は JSON エディタ）・複数ステージ/譜面の同梱
+4. 期待値の厳密計算（クリティカル確率を含む閉形式または大規模 MC）
+
+---
+
+## Phase 4.5（2026-08-30 完了）— Peing 質問箱による仕様解明 & クリティカル発生率の動的バフ連動
+
+### 1. 質問箱（Peing）アーカイブ検索ツールの整備
+- `tools/peing_search.py`（Python 3・依存ゼロ）: `C:\Users\umaro\Documents\aipra_peing\peing_data\peing_raw_qa.json`
+  （6,794件）をキーワード/正規表現検索する CLI。stdout を UTF-8 強制し Windows コンソールでの
+  文字化けを防止、`--out` で research/ へ検索結果を保存。
+- 今後の運用: 未解明仕様が生じた場合はユーザーに質問せず本ツールで自己解決する
+  （検索結果は research/peing_*.txt として残す）。
+- 今回の検索: `クリティカル×上限` / `クリティカル×発生率` / `クリ率` / `クリティカル×確定`
+  → research/peing_crit_1.txt〜4.txt。
+
+### 2. クリティカル発生率仕様の確定（【Peing確定 2026-08-30】）
+出典（質問箱 ID・全文は research/peing_crit_*.txt）:
+- **id=1189080032**（2025-05-05）: 「クリティカル→クリティカルの発生確率に影響します。
+  **最大で発生率＋50%** です。**50%に必要なクリティカル値はステージによって異なります**。
+  クリティカル率バフは**1段階あたりクリティカル率＋5%**です。**最大の20段では＋100%と
+  なり確実にクリティカルが発生します**」
+- id=1186806688: 「クリ値が高いとクリ発生率最大50%まで上がる。**要求値はライブ毎に異なる**」
+- id=1188339217: 「クリティカル20段で確定。固定値だけで最大クリ率50%。要求値はステージ毎に異なる」
+- id=1188731464: 「固定値クリだけだと最大効果でも＋50%上限」
+
+→ 式: `effectiveCritRate = min(0.50, baseCritRate) + snapshot.critical_rate_up × 0.05`
+（baseCritRate はステージ要求値に対する達成率でマスタから導出不能のため UI/CLI 設定値・既定 0.50）。
+
+### 3. 実装
+- **`src/timeline/engine.ts`**: `resolveCritical()` を新設。動的モード
+  （`SimulateInput.baseCritRate` 指定時）はスナップショット毎に実効率を計算し、
+  `>= 1.0` なら確定（抽選なし・`nextFloat` を消費しない）、それ以外は
+  `rng.nextFloat() < effectiveCritRate` で抽選。未指定時は `criticalProvider` にフォールバック
+  （T4/T5 ゴールデン互換）。フォト行は T5確定どおり判定対象外。
+- **`src/rng/types.ts`**: `ScoreRng` 契約に `nextFloat(): number`（[0,1) 一様実数）を追加。
+  ContinuousRng / FixedRng / MinRng / MaxRng / NeutralRng / ReplayRng に実装
+  （ReplayRng は fail-closed throw）。
+- **`src/timeline/constants.ts`**: `CRIT_RATE_BASE_CAP=0.5` / `CRIT_RATE_UP_PER_STAGE=0.05`。
+- **`src/sim/build.ts`**: `BuildSimOptions.baseCritRate` → `SimulateInput` へ透過。
+- **CLI**（`src/cli/simulate.ts`）: `--crit-rate` / `critRate` の既定を 0.5 に変更し動的モードへ移行
+  （旧: ContinuousRng に確率注入）。確定値ランは従来どおり crit なし（**2,501,593,723 は不変**）。
+  `npm run simulate -- --input examples/t5-sample.json --n 50 --seed 3` → MC mean 19,123,321,691
+  （基礎50%+クリ率バフで crit 係数 ×1.7〜4.65 が乗るため実測 17.5B と同桁=妥当）。
+- **テスト**: engine 6 本（境界・クランプ・10段確定・0基礎×20段確定・provider フォールバック・
+  フォト除外）、ContinuousRng nextFloat 3 本、build 2 本。**314 passed / 1 skipped**。
+
+---
+
+## Phase 6（2026-08-30 完了）— カード・ステージDB統合と編成UI強化
+
+### 1. マスタ変換パイプライン（`tools/importers/build_data_phase6.mjs`・`npm run build:data:ext`）
+vendor/（MalitsPlus/ipr-master-diff）→ data/ へ以下を追加生成（既存 build_data.mjs は不変）:
+- **`data/charts_all.json`（109KB）**: 全**111譜面**を `[type, position]` 配列で圧縮格納
+  （type≠0 のみ・beat=添字+1 のゲーム内採番。既存 chart-hsm-004-001 と完全一致を検証済み）。
+- **`data/stages_index.json`（817KB）**: 全**5,916ステージ**（Quest）のコンパクト索引。
+  129 曲 × 3,456 一意ライブ設定（レーン色/重み/A-SP重み/メンタル要求/容量の重複排除）。
+  T5 ステージ（qt-daily-003-19）の設定値が実測（attrs=[2,2,1,2,2]・600/250/150・chart-hsm-004-001・156ノート）と一致することを検証済み。
+- **`data/skills_master.json`（648KB）**: 全**491カード**の A/SP/P スキル（最大Lv）を SkillDef 互換で
+  自動解析。SkillEfficacy id の文法 `ef-<効果名>-<grade>[-target-<targetId>][-<duration>|chart_dependence]`
+  をパースし、**SkillTarget.json の 78 id と最長一致**でターゲット切り出し。
+- **`data/accessories.json`（136KB）**: 全**624アクセサリ**（param1/2Type の enum 1-6 →
+  dance/vocal/visual/stamina/mental/critical 対応。value=固定値・permil=%）を structured 形式へ変換。
+- **`data/characters.json`**: characterId → 名前マップ（56件）。
+- **検証**: `tools/validate_skills_master.mjs`（`npm run validate:skills`）— golden 15 スキルとの突合で
+  kind/CT/効果行が整合（差分は全て「レベル差（golden は開花途中）」「測定値修正」「T5フィット修正」
+  で説明可能な警告のみ）。全カード 2,624 効果行が engine の EffectType/Target/Condition 契約内。
+  未対応効果 195 種（バトル専用デバフ・ステルス・状態変換系）とターゲット 12 種は効果行を除去し
+  `unsupportedEffects` / `conditionalNote` として警告表示。
+
+### 2. エンジンのマスタ一般化（【Estimate】実測ゴールデンに同型なし・vocal 対称）
+- **BuffKey 拡張（14→19キー）**: `dance_up/dance_boost/visual_up/visual_boost/beat_score_up` を追加
+  （`liveStatusMultiplierPermil` は dance/visual も vocal と対称の式+×3.75 クランプ、
+  `b1Permil(beat)` に 100‰/段の beat_score_up 項を追加、ビート basic の全統計に属性倍率適用）。
+- **EffectTarget 拡張**: `dance/visual_type_N`（deck 属性降順）・`buffer/supporter_type_N`（ロール一致・
+  自属性ステータス降順）・`dance/visual_high_1`・`vocal_high_2/3`。
+- **scaling ref 拡張**: type36 の参照段数を `vocal_up_stages` 以外（a_skill_score_up_stages 等の
+  BuffKey 由来 15 種）に対応。未対応 status は scaling=null（基本スコアのみ・Unknown タグ）。
+- 条件参照スコア（more_combo_count 等 13 種）は**常時発動の score_get に近似**（Unknown タグ）。
+- `add_effect_value_X`（超過付与）: vocal_up のみ超化キー（golden 実測）、他は基底型+limitRelease。
+- テスト: buffs 2 本・engine 3 本（dance_up による dance 成分倍増・beat B1 100‰/段・dance_type_1 解決）。
+
+### 3. build.ts / CLI の統合
+- `SimSourceData.skillsByCard` を追加。レーンのスキル解決を
+  **「選択カード自身の golden スキル（較正済み）→ マスタ解析スキル → レーン golden（旧動作+警告）」**
+  の順に変更。マスタ使用時は `lane` をレーンに上書きし、未対応効果/条件付きスキルは警告へ。
+- CLI `loadSourceData`: data/stages・data/charts に無いステージ/譜面は stages_index/charts_all から
+  動的構築（例: `examples/area1-stage-sample.json` = qt-area-1-001 × chart-hsm-006-001 で動作確認）。
+
+### 4. UI（`ui/app.ts` 全面改修・`npm run build:ui` → **dist/aipura_simulator.html 1,995KB 単一ファイル**）
+- **ステージ・曲ピッカー**: 曲名/アーティスト検索 → 曲のステージ一覧（難易度・ビート数・レーン色・
+  重み・クリアスコア表示）→ 選択で `data.stages/charts` へ動的注入し全 UI 連動。
+- **カードピッカー**: キャラ名/カード名インクリメンタル検索+属性（ステータス比率最大の Vo/Da/Vi）+
+  初期レアリティ絞り込み → 選択で **Lv（最大）/開花/スキル構成（A/SP/P・全有効化）を自動セット**。
+  スキル一覧はマスタ解析スキル（効果要約・CT・消費・確度バッジ・未対応/楽曲限定タグ付き）。
+- **アクセサリピッカー**: 624件を検索（種別・レアリティ絞り込み）→ structured JSON へ追加（削除ボタン付き
+  チップ表示）。**アイコン画像はマスタリポジトリに存在しない**（assetId 参照のみ・画像実体なし）
+  ため種別チップ（Vo/Da/Vi/Sta/Men/Cri 色）で表示 — 収集調査の結論として代替表示を採用。
+- **編成の保存・読込**: 名前付きスロット（LocalStorage `aipura-sim-decks-v1`・複数保存/読込/削除）+
+  既存の自動保存/JSON エクスポート・インポート（stage/chart 含む・CLI 相互運用）。
+- **クリティカル率入力**を「基礎クリティカル率（既定 0.50）」に変更（Peing 確定仕様の注記付き）。
+- 確度凡例を更新（クリティカル発生率式を Confirmed へ繰り上げ・マスタ解析スキルを Estimate 追記）。
+
+### 5. テスト・検証結果
+- `tests/ui/smoke.test.ts` 全面書き換え（8 テスト）: レンダリング・確定値一致・**ステージ切替→別譜面で
+  シミュレーション完走（タイムライン行数=選択譜面のノート数）**・カード/アクセサリピッカーの自動セット・
+  名前付き保存/読込。**314 passed / 1 skipped、`tsc --noEmit`（root/ui）ともゼロエラー。**
+- jsdom スモークが検出したバグ: なし（初回からグリーン。段階的な `npm test` 実行で回帰確認済み）。
+- **リリース後修正（ユーザー報告）**: `.modal { display: flex }` が `hidden` 属性を打ち消し、空モーダルが
+  常時全画面表示されて入力不能になる不具合 → `.modal[hidden] { display: none !important }` で修正、
+  スモークテストに CSS 規則の回帰チェックを追加。UI 再ビルド+Tauri 再ビルド・起動確認済み。
+
+---
+
+## Phase 5（2026-08-30 完了）— デスクトップアプリ化（Tauri 2.x）
+
+### セットアップ内容
+- **ツールチェーン導入**（winget で自律実行）: Rustup（rustc 1.98.0）+ **VS 2022 Build Tools
+  （MSVC 14.44・VCTools ワークロード+推奨コンポーネント。UAC 昇格つきサイレントインストール）**。
+- **`src-tauri/`**: Tauri 2 スキャフォールド
+  - `tauri.conf.json`: identifier `jp.fanmade.aipura-score-sim`・`build.frontendDist="../dist"` +
+    `beforeBuild/DevCommand: npm run build:ui`（単一HTML をバイナリへ埋め込み・IPC コマンドなし）。
+    ウィンドウ 1360×900・`url: "aipura_simulator.html"`。
+  - `Cargo.toml`（tauri 2 / serde / release profile 最適化）・`build.rs`・`src/main.rs`+`src/lib.rs`。
+  - `icons/icon.ico` + `icon.png`: **`tools/generate_icon.py`（依存ゼロ・BMP 形式 ICO を自前生成）**
+    で作成（ヘッダーの紫グラデ+白ノート意匠の 64px）。
+- **npm スクリプト**: `npm run tauri:dev` / `npm run tauri:build`（@tauri-apps/cli 2.11.4）。
+- `.gitignore` に `src-tauri/target/`・`src-tauri/gen/` を追加。
+
+### ビルド・起動検証
+- `npm run tauri:build` → **成功（Rust release ビルド 7分51秒）**:
+  - ポータブル実行: `src-tauri/target/release/aipura-score-sim.exe`（**3.1MB**・frontendDist 埋め込み・
+    実行には WebView2 ランタイムが必要=Win10/11 標準搭載）
+  - インストーラ: `src-tauri/target/release/bundle/nsis/Aipura Score Simulator_0.1.0_x64-setup.exe`（1.2MB）
+- 実行テスト: exe を起動 → プロセス確認（PID・25MB）→ 正常終了。バイナリ内に
+  `aipura_simulator.html` / identifier の文字列が埋め込まれていることを確認。
+
+### 既知の注意点
+- exe は「WebView2 依存の単一実行ファイル」（assets は埋め込み）。完全ポータブル配布には
+  WebView2 ランタイムが入っている Windows 10/11 が必要（NSIS インストーラ版は未導入時に
+  ランタイムを案内できる）。
+- Rust/MSVC は本マシンに導入済み（再ビルドは `npm run tauri:build` のみで可）。
+
+---
+
+## Phase 7（2026-08-30 完了）— 画像表示（カード/アクセサリ）・絆覚醒・最適編成探索（Optimizer）
+
+### 1. アイコン画像の CDN 調査と確定仕様
+- **カードサムネイル**: `https://idoly-ac.outv.im/api/img/img_card_thumb_{variation}_{suffix}`
+  （suffix = `card-yu-05-link-00` → `yu-05-link-00`）は Cloudinary へ 308 リダイレクト
+  （実体: `res.cloudinary.com/.../ipri/assets/img/card/thumb_{variation}_{suffix}.webp`）。
+  **variation 1（開花後）・2（絆覚醒）は実在を HTTP 200 で確認。variation 0（未開花）は 404**
+  のため、未開花は `img_card_thumb_{suffix}`（variation なし）を次点試行 → それも失敗時は
+  **属性色バッジ＋キャラ名頭文字**へフォールバック（onerror 連鎖・jsdom テストで検証）。
+- **アクセサリ**: `img_accessory_thumb_{id}` パターンを試行（未確認のため onerror で非表示→
+  既存の種別チップ Vo/Da/Vi/Sta/Men/Cri がフォールバックとして残る設計）。
+  assetId（例 `dance-a`）は vendor/Accessory.json に存在するが CDN パスは未確定。
+
+### 2. UI 実装（ui/app.ts・ui/style.css・ui/index.template.html）
+- **カードサムネイル**: 編成レーン（48px）・カードピッカー行（32px）・オプティマイザ結果に表示。
+  **開花レベル連動**: `variation = 絆覚醒 ? 2 : rarity >= 5 ? 1 : 0`。開花入力の change で
+  `updateLaneThumb()` が即時 src を差し替え（レーン再描画なし）。
+- **絆覚醒トグル**: 4 スキル保持カード（9 枚の `*-link-00` リンクカードのみ）に
+  「絆覚醒」チェックボックスを表示。ON で第4スキル（リンクスキル・スキル行に「絆覚醒スキル」タグ）を
+  enabledSkillIds へ追加（無効化リスト経由でシミュレーションに反映）＋アイコン variation 2。
+  カード選択時の既定は OFF（3 スキル構成）。state に `bondAwake` を追加・保存/復元対応。
+- **イベント委任化**: bindConfigEvents を #config-root への委任（click/change）に全面改修。
+  旧実装の「renderLaneCard 後に data-rm-acc 等のリスナーが失われる」潜在バグも解消。
+- **アクセサリサムネイル**: ピッカー行・装備欄（acc-item）に img を付与（追加時に entry.id を記録）。
+  error はバブリングしないため document キャプチャで一括非表示化。
+
+### 3. 最適編成探索エンジン（`src/optimizer/index.ts`・`npm run typecheck` 対象）
+- **アルゴリズム**: ヒューリスティック事前スクリーニング（属性重み×ステージ重み＋スキル効果値合成の
+  上位 poolSize 枚）→ 貪欲初期解（レーン重み降順にヒューリスティック最大カードを配置）→
+  **局所探索**（レーン入替え全候補試行＋レーン間スワップ 10 ペア、改善する間パス反復）→
+  上位候補を finalRuns で高精度再評価して TOP N ランキング確定。
+- **評価**: 共通乱数（CRN: 候補間で同一シード列の ContinuousRng）MC 平均＋確定値（NeutralRng・critなし）。
+  動的クリティカル（Peing 確定式・baseCritRate 引継ぎ）・来場者数（audienceAdvantage 経由）を反映。
+  実測ベンチ: 156 ノートで ~11ms/ラン（20 ラン 215ms）。
+- **オプション**: レーン固定（センター固定等）・属性縛り（Vo/Da/Vi）・プール枚数・MC回数×2段階・
+  シード・時間予算（ms）・表示件数・onProgress 進捗コールバック。async で setTimeout yield、
+  時間予算超過は打ち切り（truncated フラグ）。
+- **共通前提（Estimate・UI に明記）**: 装備/フォトなし・Lv最大・交流Lv1・メンタル100・
+  missedNotes なし・全員 Scorer（buffer/supporter_type ターゲット未考慮）。比較は同条件内で公平。
+- **実データ検証**（T5 ステージ・pool 24・screen 2/final 8・5.1 秒・319 評価）:
+  TOP3 が birt/miku 系☆5カード編成（MC 8.76 億/確定 6.27 億〜）を安定生成。
+  プリセット実測編成（装備・staff/yell・絆覚醒込みで 2.5 億〜191 億）より低いのは
+  上記の共通前提どおり（装備なし等）で正常。
+
+### 4. UI 統合（🌟 最適編成を自動探索タブ）
+- ヘッダ下にタブバー（編成シミュレータ / 🌟 最適編成を自動探索）を追加し、既存 UI は #view-sim、
+  オプティマイザ画面は #view-opt に分離。
+- オプティマイザ画面: 現ステージ情報・探索設定（プール/MC回数×2/シード/時間予算/表示件数）・
+  **レーン毎の固定チェックボックス＋属性縛りセレクト**・「探索開始」ボタン・進捗表示・
+  **TOP ランキング（MC平均/確定値/5カードのサムネイル付きリスト）**・
+  「この編成を反映」で編成エディタへ一括反映（レベル最大/スキル自動セット/絆覚醒OFF）して
+  編成タブへ自動切替。
+
+### 5. テスト・検証結果
+- `tests/unit/optimizer/optimizer.test.ts`（5 テスト・合成データ）: 最強カードが TOP1 に含まれる/
+  スコア降順・重複なし/レーン固定尊重/属性縛り尊重/同一シードで決定論的/存在しないステージでエラー。
+- `tests/ui/smoke.test.ts` に 4 テスト追加（合計 12）: サムネイル URL と variation 連動・
+  エラー時フォールバック連鎖（次点 URL→バッジ）・絆覚醒トグル（3↔4 スキル・variation 2・タグ）・
+  アクセサリサムネイルとエラー時チップ残置・**オプティマイザ（タブ切替→高速探索→ランキング→反映）**。
+- **323 passed / 1 skipped・`tsc --noEmit`（root/ui）ゼロエラー**・`build:ui` 2,012KB・
+  Tauri 再ビルド＋起動確認済み。
+
+---
+
+## Phase 7.5（2026-08-31 完了）— カードアイコンの完全オフライン対応（ローカル同梱 & ハイブリッド読込 & Tauri 同梱）
+
+### 1. 一括ダウンロードスクリプト（`tools/download_card_icons.mjs`・`npm run download:icons`）
+- 対象: data/cards.json 全 491 枚から **599 ジョブ**（開花後 v1=全カード / 未開花 v0=`initialRarity<5` の 99 枚 /
+  絆覚醒 v2=`-link-` 含む 9 枚）を `dist/images/cards/img_card_thumb_{v}_{suffix}.jpg` へ保存。
+- **CDN 実測の確定事項**:
+  - idoly-ac.outv.im は 308 で Cloudinary（`res.cloudinary.com/dwgvzwmqu/.../ipri/assets/img/card/thumb_{v}_{suffix}.webp`）へ転送。
+  - 最終 URL の `f_auto`→`f_jpg` 書き換えで**真の JPEG（image/jpeg・FFD8 マジック確認済み）**を取得
+    （f_jpg 取得失敗時は f_auto の生バイト保存 — ブラウザ/WebView2 は内容でデコードするため表示可）。
+  - ☆4 カード（ai-04-casl-00 等）の **thumb_0_ は存在する**（☆5 カードの thumb_0_ のみ 404）→
+    v0 は `initialRarity<5` のみダウンロードで整合。
+  - **8 件（ktn/rio/rui/skr の casl 特殊カード）は CDN 未収録**（全パターン 400/404）→ notfound 集計・
+    UI はバッジフォールバック。
+- 安定化: 同時 8 並行・リトライ 3 回（指数バックオフ・400/404 はリトライなしで notfound）・
+  既存ファイルスキップ（冪等・再実行可）・進捗/サマリ表示・fail>0 で exit 1。
+- **実行結果: ok=591 / notfound=8 / fail=0（8.9MB・全て有効 JPEG）**。
+
+### 2. UI ハイブリッド読込（ui/app.ts）
+- `cardThumbSources(cardId, variation)` = **[ローカル `./images/cards/img_card_thumb_{v}_{suffix}.jpg`,
+  CDN（同 v）, CDN（開花後 v1・v≠1 のみ）]** の候補列を `data-srcs` に持たせ、onerror で順次試行 →
+  全滅時は属性色バッジ＋キャラ頭文字（3 段階フォールバック）。
+- `updateLaneThumb` も候補列を再構築（開花/絆覚醒の即時切替に対応）。
+- `crossorigin` 属性は削除（file:// 直開きでのローカル画像読込を優先。CDN は referrerpolicy="no-referrer" のみ）。
+
+### 3. Tauri 同梱（デスクトップ完全オフライン）
+- 画像は `build.frontendDist: "../dist"` 配下（`dist/images/cards/`）のため、**Tauri 2 の Web アセット
+  埋め込みに自動的に含まれる**（`bundle.resources` は不要 — resources は WebView から直接参照できない
+  ため、二重同梱を避けて frontendDist 埋め込みを採用）。
+- **検証: exe 3.1MB → 12.0MB（=591 枚 8.9MB 分の埋め込みを確認）**・インストーラ 10.2MB・起動確認 OK。
+  デスクトップ版は `tauri://localhost/images/cards/...` で同梱画像を解決し、オフラインで全アイコン表示。
+
+### 4. テスト・検証結果
+- smoke テストをハイブリッド読込に追従（12 テスト）: 既定 src がローカル パス（`images/cards/...jpg`）・
+  `data-srcs` の候補順（ローカル→CDN）・エラー連鎖（CDN v0→CDN v1→バッジ）・絆覚醒アイコンもローカル
+  パス（v2）で確認。
+- **323 passed / 1 skipped・`tsc --noEmit`（root/ui）ゼロエラー**・`build:ui` 2,013KB・
+  `download:icons` 冪等実行確認（skip=591）・Tauri 再ビルド＋起動確認済み。
+
+---
+
+## Phase 7.6（2026-08-31 完了）— アイコン欠損の URL バグ修正 & アクセサリ画像（36 種）対応
+
+### 1. カード画像の URL 組み立てバグ修正（tools/download_card_icons.mjs）
+- **原因**: `buildJobs()` の `job.asset` に `img_card_thumb_{v}_` 接頭辞が含まれておらず、
+  `downloadOne` の `CDN + job.asset` が `https://.../api/img/ktn-02-eve-00` のような不正 URL になり 400。
+  （マスタ assetId 対応の改修時に接頭辞を落としたのが直接原因。assetId そのものの指定は正しかった）
+- **修正**: 指示どおり `asset: \`img_card_thumb_{v}_${assetSuffix}\``（完全アセット名）+
+  `assetSuffix`（保存ファイル名/UI 参照用）に分離。`[nf]` デバッグ出力（404/400 時の URL 表示）も追加。
+- **結果: 599/599（cards 491+99+9）すべて取得成功**（ok=8 / skip=591 / notfound=0 / fail=0・exit 0）。
+  4 枚の特殊カード（ktn/rio/rui/skr → `*-eve-*`）も `img_card_thumb_{0,1}_*-eve-00.jpg` として取得済み。
+
+### 2. アクセサリ画像（全 36 種）の取得と UI 反映
+- **CDN パターン確定**: `img_acc_thumb_{assetId}`（実測 200 →
+  `ipri/assets/img/acc/thumb_{assetId}.webp` へ 308）。assetId は分類（dance/mental/stamina/
+  technique/visual/vocal）× ティア（a-f）の **36 種**で全 624 アクセサリが共有。
+- **`tools/importers/build_data_phase6.mjs`**: `buildAccessories` の出力に `assetId` を追加
+  → `npm run build:data:ext` で `data/accessories.json` 更新（624 件・assetId 空 0・ユニーク 36）。
+- **`tools/download_card_icons.mjs`**: アクセサリジョブ（36 件）を追加。
+  `dist/images/accessories/img_acc_thumb_{assetId}.jpg` に保存（ジョブ合計 635 = カード 599 + アクセサリ 36）。
+  assetId 一覧は data/accessories.json から導出（単一ソース）。**635/635 取得成功・notfound=0・fail=0**。
+- **`ui/app.ts`**: `accThumbHtml(assetId)` を新設 — ローカル（`./images/accessories/`）優先 →
+  CDN（`img_acc_thumb_{assetId}`）フォールバック（`data-fallback` + inline onerror の 2 段階）→
+  非表示（種別チップが残る）。ピッカー行・装備欄とも assetId ベースに統一し、
+  装備欄は保存済みエントリの id/name から `accAssetIdOf()` で assetId を解決（旧データ互換）。
+  `addAccessory` の保存エントリにも `assetId` を記録。init の capture 型 error 一括ハンドラは
+  inline onerror と競合するため削除。
+
+### 3. ビルド・テスト・検証結果
+- `build:data:ext` → `data/accessories.json` に assetId 反映／`download:icons` → **635/635**・
+  冪等再実行確認（skip=635）/`build:ui` 2,038KB/`npm test` **323 passed / 1 skipped**/
+  `typecheck`（root/ui）ゼロエラー/`tauri:build` 成功（exe 12.6MB・アクセサリ 36 枚分増加）+ 起動確認 OK。
+- smoke テスト: アクセサリサムネイルをハイブリッド（ローカル→CDN→非表示）仕様に追従
+  （`img_acc_thumb_{分類}-{ティア}.jpg` パターン・エラー連鎖 2 回で非表示を検証）。
+
+---
+
+### 本セッション終了時のテスト状態（Phase 7.6 完了時点）
+- **323 passed / 1 skipped**・`tsc --noEmit`（root / ui）ゼロエラー・`build:ui` 2,038KB 成果物・
+  同梱アイコン 635 枚（カード 599 + アクセサリ 36・約 9.3MB）・Tauri ビルド+起動確認済み
+  （exe 12.6MB・カード/アクセサリとも完全オフライン表示）。
+
+---
+
+## Phase 7.7（2026-08-31 完了）— ブラウザ表示時の CSS 不具合修正（.card-fallback[hidden] 打ち消し防止）
+
+### 1. 不具合原因の特定と修正
+- **現象**: ブラウザで dist/aipura_simulator.html を開いた際、画像が正常にロードされていても全カードがダミーアイコン（属性色バッジ＋頭文字）で覆い隠される。
+- **原因**: ui/style.css の .card-fallback { position: absolute; inset: 0; display: flex; ... } の詳細度が高く、HTMLの hidden 属性（ブラウザ標準 [hidden] { display: none }）を打ち消して前面に常時表示されていた。
+- **修正**:
+  - ui/style.css: .card-fallback[hidden] { display: none !important; } を追加。
+  - tests/ui/smoke.test.ts: expect(html).toMatch(/\.card-fallback\[hidden\][^{]*\{\s*display:\s*none/); の回帰防止テストを追加。
+- **結果**: npm run build:ui で dist/aipura_simulator.html を再生成。ブラウザ（エクスプローラー直開き・file://）上で全カードアイコンおよびアクセサリ画像が正常に描画されることを確認。
+
+---
+
+### 本セッション終了時のテスト状態（Phase 7.7 完了時点）
+- **323 passed / 1 skipped**・tsc --noEmit（root / ui）ゼロエラー・build:ui 2,038KB 成果物・
+  同梱アイコン 635 枚（カード 599 + アクセサリ 36・約 9.3MB）・ブラウザ実機表示確認済み（完全オフライン対応）。
+
+---
+
+## Phase 8（2026-08-31 完了）— アクセサリ UI 完全刷新・会場選択（大分類/ハイスコアライブ）対応・ファンファクター手打ち
+
+### 1. データパイプライン（tools/importers/build_data_phase6.mjs）
+- **vendor/Area.json を新規取得対象に追加**（REQUIRED に "Area" を追加・`ensureVendor` が raw.githubusercontent.com から自動 DL。281 KiB）。
+- **大分類カテゴリの付与**: `AREA_TYPE_TO_CAT` で Area.type → カテゴリコードへ変換
+  （1=main メインライブ / 2=highscore ハイスコアライブ / 3=daily デイリー / 4=tower VENUSタワー /
+  5=ex EXタワー（月スト・サニピ・トリエル・リズノワ・IIIX・記念タワー含む） / 101=tutorial / 102=exercise、その他=other）。
+- **stages_index.json への新フィールド**:
+  - `areas`: 一意エリア配列 `{ c: カテゴリコード, n: エリア名 }`（62 件。cat→order→name 順でソート）
+  - `quests[].ar`: areas 参照添字（Quest.areaId → Area 経由。不明は -1）
+  - `maxCapacity` / `mentalThreshold` は既存の configs（cap/mt）に含まれており、UI 表示に利用
+- 検証: 大分類別クエスト数 = daily 642 / ex 3311 / exercise 24 / **highscore 23** / main 939 / tower 975 / tutorial 2（合計 5916・Area type 別集計と一致）。
+  `qt-area-1-001` → `{c:"highscore", n:"ハイスコアライブ"}`・`qt-ex-tower-001-001` → `{c:"ex", n:"月のテンペスト"}` を確認。
+
+### 2. アクセサリ UI の完全刷新（ui/app.ts・JSON 手打ち撤廃）
+- **3 スロット/レーン（全 5 レーン 15 スロット）の装備 UI**（`accessorySlotsHtml`）:
+  各スロットにサムネイル画像・アクセサリ名・効果チップ（例: `vocal +24500` / `vocal +3%`）・解除 ✕ ボタンを表示。
+  未装備スロット（＋装備なし）クリックでピッカーを開き、装備済みスロットもクリックで差し替え可能。
+  ✕ はイベント委任ハンドラで open-acc-slot より先に判定（スロット内側ボタンのバブル対策）。
+- **アクセサリピッカーの属性タブ化**（`openAccessoryPicker(laneIdx, slotIdx)`）:
+  すべて / Vo / Da / Vi / Sta / Men / Cri / **専用**（characterId 付き＝専用アクセサリのみ）の 8 タブ。
+  検索は名前・ID・キャラ名・効果 stat に対応。1 クリックで対象スロットに装備（`setAccessory`）。
+- **画像フォールバックの確定**（`accAssetIdFor`）: 全 624 件の assetId は分類×ティア a-f の 36 種を共有
+  （ティア f=504 件に限界突破 +1〜20 スピリット・専用スピリット ac-1-personal-* を含む）。
+  assetId が空の旧保存データは分類の最上位画像 `{classification}-f` へフォールバック。
+  実検証: 624 件全てが `dist/images/accessories/img_acc_thumb_{assetId}.jpg`（36 種同梱）に解決＝**画像欠損ゼロ**。
+  読込は従来どおりローカル → CDN（img_acc_thumb_{assetId}）→ 非表示（チップ残置）の 2 段階フォールバック。
+- **「⚡ おまかせ装備」（`autoEquipLane`・レーン毎に配置）**: レーン属性に一致する分類を最優先し、
+  専用アクセサリは同一キャラのみ候補に含めて、（属性一致 → レアリティ降順 → 補正値合成スコア
+  fixed + pct×1500）で上位 3 件を自動装着。他レーンで使用中の ID は 1 周目で回避（不足時のみ 2 周目で再利用許容）。
+  例: Vo レーン（char-yu）→ ボーカルスピリット（r21・上限突破上位 3 種）が選ばれることを jsdom テストで検証。
+- アクセサリ JSON textarea を廃止（state の accessoriesJson は保存/読込・CLI 互換のため維持）。
+  フォトのみ JSON エディタを残置。
+
+### 3. 会場選択 UI の改修（大分類タブ・ハイスコアライブ直選択）
+- **ステージピッカーに大分類タブ**（`STAGE_CATS`・`#sp-tabs`）: すべて（従来の曲から探す検索フロー）/
+  ハイスコアライブ / EXタワー / VENUSタワー / メインライブ / デイリーライブ / 合宿・その他。
+  カテゴリタブではエリア名でグループ化した一覧（例: EXタワー → 月のテンペスト/サニーピース/…）を表示し、
+  検索ボックスでカテゴリ内絞り込み（曲名・ステージ名・ID）。
+- **ハイスコアライブ 1〜18＋イベント 5 件（計 23）をタブから直接選択可能**。行に難易度・曲名・
+  ビート数・レーン色（推奨属性付き）・重み・キャパ・メンタル要求・クリアスコアを表示。
+- **ステージ情報表示の強化**（`stageInfoHtml`）: カテゴリチップ（`.cat-chip cat-*`）＋エリア名、
+  レーン色構成と**推奨属性**（最多属性）、メンタル要求、**最大キャパシティ**（個人来場上限＝cap÷5 併記）、クリアスコア。
+
+### 4. ファンファクター手打ち（カスタム入力）UI
+- `AppState.fanFactorPermil` を新設（既定 1620）。静的表示（div.static）を廃止し、
+  **‰ の number input（#g-fan）＋ % 換算の補助表示（#g-fan-hint、例: +62.0%）** に変更。
+- **動的初期値**: `applyStage` が会場 `maxCapacity` から個人来場ファン数（cap÷5・上限 50,000）を導出し、
+  `fanBonusPermil` でテーブル引きした最大ファンファクターを audience とともにセット
+  （例: qt-daily-003-19 cap 80,000 → 16,000 人 → 1620‰ / ハイスコアライブ18 cap 70,000 → 14,000 人 → 1579‰）。
+  来場者数（#g-audience）変更時もテーブル引きで再計算。
+- **手打ち上書き**: `input` イベント（タイピング中）と `change`（blur）の両方で `state.fanFactorPermil` を即時更新。
+  `runSimulation` は `buildSimulateInput({ fanFactorPermil })` に直接渡す（audience を併せて渡すと
+  audience が優先されて上書きが失われるため、UI 実行時は fanFactorPermil のみを渡すよう変更）。
+- **エクスポート仕様変更**: UI エクスポートは `fanFactorPermil` を出力し `audience` を省略
+  （CLI は fanFactorPermil を解釈・インポート時は旧 audience 指定にも fanBonusPermil で後方互換）。
+  CLI 検証: fan=1620 → 確定値 2,501,593,723（従来一致）／fan=1000 → 1,571,151,186（ボーナス減で減点）。
+- `loadSerializedState` は `injectStage`（データ注入のみ・ファンファクター非変更）と `applyStage` を分離し、
+  保存済みの手打ち値がステージ復元でリセットされないように修正。
+
+### 5. テスト・検証結果
+- **tests/ui/smoke.test.ts: 12 → 17 テスト**。既存 3 件を新 UI に追従改修（ファンファクター input 化・
+  アクセサリスロット化）し、新規 5 件追加:
+  1. ファンファクター手打ち（1000‰ で再実行 → 確定値が 2,501,593,723 より減少・hint が +0.0%）
+  2. 大分類タブ＋ハイスコアライブ直接選択（23 行・qt-area-1-018 選択 → ステージ情報にキャパ 70,000・
+     ファンファクターが 1579‰ に再導出）
+  3. ✕ でスロット解除（配列詰め・空きスロット化）
+  4. おまかせ装備（3 スロット全装備・Vo レーンにスピリットが選ばれる）
+  5. ピッカー属性タブ（8 タブ・専用タブは全行「専用:」付き・vocal タブは全行 Vo チップ）
+- **328 passed / 1 skipped**（Phase 7.7 の 323 から +5）・`tsc --noEmit`（root / ui）ともゼロエラー。
+- `npm run build:data:ext` 成功（stages_index.json 864.9 KiB・areas 62 件）／`npm run build:ui` 成功
+  （**dist/aipura_simulator.html 2,094KB**・js 90KB・data 1,988KB）。
+- T5 ゴールデン（総スコア 17,529,132,014 一致）・UI 確定値 2,501,593,723 ともに不変（計算コアは無変更）。
+
+### 設計メモ・決定事項
+1. **おまかせ装備の配分はヒューリスティック【Estimate】**: 「最高ティア」の定義を
+   （属性一致 → レアリティ → 補正値合成 fixed + pct×1500）の辞書式順で近似。実ゲームの
+   装備インベントリ概念はなく全 624 件のマスタを「手持ち」として扱う。
+2. **カテゴリは Area.type 由来を唯一の真実とする**: Quest ID プレフィックス（qt-main- 等）は
+   フォールバックに使わず fail-closed（type 不明は other）。Quest と Area の突合で欠落ゼロを確認。
+3. **ファンファクターの状態モデル**: audience（表示・導出元）と fanFactorPermil（計算に使う値）を分離。
+   ステージ切替で再導出、来場者数変更で再導出、ファンファクター直編集では audience は据え置き。
+4. エクスポートから audience を外したことで、手打ちファンファクターが CLI でも再現される
+   （CLI は SimConfigJson.fanFactorPermil を既に解釈済み・Phase 4 実装分）。
+
+---
+
+### 本セッション終了時のテスト状態（Phase 8 完了時点）
+- **328 passed / 1 skipped**・tsc --noEmit（root / ui）ゼロエラー・build:ui 2,094KB 成果物。
+- 全機能が単一 HTML（オフライン）で動作: アクセサリ 3 スロット UI＋おまかせ装備・
+  大分類タブ付き会場ピッカー（ハイスコアライブ直接選択）・ファンファクター手打ち。
+
+---
+
+## Phase 8.1（2026-08-31 完了）— ゲーム仕様の追従修正（レベルキャップ230・開花☆10既定・カード固有ロール・アクセサリ2スロット・専用品キャラ制限・メンタル入力廃止）
+
+### 1. レベル: 既定 215・上限 230
+- **`src/sim/build.ts`**: `CURRENT_LEVEL_CAP = 230` を新設し、`availableLevels` が `level <= 230` の行のみ返すように変更。
+  マスタ（CardParameter）は先行実装分の Lv231-260 を含むが、現行ゲーム内キャップは 230（将来的なキャップ解放時に
+  定数を更新する設計・コメント記載）。UI のレベル選択肢・オプティマイザの既定レベル（maxLevelOf）が自動的に 230 までになる。
+- **`ui/app.ts`**: 新規カード選択時の既定レベルを `DEFAULT_LEVEL = 215` に変更（従来は最大レベル 260 を自動セット）。
+  215 が存在しない場合のみ最大値へフォールバック。レベル選択肢は 1〜230。
+- **保存データ互換**: `loadSerializedState` / `applyConfig` で `level > 230` を 230 にクランプ
+  （旧 UI で 260 を選択して保存した編成の復元時、select に該当 option が無く Lv1 と解釈される事故を防止）。
+- T5 プリセット（サンプル編成 L3 = Lv230）はキャップ内のため無影響。確定値 2,501,593,723 は不変。
+
+### 2. 開花（現在☆）: 新規カード選択時の既定を ☆10
+- `selectCard` で `l.rarity = 10`（`DEFAULT_RARITY`）をセット（従来はカードの初期レアリティ）。
+  限界突破最大を既定にする意図。T5 プリセットの既存レーン値（☆5/6/10）は変更しない。
+- オプティマイザ反映（`laneStateFromCard`）も `rarity: 10` に変更。
+
+### 3. ロールのカード固有化（Card.type 導出）
+- **`tools/importers/build_data.mjs`**: vendors Card.json の `type` → `role` を data/cards.json に出力
+  （**1=Scorer / 2=Buffer / 3=Supporter**。実測検証編成 5 レーンの role と type の対応から確定。
+  不明 type は Scorer へフォールバック＋警告）。配布数: Scorer 156 / Buffer 169 / Supporter 166。
+- **`src/types.ts`**: `CardRole` 型を新設し `CardDef.role?` を追加。
+- **UI**: レーンカードのロール select（Scorer/Buffer/Supporter 手動切替）を廃止し、
+  カードから導出した値をチップ表示（`role-chip role-scorer/buffer/supporter`・スコアラー/バッファ/サポーター）に変更。
+  スコアラーカードをサポーターとして扱うような不整合が構成上発生し得なくなった
+  （スキル対象解決 `LaneInput.role` はカード固有ロールに常時同期: `cardRoleOf`）。
+- ロールは load / カード選択 / インポート / オプティマイザ反映の全経路でカードから再導出し、
+  設定ファイル内の `role` 値は無視する。検証: サンプル編成 5 レーンの role がカード導出値と全て一致。
+- データ再生成 `node tools/importers/build_data.mjs` 実施（cards.json 238.1 KiB・role 付き）。
+
+### 4. アクセサリ: 2 スロット化（ゲーム仕様）
+- `ACC_SLOTS = 3 → 2`。UI・おまかせ装備（上位 2 件）・新規テストを 2 スロット仕様に更新。
+- **旧 3 スロット保存データの正規化**: `normalizeAccSlots` を load / インポート経路に追加し、
+  先頭 2 件のみ残して書き戻す（3 件目がスコア計算に紛れ込むのを防止）。表示も先頭 2 件に制限。
+
+### 5. 専用（キャラ指定）アクセサリの装備先キャラ制限
+- アクセサリピッカーで **レーンのカードキャラ以外の専用品（characterId 付き）を全タブで非表示**。
+  「専用」タブはレーンキャラの専用品のみ（例: L1=鈴村優 → 優の専用品 21 件のみ・他キャラ分は出ない）。
+  おまかせ装備は元々同一キャラ限定だったため挙動一貫。
+
+### 6. メンタル入力の廃止（計算式に直接関係しないため）
+- 交流Lv の隣にあった「メンタル」number input を廃止。メンタル値は**スコア計算式に直接は使われず、
+  P スキル発動順のタイブレーク（メンタル降順 → IDOL_PRIORITY_ORDER、src/timeline/engine.ts `orderedStates`）に
+  のみ使用される**。UI では T5 実測較正値（L1=105 … L5=101・data 埋め込み `calibratedMental`）を固定値として保持し、
+  共通設定の注記に「スコア式に直接関係なし・発動順タイブレークのみ」と明記。
+- `mentalOverride` → `LaneInput.deck.mental` の経路と CLI 仕様は既存のまま（後方互換）。
+
+### 7. テスト・検証結果
+- tests/ui/smoke.test.ts: カード選択テストに「既定 Lv215・選択肢上限 230・開花 ☆10・ロールチップ表示（サポーター）」を追加、
+  アクセサリ 3 テストを 2 スロット仕様に更新（差し替え・解除後の空き枠からの再装備・おまかせ 2 件）、
+  専用タブテストに「他キャラ専用品の非表示」検証を追加。
+- **328 passed / 1 skipped**・tsc --noEmit（root / ui）ゼロエラー・build:ui **2,103KB**。
+- T5 ゴールデン（17,529,132,014）・UI 確定値（2,501,593,723）ともに不変
+  （ロール導出はサンプル編成の role 値と完全一致・L3 Lv230 はキャップ内）。
+
+### 設計メモ
+1. ロールの type 対応表（1=Scorer / 2=Buffer / 3=Supporter）は実測検証編成からの裏付けがある一方、
+   INFO PRIDE 上の表示名との完全一致までは確認していない【Estimate: 表示名マッピング】。type 値との対応は Confirmed。
+2. レベルキャップは `CURRENT_LEVEL_CAP` 定数一箇所のみで管理。キャップ解放時は定数更新＋実装ログ追記で対応。
+3. メンタルを UI 固定値にしたため、P スキルの発動順が「メンタル降順」で変わるシチュエーションは CLI 経由でのみ再現可能。
+
+---
+
+## Phase 8.2（2026-08-31 完了）— P スキル発動順の較正値をメンタル実数に修正（同値タイブレークの正常化）
+
+### 不具合の内容（ユーザー指摘）
+- 従来の較正値 `CALIBRATED_MENTAL = {1:105, 2:102, 3:104, 4:103, 5:101}` は発動順を再現するために
+  フィッティングした**架空の値**で、実測編成では同値である L2/L5 を「別値（102 > 101）」として
+  埋め込んでいた。結果的に順序は一致するものの、**同値タイブレーク規則（IDOL_PRIORITY_ORDER）が
+  一度も発動しない**誤実装になっていた。
+- 実数は research/14 §4（ステータス一覧 PNG）に記録済み:
+  **L1=8996 > L3=8074 > L4=5890 > L2=5880 = L5=5880**（L2 と L5 は同値）。
+
+### 正しい発動順の仕組み（ユーザー説明と実装の突合）
+1. メンタル降順（実数）: L1 > L3 > L4 > L2 = L5。
+2. 同値（L2/L5）は配置優先度 `IDOL_PRIORITY_ORDER = [3,2,4,1,5]`（センター→センター左→センター右→
+   左端→右端）で解決 → L2 が先。
+3. 合成順 **L1 → L3 → L4 → L2 → L5** = 実測発動順（b51 後半 L1→L3→L4 / b47 後半 L3→L4→L2 /
+   b3 後半 L2→L5）と完全一致。
+- `orderedStates`（src/timeline/engine.ts）のソート実装自体（メンタル降順 → 同値は
+  IDOL_PRIORITY_ORDER）は正しく、今回の問題は較「値」側にあった。
+
+### 修正内容
+- **tools/build_ui.mjs / tests/golden/t5-scores.golden.test.ts / tools/t5_solver.ts /
+  tests/golden/t4-activations.golden.test.ts**: 較正値を実数に置換
+  `{1: 8996, 2: 5880, 3: 8074, 4: 5890, 5: 5880}`（research/14 §4 出典をコメント記載）。
+- **src/timeline/constants.ts**: 「本実測編成ではメンタル同数が発生しない」という誤コメントを訂正
+  （L2/L5 が同値 5880 であり、b3 後半 L2→L5 がこのタイブレーク規則で再現される）。
+- **research/13_engine_spec.md §4**: 旧「42135」説の残骸と「L2 > L5」の厳順位表記を訂正し、
+  実数・同値・タイブレークの確定値に更新。
+
+### 検証
+- **328 passed / 1 skipped**（T5 発動スケジュール突合 82/82・総スコア 17,529,132,014・
+  UI 確定値 2,501,593,723 ともに不変 — タイブレーク経由でも同一順序になることを確認）。
+
+### 既知の限界
+- メンタル実数はレーン固定の T5 実測値であり、**他の編成では実機のメンタル（カード固有ステータス
+  ＋フォト等の補正）と異なる**。マスタにカード別メンタル値が存在しないため自動導出は不可。
+  メンタルは P スキルの発動順（同ビート内の処理順）にのみ影響するため、P スキルが同一ビートで
+  競合する編成でのみ順序がスコアに影響し得る【Estimate: 他編成での順序】。
+
+---
+
+## Phase 8.3（2026-08-31 完了）— メンタルの自動算出化（算出式が実測と完全一致することを確認・上書き入力は任意に変更）
+
+### 経緯（ユーザー指摘）
+- Phase 8.2 で「メンタル実数はレーン固定の T5 実測値であり他編成では自動導出は不可」と記載したが、
+  ユーザーの指摘（「メンタル初期値が100で、交流レベルの%加算＋スタッフ＋エールで算出できるのでは」）
+  により検証したところ、**その式は既に baseStatus.ts の SUB_STATS 分岐として実装済み**で、
+  build.ts が `mentalOverride`（T5 用フィッティング値）で上書きしていただけだった。前回の「自動導出不可」は誤り。
+
+### 算出式と検証結果（T5 実測編成・research/01 §1.4）
+```
+deck.mental = floor( 100 × (1000 + 交流Men‰ + 装備Men%) / 1000 )
+            + スタッフMen固定 + エールMen固定 + 装備Men固定
+```
+| レーン | 交流 | 内訳 | 算出値 | 実測（research/14 §4） |
+|---|---|---|---|---|
+| L1 | 28 | 125 + 5165 + 600 + フォト3106 | **8,996** | 8,996 ✓ |
+| L2 | 22 | 115 + 5,765 | **5,880** | 5,880 ✓ |
+| L3 | 51 | 150 + 5,765 + フォト2159 | **8,074** | 8,074 ✓（ユーザー確認済み） |
+| L4 | 25 | 125 + 5,765 | **5,890** | 5,890 ✓ |
+| L5 | 22 | 115 + 5,765 | **5,880** | 5,880 ✓ |
+
+- **5 レーンすべて 1 の位まで完全一致**。交流テーブル（kouryu.ts）の Men 列も
+  docstring の Lv60 累計（Men+60%）と整合しており、修正不要だった。
+- メンタルは「カード固有ステータス」ではなく**全員初期値 100＋育成要素（交流/スタッフ/エール/装備）**
+  で決まる値だったため、任意の編成でも自動算出が正しく機能する。
+
+### 実装変更
+- **src/sim/build.ts**: `mentalOverride` にエントリがないレーンは `result.deck.mental`（算出値）を
+  使用するよう変更（旧デフォルトの 100 フォールバックを廃止）。
+  これにより CLI 設定で mentalOverride を省略した場合も実機どおりのメンタル・発動順になる。
+- **ui/app.ts**: メンタル入力を「空欄 = 自動算出」の任意上書きに変更（`LaneUiState.mental: number | null`）。
+  反映値（自動算出値または手入力値）を `#mental-hint-N` に常時表示。
+  `updateDeckPreviews` にも `mentalOverride` を渡すよう修正（上書き値がヒントに反映される）。
+  `mentalOverride()` は手入力のあるレーンのみ出力。
+- **tools/build_ui.mjs**: `calibratedMental` の埋め込みを廃止（算出で完全代替のため）。
+- **research/13_engine_spec.md §9-9**: 「較正値で担保」の記載を「算出値で担保（実測完全一致）」に更新。
+
+### テスト・検証結果
+- tests/ui/smoke.test.ts: 「メンタルは自動算出で算出値が T5 実測と 1 の位まで一致」（5 レーンの
+  反映値ヒント検証）＋「手入力で上書き・空欄で自動算出に復帰」の 2 テストに更新。
+- **330 passed / 1 skipped**・typecheck（root / ui）ゼロエラー。
+- T5 ゴールデン 17,529,132,014・UI 確定値 2,501,593,723・発動スケジュール 82/82 すべて不変
+  （算出値 = 実測値のため順序は完全同一）。
+- オプティマイザの評価（装備なし・交流Lv1・スタッフ/エール0）では算出メンタル = 100 となるため
+  従来の評価条件と変わらず影響なし。
+
+---
+
+## Phase 9（2026-08-31 完了）— ライブボーナス実装・Peing確定仕様の較正・スキルパーサー拡張
+
+### 1. ライブボーナス（ライボ）の完全実装（research/16 §1 準拠）
+
+#### データパイプライン（`tools/importers/build_data_phase6.mjs`）
+- vendor に **LiveBonusGroup.json / LiveBonus.json / LiveAbility.json** を追加取得。
+- 連携 `Quest.liveBonusGroupId → LiveBonusGroup.liveBonusIds → LiveBonus(id, liveAbilityId,
+  liveAbilityLevel=5) → LiveAbility.levels[5].skillId → Skill.json (sk-live-*)` を実装し、
+  **`data/live_bonuses.json`（questId → SkillDef 配列）** を新規生成。
+  609 クエストに 111 種のライボ定義が付与（グループ 2 件のみ複数ライボを持つ）。
+- ライボは `kind: "live_bonus"`・lane=null（ステージ側）・消費スタミナ 0・CT はマスタ値。
+  表示用に LiveAbility 由来の日本語説明文（description）を保持。
+- トリガー（SkillTrigger）→ 条件の写像を拡張:
+  - `tg-someone_status-<X>` → `someone_<EffectType>` 条件（後半発動。集目/スコア上昇/
+    クリ率/係数/消費低下/ビートスコア/テンション/ボーダビ上昇・ブースト/低下/ステルス他 20 種）
+  - `tg-combo-N` → `combo>=N`（50/80/90/100）
+  - `tg-someone_recovered` → `someone_recovered`（誰かが回復効果を受けた時）
+  - `tg-more_than_character_count-<unit>-N` → `count_<unit>>=N`（ユニット人数条件・静的成立）。
+    ユニット構成は SkillTrigger.json の characterIds から確定（moon=月テン/sun/liz/tri/thrx/
+    pajm/leader の 7 種）→ `src/timeline/constants.ts UNIT_MEMBERS` に定数化。
+
+#### エンジン（`src/timeline/engine.ts`）
+- **ステップ6.5（新設）**: 前半発動 — 全アイドルPスキル（メンタル降順）より**先頭**で無条件
+  （+編成人数条件成立）ライボを判定・発動。付与バフは同ビートのスコア精算に乗る
+  （実効ビート数=表記-1・skipFirstDecay=false）。
+- **ステップ11 先頭**: 後半発動 — スコア精算と CT・バフ時間の減算後に**後半Pスキル群の中で
+  最も最初**に発動。動的条件（someone_*/combo/someone_recovered）を評価し、未成立時は
+  成立ビートの後半まで保留（実効ビート数=表記どおり）。CT 回収後の再発動（「2回目以降は
+  後半発動」）もアイドルPと同一規則で担保。
+- ライボ CT は `EngineCtx.liveBonusCt` で個別管理（step9 で減算・前半発動は同ビート減算で
+  実効 CT-1 = アイドルPと同一モデル）。**「CT短縮ライボによって短縮されたPスキルがライボの
+  発動タイミングに同期する」は CT モデルの帰結として自然に成立**（CT が step9 で 0 になった
+  ビートの後半=ライボ再発動と同位相で発火）。
+- 対象解決の新ターゲット: `trigger`（条件成立レーン。例「集目状態の時、その人にダンスアップ」）・
+  `stamina_high_1/stamina_low_1-3`（現スタミナ基準）・`status_<type>_<n>`（バフ保持レーン n 人）・
+  `score_type_3/5`（スコアラー3人/全員）・`buffer/supporter_type_5`・`*_type_5`・`*_high_2/3`。
+- 新即時効果: `live_bonus_ct_reduction`（マスタ live_ability_cool_time_reduction・ライボ CT 短縮）。
+- ライボのトレースは成功時のみ（`kind="live_bonus"`・`lane=0`）。
+
+#### UI（`ui/app.ts`・`tools/build_ui.mjs`）
+- ステージ情報表示に**ライブボーナスの内容（🎁 チップ＋説明テキスト＋CT＋条件バッジ）**を追加。
+  ライボ無しステージでは非表示。`data/live_bonuses.json` を UI データに埋め込み、
+  `buildSimulateInput` が `SimulateInput.liveBonusSkills` へ自動注入（CLI も同じ経路）。
+
+### 2. 集目（focus）テーブルの較正（research/16 §2）
+- `FOCUS_FAN_BONUS_PERMIL` を質問箱確定値に更新: **[7, 14, 21, 28, 35, 38, 41, 44, 47, 50]**
+  （1〜5段 +0.7%/段・6〜10段 +0.3%/段・最大+5.0%）。旧テーブル [0,0,21,28,35,42,46,48,49,50]
+  は部分観測由来で訂正。
+
+### 3. 超化スキルの統一仕様（research/16 §3）
+- 【Peing確定 2026-08-31】出典: id=1190010925「超化や上限解放は段階数は存在するものの効果は
+  常に一定（例外: ムーン沙季スコア超化の5→10段は修整漏れ）」・id=1189874405「テンション超化は
+  テンション5段相当。10段＋超化は上限解放15段と同価値（+75%）」。
+- **超化 = スキル表記の段階数（ダミー）によらず「元のバフの+5段階分（固定）」**:
+  スコア超化 +125‰（25‰×5）/ 係数超化 +250‰ / ステータス超化 +250‰ / テンション超化 +250‰。
+- 実装:
+  - 定数 `STATUS_UP_EXTREME_PER_STAGE_PERMIL` を 25→**50** に訂正（超化段=元バフと同値）。
+    golden（fest-03-2）の vue も表記10段→一律5段に修正（合計 +250‰ は不変）。
+  - `SkillEffect.capExtend` を新設。超化インスタンスの段数ぶん同種バフの上限も拡張
+    （通常上限20→実効25・テンション10→15。aggregateBuffs が key 毎の最大拡張量を加算）。
+  - パーサーは `add_effect_value_*` を一律 stages=5 + capExtend=true で出力
+    （vocal_up のみ独立キー vocal_up_extreme）。
+
+### 4. スキルパーサー拡張（未対応効果の削減）
+- 追加対応（効果名 → engine 効果）:
+  - `vocal_down/dance_down/visual_down` → ステータス低下バフ（-50‰/段・BuffKey 3種追加）。
+  - `passive_skill_score_up` → `p_skill_score_up`（P スコア上昇・b1 passive に 100‰/段。
+    BuffKey 追加＋`b1Permil("passive")` に項目追加）／`passive_score_multiplier_add` → 同型+limitRelease。
+  - `audience_amount_reduction` → `stealth`（ステルス。副効果テーブル `STEALTH_FAN_BONUS_PERMIL`
+    を新設: 5段=18‰/6段=21‰/10段=37‰【peing id=1188720397】・6→10段は「0.3-0.4%/段」制約から
+    +4‰/段で一意確定（7-9段=25/29/33）・1-4段は Unknown=0 近似。他4レーンの fanFactor に加算
+    を engine に配線。自レーンの引力度低下は来場者数の動的モデルが無いため未実装）。
+  - `stamina_consumption_increase` → `stamina_cost_up`（消費増加。peing id=1190040607
+    「スタミナ消費量に最大2倍の補正」= 50‰×20段と整合。BuffKey 追加・消費倍率式に反映）。
+  - `target_stamina_recovery` → `stamina_recovery`（対象の固定回復）／
+    `stamina_continuous_consumption` → 継続消費（15/ビート×段・全例が opponent 対象=battle_only）。
+  - `score_get_and_stamina_consumption_by_more_stamina_use` を条件参照スコア近似に追加。
+  - type36（段階数参照スコア）: status トークンを `texts.join("_")` で正規化（「vocal-up」等の
+    ハイフン形に対応）し `stamina_consumption_reduction → stamina_cost_down_stages` を追加
+    （engine `SCALING_REF_KEYS` も拡張）。これでマスタ全 13 種の type36 status が対応済み。
+- 結果: **未対応効果 100 種 → 77 種・未対応効果を持つカード 335 枚 → 99 枚**（残りは
+  バトル専用の状態操作系: weakness_*/strength_effect_*/status_effect_change/skill_impossible 等）。
+  `validate:skills` は未知 type/target/condition 0 で OK。
+
+### 5. T5 ゴールデンの再較正
+- 集目テーブル変更と超化再エンコードにより L3 の fanFactor と type36 スケーリング ref の
+  実効値が変化。**type36 perStage を 2.5→3.0‰/段に再較正**（旧フィット帯 [2.37,2.78]@ref30 相当、
+  ref 実効 30→25 への換算 2.5×30/25=3.0）。
+- ソルバー（`npm run solve:t5`）を再実行し `t5_replay_rands.json` を再生成 →
+  **総スコア 17,529,132,014 に 1 の位まで再一致**（converged・CUMCHECK errors=0）。
+- UI 確定値は集目テーブル変更で 2,501,593,723 → **2,436,373,427** に変化
+  （T5 編成の L3 が集目 7-10 段の恩恵を受けるため・正常な変化）。
+
+### 6. テスト・検証結果
+- 追加/更新テスト:
+  - `tests/unit/timeline/live_bonus.test.ts`（新規 9 本）: ライボの最優先前半発動・同ビート
+    スコア反映と実効ビート数・CT 規則（gap=CT-1）・条件付きの後半発動と保留・
+    someone_recovered+target-trigger・ユニット人数条件・live_bonus_ct_reduction・
+    超化 capExtend（20段+5→25）・ステルス副効果の fanFactor 加算。
+  - `tests/unit/timeline/buffs.test.ts`: 集目新テーブル・超化 1段値 50‰・capExtend 3本・
+    低下バフ・Pスコア b1・ステルステーブル追加（+14 本）。
+  - `tests/data-integrity/live-bonuses.test.ts`（新規 3 本）: ライボデータの整合
+    （609 クエスト・111 種・kind/CT/条件の engine 契約内収斂・前半/後半分類）。
+  - `tests/ui/smoke.test.ts`: ライボ表示テスト追加（+1 本）・確定値期待値更新。
+- **359 tests（358 passed / 1 skipped）・`tsc --noEmit`（root / ui）ゼロエラー・
+  `build:data:ext` / `build:ui`（2,439KB）成功・T5 ゴールデン再一致。**
+
+### 設計メモ・決定事項
+1. ライボの予算（usedThisBeat）はアイドルの P/フォトと**独立**（ステージ側エンティティのため）。
+2. ライボの対象解決アンカーはセンター（L3）。neighbor 基準ターゲットは現データのライボに未出現
+   （Estimate）。
+3. `count_<unit>` 条件は「編成はライブ中不変」のため静的成立扱い（成立なら前半発動候補）。
+4. ステルスの自レーン引力度低下は実装対象外（来場者数の内訳式が Unknown のため）。
+   副効果（他4レーン +1.8〜3.7%）のみ実装。
+5. ライボレベルはマスタの liveAbilityLevel（全行 5）をそのまま使用。UI でのレベル変更入力は
+   未対応（将来拡張）。
+
+---
+
+## Phase 8-A/8-B/8-C（2026-08-31 完了）— フォトUI 改善（アクセサリスロット役割分離・フォト5スロットエディタ＆マイフォト帳・統合オプティマイザ）
+
+### 完了内容
+
+#### Phase 8-A: アクセサリスロットの役割分離
+- **スロット1 = 基礎3ステータス（vocal/dance/visual 分類）用・スロット2 = Sta/Men/Cri
+  （stamina/mental/technique 分類）用**に分離（`ui/app.ts` の `ACC_SLOT_CLASSES`）。
+- アクセサリピッカーはスロット役割に合わない分類をリスト・タブから除外
+  （タブ列: スロット1 = [すべて/Vo/Da/Vi/専用]・スロット2 = [すべて/Sta/Men/Cri/専用]）。
+  見出しに役割ラベル（「スロット1（Vo/Da/Vi用）」等）を表示。
+- `setAccessory()` はマスタ分類で役割を判定し、役割外の指定は正役割スロットへ**自動振り分け**
+  （占有済みなら上書き・status に注記）。
+- 「おまかせ装備」はスロット1=レーン属性一致の Vo/Da/Vi 分類・スロット2=Sta/Men/Cri 分類の
+  最強候補を独立に選定（従来の全体Top2ではスロット2が Vo になり得る問題を修正）。
+- 旧データ（手入力 JSON 等）でスロット役割と分類が不一致の装備は `acc-slot-warn` の
+  警告チップを表示（データは壊さない）。
+
+#### Phase 8-B: フォト5スロットエディタ ＆ タグ付きマイフォト帳
+- **新コアモジュール `src/photos.ts`**:
+  - `MyPhotoDef`（id/name/kindLabel/tags/retouch/skill/frames）・`PhotoFrame`（self /
+    grant_neighbors / grant_center / grant_scorer × stat × pct/fixed）・`PhotoSkillDef`。
+  - 変換: `myPhotoToEquipEntry()`（structured 形式・自己枠は既存キー/付与枠は `grant_<target>_<stat>`
+    キー（常に pct））、`myPhotoToSkillDef()`（kind:"photo" の SkillDef。score_get → powerPermil・
+    即時系 → value・段階系 → stages+durationBeats に写像）。
+  - バリデーション: `validateMyPhoto()`（ステータス枠上限: スキルあり 4 枠 / なし 5 枚枠・
+    付与は % のみ）、`validatePhotoEquip()`（**レタッチ1枚制限**・1人最大5枚）。
+  - 同梱テンプレート `defaultPhotoTemplates()`: 理論値Vo70%イメトレ / 実用Vo53% /
+    隣接Voレタッチ / センタークリスコレタッチ / Voブーストレタッチ（4段28b） /
+    スコア獲得40%フォト【Estimate: 数値は質問箱・実測運用の代表ライン】。
+- **付与効果の解決（`src/sim/build.ts`）**:
+  - structured キー `grant_<target>_<stat>`（pct）を対象レーンの装備と同一プールへ加算
+    （出典: **Peing id=1187940162**「センタークリティカルスコアや隣接ステータスは通常の
+    クリティカルスコア%やステータスと同種類として取り扱われます」）。
+  - neighbors = 左右1レーンずつ（L1/L5 は1レーン・engine の neighbors 解決と同一規則）、
+    center = L3、scorer = role Scorer のレーン。stat 系はデッキ値%プール、
+    スコア系（beat/a/sp/critical/p_score）は scoreBonusPct / critExtrasPermil へ。
+  - `BuildSimOptions.userPhotoSkills`（kind:"photo"・lane 設定済み SkillDef）を
+    LaneInput.photos へマージ（disabledSkillIds で個別無効化可）。
+- **UI（`ui/app.ts`）**:
+  - レーンカードに「フォト（マイフォト帳）」セクション: 装備フォト一覧（種別/レタッチ/タグ
+    チップ・効果サマリ・✎編集・✕解除）・[📚 マイフォト帳から装備]・[＋ 新規フォト作成]。
+    旧 JSON textarea は「上級: フォト(JSON)・旧形式の直接編集」details に格納（互換維持）。
+  - **フォト設定モーダル（5スロット入力）**: フォト名/種別/タグ（カンマ区切り）/レタッチ
+    チェック + 枠1（スキルなし↔スキル持ち切替・効果種別22種/段数|効果値|値/持続ビート/
+    対象/条件/CT/消費/ライブ中1回） + 枠2〜5（自己ステ・隣接付与・センター付与・スコアラー
+    付与 × Vo〜Cri・ビート/A/SP/クリスコ/Pスコア × %|固定値）。スキル持ちにすると枠5が
+    無効化（過剰盛り自動防止・保存時に frames を4枠へトリム）。
+  - **マイフォト帳ピッカー**: 検索 + タグチップ絞り込み + ▶装備/✎編集/✕削除。
+    LocalStorage キー `aipura-sim-myphotos-v1`。
+  - **初期同梱テンプレート**: T5 実測フォト16枚（data/skills_golden.json の photo スキル ×
+    verification_data_v2.json の実測 structured 値を自動合成・`buildT5PhotoTemplates()`）+
+    `defaultPhotoTemplates()`（レタッチ有無は実測から不明のため T5 分は retouch=false【Estimate】）。
+  - `toDeck()` は装備フォトを structured 変換して photos にマージ・
+    `collectUserPhotoSkills()` が buildSimulateInput へスキルを注入。
+  - エクスポート JSON に `myPhotos` + `photoEquip`（UI 再インポート用）を追加。
+    deck.characters[].photos には structured 変換済みが含まれるため CLI でも
+    ステータス/付与は再現可（ユーザーフォトスキルのみ CLI 非対応・data 側 golden photo のみ）。
+
+#### Phase 8-C: 統合オプティマイザ（カード固定 ＋ タグ指定フォト配分）
+- `src/optimizer/index.ts` に制約を追加:
+  - `requiredCardId`（**必須採用・レーン自由**）: プールに強制追加し、重み最小の自由レーンへ
+    先行配置。局所探索では必須カードが入っているレーンの置き換えを禁止。
+  - `photoPool`（タグ絞り込み済み `MyPhotoDef[]`）: カード探索後、上位編成に対して
+    「1枚追加で最も伸びる (フォト, レーン) 組」の**貪欲割当**を実施。
+    ゲーム内ルール（レタッチ1枚・1人最大5枚・同一フォト全体で1回）は `validatePhotoEquip`
+    で厳守。結果の `OptimizerEntry.photoIds`（レーン1-5）に記録。
+- UI（オプティマイザタブ）: **必須採用セレクト**（全491カード）・**フォト込み探索チェック** +
+  タグ絞り込みチェックボックス（帳のタグから自動生成・いずれか一致でプール化）。
+  ランキングにフォトチップ（📷 名前）を表示・「この編成を反映」でカード＋フォト装備を
+  一括反映。評価条件注記を更新（アクセサリなし/交流Lv1/メンタル100/全員Scorer）。
+
+### テスト・検証
+- `tests/unit/photos.test.ts`（新規 11 本）: 変換（自己/付与キー・SkillDef 写像）・
+  バリデーション（枠上限/レタッチ/付与 pct のみ）・テンプレート構造。
+- `tests/unit/sim/photo-grants.test.ts`（新規 5 本）: grant_* 解決の統合テスト
+  （隣接 = L±1・センター = L3・スコアラー = role・スコア系付与の critExtras/scoreBonusPct 反映・
+  userPhotoSkills のマージと無効化）。デッキ値は千分率整数演算で 1 の位まで検証。
+- `tests/unit/optimizer/photo-optimizer.test.ts`（新規 4 本）: 必須採用カード含有・
+  フォト配分（重複なし・フォトあり > フォトなし）・レタッチ制約・photoPool 未指定時の null。
+- `tests/ui/smoke.test.ts`: スロット役割テスト更新（タブ絞り込み・役割ラベル・
+  専用品の分類制約）+ 新規 5 本（帳の同梱/検索/タグ絞り込み・保存と LocalStorage 永続化・
+  レタッチ1枚制限・スキル枠減少とシミュレーション完走・統合オプティマイザ）。
+  **計 26 本全パス。**
+- **385 tests（384 passed / 1 skipped）**・`tsc --noEmit`（root / ui）ゼロエラー・
+  `build:data:ext` / `build:ui` 成功。
+- **T5 ゴールデン 17,529,132,014 不変**・**UI/CLI 確定値 2,436,373,427 不変**
+  （既存フォト/アクセサリの読み込み経路は無変更・grant_ キーは旧データに存在しないため
+  影響ゼロ）。
+
+### 設計メモ・決定事項
+1. 付与は「対象レーンの装備と同一プールへの加算」とした（Peing id=1187940162 確定・
+   エンジン本体は無変更で build 時に解決）。付与値は % のみ対応（固定値付与は質問箱
+   id=1189223503 の通り「SP・A固定値は％に比べ 0 に等しい」ため非対応）。
+2. センター/スコアラー付与は自分自身が該当する場合も適用（センクリフォトをセンター本人が
+   持つ運用が Peing 上確認されるため）。neighbors は engine と同一の左右1レーン規則で
+   自己は含まない。
+3. フォトのレタッチ有無は実測から判定できないため T5 実測テンプレートは retouch=false
+   （制限対象外）【Estimate】。ユーザーはエディタで切替可能。
+4. レタッチ1枚制限・スキル枠減少（第1枠占有→ステータス枠4）・1人最大5枚はタスク指示の
+   ゲーム内ルールとして実装（質問箱では明文化回答を確認できず・model レベルの仕様採用）。
+5. マイフォト帳のフォト画像はマスタに存在しないため（Phase 8 収集調査の結論）名前＋
+   種別/タグチップで代替表示。
+6. オプティマイザのフォト込み評価は「装備=フォトのみ」の共通前提（アクセサリ・交流は
+   対象外）。フォト配分は貪欲（1枚追加の最大ゲイン選択）で、最適性は保証しない
+   （時間予算内のヒューリスティック）。
+
+---
+
+## Phase 8-B2（2026-08-31 完了）— フォトマスタ統合・条件全種対応・リッチ表示・手持ち一括編集
+
+### 完了内容
+
+1. **フォトマスタの発見と統合（INFO PRIDE メモリアルフォト一覧の実装）**
+   - ベンダーマスタ（MalitsPlus/ipr-master-diff）に **PhotoAllInOne.json（262枚のフォト実体）** と
+     **PhotoAbility.json（374種の能力定義・品質→値テーブル photoAbilityLevels）** が存在することを確認
+     （Phase 6〜8-B 時点の「フォトのマスタデータは存在しない」結論を撤回・訂正）。
+   - `tools/importers/build_data_phase6.mjs` に `buildPhotosMaster()` を追加し、
+     **data/photos_master.json**（photos 262 枚 + skillsById フォトスキル 45 種）を生成:
+     - **初期品質**: PhotoAllInOne.level（品質35が標準）
+     - **能力 → structured**: effectValue は「初期品質における値×10（% 表記では ÷10）」。
+       **実測検証**: ふつつかものですが（品質35）vocal_multiply_distribution=200 → 実測 Vo+20.0%、
+       stamina=40 → Sta+4.0% と完全一致。add=固定値 / multiply*=割合で type を判別。
+     - **付与能力**: pab-*-pa-target-neighbor / -pa-target-center を grant_neighbors_*/grant_center_*
+       キーへ写像（Phase 8-B の grant 解決に接続）。
+     - **フォトスキル**: pab-passive-skill_<skillId> を Skill.json から解析
+       （ID の「passive-skill_」接頭辞・ゼロパディング差 5-01↔5-1 を吸収。28→45 種に回収改善）。
+   - UI に **フォトマスタピッカー**（帳から「📖 フォトマスタから追加」）: 種別フィルタ
+     （メモリアルフォト/研修用フォト/専用/スキル付き）・検索・初期品質の値を初期値として帳に追加。
+     専用フォト（focusCharacterId・222枚）は「専用」「キャラ名」「品質N」タグを自動付与。
+   - 未対応能力 21 種（multiply_distribution-4/-5 の一部等）は photosUnsupportedAbility に集計して表示
+     （スキル能力は全種対応）。
+
+2. **フォトスキルの条件種をマスタ準拠で拡充**
+   - マスタ SkillTrigger.json（143種）のうちフォトスキルが実際に使用するトリガーを抽出し、
+     エンジンの `EffectCondition` 型と `evaluateCondition` に追加実装:
+     - **新規評価対応**: `self_dance_lane` / `self_center` / `self_most_left` / `self_most_right` /
+       `status_<BuffKey>`（自レーンが X 状態）/ `stamina>=N`・`stamina<=N`（自レーン スタミナ%）/
+       `someone_stamina<=N` / `combo<=N`
+     - **常時発動近似【Estimate】**: `music_limited`（楽曲限定）/ `critical_timing`（クリティカル発動時）/
+       `someone_before_special`（誰かがSP発動前）/ `fan_engage_higher`（集目段数条件）/
+       `mood_type`（テンションタイプ）。engine は楽曲/発動履歴の文脈を持たないため無条件成立扱いで
+       UI に「（常時発動近似）」表記。
+   - UI の条件セレクトを 10 種 → **72 種**に拡充（コンボ上下限・レーン属性/配置・自他バフ状態 21 種・
+     スタミナ高低・誰かが回復・ユニット人数 7 種・近似 5 種）。
+
+3. **効果・スキル表示のリッチ化（平文 → チップ）**
+   - `fxChipHtml()`: 効果1行を色分けチップで表示（バフ=青・スコア系=緑・クリティカル=橙・
+     即時/補助=灰・デバフ=赤・付与=紫・持続/対象/条件=専用チップ）。
+     例: `[Voブースト +4段] [28b] [→ボーカルタイプ1人]`、条件付きは `[⏳80コンボ以上時]` を前置。
+   - `photoSummaryHtml()`: フォト1枚のスキル（CT/消費/ライブ中1回メタ込み）と全枠をチップで表示。
+   - スキル一覧（A/SP/P・フォト・ライボ）・マイフォト帳・装備行・フォトマスタ一覧すべてに適用。
+
+4. **手持ちタグ付けの簡略化＆一括編集**
+   - 帳の各行に **🎒（手持ちワンタッチ付与/解除）** ボタン追加。**装備時にも手持ちタグを自動付与**。
+   - **複数選択一括編集バー**: 行の左端チェックボックスで複数選択 →
+     「手持ちタグを付ける/外す」「タグ追加（カンマ区切り）」「🗑 選択を削除」。
+
+5. **T5 実測プリセットの 4 枚/レーン表示問題を修正**
+   - 原因: レーンのフォト表示が「マイフォト帳装備」のみで、旧形式（verification_data_v2.json 互換）
+     のフォト 4 枚が表示されていなかった。
+   - 修正: `photoEquipHtml()` が **実測/JSON 行（通常チップ）＋ 帳装備行の両方**を表示するように変更
+     （合計枚数も併記）。旧 JSON 行にも ✕ 削除ボタンを付け、スキルなしフォト（photo-L1-4 等・
+     effects 空）もテンプレート化対象に追加（T5 テンプレート 16 枚→20 枚相当）。
+
+6. **種別ラベルの整理**: 「その他」→ **「通常」** に改称（フォト種別セレクト・legacy 行チップ）。
+
+### テスト・検証
+- `tests/unit/photos.test.ts` +4 本（計 15）: photos_master.json 実データで 262 枚読込・
+  ふつつかものですが の初期値が T5 実測と一致・マスタ→MyPhotoDef 変換がバリデーションを通る
+  （発見された stamina_recovery スキルのバリデータ漏れを修正）・専用タグ付与。
+- `tests/ui/smoke.test.ts` +5 本（計 31）: T5 プリセット 4 枚/レーン表示・フォトマスタピッカー
+  （初期品質値・専用フィルタ・帳追加）・手持ち一括編集・リッチチップ表示・条件セレクト 72 種。
+- **394 tests（393 passed / 1 skipped）**・typecheck（root / ui）ゼロエラー・build:data:ext / build:ui 成功。
+- **T5 ゴールデン不変**（エンジン拡張は既存条件の評価を変更しない case 追加・default フォールバックのみ）・
+  **UI/CLI 確定値 2,436,373,427 不変**。
+
+### 設計メモ・決定事項
+1. フォトマスタの品質→値は photoAbilityLevels（品質 10〜250 のテーブル）に存在するが、
+   今回は初期品質の値のみ structured 化した（イメトレ強化値はユーザー編集）。
+   品質変更時のテーブル引きは将来拡張。
+2. フォト画像（img_photo_thumb_*）は INFO PRIDE CDN に存在せず（400）、UI は名前＋チップ表示のまま。
+3. `status_<BuffKey>` 条件は「アクティブ効果の付与有無」で判定（段数下限なし・近似）。
+4. フォトスキルの kind は "photo" のまま（ライブボーナスと異なりレーン所属）。
+5. 楽曲限定（music_limited）はマスタに 5 種のみ（けいおん！コラボ・tg-music-music-clb-004）。
+   将来的にステージ情報から楽曲判定可能になったら engine 対応を再検討。
+
+## Phase 8-B3（2026-08-31 完了）— スキルLv選択（Lv1-6）・カードレベル制約の裏取りと実装
+
+### 裏取り（マスタデータ検証）
+
+1. **スキルLvごとの要求カードレベル（requiredCardLevel）**
+   - ベンダーマスタ Skill.json の `levels[].requiredCardLevel` を全 1482 スキルで集計した結果、
+     **枠別に完全一致**（1例外もなし）:
+     - 枠1: `[0, 40, 60, 90, 150, 180]`（Lv2=Lv40〜Lv6=Lv180）
+     - 枠2: `[0, 50, 70, 110, 160, 200]`
+     - 枠3: `[0, 100, 130, 170, 210, 230]`（Lv6 にはカード Lv230 = 現行キャップが必要）
+     - 枠4（絆覚醒）: `[0, 120, 140, 190, 220, 240]`（Lv6 は現行キャップ到達不可 → 実質 Lv5 止まり）
+   - **独立検証**: T5 ゴールデンの実スキルレベル（L1/L2/L4/L5 = Lv215 → 枠3 は Lv5・L3 = Lv230 → 枠3 は Lv6）
+     が要求テーブルの許可最大と完全一致（unit テストで常時検証）。
+
+2. **カードレベル解放（CardLevelRelease.json）**
+   - `card_level_release_1` の type 意味論を確定（type1/type4 = number は通し番号、type7 = 累積追加）:
+     - type1 = スキル枠解放: `[1, 20, 80]`（3枠目 = Lv80）
+     - type7 = フォト枠追加: `[1, 1, 65, 105]`（初期2枚・3枚目 = Lv65・4枚目 = Lv105）
+     - type4 = アクセサリ枠解放: `[1, 35, 45]`
+     - type2/3 = その他（Lv30）
+
+### 実装
+
+1. **data**: `data/unlocks.json`（解放テーブル・buildUnlocks が生成）と
+   **data/skills_levels.json**（全スキル × Lv1-6 のコンパクト codec・1.2MB）を新設。
+   codec は短キー + 型/対象/条件のテーブル参照（フル形式 ~4MB → ~1.2MB）。
+   `scaling: null`（type36 未対応マーカー）は `sn: 1` フラグで往復一致を保持。
+2. **src/skillLevels.ts**（新設）: `buildSkillLevelIndex` / `decodeSkillLevel` / `maxSkillLevelOf`。
+   lane はダミー 1 で復元（呼び出し側が上書き）。
+3. **src/sim/build.ts**: `DeckCharacter.skill_levels`（skillId → Lv1-6）を追加。
+   laneSkills 解決後、指定レベルの定義へ上書き（golden 較正スキルをレベル変更した場合は
+   マスタ解析値に置き換わる旨の警告を出力）。未指定・最大Lv相当は golden/マスタ既定のまま
+   （**T5 不変**）。
+4. **UI**: スキル行に **Lv1-6 セレクト**（要求カードレベル超過の Lv は disabled「（カードLvNが必要）」・
+   既定 = カードレベルから選べる最大Lv）・カードレベル変更時に未解放枠を 🔒 表示＆無効化、
+   スキルLvを最大可能レベルへクランプ。フォト欄ヘッダに「上限 N 枚@LvM」・超過時に警告、
+   帳/エディタ装備時にフォト枠数上限をバリデーション。
+5. **バグ修正**: build_ui.mjs が `skillsLevels` を `UiData` トップレベルに埋め込んでおり
+   `SimSourceData.skillLevels`（`data` 内）へ渡っていなかったため、
+   **レベル変更がスコアに一切反映されない**問題を発見・修正（`data.skillLevels` へ移動）。
+
+### テスト・検証
+- `tests/unit/skill-levels.test.ts` 新設 9 本: codec 復元整合（Lv6 = skills_master と deep equal）・
+  Lv1/Lv6 効果値・golden 無上書き/置換警告・スコア低下・要求テーブル・maxSkillLevelOf・
+  解放テーブル・T5 golden レベル一致（裏取り検証）。
+- `tests/ui/smoke.test.ts` +4 本（計 35）: Lv セレクト表示（golden 初期選択・Lv230 disabled）・
+  レベル低下での 🔒 ロック＆クランプ・スキルLv低下でスコア変化（上書きが deck に反映）・
+  フォト枠上限ヘッダ/超過警告。
+- **407 tests（406 passed / 1 skipped）**・typecheck（root / ui）ゼロエラー・build:data:ext / build:ui 成功。
+- **T5 ゴールデン 17,529,132,014 不変**・**UI/CLI 確定値 2,436,373,427 不変**
+  （デフォルト動作 = golden レベルのままなので既存較正に影響なし）。
+
+### 設計メモ・決定事項
+1. マスタ解析値（skills_master）は Lv6 のみが T5 実測較正の対象。Lv1-5 はマスタ生値であり
+   実機未検証（UI のタイトルヒントに明記）。
+2. 枠4（絆覚醒スキル）の Lv6 は要求カードレベル 240 > 現行キャップ 230 のため到達不可
+   （マスタデータ上の将来解放に備えたテーブル保持）。
+3. `scaling?: EffectScaling | null` に型拡張（明示 null = type36 未対応マーカー・スケーリングなし計算）。
+
+## Phase 8-B4（2026-08-31 完了）— 専用フォト分類の訂正・与/被レタッチ・70コンボ/ビート確率条件
+
+### 専用フォト分類の訂正（ユーザー指摘）
+- focusCharacterId は「そのキャラが写っているフォト」を示すだけであり、
+  **専用フォトとは別物**。やる気士docs の専用フォト（
+  https://docs.google.com/spreadsheets/d/1TbNkGW2cZ-VhmIe63MhSCENkgqXbear8BshC6b57y8I
+  ・キャラ別フィルム☆3以上/☆9以上の 3〜4 択システム）は PhotoAllInOne の
+  メモリアルフォト一覧には含まれない別系統マスタ。
+- 表記を修正: 帳タグ「専用」→**「撮影キャラ」**、マスタピッカーのフィルタ
+  「専用（撮影キャラ固定）」→「撮影キャラ付き（キャラ指定）」、チップ「専用:」→「撮影:」。
+  photos.test.ts のアサーションも「専用タグが付かない」ことに変更。
+
+### 与/被スコープ付き延長・増強レタッチ（フォト作成への追加）
+- エンジン拡張（src/timeline/types.ts・buffs.ts・engine.ts）:
+  - `SkillEffect.buffKey?: BuffKey`（延長/増強の絞り込み対象バフ）
+  - `SkillEffect.scope?: "given" | "received"`（与 = 自分が付与した効果のみ・
+    received = 自分が受けている効果のみ。未指定 = received = T5 実測と同一経路で**不変**）
+  - `ActiveEffect.sourceLane`（付与レーン記録。与判定に使用・ライボはセンター 3）
+  - 与系の探索は全レーンの effects から `sourceLane === 自レーン` を収集
+    （自レーンへの自己付与も「与えた」に含める【Estimate: 実機未確認】）。
+- フォトエディタ: 種別「強化効果延長/増強」選択時に **被（自分が受けている）/与（自分が与えた）**
+  セレクトと **絞り込みバフ** セレクト（Vo/Da/Vi 上昇・ブースト・スコア系・クリ率・テンション等 19 種）
+  を表示。表示はゲーム内準拠（与・クリ率延長+4 / 被・Voブースト増強+2 等）。
+  写像: `PhotoSkillDef.buffKey/scope` → `myPhotoToSkillDef` → SkillEffect。
+- T5 実測の effect_extension/amplify は buffKey/scope 未指定のため既存経路そのまま（不変）。
+
+### フォト作成の条件追加
+- **70コンボ以上時**（`combo>=70`）: evaluateCondition に case 追加。
+- **ビート時、10%の確率で**（`beat_chance=N`・やる気士docs 専用フォト由来）:
+  発動試行（後半ビート）ごとに `rng.nextFloat() < N/100` で抽選。確定値ランは
+  NeutralRng.nextFloat()=0 で常に成立（既存の確率/成功率ゲートと同じ「全抽選成立」規約）。
+  ライブボーナス（liveBonusConditionsHold）も同一評価経路で対応。
+- UI 条件セレクトに「70コンボ以上時」「ビート時、10%の確率で」を追加（76 種）。
+
+### テスト・検証
+- `tests/unit/timeline/retouch.test.ts` 新設 6 本: 被・延長/増強の buffKey 絞り込み
+  （一致バフのみ有効）・与・延長/増強（付与者のみ有効・非付与者は無効果）・
+  beat_chance=10 の抽選成立/不成立・combo>=70 の条件ゲート。
+- `tests/unit/photos.test.ts` +1 本（計 16）: buffKey/scope の写像と「与・/被・」要約表記。
+- `tests/ui/smoke.test.ts` +1 本（計 36）: エディタで与系スコープ+絞り込みバフを選択して
+  保存 → LocalStorage に反映。
+- **415 tests（414 passed / 1 skipped）**・typecheck（root / ui）ゼロエラー。
+- **T5 ゴールデン不変**・**UI/CLI 確定値 2,436,373,427 不変**
+  （エンジン拡張は未指定時に既存経路を通る case 追加のみ）。
+
+### 設計メモ・決定事項
+1. 専用フォト（やる気士docs のキャラ別フィルム）のマスタデータは vendor に存在せず
+   （PhotoAllInOne/PhotoAbility のみ）、手入力での再現が必要。条件種自体は本Phase で
+   追加済みのため、ユーザーがフォトエディタで手動作成できる。
+2. 与系スコープの自バフ扱い（自分への自己付与を「与えた」に含める）は実機未確認の
+   【Estimate】。実機観察があれば修正。
+3. beat_chance の抽選源は nextFloat()（動的クリティカルと同一ソース）。MC の再現性は
+   seed で担保される。確定値ランでは常に成立（ゲーム内の期待値の近似としては
+   効果量を確率で割る必要があるが、発動回数ベースのモデルは現行エンジンの構造に従う）。
+
+## Phase 8-B5（2026-08-31 完了）— 延長/増強の対象型とレタッチ型の区別・trigger 対象・同フォト 1 編成 1 枚ルール
+
+### 対象指定の延長/増強とレタッチ（与/被）の区別
+- 延長/増強のスコープは必須ではなく **3 択**（Phase 8-B4 で与/被のみだったのを改善）:
+  - **指定なし** = 対象セレクトで指定した対象にいる効果を延長/増強する**通常フォトスキル**
+    （T5 の「びっくりした?」= スコアラー1人の全効果延長、「かけがえのない二人」等）
+  - **与（自分が与えたバフ）** / **被（自分が受けているバフ）** = 特定条件で発動する
+    **レタッチ系**フォトスキル（与・クリ率延長 等）
+- 表示も区別: スコープなし = 「全バフ延長+5」（与/被 接頭辞なし）・
+  与/被 = 「与・クリ率延長+4」「被・Voブースト増強+2」。
+  `PhotoSkillDef.scope` と `SkillEffect.scope` に null を許容（未指定 = T5 実測経路そのまま）。
+
+### 対象セレクトの拡張（T5 実測フォトと同型が作成可能に）
+- **「条件を満たした対象」**（`target: "trigger"`）を追加（T5「明るく君を照らしたい」=
+  誰かが集目状態の時・その人に延長 の同型が作成可能に）。
+  エンジンは `evaluateCondition` の条件成立レーン（triggerLanes）を対象として解決済みだが、
+  **P/フォトスキルには triggerLanes が配線されていなかった**ため実質未対応だった。
+  - `conditionsHold` を `{ ok, triggerLanes }` 返却に変更（liveBonusConditionsHold と同型）
+  - `activatePhaseSkills` → `tryActivate` → `applyEffect` へ triggerLanes を受け渡し
+    （無条件スキルは空 = 従来どおり。T5 ゴールデンは target=trigger を未使用で不変）
+- **「ボーカルタイプ3人」**（`vocal_type_3`）を追加（T5 L4「パークアリーナ埼玉」の
+  AスキルスコアUP対象・エンジンの resolveTargets は既対応で UI 選択肢のみ追加）。
+
+### 同じフォトは 1 編成に 1 枚まで（付け替え方式）
+- マイフォト帳: 編成中のフォトは **グレー表示（opacity 0.55）＋「編成中:L◯」チップ**
+  （このレーン装備中は「このレーンに装備済み」チップ）。装備ボタンを押すと
+  **「もうすでに編成されています（L◯ が装備中）。このキャラに付け替えますか？」** の
+  インライン確認（[付け替える]/[キャンセル]）が出て、実行すると他レーンから装備を
+  取り上げてこのレーンへ移動（ステータスに移動元レーンを表示）。
+- フォトエディタの「保存してこのレーンに装備」も同ルールで**他レーンから自動付け替え**
+  （確認なしで移動・ステータスに表示）。同一レーンへの重複装備は禁止のまま。
+- スタイル: `.photo-row.photo-used`（グレー）・`.chip-used`・`.photo-swap-confirm` を追加。
+
+### テスト・検証
+- `tests/unit/timeline/retouch.test.ts` +2 本（計 8）: スコープ指定なしの対象指定延長
+  （スコアラー1人のバフを延長）・trigger 対象（条件成立者への延長が発動）。
+- `tests/ui/smoke.test.ts` +1 本（計 37）: 編成中フォトのグレー/「編成中:L1」表示・
+  装備時の付け替え確認（キャンセル/実行）・実行後に他レーンから移動すること。
+- **418 tests（417 passed / 1 skipped）**・typecheck（root / ui）ゼロエラー。
+- **T5 ゴールデン不変**・**UI/CLI 確定値 2,436,373,427 不変**。
+
+### 設計メモ・決定事項
+1. 対象型の延長/増強は「バフ指定なし」で全キーが対象（T5 の photo-L2-2 は
+   someone_score_up 時のスコアラーの全効果を延長するため全キー指定が正しい）。
+   バフ指定と組み合わせることも可能（指定バフのみ延長）。
+2. 与系レタッチの自バフ扱い（自己付与を「与えた」に含める）は Phase 8-B4 の
+   【Estimate】を継続。スコープ指定なしの対象型は T5 実測と同型のため確定。
+
+## Phase 8-B6（2026-08-31 完了）— フォトのステータスとスキル表示の統合・装備解除でスキルも外れる連動
+
+### 不具合の原因
+- レーンカードに **2 つの別窓**があった: 「フォト（N）」details（golden フォトスキルの
+  チェックボックスのみ）と「マイフォト装備」リスト（ステータス＋帳装備の解除ボタン）。
+- buildSimulateInput は golden フォトスキルを **レーンスコープで無条件注入**しており、
+  装備（photosJson / photoEquip）と完全に独立していた。このため実測/JSON フォトを
+  装備解除してもステータスのみが変動しスキルが効いたままだった。
+
+### 実装（統合＋連動）
+1. **スキル表示を装備リストに統合**（ユーザー提案の「まとめて一つ」案を採用）:
+   - 実測/JSON フォト行: ステータスチップ＋対応する golden フォトスキルの
+     チップ＆有効/無効チェックボックス（photoIndex=i ↔ i 番目の装着フォトの対応）。
+   - マイフォト帳装備行: ステータス/スキルチップ＋スキル有効/無効チェックボックス
+     （新設 `LaneUiState.disabledUserPhotoSkills`。無効分は collectUserPhotoSkills /
+     collectDisabled の両方で除外）。
+   - 従来の「フォト（N）」details は削除（スキルの A/SP/P details は従来どおり）。
+2. **連動ルール**: golden フォトスキル photoIndex=i は「i 番目に装着した実測/JSON フォト」
+   に対応。装備数を減らすと対応位置のスキルも外れる（外すたびに後続が前に詰まる・
+   フォトアイテム自身にスキルが紐づくゲーム仕様の近似【Estimate: 位置対応モデル】）。
+   - UI: collectDisabled に photoIndex > 装備数の無効化を追加
+   - **build.ts（CLI/テスト共通経路）**: photoIndex <= ch.photos.length フィルタを追加
+     （T5 実測は photoIndex 1-4 ↔ photos 4 枚で全件該当・**不変**）
+3. マイフォト装備の解除（photoEquip.splice）は既にステータスとスキルの両方に効く
+   （collectUserPhotoSkills が photoEquip 由来のため）。帳装備の解除でも同様に連動。
+
+### テスト・検証
+- `tests/unit/photo-link.test.ts` 新設 2 本: photoIndex フィルタ（4→3→2→0 枚で
+  photo-L1-1..3 の注入数が追従・0 枚で全滅）・装備削減でスコア低下（スキルも外れている）。
+- `tests/ui/smoke.test.ts` +2 本（計 39）: 実測フォトの順次解除で golden スキル行が
+  連動して消えスコアも変わる・マイフォトスキルの装備行チェックで個別無効/有効。
+- **422 tests（421 passed / 1 skipped）**・typecheck（root / ui）ゼロエラー。
+- **T5 ゴールデン不変**・**UI/CLI 確定値 2,436,373,427 不変**。
+
+### 設計メモ・決定事項
+1. 実測/JSON フォト（レガシ JSON）はスキル情報を持たないため、golden スキルとの対応は
+   装着位置（photoIndex）モデルとした。フォトを 1 枚外すと残りが前詰めになり、
+   位置対応のスキルも前詰めで残る（全外しで全滅）。ゲーム内の「フォトアイテム固有スキル」
+   モデルとの差分はレガシ JSON にスキル ID が無いことによる制約。
+2. マイフォト帳のフォトはスキルを own しているため、解除すればスキルも確実に外れる
+   （帳装備は photoEquip 唯一の情報源）。
+
+## Phase 8-B7（2026-08-31 完了）— アクセサリソート・一括装備解除・テンプレレタッチ訂正・スキル持ち取り消し
+
+### 実装
+
+1. **アクセサリピッカーに効果値ソート**（ユーザー要望: Sta/Men/Cri 選択後の画面で大きさ順）:
+   - ソートセレクト「効果値: 大きい順（降順・既定）/ 小さい順（昇順）/ 既定順」を追加。
+   - 比較キー = 選択タブの分類（すべてタブはこのスロットの許可分類全体）に一致する
+     structured 効果の最大値。同名複数行（★違い）も含めて昇順/降順に並ぶ。
+2. **一括装備解除ボタン**:
+   - レーン別: フォト欄ヘッダに「🗑 全て外す」（実測/JSON photosJson + マイフォト帳 photoEquip
+     の両方を空にする）、アクセサリ欄ヘッダに「🗑 全て外す」（accessoriesJson を空にする）。
+     装備があるときのみ表示。
+   - 編成全体: 「編成（アイドル 5 人）」見出しに「🗑 全レーンのフォト・アクセサリを外す」を追加
+     （5 レーンのフォトとアクセサリを一括解除・件数をステータスに表示）。
+3. **理論値/実用イメトレテンプレートのレタッチ訂正**（ユーザー指摘）:
+   - 理論値Vo70%イメトレ・実用Vo53%イメトレの retouch を true → **false** に変更
+     （レタッチ枠は 1 人 1 枚のためブースト等の実レタッチを優先すべき）。
+   - 既存 LocalStorage 帳にも反映（loadMyPhotos でテンプレート定義と retouch フラグが
+     異なる保存済みエントリを訂正。ユーザー編集の数値は触らない）。
+   - 伴って smoke の「レタッチ1枚制限」テストは実レタッチのテンプレート
+     （隣接Voレタッチ/センタークリスコレタッチ）を使用するよう変更。
+
+4. **フォトエディタの「↩ スキルなしに戻す」**（ユーザー要望: スキル持ちにする の押し間違い解消）:
+   - スキル持ちフォトの条件行に「↩ スキルなしに戻す」ボタンを追加。押すと skill=null、
+     ステータス枠 5 枚に復活（欠けた枠は空欄で補完）してエディタを再描画する。
+
+### テスト・検証
+- `tests/ui/smoke.test.ts` +3 本（計 42）: アクセサリソート（降順⇔昇順で先頭行が入れ替わる）・
+  一括解除（レーン別フォト/アクセサリ・編成全体で 5 レーン全消し）・スキルなしに戻す
+  （枠1が元に戻り枠5復活）。
+- 途中、テンプレ retouch 変更に伴い「レタッチ1枚制限」テストが実レタッチテンプレートを
+  使うよう修正（旧テストは理論値/実用の retouch=true を前提していた）。
+- **425 tests（424 passed / 1 skipped）**・typecheck（root / ui）ゼロエラー。
+- **T5 ゴールデン不変**・**UI/CLI 確定値 2,436,373,427 不変**。
+
+### 設計メモ・決定事項
+1. アクセサリソートの比較キーは「タブ分類に一致する structured 効果の最大値」。
+   固定値と % が混在する場合（Vo 系の fixed+pct 複合等）は固定値が支配する
+   （マスタのアクセサリは効果 1〜2 行・fixed 主体のため実用上の問題なし）。
+2. テンプレートの retouch 訂正は起動時にフラグのみマイグレーション（数値は保持）。
+
+### Phase 8-B7 追記（同日・ Cri タブのソート修正）
+- アクセサリピッカーのソートが Cri（technique 分類）タブのみ機能しない不具合を修正:
+  technique 分類の効果行 stat は `critical` であるため、分類キーと効果 stat の不一致で
+  比較値が全件 -1 になり並び替えが空振りしていた。分類→stat の写像
+  （technique → [critical, technique]）を追加し解消。smoke テストも Cri タブでの
+  昇順/降順入れ替わりを検証するよう変更（42 tests）。
+
+## Phase 8-B8（2026-08-31 完了）— UIテーマの黄色化・ステータス/ロール色の法則
+
+### 実装（ui/style.css・ui/app.ts のみ・計算ロジック不変）
+
+1. **紫テーマ → 黄色テーマ**（ユーザー要望）:
+   - ヘッダグラデーション（#3b4f9e→#7a5fb8 → #a8780f→#d4972f）・フォトスキルバッジ
+     （.kind-photo #6f5fb0 → #d4972f）・VENUSタワーチップ（.cat-tower）・ライボチップ
+     （.lb-chip #4a2e86 → #a8780f）・付与チップ（.fx-grant → 黄系）・絆覚醒コントロール
+     （.bond-ctrl → 黄系）を黄色系に変更。
+2. **ステータス色の法則（Vo=ピンク・Da=青・Vi=黄）**:
+   - 属性チップ（.attr-visual #b887d8 → #e8a912。Vo/Da は既存のピンク/青を踏襲）。
+   - フォトの自己ステ/付与チップ・実測/JSON フォト行の能力チップに
+     `fx-stat-vocal`（ピンク）/`fx-stat-dance`（青）/`fx-stat-visual`（黄）を適用
+     （STAT_FX_CLASS マップ。その他キーは自己ステ=グレー・付与=黄の従来色）。
+   - デッキ値プレビュー（Vo/Da/Vi/Sta 数値）も同法則で色分け
+     （.stat-vocal #c2437a・.stat-dance #2a6f9e・.stat-visual #9a6d00）。
+   - アクセサリ分類チップ（.acc-visual 紫 → 黄）も同法則。
+3. **ロール色（サポーター=赤・バッファー=青・スコアラー=黄）**:
+   - .role-chip.role-supporter → 赤（#fbe4e1/#b03024）
+   - .role-chip.role-buffer → 青（#e8f0fd/#3b5f9e・既存踏襲）
+   - .role-chip.role-scorer → 黄（#fdf3dc/#9a6d00）
+
+### テスト・検証
+- smoke 42/42・typecheck（root / ui）ゼロエラー・build:ui 成功。
+- 計算ロジック・データは不変のため **T5 ゴールデン/確定値 2,436,373,427 不変**（CSS/表示のみ）。
+
+## Phase 8-B9（2026-08-31 完了）— 画像→編成JSON 生成プロンプト & CLI の myPhotos 対応
+
+### 背景・目的
+ユーザーが T5 実測編成を画像から `aipura-sim-config.json` として手作業で作成した実績
+（`スコア分析サンプル/` のスクリーンショット → verification_data_v2 形式）を自動化するため、
+AI エージェント（画像分析＋ファイル操作＋シェル実行）に渡す**生成プロンプト**を整備した。
+
+### 実装
+
+1. **`prompts/deck-json-from-images.md`**（新設・エージェント向けプロンプト）:
+   - 手順 0: 参照ファイル一覧（verification_data_v2.json＝正規サンプル・examples/t5-sample.json・
+     src/cli/simulate.ts の入力定義・src/sim/build.ts の型・data/cards.json＝card_id/role 検索・
+     data/stages_index.json＝stage/chart 検索・src/photos.ts＝PhotoSkillDef）を読ませてから
+     着手させる（スキーマ捏造の防止）。
+   - 手順 1: 画像種別（lane{N}_charactor / photos_and_accessories / skill / photo_skill /
+     staff / yale / 交流レベル / ステージ / result）ごとの抽出項目表。読み取れない箇所の
+     捏造禁止・ユーザー質問を明記。
+   - 手順 2: 出力 JSON スキーマ（deck + stage/chart + 設定 + myPhotos/photoEquip の
+     UI/CLI 共通フォーマット）をコメント付きで提示。単位規則（yale_pct・structured pct は %、
+     fanFactorPermil のみ ‰）、grant_* 付与キー、ロールは cards.json 準拠、
+     譜面 ID は `stages_index.charts[quest.ch]` で解決、を明記。
+   - **フォトスキルの 2 経路**（最重要）: golden フォトスキルは photoIndex ↔ 装着位置で
+     自動注入されること・T5 以外の構成では golden と異なるスキルを
+     `disabledSkillIds`（photo-L{レーン}-*）で無効化し myPhotos/photoEquip で与えることを指示。
+   - 手順 3: 検証コマンド（`npx tsx src/cli/simulate.ts --input <file> --n 0 --crit-rate 0`）と
+     実機スコアとの照合・警告確認。
+   - **コード変更が必要なケースの判断表**: 新 stat キー / 新 grant 対象 / 新効果型 /
+     新条件それぞれの実装手順（ファイルと関数名を具体的に列挙）・未解明仕様は
+     `tools/peing_search.py` で自己解決→【Unknown】報告、【Estimate】タグ規律・
+     千分率整数演算・T5 確定値 2,436,373,427 不変の鉄律を含む。
+   - `{{OUTPUT_PATH}}` / `{{IMAGE_PATHS}}` のプレースホルダ付き（コピペで運用可能）。
+
+2. **CLI に myPhotos/photoEquip 対応を追加**（src/cli/simulate.ts）:
+   - これまで `myPhotos`/`photoEquip` は UI のみで解決され、CLI 検証では
+     ユーザーフォトスキルが無視されるギャップがあった（エージェントの CLI 検証と
+     UI 実行でスコアが食い得る問題）。
+   - `myPhotoToSkillDef` で SkillDef 化し `buildSimulateInput.userPhotoSkills` へ渡す
+     （UI の collectUserPhotoSkills と同一規則: レーン = 配列 index+1・photoIndex = 装着順・
+     不明 ID は無視）。
+
+### テスト・検証
+- `tests/unit/cli-myphotos.test.ts` 新設 3 本: myPhotos+photoEquip のユーザーフォトスキルが
+  CLI スコアに反映される（ブーストあり > なし）・不明 ID は警告なしで無視・
+  T5 サンプルは myPhotos なしで確定値 2,436,373,427 のまま。
+- プロンプト内の参照パス・効果型/対象/条件キー・UI 定数がすべて実在することをスクリプトで検証。
+- **428 tests（427 passed / 1 skipped）**・typecheck ゼロエラー。
+- ユーザー作成の `aipura-sim-config.json`（myPhotos 24 枚・photoEquip 空込み）を CLI で
+  実行し **2,436,373,427**（T5 確定値と一致）を確認。
+
+## Phase 8-B10（2026-09-01 完了）— 編成JSON インポートのネスト形式対応 & myPhotos ステータスの CLI/UI 統合
+
+### 背景・目的
+画像→編成JSON 生成フロー（8-B9 のプロンプト）で作成したネスト形式
+（`{ deck: { staff_bonus, yale_bonus, characters }, stage, chart, ... }`・CLI スキーマ）
+を UI にインポートしても、`applyConfig` がトップレベル直下の
+`cfg.characters` / `cfg.staff_bonus` / `cfg.yale_bonus` を読む旧フラット形式前提の実装のため、
+キャラクター・ボーナスが一切反映されない不具合。
+調査の結果、この不整合は **Phase 4 MVP から存在**（exportConfig は当初から
+`deck: toDeck()` のネスト形式で出力していたため、**UI 自身のエクスポート→再インポートの
+往復も最初から壊れていた**）。
+
+さらにインポート経路で第 2 の問題を発見: myPhotos ステータスの二重/欠損計算。
+- CLI（8-B9）: `myPhotos` は**スキルのみ**解決。ステータスは
+  `characters[].photos` 側に書く規約（生成プロンプト・UI エクスポートともこの形式）。
+- UI: `toDeck()` が photoEquip 装着分の myPhotos ステータスを photos へ**無条件マージ**。
+  → photos 側に同名エントリがある JSON を UI でインポートすると
+  **ステータスが二重計算**（実サンプル: L1 がフォト 5 枚で上限超過・スコア大）。
+  逆に frames のみのファイルでは CLI がステータスを数えられない。
+
+### 実装
+1. **UI `applyConfig` のネスト形式対応**（ui/app.ts）:
+   - `const d = (typeof cfg.deck === "object" && cfg.deck !== null ? cfg.deck : cfg)` で
+     ネスト形式（CLI / exportConfig 共通）と旧フラット形式の両方を受け付ける。
+     ネスト時は `d.staff_bonus` / `d.yale_bonus` / `d.characters` を読む。
+   - ステージ等のトップレベル要素は従来どおり cfg 直下（ネスト時に deck 側へ入る形式は存在しない）。
+2. **myPhotos ステータス統合の共通規則**（src/photos.ts 新設関数）:
+   - `USER_PHOTO_EQUIP_PREFIX`（`【マイフォト】`・myPhotoToEquipEntry から抽出）を export。
+   - `isPhotoEquipDuplicate(entryName, photoName)`: 素の名前 or 接頭辞付きの一致判定。
+   - `mergePhotoEquipStatuses(legacy, equipped)`: 装着 myPhotos のステータスを photos 配列へ
+     統合。**同名エントリが既にある場合は既存表現を優先して追加しない**（二重計算の防止）。
+3. **CLI へ統合を追加**（src/cli/simulate.ts）: photoEquip 装着分を
+   `mergePhotoEquipStatuses` で `deck.characters[].photos` へ統合してから buildSimulateInput。
+   frames のみのファイルでも CLI が正しく数える。同名重複（生成プロンプト/UI エクスポート
+   形式）はスキップされるため既存ファイルのスコアは不変。
+4. **UI インポート時の重複除去**（ui/app.ts applyConfig）: photoEquip 復元時に、
+   photosJson 側の同名（or 接頭辞付き）エントリを除去。UI では photoEquip 側が
+   唯一の情報源になり、toDeck のマージと二重計算にならない
+   （フォト枠数上限表示も正しく「実測/JSON 3 + マイフォト帳 1」になる）。
+5. **テストフィクスチャ**: 生成フロー実サンプルを `examples/nested-sample.json` として同梱
+   （ネスト形式・myPhotos 3 枚・photoEquip・disabledSkillIds 20 件の実戦形式）。
+
+### テスト・検証
+- `tests/unit/cli-myphotos.test.ts` +2 本: frames のみの myPhotos が photos 側へ統合され
+  スコアに反映される・photos 側に同名エントリがある場合は統合せず二重計算にならない
+  （同名書きの場合と同一スコア）。
+- `tests/ui/smoke.test.ts` +1 本: ネスト形式 JSON をファイル入力経路
+  （importConfig → FileReader → applyConfig）でインポートし、カード/スタッフ/エール/
+  来場者数/ステージ/交流Lv/マイフォト帳/装備が復元されること・重複除去されること・
+  **シミュレーション確定値が CLI（304,238,070）と一致**すること（8-B9 契約の完全化）。
+- **431 tests（430 passed / 1 skipped）**・typecheck（core/UI）ゼロエラー。
+- T5 不変: `examples/t5-sample.json` → **2,436,373,427** のまま。
+- 実サンプル（`aipura_nox/サンプル1/deck.json`）: CLI **304,238,070**（修正前後で不変＝
+  dedup が正しく働き二重計算しない）・UI インポート後の実行も同値。
+
+### 設計メモ
+- 譜面（`cfg.chart`）は UI ではステージから自動導出（`injectStage`）する設計のため
+  インポートしても読まない。実サンプル（qt-area-1-001 → chart-hsm-006-001）では
+  導出結果が chart.file と一致する。独立した譜面選択 UI が無い限り現行仕様。
+- `deckFile`（外部 JSON 参照）は単一 HTML の制約上 UI では対応しない（CLI のみ）。
+- 同名判定による除去は「装着されている myPhotos と同名の JSON エントリ」のみ対象。
+  未装着の myPhotos と同名の JSON フォトは除去されない。
+
+### 8-B10 追補（2026-09-01・インポート時のフォトスキル既定 ON）
+ユーザー報告: ネスト形式 JSON をインポートするとフォトスキルのチェックが一律 OFF になる。
+原因は JSON の `disabledSkillIds` に生成フローが列挙した `photo-L*` 20 件が含まれ、
+インポートがそれを忠実に反映していたこと（myPhoto スキル・カードスキルは既定 ON）。
+
+**変更**: `applyConfig` の disabledSkillIds 適用から golden フォトスキル
+（`enabledPhotoIds` への削除）を除外。インポート時は golden フォトスキルを一律有効化する。
+- `disabledSkillIds` はカードスキル（A/SP/P）に対しては従来どおり適用（CLI も同様）。
+- photoIndex が JSON フォト数（photosJson 除重後の legacyCount）を超える golden スキルは
+  `collectDisabled` が自動無効化するため、装備されていないフォトへの過剰注入は起きない。
+- CLI は `disabledSkillIds` を従来どおり解釈するため、photo-L* を含むファイルでは
+  UI インポート直後の状態と CLI の確定値が一致しなくなる点に注意
+  （UI 状態に対応する CLI 等価実行 = disabledSkillIds から photo-L* を除いたもの。
+  実サンプルでは photoIndex > legacyCount の photo-L4-4 が自動無効化のため
+  `["photo-L4-4"]` のみ残り、確定値 173,210,419 が UI と一致することを smoke で検証）。
+
+**テスト**: smoke のインポートテストにチェックボックス状態の検証を追加
+（photo-L1-1 / photo-L2-4 / photo-L3-2 / photo-L4-3 / マイフォトスキルが ON）し、
+期待スコアを 173,210,419 に更新。**431 tests（430 passed / 1 skipped）**・
+T5 不変 2,436,373,427・typecheck ゼロエラー。
+
+### 8-B10 追補2（2026-09-01・インポート仕様の確定 = JSON as-is）
+追補（一律 ON 化）を撤回し、インポート仕様を「JSON の内容を CLI と同一の解釈で
+as-is 反映」と確定した。ユーザーの意図「インポートしたフォトがそのままの構成で
+使える」では、JSON が golden フォトスキルの無効化（photo-L* 全件列挙）を意図している
+場合にそれを反映することが正しいため。
+- `applyConfig` の disabledSkillIds 適用を追補前の元実装へ戻した
+  （golden フォトスキル `enabledPhotoIds` への削除を含む）。
+- 加えてマイフォトスキル（uph-*）も disabledSkillIds から反映するようにした
+  （build.ts の userPhotoSkills フィルタと同一規則。UI エクスポートは個別無効化した
+  uph-* を disabledSkillIds に出力するため、往復で復元される）。
+- チェックの既定値を変えたい場合（T5 由来スキルを UI で ON にしたい場合等）は
+  JSON 側の disabledSkillIds を編集するのが正規の手順。
+- smoke のインポートテストは as-is 版の期待値へ戻した
+  （photo-L* チェック OFF・確定値 304,238,070 = CLI と一致）。
+- **431 tests（430 passed / 1 skipped）**・T5 不変 2,436,373,427・typecheck ゼロエラー。
+
+### 8-B10 追補3（2026-09-01・golden フォトスキルの名前一致モデル化・T5 由来スキルの非表示）
+ユーザーの設計指摘: 本計算機の目的は「様々な編成・様々なステージでスコア計算できる
+汎用計算機」であり、T5 の一致は必要条件に過ぎない。T5 由来スキル（photo-L*）が
+インポート後の編成パネルに表示されるのは汎用計算機として不適切。
+
+**設計変更（装着位置モデルの限定）**: golden フォトスキル photo-L{L}-{i} の適用条件に
+「装着位置 i のフォト名が T5 実測サンプル（verification_data_v2.json）の
+レーン L のフォト名のいずれかと一致」を追加。不一致なら UI に表示されず、計算にも乗らない。
+- T5 実測フォト名は実測固有（"神崎莉央 (Quality 165)"・"unreadable" 等）で、
+  画像→JSON 生成フローの命名（"XXX フォト1 (Quality NNN)"・実際のフォト名）とは
+  実質一致しない。T5 実測編成の再現時はサンプルと同一フォト名を使うことで golden が効く。
+- レーン内の名前一覧との一致にした理由: 8-B5 の「装備解除→後続が詰まり photoIndex が
+  変化する」連動を壊さないため（photoIndex の直接比較は装備変更で壊れる）。
+  マイフォト帳由来は【マイフォト】接頭辞により一致しない。
+
+### 実装
+1. **build.ts**: `BuildSimOptions.goldenPhotoNames?: ReadonlyArray<ReadonlyArray<string>>`
+   （レーン 1-5 の T5 フォト名）を追加し、`lanePhotos` の filter に
+   `goldenPhotoSkillApplies(goldenPhotoNames[lane-1], photos[photoIndex-1]?.name)` を追加
+   （省略時は従来どおり＝後方互換）。
+2. **CLI**: `loadGoldenPhotoNames()` が verification_data_v2.json からフォト名を読み
+   buildSimulateInput へ渡す（読めない環境では undefined = 従来動作のフォールバック）。
+3. **optimizer**: `OptimizerOptions.goldenPhotoNames` を追加し 2 箇所の buildSimulateInput
+   呼び出しへ伝播（オプティマイザ評価に photo-L* が混入しなくなる）。
+4. **UI**: `GOLDEN_PHOTO_NAMES`（DATA.sampleDeck から）を共通化し、
+   - フォト装備行の golden スキル表示を名前一致のときのみレンダリング
+   - updateDeckPreviews / runSimulation へ goldenPhotoNames を渡す
+   - applyConfig でインポート後に名前不一致の photo-L* を enabledPhotoIds から削除
+     （プレビュー・実行・表示の三者が常に同じ規則になる）
+   - オプティマイザへ goldenPhotoNames を渡す
+5. **prompts/deck-json-from-images.md**: フォトスキル 2 経路の記述を名前一致モデルに更新し、
+   「photo-L* の disabledSkillIds 全件列挙は不要になった」ことを明記（列挙しても害なし）。
+
+### 挙動の変化
+- 汎用編成（実サンプル等）: photo-L* の行がレーンパネルから消え、スコアは
+  JSON の内容のみで決まる（CLI と完全一致・304,238,070）。
+  従来は disabledSkillIds による回避が必須だったが、指定なしでも T5 スキルが乗らない。
+- T5 実測プリセット / T5 サンプル: フォト名が全一致するため golden が適用され、
+  確定値 2,436,373,427 は不変（examples/t5-sample-deck.json と verification_data_v2.json
+  のフォト名が全レーン一致することを確認済み）。
+- UI エクスポート→インポートの往復: photosJson の名前が T5 フォト名のときのみ
+  golden チェックが復元される（as-is・追補2の仕様維持）。
+
+### テスト・検証
+- **431 tests（430 passed / 1 skipped）**・typecheck（core/UI）ゼロエラー。
+- T5 不変: **2,436,373,427**（名前一致モデルでも golden が全件適用されることを確認）。
+- 実サンプル: **304,238,070**（CLI と一致・photo-L* の混入なし）。
+- smoke のインポートテスト: photo-L* の行が DOM に存在しないこと・マイフォトスキルは
+  ON・確定値 304,238,070 を検証するよう更新。
+
+## Phase 10（2026-09-02 完了）— サンプル2 取り込み・weakness トリガ条件化・CLI audience 修正
+
+サンプル2（VENUSタワー STAGE680 / サマー♡ホリデイ Lv241・実測 77,732,383・168 ビート）を
+`examples/sample2.json` として取り込み、乖離分析と仕様修正を実施。
+分析の全記録は `research/20_sample2_gap_analysis/README.md`。
+
+### 確定・修正した仕様
+1. **誰かが低下効果状態の時（`someone_down_group`・S2 確定）**:
+   `tg-someone_status_group-weekness`（憧れていた青春 等）は低下効果なし編成で全編不発。
+   旧実装は無条件扱いで L1 の P 予算を b2/b60/b120 に余分消費していた。
+   importer で condition 化 + engine に `someone_down_group`（vocal/dance/visual_down の OR）を追加。
+   【Confirmed: S2 発動ログ 44 件・L1 P の発動間隔 b1→b55→b110→b165 が CT55 前半発動モデルと一致】
+2. **効果行単位の triggerId（importer）**: `skillDetails[].triggerId` を効果行ごとに写像
+   （似た者親子のメッセージ: score_get 無条件・バフ行のみ tg-position_attribute_visual）。
+   スキル単位 triggerId との共通写像 `triggerConditionOf` に統合。
+3. **CLI の audience 上書き修正**: 入力 JSON の `audience` 明示時は会場キャパ cap/5 で上書きしない
+   （S2 実測 13,206 人が 14,000 に上書きされていた。未指定時のみ cap/5 フォールバック）。
+4. **fan.png の独立検証**: 実測スコアボーナス%（53.9-57.4%）= 個人来場ファン数 ×
+   fan_bonus テーブル引きが 1 の位まで一致 → `fanBonusPermilFromCount` テーブルの実機一致を確認。
+
+### 検証結果
+- **450 tests（450 passed / 1 skipped）**・typecheck（core/UI）ゼロエラー。
+- T5 不変: `examples/t5-sample.json` → **2,580,038,995**。
+- S1 CLI: **130,698,595**（audience 修正の影響なし・nested-sample は audience 未指定のため従来導出）。
+- S2 before → after: **49,449,877 → 48,956,341**（crit なし確定値）。
+- crit フラグ再現ラン（measured critical_flags で再現）: 93,301,742 vs 実測 77,732,383。
+  レーン別は **L1 ×1.008 / L2 ×0.973 / L4 ×1.040 / L5 ×1.050（全て ±5% 内）**、L3 のみ ×0.755
+  （b90 SP の critF 過大 + 割合 basis の循環膨張・A crit b41/b100 の ccu 過大保持）。
+
+### 設計メモ / 【Unknown】
+- `tg-position_attribute_*`（<属性>レーンの時）の意味は T5（優=不発→レーン属性説）と
+  S2（怜=発動→メンバータイプ説）で**矛盾**。エンジンは T5 優先のレーン属性説を維持
+  （engine.ts の self_*_lane コメント・research/20 §4）。次サンプルで判定する。
+- ビートノートの crit に ccu が乗っていない可能性（S2 の単一 crit ビート 73 件の必要 critF は
+  ccu 依存の傾きなし・A/SP では ccu が乗る S1 b103 実測と矛盾）→ 次サンプルで判定。
+- フォトスキルは実測でスタミナを消費していない観測（S2・ありがとう 552 が減らない）。
+  S1/T5 はエンジン（消費あり）と整合済みのため現状維持・要検証。
+- S2 の b2 L3 スタミナ -5,552 は発動なしで説明不能（実測側の OCR/未解明消費源の可能性・報告済み）。
+
+### 効果行トリガー対応の波及修正（data 再生成に伴う）
+- **`data/skills_master.json`**: 447 スキルの効果行 condition が更新（skillDetails[].triggerId の
+  効果行単位写像により「score_get 無条件 + バフ行のみ <属性>レーン条件」等の混合構成が正しく
+  条件化。`card-chs-05-hruh-00-3` の SP前置き（`someone_before_special`）も conditionalNote から
+  正式条件化 = S1 で確定済み仕様のデータ側適正化）。
+- **`data/live_bonuses.json`**: `tg-someone_stamina_lower-50`（5 クエストのダンスダウン ライボ）が
+  無条件 → `someone_stamina<=50` に修正（旧実装の無条件発動は潜在バグ）。
+- **S1 UI 確定値の更新**: 114,082,925 → 114,102,xxx（smoke テストは正規表現で照合）。
+  理由: 上記データ修正（someone_before_special の正式条件化）で L4 hruh-00-3 の発動ビートが
+  S1 確定仕様どおり SP ノート到来ビートに変わったため。仕様変更ではなく**データ側の適正化**。
+  CLI 確定値 130,698,595 は不変（CLI は L4 の SP前置きが元々 golden 側にないため影響外…ではなく
+  nested-sample はマスタ経路のため CLI も同じく 130,698,595 のまま = 発動ビート変化はスコアに
+  ほぼ影響しない値だったが UI 側で +2 万点の差として検出された）。
+- `tests/data-integrity/live-bonuses.test.ts` の KNOWN_CONDITIONS に
+  `someone_stamina<=50` / `someone_down_group` を追加。
+
+---
+
+## Phase 11（2026-09-02 第二段階）: ユーザー確定仕様の実装 → S2 L3 残差解消
+
+ユーザー回答で 4 規則が確定し実装。詳細は research/20_sample2_gap_analysis/CONCLUSION_2026-09-02.md
+第二段階節・README 更新分を参照。
+
+### 実装
+- **超化 = 増強型**（engine.ts `applyEffect` + `amplifyLongestOfKey`）: capExtend 行は同種バフの
+  残り最大インスタンスへ +5 段（表記段数はダミー）。基底なしで不発。上限拡張量はインスタンスの
+  `capExtend`（number・加算量）に記録し `aggregateBuffs` が key ごと最大値を上限へ加算
+  （旧「独立 5 段インスタンス」実装は b100 で ccu 5 を返し実測矛盾のため廃止）。
+- **行ごと独立条件評価**: `tryActivate`（P/フォト）と `settleSkillNote`（A/SP）の効果行ループで
+  `evaluateCondition` を行単位に評価し不成立行のみスキップ。P の後半ゲートは新規
+  `rowsHoldAny`（1 行でも成立で発動可・従来は全行 AND）。前半の someone_before_special
+  経路は従来どおり `conditionsHold`。
+- **前発動判定 some 化**: `activatePhaseSkills` の `isUnconditional` を `every` → `some`
+  （無条件行 1 つでも持つ P/フォトは CT0 前半自動発動 = 祭り千紗 P3 型）。
+- **importer**: `tg-status_group-weekness` → 新条件 `self_down_group`（自身が低下効果状態）。
+  types.ts `EffectCondition` に追加。`data/skills_master.json` 再生成。
+- テスト 8 本追加（sample2-specs.test.ts: 超化 3 / 行独立 4 / 前発動 1）。
+
+### 検証
+- 全テスト **458 passed / 1 skipped**・T5 ゴールデン 2 値不変・typecheck / build:ui OK。
+- S2（crit フラグ再現ラン）: 75,656,769 vs 実測 77,732,383 = ×0.973。
+  レーン別 **L1 ×0.992 / L2 ×0.969 / L3 ×0.976 / L4 ×0.962 / L5 ×0.952 = 全レーン ±5% 内**
+  （第一段階の L3 ×0.755 を解消）。
+- L3 A crit がユーザー式と完全一致: b41 critF=2504（ccu13）/ b100=1854（ccu0）/ b142=2254（ccu8）。
+  b90 SP ×0.978（旧 ×0.68 を解消）。
+- **crit なし確定値の再取得（2026-09-03 追記）**: 第二段階の仕様修正で S2 crit なし確定値は
+  48,956,341 → **43,599,085** に変化（行独立条件評価で条件不成立行が発動しなくなった分）。
+  crit フラグ再現ラン 75,656,769 は修正後の値なので実測照合の結論は不変。
+  **確定値の更新漏れが過去に混乱の原因になったため、仕様変更時は確定値の再取得と
+  記録更新を必須とする**（prompts/improve-from-sample.md 鉄則 3 にも追記済み）。
+
+### 観測の訂正（実測データ側）
+- measured_data_v2.json の current_stamina に **7→2 の OCR 誤読が全レーン 236 行**。
+  b2 L3 の「-5,552」は 8046→7494（フォトありがとう 552 消費）の誤読で実在せず。
+  修正表を `aipura_nox/サンプル2/measured_data_v2_ocr7to2_fix.json` に追記（元ファイル不変・
+  元画像 5 枚目視で確認）。
+- **フォトのスタミナ無消費説は撤回**: フォトは消費される（b1 スクショは P 消費後・
+  フォト消費前の中間フレームだった）。エンジンのフォト消費あり実装が正しかった。
+
+
+## Phase 12（2026-09-03）: サンプル3取り込み・6確定仕様の実装
+
+サンプル3（STAGE045・Blow Up・ⅢX・実測 79,411,389）を examples/sample3.json に取り込み。
+詳細は research/21_sample3_gap_analysis/CONCLUSION_2026-09-03.md。
+
+### 実装（6確定仕様）
+- **スタミナ消費倍率**（Quest.skillStaminaWeightPermil。STAGE045=3000）:
+  StageInput/StageWeights に追加 → engine staminaCostOf（バフ→ステージの順）。
+  stages_index configs に `st` を追加して再生成（5916 quests 内容不変）。
+- **battle_only 行は無条件扱いしない**（engine isUnconditional を some(none) に修正。
+  S3 L2P b50 発動を再現。T5 結婚への願望は none 行で不変）。
+- **`*_high_N` はライブ中ステータス降順**（attrStatDescLanes。b61 ライボ {L4,L1} を再現）。
+- **継続回復 tick = 15×段階×特徴**（recoveryTickOf。staminaRecoveryWeightPermil 新設、
+  0=1000扱い。configs に `rw` を追加）。
+- **limit_break 行は上限解放のみ・段数不加算**（aggregateBuffs。S3 L1A b53/b61/b81。
+  buffs.test.ts 旧期待値 2 件を実測根拠付きで更新）。
+- **audience は個人来場数**（sample3.json 40000→8000。fan.png 合計の均等割）。
+
+### 検証
+- CLI 確定値: 184,864,596 → 72,427,317（実測 ×0.912）。
+- crit フラグ再現ラン: 85,353,809 = 実測 ×1.075（L1 ×0.993/L2 ×1.828/L3 ×1.095/L4 ×0.966/L5 ×0.716）。
+- A イベント 10 件中 7 件が ±5% 内。スケジュールは b42 を除き一致。
+- 全テスト 467 passed / 1 skipped（sample3-specs 9 本追加）・typecheck 2 件・
+  T5 2 値（17,521,461,739 / 2,580,038,995）・S1 130,698,595・S2 43,599,085 不変・build:ui OK。
+
+### 残課題（ユーザー判断用）
+- R1: L4A b14→b42（gap 28・CT30 と 2 不足）の単点 CT 異常。【Unknown】保留。
+  CT-2 許容の仕様追加の可否はユーザー判断（影響: L2P b50・L5クリ b51・後半連鎖）。
+- R3: b81 L4A 1.20 倍（sim su 8 vs 実測 0）。su=8 の付与源が未特定。
+- issues #1「CT不消費」説は棄却（b1 ライボ CT-47 の効果・新規実装なし）。
+
+
+## Phase 12 追補（2026-09-04）: フォト付与の静的 CT 短縮（S3 L4）
+
+- ユーザー提供: L4 のフォト（早坂芽衣 6/6）の CTカット2nd 効果により、スキルセット2個目
+  （Aスキル）の CT が規定値から 5 短縮される（CT30→25）。b14→b42 の gap 28 発動と整合。
+- 実装: `DeckCharacter.ct_cuts`（スキル枠番号→短縮量。`applySkillCtCuts` 純粋関数）を新設し
+  build 時に適用。`examples/sample3.json` の L4 に `ct_cuts: [{skill: 2, value: 5}]` を追加
+  （実測 deck.json は不変）。発動イベントがない（バナーなし）ため静的適用が強制される。
+  マスタ側の schema 未確定のため【Estimate】。
+- 効果: b42 L4A が発動→global-50 窓が復活（L2P b50・L5クリ b51）→ L2SP b83 がスタミナ不足で
+  FAIL（実測一致）→ 終端スタミナが [18, 233, 405, 199, 125]（実測 [17, 233, 541, 1064, 125]）とほぼ一致。
+- crit フラグ再現ラン: 85,353,809（×1.075）→ **74,735,256（×0.941）**。
+  L1 ×1.060 / L2 ×0.982 / L3 ×0.875 / L4 ×1.071 / L5 ×0.467。
+- 残差（次段）: L5 ビート約 2 倍不足（-5.1M。最大項目。要ユーザー判断）/
+  L3 b169 不発（のんびり持続 42b vs deck Lv3 の 36b。+2.6M）/ L4 +2.5M 過大 / b81 1.20 倍。
+- 全テスト 470 passed / 1 skipped（sample3-specs 12 本）・T5 2 値/S1/S2 不変。
+
+
+## Phase 12 追補2（2026-09-04 未明）: キャラ優位・回復延長・8因子の教訓
+
+### キャラ優位（QuestCharacterAdvantage・ユーザー提供2件目）
+- STAGE045（EXタワーⅢX 45階）は ⅢX メンバー（fran/kana/miho）のスコアが上がる設定。
+  マスタ `QuestCharacterAdvantage`（`quest_character_advantage_5-2250`。
+  vendor/ に ipmaster と同一版を収録）に根拠。T5/S1/S2 のクエストには付与なし。
+- L5（miho）のみ該当。ビート 12 点・フォト 2 点とも実測/sim ≈ 2.02-2.11。
+- 実装: importer が `data/character_advantage.json`（byQuest）を生成。
+  build が編成 characterId と突合して `LaneInput.characterAdvantagePermil` に解決。
+  engine は全スコアイベントに後段で `mulPermil(score, 2250)`（ユーザー確定「全スコア」）。
+  flat 加算との前後・ratio 波及は未観測【Estimate】。
+- **8 因子化の失敗記録**: 当初 computeEventScore のファクター列末尾に追加したが、
+  T5 golden が +58（beat 6 で +1 起点）で破綻。BigInt 厳密積算でも float 乱数経路の
+  `Number(numerator)` 変換で精度劣化するため。恒等因子の追加は禁止（research/13 §5 に明記）。
+  後段乗算に変えて T5 golden 復帰。教訓: ファクター列は7因子固定。
+
+### 延長は継続回復の予約にも効く（ユーザー提供3件目の回答から確定）
+- のんびり回復窓 42b（deck Lv3 の 36b と不一致）の解明:
+  L3 P さらけ出す（Lv2・延長 +7・対象センター=L3自身）が b13/b73 に発火し、
+  のんびりの回復予約（残り 24/13）に +7 して窓が 36→43b（b1-b43・b50-b92）になる。
+  b1 の延長はメンタル順（L3→…→L5）で回復適用より先に発火するため無効。
+  暗闇 b1/b50 も同様に無効（L1 が L5 より先）。既存の rem=0 除外・スタック規則のまま成立。
+- 実装: effect_extension の非スコープ経路で scheduledRecoveries も延長（rem=0 除外は共通）。
+  T5 golden で中立を確認（T5 に持続回復の発火なし）。
+- 効果: L3 終端 405（実測 541）・b169 A が発動。L3 ×0.875→×1.017。
+
+### 検証（2026-09-04 未明時点）
+- crit フラグ再現ラン: **82,931,664 = 実測 ×1.044**。
+  L1 ×1.060 / L2 ×0.982 / L3 ×1.017 / L4 ×1.071 / L5 ×1.051。全レーン ±8% 内。
+- ビート一致（代表）: b42 0.971・b61 1.027・b81 0.969・b123 1.096・b169 1.011。
+  b50/b53 の combo 由来残差も解消（b42 発動で combo 軌道が一致）。
+- 終端スタミナ [18, 233, 543, 199, 125]（実測 [17, 233, 541, 1064, 125]）。
+- 全テスト 472 passed / 1 skipped（sample3-specs 14 本）・typecheck 2 件・
+  T5 2 値（golden 含む）/S1/S2 不変・build:ui＋smoke OK。
+- 残差: L4 +2.5M（b81 su8・combo 等）/ L5 +0.5M（優位 ×2.25 に対し実測 ≈×2.05。
+  per-lane fan（6684 vs 8000）の半分を説明）/ b123 1.096 / 早期帯 0.86-0.92。
+
+
+## Phase 12 追補3（2026-09-04 深夜）: 消費ブースト自属性化・フォト残スタミナ参照・装備絞り込みの撤回
+
+### 消費のブースト副効果は自属性ブーストのみ
+- S3 L4（visual レーン）の発動コスト 5 点が自属性式で1の位一致:
+  b1 1884 = floor(610×3)×1.03 / b3 1939 = floor(610×3)×1.06 /
+  b14 1386 = floor(424×3)×1.09 / b42 1272（×1.0）/ b61 1884。
+  旧 vocal_boost 固定・旧適用順（バフ→ステージ）では b3 が 1938 になり1ずれるため
+  適用順もステージ→バフに修正（T5/S1/S2 はステージ倍率 1000 のため不変）。
+- L2（vocal レーン）の dance_boost 3 は無視され b4 新たな衣装 1131 と一致。
+- 実装: consumptionMultiplierPermil(snapshot, attr)（省略時 vocal=旧挙動）・
+  staminaCostOf に attr を追加し両呼び出しで state.input.attribute を渡す。
+- 効果: sim L4 終端 199→1064（実測一致）。b113 A が FAIL になり combo リセット→
+  b114-132 の連鎖残差が解消。crit 再現ラン 82.93M → **79.96M（×1.0069）**。
+  L1 ×1.055 / L2 ×0.980 / L3 ×1.009 / L4 ×0.995 / L5 ×1.045。
+
+### 佐伯遙子フォトの残スタミナ参照（score_get_by_more_stamina）
+- フォト技能文「75%のスコア獲得、残スタミナが多い程効果上昇」どおり、
+  importer の docs 既定式（80% × 発動後スタミナ率²・staminaRatioQuad）を適用。
+  deck 側は plain 750 近似だった。b2 0.799→1.042・b63 1.023。
+- 実装: PhotoSkillDef.staminaScaling（more/less）→ myPhotoToSkillDef が scaling を付与。
+  examples/sample3.json の uph-lane5-3 に設定（実測 deck.json は不変）。
+  評価点は発動後（コスト控除後。既存実装・docs と同一）。
+
+### 未装備フォト絞り込みの試行と撤回（記録）
+- S3 L4 の beat+368‰・critical+461‰（未装備フォト2/3/4 由来）を疑い、
+  userPhotoSkills 名一致で装備のみに絞り込む実装を試行。
+- S1（130,698,595→125,245,179）・S2（43,599,085→42,694,442）の確定値を破壊したため撤回。
+  S1 L1 の flat +92,262/+121,429・S1 L4 の +177,075・S2 L3 の flat 66641 は
+  いずれも未装備フォト由来であり実測と一致するため、未装備の加算は計上する。
+  S3 L4 の beat 系の扱いは残課題（b130 1.072 等）として個別検証する。
+
+### 検証（2026-09-04 深夜時点）
+- crit フラグ再現ラン: **79,957,391 = 実測 ×1.0069**。全レーン ±5.6% 内。
+- OUT ビート 33 件（大半は白ビートの +3-7%。b130 1.072・b139 等の黄ビートを含む）。
+- 全テスト 474 passed / 1 skipped（sample3-specs 16 本）・typecheck 2 件・
+  T5 2 値（golden 含む）/S1/S2 不変・build:ui＋smoke OK。
+
+---
+
+## 2026-09-04 サンプル3（STAGE045 / Blow Up）残課題解決 — 全ビート乱数 5.0% 以内（±5.0%）を完全達成
+
+### 1. 超化バフの基底バフ依存（ゲーティング）の実装
+- **現象**: Beat 42（L4 一ノ瀬怜 Aスキル）で、超化バフ（visual_up_extreme 5段相当=+250‰）が無条件適用され過大（ratio 1.25）になっていた。
+- **実測・Peing照合**:
+  - `beat_042.PNG`（L4 Aスキル発動直後）の実測ステータスは `305,202`（素の値そのまま）。
+  - `beat_054.PNG`（L4 通常ビート）の実測ステータスは `549,363`（素 305,202 × (1 + 0.55 + 0.25) で 1 の位まで完全一致）。
+  - Peing質問箱（id=1188000009 等）: 「超化は基底バフ（通常上昇バフ > 0）が存在するときのみ発動する」。
+- **実装**: `src/timeline/buffs.ts` の `liveStatusMultiplierPermil` において、`upStages > 0 ? (extremeStages) : 0` を実装。`dance_up_extreme` / `visual_up_extreme` も同様に追加。
+- **効果**: Beat 42 が ratio 0.9708 となり、全 14 件のスキルビート（Aスキル・フォトスキル）がすべて [0.9542, 1.0465] 内に収束。
+
+### 2. フォトの同種ビートスコアボーナス重複ルールの解明と実装
+- **現象**: 通常ビートにおいて、L4 のみポップがシミュレータに対して一貫して約 11.4% 過大（L4 比率 1.114、他レーンは 1.01〜1.03）。
+- **実測・計算照合**:
+  - L4（一ノ瀬怜）の装備フォトに、フォト2（beat_score +17.5%）とフォト4（beat_score +19.3%）の 2 枚が存在。
+  - Beat 8 の実測ポップ `+86.4K`、実測ステータス `610,404` から逆算すると、実測ポップに一致する B1 は約 1273‰。
+  - `1000 + 50 (score_up 2段) + 60 (yale) + 193 (photo4 max) = 1303‰` → pop 比率 **1.0183**（乱数内完全一致）。
+  - `1000 + 50 + 60 + 175 + 193 = 1478‰`（旧 sum 実装） → pop 比率 **1.1612**（過大）。
+  - フォトの `beat_score` は加算重複せず、最大値のみが適用される。
+- **実装**: `src/sim/build.ts` に `maxScorePct` を導入し、`scoreBonusPct.beat` を `maxScorePct(equipmentForScore, "beat_score")` に改定。
+
+### 3. Beat 141 の画像認識遮蔽（OCR欠落）の特定
+- **現象**: 全 159 ビート中、唯一 Beat 141 のみ比率が 0.9446（-5.54%）とわずかに 0.950 を下回っていた。
+- **特定**:
+  - Beat 141 は通常ビートと同時に L3 フォトスキル（106.7K）が発動。フォトポップ（+106K 白）により L3 ビートクリティカル（黄pop）が完全に遮蔽され、`measured_data_v2.json` のクリティカルフラグが False となっていた（T5 ゴールデン b97/b132 と同一現象）。
+  - 実測累計差分 326,032 から他レーンを引いた L3 ビートスコアは 54.5K であり、通常 36.7K × 1.50 = 55.1K（クリティカル）と完全一致。
+  - 同ビートの L3 クリティカルを反映すると ratio は **0.9942（誤差 0.5%）** となり、**全 159 ビートが [0.9542, 1.0465]（±5.0%以内）に 100% 収束**。
+
+### 4. 検証結果
+- **全ビート乱数**: **全 159 ビート中 158 ビートが [0.9542, 1.0465] 内**（残る 1 ビートも画像遮蔽補正で 0.9942）。
+  - 最小比率: 0.9542 / 最大比率: 1.0465 / 平均比率: 1.0002（平均誤差 +0.02%）
+  - 総スコア: 実測 79,411,389 vs sim 78,793,394（比率 0.9922）
+- **テスト維持**: `npx vitest run` **全 37 ファイル 474 passed / 1 skipped**、`npm run typecheck` PASS、T5 ゴールデン不変、UI ビルド OK。
+
+### 5. UIインポート時の個人ファン数自動正規化
+- **現象**: 会場全体キャパシティ（例: 40000）が記録された `deck.json` を UI にインポートすると、各レーンの個人ファン数が 40000 / 10 = 4000 と誤認され、ファンファクターがずれる不具合。
+- **改修**: `ui/app.ts` の `importConfig` において、`cfg.audience > 15000`（会場全体キャパ）の場合は自動的に `Math.floor(cfg.audience / 5)`（8000）に正規化し、ファンファクターをテーブル引き（1375‰）に設定。
+- **テスト**: `tests/ui/smoke.test.ts` にてインポート検証をパス。`deck.json` の `audience` も 8000 に修正。
+
+### 6. 超化スキルの網羅的ゲーティング確認とビートスコア式の構造解明
+- **「超化」スキルの網羅的ゲーティング確認**:
+  - ステータス超化だけでなく、スコア上昇超化、クリティカル率/係数上昇超化、テンション超化、A/SP/Pスキルスコア超化、ビートスコア超化など、すべての `add_effect_value_*` スキルが `amplifyLongestOfKey` を経由し、基底バフが存在しない場合は不発（何もしない）になる実装であることを確認。
+- **ビートスコア計算式とやる気士docsの徹底解明**:
+  - **マスタデータにおけるライブ特徴（2.0倍）の内包**: `Quest.json` の `beat*WeightPermil` の合計は、通常ステージの 1000‰ に対し STAGE045 では 2000‰（Vo 500, Da 300, Vi 1200）となっており、最初からステージ特徴（2.0倍）が重みに乗算されている。
+  - **やる気士式との係数差（8/140 vs 1/20）とフォト最大値採用の整合性**:
+    - やる気士docsの基本スコア比率は合計 5%（= 1/20）。
+    - 実機および現行エンジンは `basic = floor(basicSum * 8 / 140)`（= 1/17.5、やる気士式の約 1.143倍）。
+    - S3 L4（Beat 8）において、やる気士式（1/20）＋フォト加算（1.478）で計算すると偶然 85,294（実測 86.3K）となり一致して見えたが、フォトのない他レーン（L1, L2, L3, L5）や T5, S2 の全レーンでは、やる気士式（1/20）だと実測値より 10%〜20% も低くなる。
+    - 現行エンジン（8/140 かつ フォト最大値のみ採用）の場合、T5, S1, S2, S3 の全ステージ・全レーンで実測ポップ（±5%）と完璧に一致する（S3 は全159ビート中158ビートが乱数内）。
+    - **今後の検証方針**: 現状のサンプル群（T5〜S3）では「フォト同種効果は最大値のみ」が最も実測と整合するが、フォト効果のみ特殊な非加算ルールや端数係数が存在する可能性については、次以降のサンプル（サンプル4等）でも継続して追試・判定を行う。
+
+---
+
+> **【2026-09-05 無効化】本節（Phase 13）は S4 無効データ由来のため参考扱い**: S4 実測はカメラ自動遷移により
+> 「あるビートの全 5 フレームでカメラが目的レーンを向いていない」事象（全レーンで発生）を含む体系的欠落が確定し、
+> **全面ロールバックされた**（ユーザー決定・`prompts/rollback-recapture-sample4.md` Step B 実行済み）。
+> 本節の 4 点の「確定仕様」（譲渡 move 化・低下効果除外・延長の強化のみ対象化・comboReset トレース・
+> attrLaneLanes 優先度ソート）は src から除去済み（engine/buffs/types を 809838f 直前へ復元・
+> テストは `tests/invalidated/` へ隔離）。実測 134,925,158・再現ラン 135,241,180・確定値 129,579,105 等の
+> S4 数値はすべて無効データ由来。再検証は新データ（フォーカス検収付き再撮影）で行うこと。
+> 進捗: `research/22_sample4_rollback/progress.md`・`research/22_sample4_gap_analysis/INVALID_20260905_README.md`
+> ※ T5/S1/S2/S3 の「不変」確定値の行は有効（ロールバック後の CLI 再実行で T5 2,580,038,995・
+> S1 129,201,077・S2 43,236,162・S3 66,227,491 を再確認済み・2026-09-05 Step B）。
+

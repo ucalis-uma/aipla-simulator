@@ -1,0 +1,83 @@
+{
+ "summary": {
+  "generated": "2026-09-28",
+  "sample": "S2",
+  "purpose": "Phase 14-F（expiredThisBeat 復活）の単独寄与を、revival だけが異なる trace 2 本の全セル突合で確定させる（phase14f_revival_audit.md §6 手順 B）",
+  "inputs": {
+   "on_trace": {
+    "path": "research/20_sample2_gap_analysis/sim_trace_full.json",
+    "sha256": "ef80c4bb10d6b04c78f6ced3265217f67456d5e78538dee6e7e2204bc89fbee2",
+    "note": "revival ON（現行コミットのエンジンで再生成済み）"
+   },
+   "off_trace": {
+    "path": "C:\\Users\\umaro\\AppData\\Local\\Temp/p154_base/s2_off.json",
+    "sha256": "ef80c4bb10d6b04c78f6ced3265217f67456d5e78538dee6e7e2204bc89fbee2",
+    "note": "revival OFF（engine の満了退避 1 行を無効化して生成）"
+   },
+   "baseline_trace": {
+    "rev": "34c6ed7",
+    "path": "research/20_sample2_gap_analysis/sim_trace_full.json",
+    "sha256": "ef80c4bb10d6b04c78f6ced3265217f67456d5e78538dee6e7e2204bc89fbee2",
+    "note": "14-E/14-F 採用直前の最終コミット"
+   },
+   "measured": {
+    "path": "research/26_data_integrity/measured_data_s2_v3.json",
+    "beats": 168
+   },
+   "on_off_byte_identical": true
+  },
+  "space": {
+   "beats": 167,
+   "lanes": 5,
+   "buff_keys": 27,
+   "cells_compared_per_pair": 22545
+  },
+  "total_scores": {
+   "revival_on": {
+    "neutral": 43118707,
+    "replay": 74895810
+   },
+   "revival_off": {
+    "neutral": 43118707,
+    "replay": 74895810
+   },
+   "pre_14ef": {
+    "neutral": 43118707,
+    "replay": 74895810
+   },
+   "delta_14f_only_replay": 0
+  },
+  "structural_identity_revival_on_vs_off": {
+   "activation_diff_beats": 0,
+   "gained_diff_beats": 0,
+   "acts": [],
+   "gained": []
+  },
+  "cell_diffs": {
+   "A_14f_only": 0,
+   "B_pre_14ef_vs_on": 0,
+   "C_14e_only": 0,
+   "additivity": {
+    "A_14f_only": 0,
+    "B_14e_plus_14f": 0,
+    "C_14e_only": 0,
+    "B_equals_A_union_C": true,
+    "A_intersect_C": 0,
+    "in_B_but_neither_A_nor_C": 0
+   }
+  },
+  "14f_only_cells_measured_support": {},
+  "b136_window": {
+   "beats": [
+    132,
+    148
+   ],
+   "note": "15-1 で Step 11 非復活を確定した窓。この窓の差分が 14-E 由来か 14-F 由来かを切り分ける",
+   "combined_diff_cells": 0,
+   "revival_only_diff_cells": 0,
+   "cells": []
+  }
+ },
+ "revival_only_cells": [],
+ "combined_pre_14ef_vs_on": []
+}

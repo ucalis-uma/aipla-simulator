@@ -3,6 +3,11 @@
 作成: 2026-09-27（Phase 14-F 採用セッション）。次セッション（どのエージェントでも可）の
 手順書兼チェックリスト。作業開始前に AGENTS.md / PLAN.md / `research/12_implementation_log.md` 末尾（Phase 14-F）を読む。
 
+> **【2026-09-28 時点の進捗】15-1・15-2・15-3・15-4・15-5 は完了。残るは 15-6（S4 再撮影）のみ。**
+> 15-6 はライブチケット消費を伴う aipura_nox 側作業なので着手前に必ずユーザー確認を取る。
+> 15-4 の結果（Phase 14-F の単独寄与 = S1/S2/S3 で **0 セル**、T5 の 14 セルのみ）は
+> `research/26_data_integrity/phase14f_revival_audit.md` §5–§6 と本ファイル §15-4。
+
 ## 0. 現在の状態（出発点の確定値）
 
 | 項目 | 値 |
@@ -98,10 +103,38 @@ S3 `visual_up_extreme` L4 = 87件、S2 `sp_skill_score_up` L3 = 74件、S2 `PERS
 → **文書化して監査除外リストに入れる**か、エンジンで模倣するかの判断。除外する場合は
 `known_anomalies.json` 方式で黙示 skip を作らず明示する（PLAN.md §16 の規律）。
 
-### 15-4 Phase 14-F の S1 単独寄与の分離トレース
+### 15-4 Phase 14-F の S1 単独寄与の分離トレース ✅完了(2026-09-28)
+
 S2/S3 は HEAD/採用後でバフスナップショット差分 0セルを確認済み。S1 は HEAD でも b136 前後が
 消えているため、14-F 単独の寄与を単独トレースで示せていない（`phase14f_revival_audit.md` §6 手順 B）。
 → HEAD と 14-F 採用後で S1 のみ trace を突き合わせ、差分セルを全件列挙してメモ化。
+
+**【実施結果 2026-09-28】** HEAD の trace 同士では 14-E と混在して分離できないため、
+**revival だけを無効化したエンジンで S1 trace を作り直す**対照実験にした（`engine.ts` L248 の
+満了退避 1 行を `state.expiredThisBeat = [];` に置換 → 発火は T5 が旧値 17,516,522,572・
+t5-scores golden 4/4 で確認）。恒久スクリプト
+`research/26_data_integrity/audit_phase14f_s1_divergence.mjs`（再現手順は
+`phase14f_revival_audit.md` §6）で buffSnapshots 全空間を突合した結果:
+
+| 比較 | S1 | S2 | S3 |
+|---|---|---|---|
+| **14-F 単独の差分セル** | **0** | 0 | 0 |
+| 採用前（`34c6ed7`）↔ 現行（14-E+14-F） | 18 | 0 | 0 |
+| 加算性（現行差 = 14-E 差 ⊎ 14-F 差） | 成立（A∩C=0・漏れ 0） | 成立 | 成立 |
+
+- S1 の ON/OFF trace は **SHA-256 まで一致**（`6101c8c72dca…`）。スコア・発動系列・ビート別 gained も同一。
+- S1 の変化 18 セルは**全て 14-E 由来**で 18/18 が実測表示と一致。b136 窓（b132–b148）の
+  差分 8 セル（L1 vocal_up 3→0）も 14-E 由来、14-F 単独は 0 セル。
+- **訂正**: §3.4 の「14-F 単独の寄与は約 +0.22pt」は誤り（撤回）。S1 の一致率 94.50%→95.75% は
+  すべて 14-E と監査側の未観測セル除外。14-F の実データ上の寄与は **T5 の 14 セルだけ**。
+  独立の裏取り: 14-E 時点の一致分子 1623 が現行と同一（S1 trace は 14-E で確定し 14-F で不変）。
+- 成果物: `research/26_data_integrity/phase14f_{s1,s2,s3}_divergence_audit.json`、
+  メモ §5–§6（§4 の未決着 1 も解決としてクローズ）。
+- 検証: `npm run typecheck` 0エラー / `npx vitest run` **41 ファイル・504 passed / 1 skipped**（基準値どおり・
+  engine 無変更なので変化なし）/ `npx vitest run tests/ui` 43 passed / 常時比較（`dump_samples_trace.ts` 再実行で
+  `sim_trace_full.json` 3 件が差分ゼロ）も維持。監査 JSON は再生成しても `cells_total` と差分セル数が再現した
+  （S2 22,545・S3 22,815・どちらも 14-F 単独 0）。15-3 の監査結果も不変（S2 strict 89.76% / S3 91.73% /
+  T5 78.83%・いずれも adjusted 100%・residual 0）。
 
 ### 15-5 単一HTML UI の再ビルド ✅完了(2026-09-27)
 
@@ -137,13 +170,29 @@ python research/25_buff_audit/run_audit_v3.py               # ← 同上
 ```
 
 Phase 14-F の ON/OFF 比較をもう一度やる場合（15-1/15-4 で有用）:
-`research/26_data_integrity/phase14f_revival_audit.md` §6（OFF 版 trace の作り方と
-`audit_phase14f_divergence.mjs --off <OFF trace>` の実行例）。OFF 版 trace はリポジトリに置いていない。
+`research/26_data_integrity/phase14f_revival_audit.md` §6（revival OFF trace の作り方＝engine の
+満了退避 1 行を無効化 → T5 旧値で発火確認 → ダンプ → `git checkout` で復元、と
+恒久スクリプト `audit_phase14f_s1_divergence.mjs` の実行例）。OFF 版 trace は現行 trace と
+バイト一致のためリポジトリに置いていない（SHA-256 は監査 JSON の `inputs` に記録済み）。
 
 ## 3. 規律（過去に実際に失敗したこと）
 
 - **スコアが動いたことを口実に `rands` を再取得し直さない**。スコア差分はバフセルの符号・件数で
   説明できるはず（Phase 14-F 監査 §5-3 がその失敗教訓）。
+- **「差分 0 セル」は無効化の発火確認なしに報告しない**（15-4 の実失敗）。revival を止めたはずの
+  trace が実は ON だと差分は必ず 0 になり、実在しない寄与（§3.4 の「14-F 単独 +0.22pt」）を生んだ。
+  対照確認は T5 旧値 17,516,522,572 ＋ `t5-scores.golden.test.ts` 4/4 の 2 点セットで行う。
+- **「git 過去が途切れている」という思い込みに注意**: S1 の `sim_trace_full.json` は `34c6ed7` に
+  存在する（15-4 で baseline として使用）。本当の障害は「HEAD の trace に 14-E が既に乗っていて
+  14-F 単独の差分が見えない」ことで、engine を一時切り替えた対照 trace でのみ分離できる。
+- **ad-hoc な比較スクリプトは必ずコミットする**（`dump_full3/compare.mjs` は未コミットのまま消失し、
+  §3.4 の「S1 分岐 15 セル」が再現不能になった。15-4 の恒久スクリプト化が再構築）。
+- **対照実験の後は `engine`・`data`・`golden` を無変更に戻す**。`git status` に
+  `src/timeline/engine.ts`・`samples_trace*.json`・`data/*.json` が出ていないことを確認してから報告する
+  （OFF 版 trace を残置すると、後続セッションがそれを現行エンジン結果として流用する）。
+- **検証数はコミットメッセージか実測で裏取りする**（前セッション記録の「512 passed / 42 files」は
+  HEAD で再現不能。実測・コミット da187f3/0830d05 の記録とも **504 passed / 1 skipped・41 ファイル**で一致、
+  `tests/ui` は 43 passed）。
 - 推測実装には【Estimate】/【Unknown】。読めない値の捏造禁止（null + 注記）。
 - `aipura_nox/サンプル*/` の既存ファイルは変更・削除しない（修復は追記のみ）。
 - BWIKI 由来データの数値利用禁止（`research/03_data_sources.md`）。

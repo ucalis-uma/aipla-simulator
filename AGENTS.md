@@ -11,7 +11,8 @@
 | `PLAN.md` | 全体計画・フェーズ履歴 |
 | `workspace_map.html` | **作業環境の可視化マップ**（ブラウザで開く）。2ディレクトリ・5エージェントの全体像・データフロー図・セッション年表・フェーズ進捗・ディレクトリ詳細 |
 | `research/03_data_sources.md` | **ゲームデータの出典管理表**。どのデータをどこから取ってよいかはここが一次情報 |
-| `research/12_implementation_log.md` | 実装ログ（末尾 = 最新） |
+| `research/12_implementation_log.md` | 実装ログ（末尾 = 最新）。**Phase 13（2026-09-05）以降のみ**を保持 |
+| `research/12_implementation_log_archive_phase0-12.md` | 実装ログのアーカイブ（Phase 0〜12・2026-08-29〜09-04）。`research/12 §5` / `§7〜§9` / `Phase 3b` などの旧参照はここを指す |
 
 ## 作業環境の全体像（2ディレクトリ構成）
 

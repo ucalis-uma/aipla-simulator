@@ -1,0 +1,355 @@
+{
+ "summary": {
+  "generated": "2026-09-28",
+  "sample": "S1",
+  "purpose": "Phase 14-F（expiredThisBeat 復活）の単独寄与を、revival だけが異なる trace 2 本の全セル突合で確定させる（phase14f_revival_audit.md §6 手順 B）",
+  "inputs": {
+   "on_trace": {
+    "path": "research/17_sample1_gap_analysis/sim_trace_full.json",
+    "sha256": "6101c8c72dca2822c5d4ef59d726829bc3b94a630a600fa914416e52928fa6f4",
+    "note": "revival ON（現行コミットのエンジンで再生成済み）"
+   },
+   "off_trace": {
+    "path": "C:\\Users\\umaro\\AppData\\Local\\Temp/p154_base/s1_off.json",
+    "sha256": "6101c8c72dca2822c5d4ef59d726829bc3b94a630a600fa914416e52928fa6f4",
+    "note": "revival OFF（engine の満了退避 1 行を無効化して生成）"
+   },
+   "baseline_trace": {
+    "rev": "34c6ed7",
+    "path": "research/17_sample1_gap_analysis/sim_trace_full.json",
+    "sha256": "cf4ccb6296e727b13a6948fe31b3579b031a3aa7967e22fded21985e016abde1",
+    "note": "14-E/14-F 採用直前の最終コミット"
+   },
+   "measured": {
+    "path": "../aipura_nox/サンプル1/measured_data.json",
+    "beats": 177
+   },
+   "on_off_byte_identical": true
+  },
+  "space": {
+   "beats": 176,
+   "lanes": 5,
+   "buff_keys": 27,
+   "cells_compared_per_pair": 23760
+  },
+  "total_scores": {
+   "revival_on": {
+    "neutral": 57661616,
+    "replay": 116829040
+   },
+   "revival_off": {
+    "neutral": 57661616,
+    "replay": 116829040
+   },
+   "pre_14ef": {
+    "neutral": 57671105,
+    "replay": 116846821
+   },
+   "delta_14f_only_replay": 0
+  },
+  "structural_identity_revival_on_vs_off": {
+   "activation_diff_beats": 0,
+   "gained_diff_beats": 0,
+   "acts": [],
+   "gained": []
+  },
+  "cell_diffs": {
+   "A_14f_only": 0,
+   "B_pre_14ef_vs_on": 18,
+   "C_14e_only": 18,
+   "additivity": {
+    "A_14f_only": 0,
+    "B_14e_plus_14f": 18,
+    "C_14e_only": 18,
+    "B_equals_A_union_C": true,
+    "A_intersect_C": 0,
+    "in_B_but_neither_A_nor_C": 0
+   }
+  },
+  "14f_only_cells_measured_support": {},
+  "b136_window": {
+   "beats": [
+    132,
+    148
+   ],
+   "note": "15-1 で Step 11 非復活を確定した窓。この窓の差分が 14-E 由来か 14-F 由来かを切り分ける",
+   "combined_diff_cells": 8,
+   "revival_only_diff_cells": 0,
+   "cells": [
+    {
+     "beat": 136,
+     "lane": 1,
+     "buff": "vocal_up",
+     "sim_revival_off": 0,
+     "sim_revival_on": 0,
+     "sim_pre_14ef": 3,
+     "activations_same_beat_same_lane": []
+    },
+    {
+     "beat": 137,
+     "lane": 1,
+     "buff": "vocal_up",
+     "sim_revival_off": 0,
+     "sim_revival_on": 0,
+     "sim_pre_14ef": 3,
+     "activations_same_beat_same_lane": []
+    },
+    {
+     "beat": 138,
+     "lane": 1,
+     "buff": "vocal_up",
+     "sim_revival_off": 0,
+     "sim_revival_on": 0,
+     "sim_pre_14ef": 3,
+     "activations_same_beat_same_lane": []
+    },
+    {
+     "beat": 139,
+     "lane": 1,
+     "buff": "vocal_up",
+     "sim_revival_off": 0,
+     "sim_revival_on": 0,
+     "sim_pre_14ef": 3,
+     "activations_same_beat_same_lane": []
+    },
+    {
+     "beat": 140,
+     "lane": 1,
+     "buff": "vocal_up",
+     "sim_revival_off": 0,
+     "sim_revival_on": 0,
+     "sim_pre_14ef": 3,
+     "activations_same_beat_same_lane": []
+    },
+    {
+     "beat": 141,
+     "lane": 1,
+     "buff": "vocal_up",
+     "sim_revival_off": 0,
+     "sim_revival_on": 0,
+     "sim_pre_14ef": 3,
+     "activations_same_beat_same_lane": []
+    },
+    {
+     "beat": 142,
+     "lane": 1,
+     "buff": "vocal_up",
+     "sim_revival_off": 0,
+     "sim_revival_on": 0,
+     "sim_pre_14ef": 3,
+     "activations_same_beat_same_lane": []
+    },
+    {
+     "beat": 143,
+     "lane": 1,
+     "buff": "vocal_up",
+     "sim_revival_off": 0,
+     "sim_revival_on": 0,
+     "sim_pre_14ef": 3,
+     "activations_same_beat_same_lane": []
+    }
+   ]
+  }
+ },
+ "revival_only_cells": [],
+ "combined_pre_14ef_vs_on": [
+  {
+   "beat": 1,
+   "lane": 1,
+   "buff": "vocal_up",
+   "sim_pre_14ef": 0,
+   "sim_current": 3,
+   "revival_off": 3,
+   "measured_display": 3,
+   "attribution": "14-E",
+   "measured_agreement": "現行模型と一致"
+  },
+  {
+   "beat": 36,
+   "lane": 1,
+   "buff": "vocal_up",
+   "sim_pre_14ef": 3,
+   "sim_current": 0,
+   "revival_off": 0,
+   "measured_display": 0,
+   "attribution": "14-E",
+   "measured_agreement": "現行模型と一致"
+  },
+  {
+   "beat": 51,
+   "lane": 1,
+   "buff": "vocal_up",
+   "sim_pre_14ef": 0,
+   "sim_current": 3,
+   "revival_off": 3,
+   "measured_display": 3,
+   "attribution": "14-E",
+   "measured_agreement": "現行模型と一致"
+  },
+  {
+   "beat": 51,
+   "lane": 2,
+   "buff": "critical_rate_up",
+   "sim_pre_14ef": 5,
+   "sim_current": 6,
+   "revival_off": 6,
+   "measured_display": 6,
+   "attribution": "14-E",
+   "measured_agreement": "現行模型と一致"
+  },
+  {
+   "beat": 86,
+   "lane": 1,
+   "buff": "vocal_up",
+   "sim_pre_14ef": 3,
+   "sim_current": 0,
+   "revival_off": 0,
+   "measured_display": 0,
+   "attribution": "14-E",
+   "measured_agreement": "現行模型と一致"
+  },
+  {
+   "beat": 101,
+   "lane": 1,
+   "buff": "vocal_up",
+   "sim_pre_14ef": 0,
+   "sim_current": 3,
+   "revival_off": 3,
+   "measured_display": 3,
+   "attribution": "14-E",
+   "measured_agreement": "現行模型と一致"
+  },
+  {
+   "beat": 101,
+   "lane": 2,
+   "buff": "critical_rate_up",
+   "sim_pre_14ef": 5,
+   "sim_current": 6,
+   "revival_off": 6,
+   "measured_display": 6,
+   "attribution": "14-E",
+   "measured_agreement": "現行模型と一致"
+  },
+  {
+   "beat": 136,
+   "lane": 1,
+   "buff": "vocal_up",
+   "sim_pre_14ef": 3,
+   "sim_current": 0,
+   "revival_off": 0,
+   "measured_display": 0,
+   "attribution": "14-E",
+   "measured_agreement": "現行模型と一致"
+  },
+  {
+   "beat": 137,
+   "lane": 1,
+   "buff": "vocal_up",
+   "sim_pre_14ef": 3,
+   "sim_current": 0,
+   "revival_off": 0,
+   "measured_display": 0,
+   "attribution": "14-E",
+   "measured_agreement": "現行模型と一致"
+  },
+  {
+   "beat": 138,
+   "lane": 1,
+   "buff": "vocal_up",
+   "sim_pre_14ef": 3,
+   "sim_current": 0,
+   "revival_off": 0,
+   "measured_display": 0,
+   "attribution": "14-E",
+   "measured_agreement": "現行模型と一致"
+  },
+  {
+   "beat": 139,
+   "lane": 1,
+   "buff": "vocal_up",
+   "sim_pre_14ef": 3,
+   "sim_current": 0,
+   "revival_off": 0,
+   "measured_display": 0,
+   "attribution": "14-E",
+   "measured_agreement": "現行模型と一致"
+  },
+  {
+   "beat": 140,
+   "lane": 1,
+   "buff": "vocal_up",
+   "sim_pre_14ef": 3,
+   "sim_current": 0,
+   "revival_off": 0,
+   "measured_display": 0,
+   "attribution": "14-E",
+   "measured_agreement": "現行模型と一致"
+  },
+  {
+   "beat": 141,
+   "lane": 1,
+   "buff": "vocal_up",
+   "sim_pre_14ef": 3,
+   "sim_current": 0,
+   "revival_off": 0,
+   "measured_display": 0,
+   "attribution": "14-E",
+   "measured_agreement": "現行模型と一致"
+  },
+  {
+   "beat": 142,
+   "lane": 1,
+   "buff": "vocal_up",
+   "sim_pre_14ef": 3,
+   "sim_current": 0,
+   "revival_off": 0,
+   "measured_display": 0,
+   "attribution": "14-E",
+   "measured_agreement": "現行模型と一致"
+  },
+  {
+   "beat": 143,
+   "lane": 1,
+   "buff": "vocal_up",
+   "sim_pre_14ef": 3,
+   "sim_current": 0,
+   "revival_off": 0,
+   "measured_display": 0,
+   "attribution": "14-E",
+   "measured_agreement": "現行模型と一致"
+  },
+  {
+   "beat": 151,
+   "lane": 1,
+   "buff": "vocal_up",
+   "sim_pre_14ef": 0,
+   "sim_current": 3,
+   "revival_off": 3,
+   "measured_display": 3,
+   "attribution": "14-E",
+   "measured_agreement": "現行模型と一致"
+  },
+  {
+   "beat": 151,
+   "lane": 2,
+   "buff": "combo_score_up",
+   "sim_pre_14ef": 3,
+   "sim_current": 4,
+   "revival_off": 4,
+   "measured_display": 4,
+   "attribution": "14-E",
+   "measured_agreement": "現行模型と一致"
+  },
+  {
+   "beat": 151,
+   "lane": 2,
+   "buff": "critical_rate_up",
+   "sim_pre_14ef": 5,
+   "sim_current": 6,
+   "revival_off": 6,
+   "measured_display": 6,
+   "attribution": "14-E",
+   "measured_agreement": "現行模型と一致"
+  }
+ ]
+}
