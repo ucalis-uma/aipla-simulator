@@ -1,0 +1,12 @@
+audience 監査（cap/5 = ゲーム側の個人来場数上限・fan テーブル上限は audience 50,000 で 2000‰）
+
+  サンプル1       stage=qt-area-1-001         audience=  71000 fan=  2000‰ cap=   100 cap/5=    20 → NG: 目標スコア clear=71000 と同一（誤読）→ 20人に自動補正
+  サンプル2       stage=qt-tower-680          audience=  13206 fan=  1564‰ cap= 70000 cap/5= 14000 → OK
+  サンプル3       stage=qt-ex-tower-005-045   audience=   8000 fan=  1375‰ cap= 40000 cap/5=  8000 → OK
+  サンプル4       stage=qt-ex-tower-005-045   audience=   8000 fan=  1375‰ cap= 40000 cap/5=  8000 → OK
+
+NG（自動補正対象）: 1 件 / 対象 4 件
+
+規則: deck.json の audience は「個人（レーン平均）来場数」= fan.png のレーン別来場数5件の平均
+      （= 見出しの合計来場数 ÷ 5・上限 capacity/5）。合計をそのまま入れると 5 倍過大になる。
+      目標スコア（左上表示の右辺 = stage.clear）を audience に入れるのは禁止（サンプル1 で実害）。

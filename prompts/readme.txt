@@ -130,3 +130,15 @@ prompts/phase15-followups.md
 15-4 の結論（14-F 単独の差分は S1/S2/S3 で 0 セル、T5 の 14 セルのみ／旧「+0.22pt」推定は撤回）は
 `research/26_data_integrity/phase14f_revival_audit.md` §5–§6 と実装ログ `research/12` Phase 15-4 節。
 再現用の恒久スクリプト: `research/26_data_integrity/audit_phase14f_s1_divergence.mjs`。**
+
+prompts/phase16-action1-beat-score-analysis.md
+は Phase 16 アクション1（2026-09-29 作成・通常ビート計算式の同定および S3 乖離要因分解）。
+バフ一致率 100%（adjusted）達成を受けてスコア側ギャップの解明に着手。やる気士 docs 式（λ=1/20 + フォト sum）vs
+現行エンジン式（λ=8/140 + フォト max）を含む通常ビート 4 モデルを「全ビート個別に ±5.0% 範囲内収束」を
+唯一の判定基準として個別検証する。あわせて S3 confirmed 乖離（−8.24%）の要因（通常/スキル/クリティカル）を分解する。
+
+prompts/phase16-action2-systematic-offset.md
+は Phase 16 アクション2（2026-09-29 作成・レーン別系統オフセットの解明と実測発動差異の特定）。
+アクション1で判明した S2 の一律 −7.5% オフセット（全レーン均一）、S3 の L2/L4 のみ +9% 突出、S3 の実測のみ発動 8 ビート
+の要因を徹底究明する。あわせて S1（ハイスコア STAGE043）を分析ツールに追加し、全4サンプルの横断比較を完成させる。
+

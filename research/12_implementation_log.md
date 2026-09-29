@@ -1198,3 +1198,166 @@ diff の各セルに `rule_id` / `tier`、summary に `tiers`（strict/adjusted/
   分割前の旧 1〜2177 行）を `research/12_implementation_log_archive_phase0-12.md` へ移設**した（内容無修正）。
 - 本ファイルは Phase 13（2026-09-05）以降を保持。`research/12 §5` / `§7〜§9` / `§T5-2b` /
   `Phase 3b` / `Phase 8-B3` 形式の旧参照はアーカイブ側を指す（両ファイル先頭に相互案内を記載）。
+
+---
+
+# Phase 16 アクション1: 通常ビートスコア式の同定 ＋ S3 ギャップ分解（2026-09-29）
+
+仕様: `prompts/phase16-action1-beat-score-analysis.md` ／ 報告: `research/23_beat_score_analysis/phase16_action1_report.md`
+
+## 1. 目的
+
+Phase 15 でバフ一致率 adjusted 100%（residual 0）に到達したため、スコア側の乖離に着手する。
+(1) 通常ビート式の同定（λ=8/140＋photo max の現行 vs λ=1/20＋photo sum のやる気士 docs 式）、
+(2) S3 confirmed ギャップ（−8.24%）の要因分解。判定は**全ビート個別** sim/meas ∈ [0.9500, 1.0500]
+（平均判定は禁止・prompts/phase16 §2）。
+
+## 2. 実装
+
+- 新規 `tools/analyze_beat_score_models.ts`（`src/` は恒久変更しない）
+  - エンジントレースのファクターから 4 モデル値を**厳密に**再計算。λ は `basic`、
+    photo max/sum は `scoreBonusPct.beat`（→ `b1Permil`）の差分 Δ‰ として作用
+  - **self-check 必須**: Model A がトレースの gainedScore と全イベント一致（不一致なら即中断）。
+    結果 S3 740 / T5 685 / S2 745 beat イベント・その他 16/32/18、**不一致 0・検証不能 0**
+  - ビート分類（純白 / 白＋クリ / スキル発動 / データ欠損）、レーン別ポップ突合、
+    ギャップ分解（`gapDecomposition`）を内蔵
+  - データロードは `tools/dump_samples_trace.ts` / `tools/dump_t5_trace.ts` と**同一手順**に統一
+    （S3 の `ct_cuts`・`staminaScaling`・写真マージ、`critical_flags.beats` は
+    `measured_data_v2.json` が正。T5 は `fanBaseCount=16000` のみ。_STAGE045_ADVANTAGE は不要）
+- 実行: `npx tsx tools/analyze_beat_score_models.ts --samples=S3,T5,S2 --json=research/23_beat_score_analysis/phase16_action1_data.json`
+
+## 3. 結果（詳細は報告書）
+
+1. **λ=1/20 は棄却**。白ノーツ平均比率が現行比で正確 **0.875 倍**（S3 0.8659 / T5 0.8647 / S2 0.8094、
+   C/A = 0.8750 が 3サンプル一致）で、白ノーツは S3 0/70・T5 0/26・S2 0/32 の全滅。→ docs 式への変更は不可
+2. **photo max/sum は判別不能**。判別材料は S3-L4（17.5+19.3）と S2-L4（17.5+20.6）の 2 セルだけ。
+   S3 は max を支持、S2 は sum を支持するが、S2 の sum 優位は他 4 レーンが同一比率のまま狂っている
+   （＝系統ズレの吸収）ため偽シグナル。**現行 max を維持**【Unknown】
+3. **全ビート ±5% を満たすモデルは無し**。現行 A でも S3 152/159・T5 145/155・S2 33/165
+4. **S3 ギャップは通常ビート式では説明できない**: 確定値（crit 無・rand1000）65,954,705 /
+   実測 79,411,389 のギャップ −13,456,684 の **93.1% はクリティカルプレミアム**（sim +12,530,565）。
+   実測 crit を再現したリプレイでは −926,119（−1.17%）に縮み、内訳は
+   スキル発動ビート −662,768（71.6%）／純白 −166,971（18.0%＝実測総スコアの 0.21%）／白＋クリ −96,380（10.4%）
+5. **新規の未説明事項**: レーン別系統オフセット。純白ビートの pop/sim が
+   S2 で全レーン 1.007〜1.217（平均 1.085・白ノーツ全 32 ビートが 0.9024〜0.9572 に密集、σ=0.013）、
+   S3 で L2 1.0945・L4 1.0916 のみ突出（L2 には beat_score% 写真が無く、photo 規則では絶対に動かない）。
+   T5 は全レーン 1.000〜1.017 で揃う（＝式自体は正しい対照群）
+6. **実測のみ発動 8 ビート**（S3・sim のみ 0 件）が残り、スキル系差分の主因候補
+
+## 4. 変更ファイル
+
+- 新規: `tools/analyze_beat_score_models.ts` /
+  `research/23_beat_score_analysis/{phase16_action1_report.md, phase16_action1_data.json, phase16_action1_stdout.txt}`
+- **engine・data・golden・既存 trace は無変更**
+
+## 5. 検証
+
+- `npx vitest run`: **41 ファイル / 504 passed / 1 skipped**（基準値と一致）
+- `npm run typecheck`: **0 エラー**
+- S3 リプレイ総スコア 78,485,270 = 保存トレース `simTotal` と完全一致
+- T5: 本ツールは中立乱数を使うため総スコア 18,198,177,037（アーカイブ 17,521,599,508 と +3.86% 差）。
+  ビート単位判定と self-check は同一ラン内照合なので影響なし。T5 golden テスト不変
+
+---
+
+# Phase 16 アクション2 / 2b: A2 ファクター分解と S1 乖離（+127%）の主因確定（2026-09-30）
+
+報告: `research/23_beat_score_analysis/phase16_action2b_s1_audience.md` ／ 出力: `phase16_action2{,b}_*.txt`
+
+## 1. アクション2（A2 ファクター分解を全サンプルへ拡張）
+
+`tools/analyze_beat_score_models.ts` を拡張し、S1（サンプル1・v2 形式）を専用ビルダ `buildSample1()`
+で組み込み、既存 S3/T5/S2 にも `laneFactorDiagnostics()`（スキル発動なしビートの非クリティカルセルで
+basic/b1/combo/fan/stage/adv/photo(fixed/pct) を実測値と突き合わせ、**その項単独で不足を埋める場合に
+示唆される値**を逆算）を適用した。
+
+| サンプル | 生 ratio（L1..L5） | 最良仮説 | 備考 |
+|---|---|---|---|
+| S1（補正前） | 0.450 / 0.420 / 0.423 / 0.441 / 0.410 | — | **示唆 fan が全レーン 884〜1,049‰**（sim は 2,155〜2,480‰）|
+| S3 | 0.959 / 1.092 / 0.973 / 1.093 / 0.944 | D+fixed(後) 平均 0.9525 σ0.0069 | L2/L4 のみ突出 |
+| T5 | 1.018 / 1.018 / 1.016 / 1.010 / 1.011 | 生(A) 平均 1.0145 σ0.0038 | 対照群として揃う |
+| S2 | 1.007 / 1.061 / 1.028 / 1.215 / 1.109 | D+fixed(後) 平均 1.0198 σ0.0084 | L4 に photo fixed+pct 併記 |
+
+S1 の「レーン非依存で約 2.2 倍」「示唆 fan ≈ 1000‰（＝実測 1000/2155）」という指紋が次の発見を指示した。
+
+## 2. アクション2b（結論）: S1 の audience は目標スコアの誤読
+
+- `サンプル1/deck.json` `audience = 71000` ＝ `qt-area-1-001` の **目標スコア `clear = 71000`**
+  （左上スコア表示「18,780,790/71,000」＝ `research/05_data_quality.md` に記載の実体）。
+  会場キャパは **cap = 100 人**。fan はテーブル上限 2000‰ にクラップし、全スコアが約 2.27 倍化していた
+- `simulate.ts` と同一規則（個人来場数 = cap/5 = 20人 → fan 1002‰）で補正すると
+  **S1 総スコア = 116,829,040 / 実測 116,537,513 → +0.25%**（補正前 +127.36%）
+- **通常ビート式（λ=8/140）・photo max・crit・バフはいずれも無変更でよい**ことが確定。
+  `pop合計/バー増分` も 0.9958 に収まり、S1 だけ 0.43 だった異常値はデータ品質問題ではなく入力誤りだった
+- 補正は対症ではなく一般規則 `resolveAudience()` として実装（宣言値 == 目標スコア clear、
+  または宣言値 > 会場キャパ cap で発動。cap/5 超過は警告のみ）。S3（8,000 = 40,000/5 と完全一致）と
+  S2（13,206 ≦ 70,000/5）は非該当＝正当であることの検証になった。**実測サンプルの deck.json は未変更**
+- 補正前の乖離は `--raw-inputs` フラグで再現保持する（`phase16_action2_raw_inputs.txt` = S1 +127.36% の証拠、
+  `phase16_action2c_all.txt` = 補正後）
+- **`サンプル1/fan.png` を直接閲覧して裏取り完了**: 見出し「来場ファン数 **100人**」、レーン別
+  **19・19・18・22・22**（平均 20.0 = `cap/5`）が補正値と一致。スコアボーナスの「**※最大** +0.2%」は
+  `f(cap/5)` の値で、全レーン表示も +0.2%（=1,002‰）だった。※最大とレーン別値は別物で、
+  **ボーナス算定はレーン別**（S2 で 5/5 表引き一致 → `phase16_action3_fan_per_lane.md`）。
+  同じ画面に並ぶ**総ファン数（17万人台）**と**目標スコア**が誤用の温床だった（スキル成功率 全レーン 100% は
+  `usedSkillIds` と整合）
+
+## 3. 変更ファイル
+
+- `tools/analyze_beat_score_models.ts`: `buildSample1` / `laneFactorDiagnostics` / `resolveAudience` /
+  `--dump` / `--samples`（`=` と空白区切り両対応）/ `--quiet` でもレポートを書く修正
+- 新規: `tools/audit_audience.mjs`（宣言 audience × fan‰ × cap の監査）/
+  `tools/dump_lane_pops.mjs`（レーン別ポップの受け入れ検査・n 層別の `popΣ/barΣ`）/
+  `research/23_beat_score_analysis/phase16_action2*.{txt,json}` /
+  `phase16_action2d_lane_pops_audit.md` / `phase16_audience_audit.txt` / `phase16_lane_pops_audit.txt` / `vitest_out.txt`
+- `prompts/measure-new-sample.md`: `audience` に目標スコアを入れない注意を追記
+- `AGENTS.md`: 「`deck.json audience` = 個人（レーン平均）来場数のみ／fan.png の 3 数字の使い分け／
+  受け入れ検査 `node tools/audit_audience.mjs`」を基本規律に追加（他エージェントが同じ罠を踏まないため）
+- **`src/`・`data/`・golden・既存 trace・実測サンプルは全て無変更**
+
+## 4. 検証
+
+- `npx vitest run`: **41 ファイル / 504 passed / 1 skipped**（基準値と一致・T5 golden 不変）
+- `npm run typecheck`: **0 エラー**
+- 再現: `npx tsx tools/analyze_beat_score_models.ts --samples=S1,S3,T5,S2 --quiet --out=research/23_beat_score_analysis/phase16_action2c_all.txt`
+
+
+## 5. アクション2d: レーン別スコアポップの受け入れ検査（層別化の発見）
+
+新規工具 **`tools/dump_lane_pops.mjs`**（read-only）で全サンプルのレーン別ポップを点検した
+（詳報 `phase16_action2d_lane_pops_audit.md` / 生ログ `phase16_lane_pops_audit.txt`）。
+
+- **5 レーン揃って読めたビートでは `popΣ ≒ beat_gained_score`**（中値補正で S1 0.9965 / S2 1.0000 /
+  S3 1.0000 / S4 0.9998）→ 実測レーン別ポップは健全。**旧 catalog が追った「pop が足りない」系異常は、
+  読めるレーン数 n の層を混ぜて集計した見かけ**だった（n=4 で 0.87、n=3 で 0.41〜0.80 に沈む）
+- **`pop合計/バー増分` = 0.43（S1）の正体 = ①audience 誤入力（§2）＋②この層の混在**。解析は n 層別で行う
+- **S3 の「スキル発動あり & 5レーン読めた」3 件だけ 0.83〜0.91**（b63/b71/b141）＝
+  発動ビートではバー増分がポップ合計を ~10% 上回る → §2-3 の `beatWeightsPermil` 二重計上疑いを
+  追う際の最有力の手がかり（S3 の L2/L4 突出と同じ領域）
+- **S4 は 5 レーン揃うのが 15/167 ビート**（`no_frame` 400）→ AGENTS.md のポップ記録規律の根拠どおり
+- データ源がサンプル間で不一致（S1/S4 は `lane_pops_backfill.json` のみ、S2/S3 は
+  `measured_data_v3.json` の `lanes[].gained_score_pop.text` にもある）→ 工具の `collectPops()` が吸収
+
+## 6. アクション3: ファンボーナスは**レーン別**（§4.1 のレーン平均仮説を訂正）
+
+`サンプル2/fan.png` を直接閲覧し、レーン別のスコアボーナスが**そのレーンの来場数でのマスタ表引きと
+5/5 で完全一致**することを確かめた（詳報 `research/23_beat_score_analysis/phase16_action3_fan_per_lane.md`）:
+
+| レーン来場 | 11,996 | 13,543 | 13,741 | 13,255 | 13,496 |
+|---|---|---|---|---|---|
+| 表示ボーナス | +53.9% | +57.0% | +57.4% | +56.5% | +56.9% |
+| 表引き | 1539‰ | 1570‰ | 1574‰ | 1565‰ | 1569‰ |
+
+- 見出し注記「**スコアボーナス ※最大+X%**」＝ `表引き(capacity/5)`（S2 +58.0% / S1 +0.2% / T5 +62.0%）。
+  **`research/09_buffs_criticals.md §4.1` が見た「+62.0% が 5列すべて同一」はこの注記行であり、
+  レーン平均仮説の根拠ではなかった**（§4.1 に 2026-09-30 付記で訂正済み）
+- 合計 66,031 = 見出し表示／平均 13,206.2 = `deck.json audience` → **現行の入力規則（レーン平均を 1値）は
+  代表値として妥当**。エンジン（`src/sim/build.ts:728`）は単一 audience を全レーンへ適用する近似で、
+  S2 のレーン間相対差は最大 2.2%（L1 を +1.6% 過大／L3 を −0.6% 過小）。
+  **合計スコアにはほぼ影響しない**（＝ S2 の −3.65% の主因ではない）
+- 未解明（レーン別 fan を実装する前に解く）: 解析トレースの `fan` 欄が表引きより 0.6〜1.9% 低い
+  （S1 1001/1002・S3 1361/1375・T5 1590/1620・S2 1554/1564。センター L3 の +47〜+178‰ は
+  集目加算 `focusFanBonusPermil` と整合）
+- `prompts/measure-new-sample.md`: `stage.lane_fans[]` のレーン別来場数＋ボーナス%記録を**必須**に格上げ、
+  「※最大」の意味と目標スコア誤用の再発防止明記
+- `src/`・`data/`・golden・実測サンプルは無変更（`npm run typecheck` 0 エラー）
+

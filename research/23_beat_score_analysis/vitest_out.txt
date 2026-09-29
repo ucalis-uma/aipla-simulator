@@ -1,0 +1,105 @@
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/umaro/Documents/アイプラ[39m
+
+ [32m✓[39m tests/unit/photos.test.ts [2m([22m[2m16 tests[22m[2m)[22m[90m 50[2mms[22m[39m
+ [32m✓[39m tests/unit/timeline/buffs.test.ts [2m([22m[2m89 tests[22m[2m)[22m[90m 52[2mms[22m[39m
+ [32m✓[39m tests/unit/timeline/unhandled-skill-triggers.test.ts [2m([22m[2m7 tests[22m[2m)[22m[90m 30[2mms[22m[39m
+ [32m✓[39m tests/unit/timeline/live_bonus.test.ts [2m([22m[2m9 tests[22m[2m)[22m[90m 36[2mms[22m[39m
+ [32m✓[39m tests/unit/timeline/extension-revival.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 31[2mms[22m[39m
+ [32m✓[39m tests/unit/timeline/skill-trigger-gate.test.ts [2m([22m[2m7 tests[22m[2m)[22m[90m 69[2mms[22m[39m
+ [32m✓[39m tests/unit/timeline/sample1-specs.test.ts [2m([22m[2m8 tests[22m[2m)[22m[90m 41[2mms[22m[39m
+ [32m✓[39m tests/unit/timeline/engine.test.ts [2m([22m[2m26 tests[22m[2m)[22m[90m 68[2mms[22m[39m
+ [32m✓[39m tests/golden/t4-activations.golden.test.ts [2m([22m[2m6 tests[22m[2m)[22m[90m 17[2mms[22m[39m
+ [32m✓[39m tests/unit/timeline/retouch.test.ts [2m([22m[2m8 tests[22m[2m)[22m[90m 113[2mms[22m[39m
+ [32m✓[39m tests/unit/timeline/sample3-specs.test.ts [2m([22m[2m16 tests[22m[2m)[22m[90m 54[2mms[22m[39m
+ [32m✓[39m tests/unit/sim/build.test.ts [2m([22m[2m14 tests[22m[2m)[22m[90m 299[2mms[22m[39m
+ [32m✓[39m tests/data-integrity/critical-flags.test.ts [2m([22m[2m8 tests[22m[2m | [22m[33m1 skipped[39m[2m)[22m[90m 26[2mms[22m[39m
+ [32m✓[39m tests/unit/sim/photo-grants.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 23[2mms[22m[39m
+ [32m✓[39m tests/unit/timeline/type36-scaling.test.ts [2m([22m[2m13 tests[22m[2m)[22m[90m 18[2mms[22m[39m
+ [32m✓[39m tests/unit/formula/score-event.test.ts [2m([22m[2m22 tests[22m[2m)[22m[90m 20[2mms[22m[39m
+ [32m✓[39m tests/data-integrity/popups-effects.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 21[2mms[22m[39m
+ [32m✓[39m tests/data-integrity/skills.test.ts [2m([22m[2m8 tests[22m[2m)[22m[90m 25[2mms[22m[39m
+ [32m✓[39m tests/unit/timeline/buff-snapshots.audit.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 802[2mms[22m[39m
+ [32m✓[39m tests/data-integrity/lanes.test.ts [2m([22m[2m7 tests[22m[2m)[22m[90m 18[2mms[22m[39m
+ [32m✓[39m tests/unit/skill-levels.test.ts [2m([22m[2m9 tests[22m[2m)[22m[90m 77[2mms[22m[39m
+ [32m✓[39m tests/data-integrity/live-bonuses.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 79[2mms[22m[39m
+ [32m✓[39m tests/golden/t5-scores.golden.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 311[2mms[22m[39m
+ [32m✓[39m tests/golden/deck-status.golden.test.ts [2m([22m[2m10 tests[22m[2m)[22m[90m 16[2mms[22m[39m
+ [32m✓[39m tests/data-integrity/timeline-structure.test.ts [2m([22m[2m9 tests[22m[2m)[22m[90m 33[2mms[22m[39m
+ [32m✓[39m tests/unit/photo-link.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 55[2mms[22m[39m
+ [32m✓[39m tests/unit/formula/combo.test.ts [2m([22m[2m8 tests[22m[2m)[22m[90m 18[2mms[22m[39m
+ [32m✓[39m tests/data-integrity/score-totals.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 14[2mms[22m[39m
+ [32m✓[39m tests/unit/timeline/fan-attract.test.ts [2m([22m[2m17 tests[22m[2m)[22m[90m 17[2mms[22m[39m
+ [32m✓[39m tests/unit/rng/fixed.test.ts [2m([22m[2m13 tests[22m[2m)[22m[90m 153[2mms[22m[39m
+ [32m✓[39m tests/unit/optimizer/photo-optimizer.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 744[2mms[22m[39m
+   [33m[2m✓[22m[39m 統合オプティマイザ（Phase 8-C）[2m > [22mphotoPool から各レーンにフォトが配分される（photoIds 記録・スコア向上） [33m322[2mms[22m[39m
+ [32m✓[39m tests/unit/optimizer/optimizer.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 291[2mms[22m[39m
+ [32m✓[39m tests/unit/rng/replay.test.ts [2m([22m[2m11 tests[22m[2m)[22m[90m 19[2mms[22m[39m
+ [32m✓[39m tests/unit/formula/fan.test.ts [2m([22m[2m24 tests[22m[2m)[22m[33m 548[2mms[22m[39m
+ [32m✓[39m tests/unit/rng/random.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 930[2mms[22m[39m
+   [33m[2m✓[22m[39m ContinuousRng[2m > [22m全ロールが [950, 1050] に収まる [33m804[2mms[22m[39m
+ [32m✓[39m tests/unit/formula/critical.test.ts [2m([22m[2m10 tests[22m[2m)[22m[90m 15[2mms[22m[39m
+ [32m✓[39m tests/unit/sim/ui-pipeline.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 455[2mms[22m[39m
+ [32m✓[39m tests/unit/rng/bounds.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 170[2mms[22m[39m
+(node:16928) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+ [32m✓[39m tests/unit/timeline/sample2-specs.test.ts [2m([22m[2m13 tests[22m[2m)[22m[33m 7797[2mms[22m[39m
+   [33m[2m✓[22m[39m サンプル2確定仕様: audience の取り扱い[2m > [22maudience 明示時は会場キャパ cap/5 で上書きされない（fanFactorPermil が実測 audience 由来になる） [33m7705[2mms[22m[39m
+(node:17068) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+ [32m✓[39m tests/unit/cli-myphotos.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 22376[2mms[22m[39m
+   [33m[2m✓[22m[39m CLI myPhotos/photoEquip 解決（Phase 8-B9）[2m > [22mmyPhotos + photoEquip のユーザーフォトスキルが CLI のスコアに反映される [33m6845[2mms[22m[39m
+   [33m[2m✓[22m[39m CLI myPhotos/photoEquip 解決（Phase 8-B9）[2m > [22mphotoEquip 未指定・不明 ID は警告なしで無視される（T5 互換） [33m2584[2mms[22m[39m
+   [33m[2m✓[22m[39m CLI myPhotos/photoEquip 解決（Phase 8-B9）[2m > [22mT5 サンプル（myPhotos なし）は確定値 2,581,114,209（Phase 14-F 満了バフ復活の採用後） [33m2615[2mms[22m[39m
+   [33m[2m✓[22m[39m CLI myPhotos/photoEquip 解決（Phase 8-B9）[2m > [22mframes ステータスのみの myPhotos も photos 側へ統合されスコアに反映される（Phase 8-B10） [33m5163[2mms[22m[39m
+   [33m[2m✓[22m[39m CLI myPhotos/photoEquip 解決（Phase 8-B9）[2m > [22mphotos 側に同名エントリがある場合は統合せず二重計算にならない（Phase 8-B10） [33m5165[2mms[22m[39m
+[90mstderr[2m | tests/ui/smoke.test.ts[2m > [22m[2m単一HTML UI スモーク[2m > [22m[2mスキルLvを下げて実行するとスコアが変化する（golden→マスタ解析値の置換がdeckに反映）
+[22m[39m[warn] L1: skill "sk-yu-05-birt-02-2" is golden-calibrated at Lv6; Lv1 uses master values (uncalibrated)
+
+[90mstderr[2m | tests/ui/smoke.test.ts[2m > [22m[2m単一HTML UI スモーク[2m > [22m[2m編成JSONインポート: ネスト形式（CLI / exportConfig と同一 { deck: {...} }）を取り込み CLI と同一スコアになる
+[22m[39m[warn] L5: skill "sk-ski-05-waso-00-1" is golden-calibrated at Lv6; Lv4 uses master values (uncalibrated)
+[warn] L5: skill "sk-ski-05-waso-00-2" is golden-calibrated at Lv6; Lv4 uses master values (uncalibrated)
+[warn] L5: skill "sk-ski-05-waso-00-3" is golden-calibrated at Lv5; Lv2 uses master values (uncalibrated)
+
+ [32m✓[39m tests/ui/smoke.test.ts [2m([22m[2m43 tests[22m[2m)[22m[33m 43984[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mシミュレーション実行で KPI・レーン別内訳・タイムラインが描画され、確定値が一致する [33m1718[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mファンファクターを手打ちするとスコアが即座に再計算される [33m2210[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mステージピッカーに大分類タブがあり、ハイスコアライブを直接選択できる [33m553[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mライブボーナス付きステージを選択するとステージ情報にライボ内容が表示される [33m4440[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mステージ・曲ピッカーで検索→別譜面へ切替できる [33m318[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22m切替後の譜面でシミュレーションが完走する（ビート数が譜面に追従） [33m4123[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mカードピッカーで検索→選択するとレベル・開花・スキルが自動セットされる [33m556[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mアクセサリピッカーで検索→選択するとスロットに装備される [33m442[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22m✕ボタンでスロットの装備を解除できる [33m500[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mおまかせ装備で2スロットに最強装備が自動配分される [33m313[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mカードサムネイルが表示され、開花レベル連動・エラー時フォールバックが動く [33m885[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22m絆覚醒トグルで第4スキルの有効/無効とアイコン（variation 2）が切り替わる [33m751[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mアクセサリにサムネイル img が付き、読込エラーで隠れてチップが残る [33m344[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mアクセサリピッカーはスロット役割でタブが絞られ、専用タブでキャラ専用のみ表示される [33m915[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mスロット1（Vo/Da/Vi用）のピッカーは基礎3ステ分類のみ選べ、役割外は自動振り分けされる [33m798[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mオプティマイザ: 探索→ランキング表示→1クリックで編成反映 [33m799[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mマイフォト帳に T5 実測+理論値テンプレートが同梱され、検索・タグ絞り込みが動く [33m659[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mマイフォト帳から装備でき、レタッチ1枚制限のバリデーションが効く [33m1150[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22m同じフォトは1編成に1枚まで: 編成中フォトはグレー表示・装備時は付け替え確認（Phase 8-B5） [33m1551[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mスキル持ちフォトはステータス枠が4枠に減り、装備してシミュレーションが完走する [33m2654[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mフォトマスタピッカーで INFO PRIDE のメモリアルフォトを初期品質の値で帳に追加できる [33m1184[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22m帳の複数選択で手持ちタグを一括付与/解除できる [33m1155[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22m効果とスキルが平文ではなくチップで表示される [33m526[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mフォトエディタの条件セレクトにマスタ由来の全条件種がある [33m703[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22m延長/増強レタッチで 与/被 スコープと絞り込みバフを選べる（Phase 8-B4） [33m859[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mアクセサリピッカーに効果値の昇順/降順ソートがある（Phase 8-B7） [33m417[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22m一括装備解除: レーン別のフォト/アクセサリ全外しと編成全体の解除（Phase 8-B7） [33m1260[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mフォトエディタのスキルなしに戻すボタンでスキル持ちを取り消せる（Phase 8-B7） [33m765[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mカードレベルを下げると未解放スキル枠がロック表示になり、スキルLvが最大可能レベルへクランプされる [33m381[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mフォト装備解除でスキルも同時に外れる（実測/JSON ↔ golden スキル連動・Phase 8-B5） [33m1685[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mマイフォトのスキルは装備行のチェックで個別無効化できる（Phase 8-B5） [33m3158[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mスキルLvを下げて実行するとスコアが変化する（golden→マスタ解析値の置換がdeckに反映） [33m1431[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mフォト枠数上限: ヘッダに「上限 N 枚@LvM」が表示され、レベル低下で超過警告が出る [33m399[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22m統合オプティマイザ: 必須採用カードが編成に含まれ、タグ指定フォトが配分される [33m1995[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22m編成JSONインポート: ネスト形式（CLI / exportConfig と同一 { deck: {...} }）を取り込み CLI と同一スコアになる [33m1630[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m41 passed[39m[22m[90m (41)[39m
+[2m      Tests [22m [1m[32m504 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (505)[39m
+[2m   Start at [22m 08:37:28
+[2m   Duration [22m 50.43s[2m (transform 4.35s, setup 0ms, collect 14.30s, tests 79.91s, environment 2.88s, prepare 12.49s)[22m
+
