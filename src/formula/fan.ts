@@ -71,3 +71,54 @@ export function fanBonusPermil(
   }
   return row.advantagePermil;
 }
+
+/** レーン数（L1..L5）。満員ガードの一律適用・入力検証で使用 */
+const FAN_LANE_COUNT = 5;
+
+/**
+ * 【Phase 16-A4・2026-09-30】レーン別来場ファン数 → レーン別ファンファクター permil。
+ *
+ * 規則は実測 5 サンプル 25/25 完全一致で確定（research/23_beat_score_analysis/
+ * phase16_action3b_fan_full_house.md）:
+ * - **満員（合計 >= maxCapacity）**: 全レーン一律 `f(floor(cap/5))`。
+ *   素朴なレーン別表引きは 13/25 不一致で、S3 L5 が係数 −2.4%・L3 が +0.9% の後退になる。
+ *   S1/S3/S4 の fan.png 表示（+0.2% / +37.5% / +37.5%）はレーン別来場数が偏っても全レーン同一
+ *   だったことが根拠。
+ * - **空席あり（合計 < maxCapacity）**: 各レーンの個別来場数で表引き `f(laneFans[i])`。
+ *   S2/S5 の全 10 レーンが fan.png の表示と 0.1pp 単位で一致。
+ *
+ * maxCapacity 未指定時は満員判定ができないため常にレーン別表引き（空席前提）とする【Estimate】。
+ *
+ * @param laneFans レーン別来場ファン数（L1..L5 の 5 要素・0 以上の整数）
+ * @param table audience 昇順のテーブル（data/stages/audience_advantage.json を注入）
+ * @param maxCapacity 会場最大キャパシティ（stages_index の cap）。満員ガードに使用
+ * @returns レーン順（index = lane-1）のファンファクター permil（1000 = ボーナスなし）
+ */
+export function laneFanFactorsPermil(
+  laneFans: readonly number[],
+  table: readonly AudienceAdvantageRow[],
+  maxCapacity?: number,
+): number[] {
+  if (laneFans.length !== FAN_LANE_COUNT) {
+    throw new Error(
+      `laneFans must have ${FAN_LANE_COUNT} entries (L1..L5), got ${laneFans.length}`,
+    );
+  }
+  for (const fans of laneFans) {
+    if (!Number.isInteger(fans) || fans < 0) {
+      throw new Error(`laneFans entries must be non-negative integers, got ${fans}`);
+    }
+  }
+  if (maxCapacity !== undefined) {
+    if (!Number.isInteger(maxCapacity) || maxCapacity <= 0) {
+      throw new Error(`maxCapacity must be a positive integer, got ${maxCapacity}`);
+    }
+    const total = laneFans.reduce((sum, fans) => sum + fans, 0);
+    if (total >= maxCapacity) {
+      // 満員: 実機は全レーン一律で f(cap/5)（= fan.png の「※最大」値）を適用する
+      const uniform = fanBonusPermil(Math.floor(maxCapacity / FAN_LANE_COUNT), table);
+      return Array.from({ length: FAN_LANE_COUNT }, () => uniform);
+    }
+  }
+  return laneFans.map((fans) => fanBonusPermil(fans, table));
+}

@@ -1980,17 +1980,23 @@ function settleScoreGet(
     : comboFactorPermil(ctx.displayCombo.value, snap.combo_score_up);
   // 【Phase 9】ステルス副効果: 他レーンのステルス段数ぶんファンボーナスに加算
   // （research/01 §2.6・peing id=1188720397。割合型はファン不適用のため 1000 のまま）
+  // 【Phase 16-A4】レーン別ファンファクター（満員ガード付き表引き）が指定されていれば最優先。
+  // 引力度配分（fanFactorPermilByAttraction）と集目/ステルス加算は行わない
+  // ——実測のレーン別来場数に配分効果が内包されているため（二重補正の防止）。
+  const laneFanF = ctx.input.laneFanFactorPermil?.[self.input.lane - 1];
   const fanF = isRatio
     ? 1000
-    : ctx.input.fanBaseCount !== undefined
-      ? fanFactorPermilByAttraction(
-          ctx.input.fanBaseCount,
-          snap.focus,
-          snap.stealth,
-          otherFocusStealth(self.input.lane, states),
-        )
-      : fanFactorPermil(ctx.input.fanFactorPermil, snap.focus) +
-        stealthBonusOthers(self.input.lane, states);
+    : laneFanF !== undefined
+      ? laneFanF
+      : ctx.input.fanBaseCount !== undefined
+        ? fanFactorPermilByAttraction(
+            ctx.input.fanBaseCount,
+            snap.focus,
+            snap.stealth,
+            otherFocusStealth(self.input.lane, states),
+          )
+        : fanFactorPermil(ctx.input.fanFactorPermil, snap.focus) +
+          stealthBonusOthers(self.input.lane, states);
   const rand = ctx.input.rng.nextScoreRoll();
   // 【T5実測確定】フォト行はクリティカル判定の対象外（b47/b132/b125 のポップが
   // 全て非critの達成帯に成立。crit適用では r≈200-930 になり範囲外）。
@@ -2206,16 +2212,20 @@ function settleBeatNote(
     // src/formula/combo.ts の comboFactorPermil（B1 が csu を 25‰/段 で持つ）+ csu なし。
     const comboF = comboFactorPermil(ctx.displayCombo.value, snap.combo_score_up);
     // 【Phase 9】ステルス副効果（他レーンの stealth 段数 → ファンボーナス加算）
+    // 【Phase 16-A4】laneFanFactorPermil（レーン別来場数の表引き・満員ガード済み）が最優先
+    const laneFanF = ctx.input.laneFanFactorPermil?.[state.input.lane - 1];
     const fanF =
-      ctx.input.fanBaseCount !== undefined
-        ? fanFactorPermilByAttraction(
-            ctx.input.fanBaseCount,
-            snap.focus,
-            snap.stealth,
-            otherFocusStealth(state.input.lane, states),
-          )
-        : fanFactorPermil(ctx.input.fanFactorPermil, snap.focus) +
-          stealthBonusOthers(state.input.lane, states);
+      laneFanF !== undefined
+        ? laneFanF
+        : ctx.input.fanBaseCount !== undefined
+          ? fanFactorPermilByAttraction(
+              ctx.input.fanBaseCount,
+              snap.focus,
+              snap.stealth,
+              otherFocusStealth(state.input.lane, states),
+            )
+          : fanFactorPermil(ctx.input.fanFactorPermil, snap.focus) +
+            stealthBonusOthers(state.input.lane, states);
     const rand = ctx.input.rng.nextScoreRoll();
     const crit = resolveCritical(ctx, snap, note.beat, state.input.lane);
     const critF = crit

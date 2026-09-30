@@ -1,0 +1,86 @@
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/umaro/Documents/アイプラ[39m
+
+ [32m✓[39m tests/unit/photos.test.ts [2m([22m[2m16 tests[22m[2m)[22m[90m 35[2mms[22m[39m
+ [32m✓[39m tests/unit/timeline/buffs.test.ts [2m([22m[2m89 tests[22m[2m)[22m[90m 42[2mms[22m[39m
+ [32m✓[39m tests/unit/timeline/unhandled-skill-triggers.test.ts [2m([22m[2m7 tests[22m[2m)[22m[90m 27[2mms[22m[39m
+ [32m✓[39m tests/unit/timeline/extension-revival.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 30[2mms[22m[39m
+ [32m✓[39m tests/unit/timeline/live_bonus.test.ts [2m([22m[2m9 tests[22m[2m)[22m[90m 34[2mms[22m[39m
+ [32m✓[39m tests/unit/timeline/sample1-specs.test.ts [2m([22m[2m8 tests[22m[2m)[22m[90m 34[2mms[22m[39m
+ [32m✓[39m tests/unit/timeline/engine.test.ts [2m([22m[2m28 tests[22m[2m)[22m[90m 57[2mms[22m[39m
+ [32m✓[39m tests/unit/timeline/skill-trigger-gate.test.ts [2m([22m[2m7 tests[22m[2m)[22m[90m 67[2mms[22m[39m
+ [32m✓[39m tests/golden/t4-activations.golden.test.ts [2m([22m[2m6 tests[22m[2m)[22m[90m 15[2mms[22m[39m
+ [32m✓[39m tests/unit/timeline/sample3-specs.test.ts [2m([22m[2m16 tests[22m[2m)[22m[90m 51[2mms[22m[39m
+ [32m✓[39m tests/unit/timeline/retouch.test.ts [2m([22m[2m8 tests[22m[2m)[22m[90m 106[2mms[22m[39m
+ [32m✓[39m tests/unit/sim/build.test.ts [2m([22m[2m19 tests[22m[2m)[22m[33m 366[2mms[22m[39m
+ [32m✓[39m tests/data-integrity/critical-flags.test.ts [2m([22m[2m8 tests[22m[2m | [22m[33m1 skipped[39m[2m)[22m[90m 21[2mms[22m[39m
+ [32m✓[39m tests/unit/timeline/buff-snapshots.audit.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 661[2mms[22m[39m
+ [32m✓[39m tests/unit/sim/photo-grants.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 22[2mms[22m[39m
+ [32m✓[39m tests/unit/timeline/type36-scaling.test.ts [2m([22m[2m13 tests[22m[2m)[22m[90m 16[2mms[22m[39m
+ [32m✓[39m tests/data-integrity/popups-effects.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 27[2mms[22m[39m
+ [32m✓[39m tests/data-integrity/skills.test.ts [2m([22m[2m8 tests[22m[2m)[22m[90m 23[2mms[22m[39m
+ [32m✓[39m tests/unit/skill-levels.test.ts [2m([22m[2m9 tests[22m[2m)[22m[90m 75[2mms[22m[39m
+ [32m✓[39m tests/unit/formula/score-event.test.ts [2m([22m[2m22 tests[22m[2m)[22m[90m 18[2mms[22m[39m
+ [32m✓[39m tests/data-integrity/lanes.test.ts [2m([22m[2m7 tests[22m[2m)[22m[90m 20[2mms[22m[39m
+ [32m✓[39m tests/golden/t5-scores.golden.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 268[2mms[22m[39m
+ [32m✓[39m tests/unit/formula/fan.test.ts [2m([22m[2m31 tests[22m[2m)[22m[33m 410[2mms[22m[39m
+ [32m✓[39m tests/data-integrity/live-bonuses.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 64[2mms[22m[39m
+ [32m✓[39m tests/golden/deck-status.golden.test.ts [2m([22m[2m10 tests[22m[2m)[22m[90m 13[2mms[22m[39m
+ [32m✓[39m tests/data-integrity/timeline-structure.test.ts [2m([22m[2m9 tests[22m[2m)[22m[90m 30[2mms[22m[39m
+ [32m✓[39m tests/data-integrity/score-totals.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 10[2mms[22m[39m
+ [32m✓[39m tests/unit/photo-link.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 49[2mms[22m[39m
+ [32m✓[39m tests/unit/rng/fixed.test.ts [2m([22m[2m13 tests[22m[2m)[22m[90m 125[2mms[22m[39m
+ [32m✓[39m tests/unit/timeline/fan-attract.test.ts [2m([22m[2m17 tests[22m[2m)[22m[90m 14[2mms[22m[39m
+ [32m✓[39m tests/unit/optimizer/optimizer.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 247[2mms[22m[39m
+ [32m✓[39m tests/unit/formula/combo.test.ts [2m([22m[2m8 tests[22m[2m)[22m[90m 13[2mms[22m[39m
+ [32m✓[39m tests/unit/rng/replay.test.ts [2m([22m[2m11 tests[22m[2m)[22m[90m 14[2mms[22m[39m
+ [32m✓[39m tests/unit/optimizer/photo-optimizer.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 580[2mms[22m[39m
+ [32m✓[39m tests/unit/formula/critical.test.ts [2m([22m[2m10 tests[22m[2m)[22m[90m 12[2mms[22m[39m
+ [32m✓[39m tests/unit/sim/ui-pipeline.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 327[2mms[22m[39m
+ [32m✓[39m tests/unit/rng/random.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 785[2mms[22m[39m
+   [33m[2m✓[22m[39m ContinuousRng[2m > [22m全ロールが [950, 1050] に収まる [33m703[2mms[22m[39m
+ [32m✓[39m tests/unit/rng/bounds.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 118[2mms[22m[39m
+ [32m✓[39m tests/unit/timeline/sample2-specs.test.ts [2m([22m[2m13 tests[22m[2m)[22m[33m 5962[2mms[22m[39m
+   [33m[2m✓[22m[39m サンプル2確定仕様: audience の取り扱い[2m > [22maudience 明示時は会場キャパ cap/5 で上書きされない（fanFactorPermil が実測 audience 由来になる） [33m5875[2mms[22m[39m
+ [32m✓[39m tests/unit/cli-myphotos.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 16240[2mms[22m[39m
+   [33m[2m✓[22m[39m CLI myPhotos/photoEquip 解決（Phase 8-B9）[2m > [22mmyPhotos + photoEquip のユーザーフォトスキルが CLI のスコアに反映される [33m5254[2mms[22m[39m
+   [33m[2m✓[22m[39m CLI myPhotos/photoEquip 解決（Phase 8-B9）[2m > [22mphotoEquip 未指定・不明 ID は警告なしで無視される（T5 互換） [33m1917[2mms[22m[39m
+   [33m[2m✓[22m[39m CLI myPhotos/photoEquip 解決（Phase 8-B9）[2m > [22mT5 サンプル（myPhotos なし）は確定値 2,581,114,209（Phase 14-F 満了バフ復活の採用後） [33m1892[2mms[22m[39m
+   [33m[2m✓[22m[39m CLI myPhotos/photoEquip 解決（Phase 8-B9）[2m > [22mframes ステータスのみの myPhotos も photos 側へ統合されスコアに反映される（Phase 8-B10） [33m3760[2mms[22m[39m
+   [33m[2m✓[22m[39m CLI myPhotos/photoEquip 解決（Phase 8-B9）[2m > [22mphotos 側に同名エントリがある場合は統合せず二重計算にならない（Phase 8-B10） [33m3414[2mms[22m[39m
+ [32m✓[39m tests/ui/smoke.test.ts [2m([22m[2m43 tests[22m[2m)[22m[33m 29638[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mシミュレーション実行で KPI・レーン別内訳・タイムラインが描画され、確定値が一致する [33m1369[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mファンファクターを手打ちするとスコアが即座に再計算される [33m1684[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mステージピッカーに大分類タブがあり、ハイスコアライブを直接選択できる [33m405[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mライブボーナス付きステージを選択するとステージ情報にライボ内容が表示される [33m3119[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22m切替後の譜面でシミュレーションが完走する（ビート数が譜面に追従） [33m2957[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mカードピッカーで検索→選択するとレベル・開花・スキルが自動セットされる [33m451[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mアクセサリピッカーで検索→選択するとスロットに装備される [33m306[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22m✕ボタンでスロットの装備を解除できる [33m365[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mカードサムネイルが表示され、開花レベル連動・エラー時フォールバックが動く [33m604[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22m絆覚醒トグルで第4スキルの有効/無効とアイコン（variation 2）が切り替わる [33m499[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mアクセサリピッカーはスロット役割でタブが絞られ、専用タブでキャラ専用のみ表示される [33m605[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mスロット1（Vo/Da/Vi用）のピッカーは基礎3ステ分類のみ選べ、役割外は自動振り分けされる [33m512[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mオプティマイザ: 探索→ランキング表示→1クリックで編成反映 [33m519[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mマイフォト帳に T5 実測+理論値テンプレートが同梱され、検索・タグ絞り込みが動く [33m476[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mマイフォト帳から装備でき、レタッチ1枚制限のバリデーションが効く [33m780[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22m同じフォトは1編成に1枚まで: 編成中フォトはグレー表示・装備時は付け替え確認（Phase 8-B5） [33m1088[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mスキル持ちフォトはステータス枠が4枠に減り、装備してシミュレーションが完走する [33m1706[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mフォトマスタピッカーで INFO PRIDE のメモリアルフォトを初期品質の値で帳に追加できる [33m780[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22m帳の複数選択で手持ちタグを一括付与/解除できる [33m719[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22m効果とスキルが平文ではなくチップで表示される [33m352[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mフォトエディタの条件セレクトにマスタ由来の全条件種がある [33m535[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22m延長/増強レタッチで 与/被 スコープと絞り込みバフを選べる（Phase 8-B4） [33m660[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22m一括装備解除: レーン別のフォト/アクセサリ全外しと編成全体の解除（Phase 8-B7） [33m762[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mフォトエディタのスキルなしに戻すボタンでスキル持ちを取り消せる（Phase 8-B7） [33m592[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mフォト装備解除でスキルも同時に外れる（実測/JSON ↔ golden スキル連動・Phase 8-B5） [33m946[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mマイフォトのスキルは装備行のチェックで個別無効化できる（Phase 8-B5） [33m1815[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22mスキルLvを下げて実行するとスコアが変化する（golden→マスタ解析値の置換がdeckに反映） [33m811[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22m統合オプティマイザ: 必須採用カードが編成に含まれ、タグ指定フォトが配分される [33m1334[2mms[22m[39m
+   [33m[2m✓[22m[39m 単一HTML UI スモーク[2m > [22m編成JSONインポート: ネスト形式（CLI / exportConfig と同一 { deck: {...} }）を取り込み CLI と同一スコアになる [33m952[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m41 passed[39m[22m[90m (41)[39m
+[2m      Tests [22m [1m[32m518 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (519)[39m
+[2m   Start at [22m 21:36:50
+[2m   Duration [22m 34.72s[2m (transform 3.25s, setup 0ms, collect 10.61s, tests 56.67s, environment 2.59s, prepare 10.34s)[22m
+

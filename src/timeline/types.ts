@@ -493,6 +493,16 @@ export interface SimulateInput {
    * fanFactorPermilByAttraction）。未指定時は fanFactorPermil + 集目加算の従来方式。
    */
   fanBaseCount?: number;
+  /**
+   * 【Phase 16-A4・2026-09-30】レーン別ファンファクター permil（長さ 5・index = lane-1）。
+   *
+   * 実測のレーン別来場数（fan.png）を formula/fan.ts laneFanFactorsPermil（満員ガード付き）で
+   * 表引きした結果をそのまま全ビートへ適用する。指定時は fanBaseCount / fanFactorPermil より
+   * **優先**し、引力度配分（fanFactorPermilByAttraction）と集目/ステルス加算は行わない
+   * ——実測の来場数に集目/ステルスの配分効果が内包されているため（二重補正の防止）。
+   * buildSimulateInput（BuildSimOptions.laneFans / maxCapacity）が注入する。
+   */
+  laneFanFactorPermil?: readonly number[];
   /** コンボテーブル（既定 data/stages/combo_advantage.json 同期の COMBO_ADVANTAGE_TABLE） */
   comboAdvantageTable?: readonly ComboAdvantageRow[];
   /** 成功率の基礎値 permil（min(1, 席埋率×メンタル/要求) の結果。既定 1000。本実測は全成立） */

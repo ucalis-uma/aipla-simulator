@@ -12,6 +12,9 @@
  *              （staff_bonus / yale_bonus / characters[5]）,
  *              ※ "deckFile" で外部 JSON 参照も可（入力ファイルからの相対パス）
  *   "stage":   { "file": "qt-daily-003-19" },
+ *              （"lane_fans": [11996, 13543, 13741, 13255, 13496] でレーン別来場ファン数
+ *                （fan.png 実測・L1..L5）を渡せる。指定時は満員ガード付きレーン別表引きに
+ *                なり単一 audience より優先される【Phase 16-A4】。満員判定はステージの cap）
  *   "chart":   { "file": "chart-hsm-004-001" },
  *   "audience": 16000,                      （省略可・来場ファン数→ファンファクター。省略時 1620‰ 固定）
  *   "successBasePermil": 1000,              （省略可・成功率の基礎値）
@@ -94,7 +97,16 @@ interface SimConfigJson {
   deck?: DeckJsonV2;
   /** 編成 JSON へのパス（入力ファイルからの相対） */
   deckFile?: string;
-  stage: { file: string };
+  stage: {
+    file: string;
+    /**
+     * 【Phase 16-A4・2026-09-30】レーン別来場ファン数（L1..L5・fan.png 実測）。
+     * 指定時は満員ガード付きレーン別表引き（満員なら全レーン一律 f(cap/5)、
+     * 空席なら f(lane_fans[i])）で計算し、単一 audience より優先する。
+     * 満員判定はステージの会場キャパ（stages_index の cap）で行う。
+     */
+    lane_fans?: number[];
+  };
   chart: { file: string };
   audience?: number;
   fanFactorPermil?: number;
@@ -288,7 +300,13 @@ function buildInput(cfg: SimConfigJson, inputPath: string, critRate: number): Si
   // cap/5 での上書きは実測値を捨てる誤りだった（S1 の 71,000 は「クリアスコアと同値の
   // 誤値」問題で、正しい実測値の上書きは別問題。STAGE680: cap 70,000→14,000 が
   // 実測 13,206 を上書きしていた）。
-  if (cfg.fanFactorPermil === undefined && cfg.audience === undefined) {
+  // 【Phase 16-A4】lane_fans 指定時はレーン別表引きが優先されるため、audience の自動導出は行わない
+  const laneFans = Array.isArray(cfg.stage.lane_fans) ? cfg.stage.lane_fans : undefined;
+  if (
+    laneFans === undefined &&
+    cfg.fanFactorPermil === undefined &&
+    cfg.audience === undefined
+  ) {
     const cap = stageCapacities[cfg.stage.file];
     if (cap !== undefined) {
       cfg.audience = Math.max(0, Math.min(50000, Math.floor(cap / 5)));
@@ -336,6 +354,9 @@ function buildInput(cfg: SimConfigJson, inputPath: string, critRate: number): Si
     chartFile: cfg.chart.file,
     data,
     audience: cfg.audience,
+    // 【Phase 16-A4】レーン別来場数モード（満員ガードは buildSimulateInput 側で適用）
+    laneFans,
+    maxCapacity: stageCapacities[cfg.stage.file],
     fanFactorPermil: cfg.fanFactorPermil,
     successBasePermil: cfg.successBasePermil,
     missedNotes: cfg.missedNotes,
@@ -441,6 +462,10 @@ function main(): void {
       stage: cfg.stage.file,
       chart: cfg.chart.file,
       fanFactorPermil: base.fanFactorPermil,
+      // 【Phase 16-A5・2026-09-30】`stage.lane_fans[]` 指定時に実適用されたレーン別ファン係数
+      // （満員ガード付き表引きの結果・build.ts で算出）。未指定なら null。
+      // CLI 出力だけで「どの係数が各レーンに効いたか」を監査できるようにする（E2E 検証の足場）。
+      laneFanFactorPermil: base.laneFanFactorPermil ?? null,
       roundingPolicy: "at-end",
       randRange: [EVENT_RAND_MIN_PERMIL, EVENT_RAND_MAX_PERMIL],
       randType: "continuous (float)",

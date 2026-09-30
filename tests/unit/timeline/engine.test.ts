@@ -887,3 +887,41 @@ describe("simulateTimeline: 動的クリティカル発生率（Peing確定 2026
     expect(photoEv?.critFactorPermil).toBe(1000);
   });
 });
+
+/**
+ * 【Phase 16-A4・2026-09-30】レーン別ファンファクター（満員ガード付き・buildSimulateInput が注入）。
+ * SimulateInput.laneFanFactorPermil 指定時は、引力度モデル（fanBaseCount）や静的值
+ * （fanFactorPermil）より優先してレーン別の B3 が使われることを固定する。
+ */
+describe("simulateTimeline: レーン別ファンファクター（Phase 16-A4）", () => {
+  it("laneFanFactorPermil がレーン別に適用され、fanBaseCount（引力度モデル）より優先される", () => {
+    const res = simulateTimeline(
+      input([note(1, 1, 0)], defaultLanes(), {
+        laneFanFactorPermil: [2000, 1000, 1000, 1200, 1000],
+        fanBaseCount: 16000, // 指定しても laneFanFactorPermil が勝つ
+      }),
+    );
+    const events = res.beats[0]?.events ?? [];
+    const fanOf = (lane: number): number | undefined =>
+      events.find((e) => e.lane === lane)?.fanFactorPermil;
+    expect(fanOf(1)).toBe(2000);
+    expect(fanOf(2)).toBe(1000);
+    expect(fanOf(4)).toBe(1200);
+    // 他因子が同一の L1/L2 はファンファクター比どおり 2 倍（sequential 丸めの ±1 を許容）
+    const l1 = events.find((e) => e.lane === 1)?.gainedScore ?? 0;
+    const l2 = events.find((e) => e.lane === 2)?.gainedScore ?? 0;
+    expect(Math.abs(l1 - 2 * l2)).toBeLessThanOrEqual(1);
+  });
+
+  it("未指定時は従来どおり fanFactorPermil（静的値）が使われる（後方互換）", () => {
+    const res = simulateTimeline(
+      input([note(1, 1, 0)], defaultLanes(), { fanFactorPermil: 1500 }),
+    );
+    const events = res.beats[0]?.events ?? [];
+    expect(events.length).toBeGreaterThan(0);
+    for (const e of events) {
+      expect(e.fanFactorPermil).toBe(1500);
+    }
+  });
+});
+

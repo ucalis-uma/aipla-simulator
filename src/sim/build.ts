@@ -13,7 +13,7 @@
  * （旧 CLI のハードコード {1:vocal,...} を一般化）。
  */
 import { computeDeckStatus } from "../formula/baseStatus.js";
-import { fanBonusPermil, type AudienceAdvantageRow } from "../formula/fan.js";
+import { fanBonusPermil, laneFanFactorsPermil, type AudienceAdvantageRow } from "../formula/fan.js";
 import { parseGrantKey, grantValuePermil } from "../photos.js";
 import { decodeSkillLevel, buildSkillLevelIndex } from "../skillLevels.js";
 import { pctToPermil } from "../rounding.js";
@@ -282,6 +282,22 @@ export interface BuildSimOptions {
   audience?: number;
   /** ファンファクター permil（audience 未指定時に使用。既定 1620=実測値） */
   fanFactorPermil?: number;
+  /**
+   * 【Phase 16-A4・2026-09-30】レーン別来場ファン数（L1..L5・index = lane-1。fan.png 実測）。
+   *
+   * 指定時は audience / fanFactorPermil より優先し、fan.ts laneFanFactorsPermil
+   * （満員ガード付き表引き）でレーン別ファンファクターを確定して
+   * SimulateInput.laneFanFactorPermil へ注入する。引力度配分モデル
+   * （fanFactorPermilByAttraction）は使わない——実測のレーン別来場数に
+   * 集目/ステルスの配分効果が内包されているため（二重補正の防止）。
+   * 未指定時は従来の単一 audience / fanFactorPermil 経路を完全互換で維持する。
+   */
+  laneFans?: readonly number[];
+  /**
+   * 会場最大キャパシティ（stages_index の cap）。laneFans の満員判定
+   * （合計 >= maxCapacity → 全レーン一律 f(cap/5)）に使用。未指定時はレーン別表引き
+   */
+  maxCapacity?: number;
   /** 成功率の基礎値 permil（既定 1000=メンタル盛りで全成立） */
   successBasePermil?: number;
   /** ミスノート（例: T5実測は b1 全レーン取りこぼし） */
@@ -721,7 +737,32 @@ export function buildSimulateInput(options: BuildSimOptions): BuildSimResult {
     stageFactorPermil: 1000,
   };
   let fanFactorPermil = options.fanFactorPermil ?? 1620;
-  if (options.audience !== undefined) {
+  let laneFanFactorPermil: number[] | undefined;
+  if (options.laneFans !== undefined) {
+    // 【Phase 16-A4・2026-09-30】レーン別来場数（fan.png 実測）→ 満員ガード付き表引き。
+    // 実測 5 サンプル 25/25 一致の規則（phase16_action3b_fan_full_house.md）:
+    //   合計 >= cap（満員）→ 全レーン一律 f(cap/5) ／ 合計 < cap（空席）→ f(lane_fans[i])
+    if (data.audienceAdvantage === undefined) {
+      throw new Error("laneFans specified but audienceAdvantage table is missing");
+    }
+    laneFanFactorPermil = laneFanFactorsPermil(
+      options.laneFans,
+      data.audienceAdvantage,
+      options.maxCapacity,
+    );
+    const laneSum = options.laneFans.reduce((sum, fans) => sum + fans, 0);
+    const isFullHouse =
+      options.maxCapacity !== undefined && laneSum >= options.maxCapacity;
+    // fanFactorPermil（スカラー）は従来互換の参考値（レーン平均）。エンジンは laneFanFactorPermil を優先
+    fanFactorPermil = Math.round(
+      laneFanFactorPermil.reduce((sum, value) => sum + value, 0) / laneFanFactorPermil.length,
+    );
+    warnings.push(
+      `laneFans=(${options.laneFans.join("/")}) 合計 ${laneSum} / cap ${options.maxCapacity ?? "-"} → ` +
+        `${isFullHouse ? "満員: 全レーン一律 f(cap/5)" : "空席: レーン別表引き"}: ` +
+        `[${laneFanFactorPermil.join(", ")}]‰（平均 ${fanFactorPermil}‰）`,
+    );
+  } else if (options.audience !== undefined) {
     if (data.audienceAdvantage === undefined) {
       throw new Error("audience specified but audienceAdvantage table is missing");
     }
@@ -743,6 +784,8 @@ export function buildSimulateInput(options: BuildSimOptions): BuildSimResult {
     notes,
     stage,
     fanFactorPermil,
+    // 【Phase 16-A4】レーン別来場数モードのみ注入（未指定時は従来経路＝完全互換）
+    ...(laneFanFactorPermil !== undefined ? { laneFanFactorPermil } : {}),
     fanBaseCount: options.audience,
     successBasePermil: options.successBasePermil ?? 1000,
     baseCritRate: options.baseCritRate,

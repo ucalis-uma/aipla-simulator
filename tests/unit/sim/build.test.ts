@@ -176,6 +176,104 @@ describe("buildSimulateInput", () => {
     expect(b2.base.fanFactorPermil).toBe(1620);
   });
 
+  // 【Phase 16-A4・2026-09-30】レーン別来場数モード（満員ガード付き）。
+  // レーン別来場数は fan.png 実測（research/23_beat_score_analysis/tmp_lane_fans_out.txt）。
+  // 未指定時は従来の単一 audience / fanFactorPermil 経路を完全互換で維持する。
+  describe("laneFans（レーン別来場数・満員ガード付き）", () => {
+    it("満員（S3: 合計 40,000 = cap）は全レーン一律 f(cap/5)=1375‰ を注入する", () => {
+      const b = buildSimulateInput({
+        deck: T5_DECK,
+        stageFile: "qt-daily-003-19",
+        chartFile: "chart-hsm-004-001",
+        data,
+        laneFans: [8515, 7748, 8535, 8518, 6684],
+        maxCapacity: 40000,
+      });
+      expect(b.base.laneFanFactorPermil).toEqual([1375, 1375, 1375, 1375, 1375]);
+      expect(b.base.fanFactorPermil).toBe(1375);
+      expect(b.warnings.some((w) => w.includes("満員: 全レーン一律"))).toBe(true);
+      // 満員ガードがないと L5 が 1342‰（−2.4%）へ後退することを同時に固定
+      expect(b.base.laneFanFactorPermil?.[4]).not.toBe(1342);
+    });
+
+    it("空席（S2: 合計 66,031 < cap 70,000）はレーン別表引きを注入する", () => {
+      const b = buildSimulateInput({
+        deck: T5_DECK,
+        stageFile: "qt-daily-003-19",
+        chartFile: "chart-hsm-004-001",
+        data,
+        laneFans: [11996, 13543, 13741, 13255, 13496],
+        maxCapacity: 70000,
+      });
+      expect(b.base.laneFanFactorPermil).toEqual([1539, 1570, 1574, 1565, 1569]);
+      // 参考値（レーン平均）は単一 audience 13,206 → 1564‰ 相当の近似値
+      expect(b.base.fanFactorPermil).toBe(1563);
+      expect(b.warnings.some((w) => w.includes("空席: レーン別表引き"))).toBe(true);
+    });
+
+    it("laneFans 未指定時は laneFanFactorPermil を付与しない（従来経路＝完全互換）", () => {
+      const legacy = buildSimulateInput({
+        deck: T5_DECK,
+        stageFile: "qt-daily-003-19",
+        chartFile: "chart-hsm-004-001",
+        data,
+        audience: 16000,
+      });
+      expect(legacy.base.laneFanFactorPermil).toBeUndefined();
+      expect(legacy.base.fanFactorPermil).toBe(1620);
+    });
+
+    it("laneFans の要素数不足・不正値はエラー", () => {
+      expect(() =>
+        buildSimulateInput({
+          deck: T5_DECK,
+          stageFile: "qt-daily-003-19",
+          chartFile: "chart-hsm-004-001",
+          data,
+          laneFans: [1000, 1000, 1000, 1000],
+          maxCapacity: 5000,
+        }),
+      ).toThrow();
+      expect(() =>
+        buildSimulateInput({
+          deck: T5_DECK,
+          stageFile: "qt-daily-003-19",
+          chartFile: "chart-hsm-004-001",
+          data,
+          laneFans: [1000, 1000, 1000, 1000, -1],
+          maxCapacity: 5000,
+        }),
+      ).toThrow();
+    });
+
+    it("組み上げたレーン別ファンファクターがビートスコアへ適用される（満員ガード vs 素朴表引き）", () => {
+      const l5BeatTotal = (opts: { laneFans: number[]; maxCapacity?: number }): number => {
+        const b = buildSimulateInput({
+          deck: T5_DECK,
+          stageFile: "qt-daily-003-19",
+          chartFile: "chart-hsm-004-001",
+          data,
+          ...opts,
+        });
+        const res = simulateTimeline({
+          ...b.base,
+          rng: new NeutralRng(),
+          criticalProvider: () => false,
+        });
+        return res.beats
+          .flatMap((bt) => bt.events)
+          .filter((e) => e.lane === 5 && e.sourceKind === "beat")
+          .reduce((sum, e) => sum + e.gainedScore, 0);
+      };
+      const laneFans = [8515, 7748, 8535, 8518, 6684]; // S3（合計 40,000）
+      const guarded = l5BeatTotal({ laneFans, maxCapacity: 40000 }); // 満員 → 1375‰
+      const naive = l5BeatTotal({ laneFans }); // 満員ガードなし → 1342‰（−2.4%）
+      expect(guarded).toBeGreaterThan(naive);
+      // L5 のビートスコア比がファンファクター比（1375/1342）に一致する
+      expect(guarded / naive).toBeCloseTo(1375 / 1342, 2);
+    });
+  });
+
   it("baseCritRate を SimulateInput へ透過する（Peing確定・動的クリティカル用）", () => {
     const withRate = buildSimulateInput({
       deck: T5_DECK,

@@ -1361,3 +1361,143 @@ S1 の「レーン非依存で約 2.2 倍」「示唆 fan ≈ 1000‰（＝実�
   「※最大」の意味と目標スコア誤用の再発防止明記
 - `src/`・`data/`・golden・実測サンプルは無変更（`npm run typecheck` 0 エラー）
 
+## 7. アクション3b: §6 の「レーン別」は**空席がある会場のみ**（満員なら一律）— 5サンプル 25/25 で確定
+
+S4・S5 の `fan.png` を横幅 1320px＋拡大で直接閲覧してレーン別「来場ファン数」「スコアボーナス」を読み、
+S1-S5 の 25 レーン分をマスタ表引きと突合した（詳報 `research/23_beat_score_analysis/phase16_action3b_fan_full_house.md`／
+検査 `node research/23_beat_score_analysis/tmp_lane_fans.mjs`、出力 `tmp_lane_fans_out.txt`）:
+
+| サンプル | 会場キャパ（`vendor/Quest.json`） | 来場合計 | 充足率 | 全レーンの表示ボーナス |
+|---|---|---|---|---|
+| S1 `qt-area-1-001` | 100 | 100 | 100.0% 満員 | +0.2% ×5（一律） |
+| S2 `qt-tower-680` | 70,000 | 66,031 | 94.3% | +53.9 / +57.0 / +57.4 / +56.5 / +56.9%（**表引きと 5/5**） |
+| S3 `qt-ex-tower-005-045` | 40,000 | 40,000 | 100.0% 満員 | +37.5% ×5（一律） |
+| S4 `qt-ex-tower-005-054` | 40,000 | 40,000 | 100.0% 満員 | +37.5% ×5（一律） |
+| S5 `qt-tower-686` | 80,000 | 61,564 | 77.0% | +57.6 / +51.5 / +57.6 / +53.6 / +52.5%（**表引きと 5/5**） |
+
+- **確定した規則**: `来場合計 >= 会場キャパ`（満員）なら**全レーン = `f(capacity/5)` ＝「※最大」**、
+  空席があるときだけ `f(レーン別来場数)`。素朴なレーン別表引きは **13/25 不一致**、この規則は **0/25 不一致**
+  （S3 はレーン別 8,515/7,748/8,535/8,518/6,684 で表引きなら 38.7/36.8/38.8/38.7/34.2% となるが、実機の表示は全レーン 37.5%）
+- **「※最大」= `f(capacity/5)` は 5/5 で一致**（S1 +0.2 / S2 +58.0 / S3 +37.5 / S4 +37.5 / S5 +62.0%）。
+  `maxCapacity` は画面でなく `vendor/Quest.json` から確定（出典規律遵守）
+- **計算機への含意**: 現行エンジン（単一 `audience` = レーン平均を全レーンへ適用）は**満員会場では実機と完全一致**。
+  §6 の続きで `lane_fans[]` を素直に配列化すると S3 L5 が係数 **−2.4%**・L3 が +0.9% の**明確な後退**になる
+  → 実装には**満員ガード**（`sum(lane_fans) >= maxCapacity` なら `f(cap/5)` 維持）が必須と §5-2 に追記
+- **S3 のレーン別スコア乖離は fan では説明できない**（全レーン一律なので原因から除外）。
+  得をするのは空席がある会場だけ（S2 ±1.60%・S5 ±2.01%、レーン別係数の最大/最小 S5 で 1.0403）
+- §6 の未解明点（トレース `fan` が表引きより 0.6〜1.9% 低い）は**満員規則でも説明できない**（満員なら 1375‰ 一律のはず）→ 引き続きレーン別 fan 実装前に解く
+- 訂正適用: `AGENTS.md`（fan.png の注意書き）・`prompts/measure-new-sample.md`（`lane_fans[]` の記録規則と
+  「レーン別来場数は `cap/5` を超えうる（S3 L3 8,535 > 8,000）のでクランプ禁止」）・`phase16_action3_fan_per_lane.md`（冒頭に訂正注記）
+- `src/`・`data/`・golden・実測サンプルは無変更（追記は research・prompts・AGENTS のみ。計算機コード未変更のため typecheck/vitest 対象外）
+
+## 8. 環境整備: `npm run typecheck` が**赤だった**既存要因を除去（本件の副産物）
+
+- 旧 `tools/probe_beats.ts`（untracked の使い捨て probe）が `src/timeline/stageId.ts`・`src/types/skillTypes.ts`
+  （**どちらも存在しない**）と現行型に無い `BuildSimOptions.questId` / `BuildSimResult.fanBaseCount` を参照し、
+  `tsconfig.json` の include が `tools/**/*.ts` を含むため **typecheck が 5 エラーで落ちる**状態だった
+  （`research/23_beat_score_analysis/probe_tmp.txt` のモジュール解決エラーどおり、一度も正常実行されていない死んだファイル）
+- **`research/23_beat_score_analysis/probe_beats.ts` へ移設**（`research/**` は typecheck 対象外）。削除せず、
+  冒頭に「移設・現状動作しない・再使う場合の修正点」を明記し、import 経路と `ROOT` の階層だけ実態に合わせた
+- 効果: `npm run typecheck` **0 エラー**に復帰（以後の全エージェントの受け入れ検査が通る）
+- 併走確認: `npx vitest run` **41 test files passed**（T5 golden 2,581,114,209 の検査を含む）／
+  `node tools/audit_audience.mjs` は既存どおり NG 1 件（サンプル1 の audience=71000 = 目標スコア誤入力・§2 で確定済みの既知事項）
+
+
+## 9. アクション4: 満員ガード付きレーン別ファンボーナス実装 + S3 発動ビート超過（b63/b71/b141）の解決
+
+詳報 `research/23_beat_score_analysis/phase16_action4_report.md`。
+
+### 9-1. 実装（`src/`・後方互換）
+
+- `src/formula/fan.ts` に `laneFanFactorsPermil(laneFans, table, maxCapacity?)`（満員ガード付き表引き）:
+  `合計 >= cap`（満員）→ 全レーン一律 `f(floor(cap/5))`、`< cap`（空席）→ `f(laneFans[i])`。
+  満員ガードなしの素朴表引きは S3 L5 が 1342‰（係数 −2.4%）・L3 が +0.9% の後退になるため必須
+- `src/timeline/types.ts`: `SimulateInput.laneFanFactorPermil?`（index = lane-1）。指定時は
+  `fanBaseCount`（引力度モデル）/`fanFactorPermil` より優先し、引力度配分と集目/ステルス加算を
+  行わない（`fan.png` の実測数が再配分済みのため二重補正を防止）
+- エンジン 2 サイト（`settleScoreGet` / `settleBeatNote`）に同一の優先順位を追加
+- `src/sim/build.ts`: `BuildSimOptions.laneFans` / `maxCapacity`。判定理由を `warnings` に出し、
+  スカラー `fanFactorPermil`（レーン平均）を参考値として維持。`laneFans` 未指定時は従来経路
+- `src/cli/simulate.ts`: `stage.lane_fans[]` を読み、指定時は audience 自動導出を抑止
+- 満員会場の総スコアへの影響（S3 リプレイで実測）: 新経路 73,020,495 vs 従来 73,826,029（−1.1%）。
+  実測レーン別ポップは L3 が他より +15% 高く引力度比率（1568/1356）と一致するため、
+  「満員会場で表示値 = 適用係数」は【Estimate】として残し、既定は従来経路のまま
+- テスト +14 件（fan 7 / build 6 / engine 2）。受け入れ: 対象 3 ファイル **78 passed**、
+  `npx vitest run` **41 ファイル / 518 passed / 1 skipped（519）**、`npm run typecheck` 0 エラー、
+  T5 golden 不変。S1/S2/S3 の `*-specs.test.ts` も無変更で通過（実測入力・`data/` は無変更）
+
+### 9-2. タスク2: トレース `fan` の 0.6〜1.9% 差 = 引力度配分の per-lane 値【解決】
+
+- trace `fan` = エンジンの引力度モデル `fanFactorPermilByAttraction` の per-lane 分配値
+  （`count_i = round(baseCount×5×attract_i/Σattract)`。集目 10 段の L3 へ再配分）で、
+  会場レベルの表引き（※最大）とは違う量。S3: 非集目 4 レーン 1356 / L3 1568（平均 1360.8‰）；
+  S1: 18〜19人組 1001 / 20〜22人組 1002（`fan.png` の 19/19/18/22/22 の再配分結果）
+
+### 9-3. タスク3: S3 の発動ビート超過（b63/b71/b141）【解決】
+
+- 原因 = **スキルバナーがそのレーンのノートポップを記録から隠す**（バーは正しい）。
+  新規 `tmp_a4_banner_gap.mjs` で 4 サンプル×全ビートを全数検査:
+  S3 の n=5 で |gap|>600 は **b63(+54,184)・b71(+39,097)・b141(+54,982) の 3 件だけ**。
+  3 件ともバナー付きレーンの slot がバナー値（+335.8K/+120.4K/+106K）で、差はノート 1 本級。
+  **S3 に負の gap は 0 件**（二重計上なし → `beatWeightsPermil` の 2000‰ 容疑を棄却）。
+  同署名の n=4 ビート（b13/b41/b53/b61/b73 他）も金額はノート級。b70/b142 は A スキル FAIL の
+  正当な 0。S1 の n=5 唯一の外れ b2(+60,809) = action2d の「b2 0.601」も同じ署名
+- 証拠: `lane3/beat_141.PNG`（+106K バナー = 記録 slot と一致）・`lane5/beat_063.PNG`、
+  `tmp_a4_s3_beats.ts`（sim 内訳）+ `tmp_a4_banner_gap.mjs`（検査）。4 ファイルは読み取り専用に標示
+
+### 9-4. タスク4: フォト重複規則と S1 残分散【部分決着】
+
+- `tools/analyze_beat_score_models.ts` の候補比較で **D+fixed(後) = photoSum（合算）+ fixed を
+  pct の後** が S2（レーン間σ 0.0084・全レーン ±5% 内）・S3（σ 0.0069）の最良仮説。
+  S1 の L2 0.9055 / L5 0.8831 の残分散も同モデルで σ 0.0032 に収束
+  （属性/優位/能力値ではなくフォト計上の候補差。fan でもない）
+- 残るのはレーン非依存の一様オフセット（S1 −12% / S3 −4.75% / S2 +1.98%）。
+  S1 には LB 定義なし（`live_bonuses.json`）→ ライボでは説明できない。
+  次に必要なデータ: ① `live_bonus.png` 付きサンプル ② 同一ビート 2 フォト同時発動 ③ 満員・偏り会場の
+  レーン別ポップ（§9-1 の【Estimate】の裁定）
+
+## 10. アクション5: `lane_fans` の CLI 経由 E2E（検証済み）と **A/SP ノート精算の欠陥**を特定（2026-09-30〜10-01 / cline）
+
+詳報: `research/23_beat_score_analysis/phase16_action5_report.md`
+証拠: 同 `phase16_action5_lane_fans_cli_e2e.mjs` + `_out.txt` / `phase16_action5_lane_gap.ts` + `_out.txt` / `phase16_action5_vitest_out.txt`
+
+### 10-1. CLI 黒箱 E2E: **検B・検C・検D・後方互換 すべて PASS**（総合 PASS）
+
+- CLI を子プロセスで 2 回（`laneFans` 有/無・`--crit-rate 0 --n 1`）叩く黒箱検査。満員 = S1・S3、空席 = S2
+- 検B（実適用レーン係数 = `fan.ts` の期待値）: S1 `[1002×5]` / S2 `[1539,1570,1574,1565,1569]` / S3 `[1375×5]` **3/3 一致**、legacy 側は `null`（後方互換）
+- 検D（空席 S2 の線形逆算）: legacy のレーン別スコア → 係数逆算 → 表を逆引きした来場数を `lane_fans` に与え直すと
+  **legacy を最大 0.046% で再現**（許容 ±0.5%）→ ファン係数はレーン別線形乗算であることが黒箱で確認できた
+- **検A（legacy との総和噛み合い）は参考扱いに降格**: 満員でも legacy は lane_fans より 1.47〜1.96% 高い。
+  `fanFactorPermil` は同一値で、差は legacy 側の集目/ステルス配分の上乗せ（§9 の設計判断 = `lane_fans` 側は二重補正防止のため意図的に省く）。
+  「legacy と一致」をゲートにすると設計と矛盾するため、期待値照合（検B）に置き換えた
+- 副産物: CLI JSON の `settings.laneFanFactorPermil`（`number[] | null`）— 実適用係数を逆算なしで監査できる
+
+### 10-2. 前セッションのチャット報告（証拠なし）の再検証: **数値違い・件数違い**
+
+「S3 L5 に sim=0/実測 316.9K が 6 件」→ **L5 では 0 件**。実在は S3 = b4 L2 (2.3M)・b34 L2 (2.9M)・b169 L3 (2.5M)、
+S2 = b112 L5 (1.0M)・b148 L4 (3.2M)、S1 = 0 件。316.9K という値はどこにも存在しない（チャットのみ・証拠なしの報告の再発）。
+→ 教訓: **sim=0 報告は PopTable（`Map<beat,(number|null)[]>`）の総当たりで出し、pop セル数を添える**（本アクションで実装済み）
+
+### 10-3. 原因の特定: **A/SP ノートの得点がスキル発動に紐付いている**（タイミングズレ・レーン帰属誤りは否定）
+
+- `POSITION_TO_LANE=[3,2,4,1,5]`（`src/timeline/constants.ts`）と実測 pop のレーンが **5/5 一致** → 帰属の誤りではない。隣接ビートの sim も正常で Timing でもない
+- 該当 5 セルは全て A ノート（type=2）で発動トレースが `A/L#:FAIL(stamina_short)`（同ビートの P/フォトも同時に失念）。
+  **A/SP の `stamina_short` 失点: S3 11 件（実測 pop 7,700,000 = 全体の 9.7%）/ S2 2 件（4,200,000 = 5.4%）/ S1 0 件**
+- 金額の対応: **S3（−5.59M）は失点 7.70M で過不足なく説明**（失点を除くと +2.1M の過剰側）。
+  **S2（+28.84M）はほぼ全額が b90 の SP 1 個**（sim 63,317,124 vs 実測 29,500,000 = −33.8M。b90 を除くと **−10.25%** に反転）
+- 仮説【Estimate】: 実ゲームは A/SP ノートを**ヒット時点で払い、レーンスキルの発動可否と独立**。
+  未修正（裁定には backfill `color` との全件突合が必要 → 報告書 §5-1）
+- 副次: **S2 のレーン別スタミナ記帳が実測と大きく乖離**（末尾 sim [7,683,199,219,221,53] vs 実測 [2,683,8,222,2,333,4,151,2,309]）。
+  S1 は ±19 で一致するので **S2 固有**の欠陥。S3 L5 の +37% は分散型で A/SP 問題では説明できない（λ/off-attr 側）
+
+### 10-4. S4・S5 は対象外（データ不在）
+
+`samples_*` 実測: S4 = `deck.json`+`fan.png` のみ（`measured_data_v2.json` は無効撮影回のみに存在）/
+S5 = `fan.png` のみ（デッキも組めない）。**S4/S5 はレーン別データが撮れるまで E2E に載せられない**
+
+### 10-5. 検証と変更ファイル
+
+- `npx vitest run` = **41 files / 518 passed・1 skipped**、T5 ゴールデン **2,581,114,209 不変**、`npm run typecheck` クリーン
+- 変更: `src/cli/simulate.ts`（`settings.laneFanFactorPermil` の追加のみ・スコア経路不変）
+- 新規: `phase16_action5_lane_fans_cli_e2e.mjs` / `phase16_action5_lane_gap.ts` / 報告書
+
