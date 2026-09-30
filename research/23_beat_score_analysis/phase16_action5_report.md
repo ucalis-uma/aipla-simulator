@@ -4,6 +4,7 @@
 関連: `phase16_action3b_fan_full_house.md`（満員一律・空席レーン別の確定）/ `phase16_action4_report.md`（満員ガード付き `lane_fans` 実装）/ `phase16_action2d_lane_pops_audit.md`（レーン別ポップ監査）
 証拠: `phase16_action5_lane_fans_cli_e2e.mjs` + `_out.txt` / `phase16_action5_lane_gap.ts` + `_out.txt` / `phase16_action5_vitest_out.txt`
 （`npm run typecheck` は上記 2 スクリプト・`src/` ともにクリーン）
+コミット: **`f05c7d5`**（A4 の未コミット実装分 = `lane_fans` の engine/build/fan 適用と、本 A5 の検査一式を同梱）
 
 ## 0. 完了条件と充足状況
 
