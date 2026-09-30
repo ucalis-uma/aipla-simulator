@@ -155,3 +155,25 @@ prompts/phase16-action4-engine-fan-and-offsets.md
 アクション3bで確定した満員ガード付きファンボーナスの src/ 実装、トレース fan 欄微小差の解明、
 S3 発動ビート+10%超過（b63/b71/b141）の真因特定、S1 残分散・フォト重複規則の最終決着を行う。
 
+prompts/phase16-action5-* はプロンプト化していない（2026-09-30〜10-01 実行・完了 14c99e8。
+CLI 経由 E2E は検B/C/D/後方互換すべて PASS、乖離マッピングで A/SP 失点と b90 上振れを特定。
+詳報 research/23_beat_score_analysis/phase16_action5_report.md / 実装ログ §10）
+
+prompts/phase16-action6-stamina-ledger-and-asp-activation.md
+は Phase 16 アクション6（2026-10-01 作成・**最優先**・単独で着手可）。レーン別スタミナ記帳の初回分岐ビートを
+特定して訂正し、「sim=0 かつ実測 pop>0」5 セル（S3 b4L2/b34L2/b169L3、S2 b112L5/b148L4）を発動成功＋pop±15% で
+再現する。**発動成功セルの実測 pop（2.0〜3.9M）と失点疑いの pop（1.0〜3.2M）が同規模**のため、
+「A/SP をヒット時点で払う（発動と独立）」規則変更よりも「実機では発動していた（= sim のスタミナ帳簿が過少）」が最有力。
+規則変更はフォールバックで、engine を触る前にユーザー承認必須。ゲート: vitest 全件 / T5 golden 不変 / S1 ±1% 維持 / S3 ±3% 以内。
+
+prompts/phase16-action7-s2-l3-sp-b90-overpay.md
+は Phase 16 アクション7（2026-10-01 作成・**アクション6 依存**）。S2 +37.10% の大半 = b90 L3 の SP 1 点
+（sim 63,317,124 / 実測 pop 29,500,000・バー増分 29,538,545）の乗因子分解を b100 L3・b41 L3 対照で行い、
+掛けすぎ位置を 1 つに特定して b90 ±15% / L3 ±20% / S2 ±10% に持っていく。engine.ts は 1 ファイル 1 エージェント。
+
+prompts/phase16-action8-pop-vs-lane-total-integrity.md
+は Phase 16 アクション8（2026-10-01 作成・**読み取り専用なので 6/7 と並行可**）。S3 L5 の
+「pop 読込セルでは sim とほぼ同額（Σ(pop−sim) = −113,820）なのにレーン合計は sim の 72.8%」という構造矛盾を、
+15 レーン分の Σpop/レーン合計 表・over-sum 検出・帰属一致率・scores_by_lane vs total_score 照合で確定させる。
+S3 L5 の +37% が実測側のデータ問題ならシミュレータの欠陥として扱うのは中止する。
+
