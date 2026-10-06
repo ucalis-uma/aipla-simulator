@@ -231,3 +231,21 @@ F3=**カード枠フォトの golden ゲート**（実機に無い発動を止�
 実装順序は F1→F2→（T5 再取得・A10）→F3。T5 ゴールデンは段階別に再取得して報告（9b 時点: 2,581,114,209）。
 受け入れは A9 手順書 §1 T5 の 8 項目をそのまま使用。9b の結論は research/23_beat_score_analysis/phase16_action9b_report.md。
 
+【アクション10 完了 2026-10-02 / コミット b12d78b】`tools/audit_hidden_cells.mjs`＋`tools/audit_hidden_cells_sim.ts`
+（A8 の 2 本を移植・テキスト解析は廃止）・`npm run audit:hidden`・AGENTS.md の実効検査行。ゲートは
+比 = sim(pop読込不能セル) ÷ (レーン合計 − Σpop) で **≥2.0 = FAIL**（Σpop の 2 口径 × photo-gate off/on の最悪値で判定・閾値は緩めない・FAIL で exit 1）。
+F3 前の実行で **S3 L5 のみ FAIL**（統合 12.49×・内生 **7.69× = A8 と同値**・sim レーン合計 13,289,439・exit 1）。
+原因は `goldenPhotoNames` 未指定時のフォトスキル素通り＝**実装側の実バグ**で、**F3 適用により 0.86×/0.95× へ解消**（基準は一切緩めていない）。
+F3 後は素の既定と受け入れ経路が同値（S1 114,162,150 / S2 74,669,710 / S3 77,425,702）で **FAIL 0 / PASS / exit 0**、
+閉包 3/3 差 0・`--ledger` で S1 全 5 レーン 100%（L1 176/176）。逆方向（S3 L3 = 0.04×）の下ゲートは未実装【Unknown】。
+詳報 phase16_action10_report.md。
+
+【アクション9c 完了 2026-10-02 / コミット b12d78b】F1（消費ブーストは**属性不問＝段数の合計**）・F2（phase=last のコストを減算前（実機表示）状態で評価）・
+F3（**golden フォトゲートの既定を off**・実測再現側は必ず名前を渡す）を実装。**受け入れ 8 項目すべて充足**:
+S1 **+0.25%**・S1 L1 系列 **176/176**（F2 で 59/176 → 176/176）・b70×L5 = `stamina_short` で 0・
+b4L2/b34L2/b169L3 発動（cost 1,131/1,131/492・セル 2.32M/3.10M/2.33M vs 実測 pop 2.3M/2.9M/2.5M）・S3 **−1.17%**・S2 **−3.65%**・
+`npx vitest run` 41 files / 519 passed / 1 skipped ＋ typecheck 0 errors・`audit_audience` / `dump_lane_pops` / `audit:hidden` 緑。
+**T5 ゴールデンは F1/F2/F3 の全段階で 2,581,114,209 不変**（golden テストの 17,521,599,508 も不変）。
+9b の「S2 +37.40%」「S3 −1.32%」は再現せず（実測可能値は −3.65% / −1.17%）、9b ハーネスは `critical_flags` を読めず**クリ空**だった（総合値は過小・比較不可）。
+A6 の「S1 L1 176/176」は F2 前は再現しない（59/176）。archive §Phase12 追補3 の「自属性のみ」に反証注記を追加。詳報 phase16_action9c_report.md。
+
