@@ -264,3 +264,15 @@ lane_fans は ±1.6pt のみ）・再現コマンド・読み取り専用スク�
 ゲート: S2 の |乖離| が縮む（目標 2.0% 以内）・S1 +0.25% と S3 −1.17% 維持・T5 2,581,114,209 不変・vitest 全件＋typecheck 0・
 `npm run audit:hidden` PASS 維持・単体テスト追加。
 
+【完了 2026-10-02 / commit 128f18b】Phase 16 Action11 実行済み（`src/` は**無変更**）。
+裁定①**ライボは未発動**（`サンプル2/live_bonus.png` は事前定義画面。S2 のカード技能 15 件・golden `photo-L*` 20 件のいずれにも
+`stamina_cost_down` が無く、golden 全体でもデッキ外の `sk-ktn-05-wedd-00-1` 1 件のみ。probe も発動 0 件）。
+②beat 素点は **「beat ノート専用のレーン定数倍率」まで絞れたが単一機構に特定できず**（固定重み LSQ rms 2.3〜7.7%・全 120 順列・
+own/off 属性重み・per-lane b1 定数オフセット（S1 の b1=1060 同一 4 レーンが反例）をすべて数値で棄却。事前解析の「S1≈1.00」は否定＝
+S1 1.0715/1.1309/0.9997/1.0868/1.1448）。
+③L3 の b≈100 の −10% 段差は **クリティカル係数の段数遷移**（sim の `critFactorPermil` 2504→2254 = `critical_coeff_up` 15→10 段。
+非クリセルは全期間 0.9790 で不変、crit=2254 のセルだけ 0.9258）＝素点とは**別機構**。
+ゲート: S2 −3.65%（修正なしのため現状維持）／S1 +0.25% ✓／S3 −1.17% ✓／`npx vitest run` 519 pass / 1 skip ✓／
+`npm run typecheck` 0 エラー ✓／`npm run audit:hidden` PASS・FAIL 0・WARN 0（exit 0）✓／T5 不変。
+次に必要な観測は「同一デッキを別レーンに置いた実測」または「1 属性だけ変えた実測」（デッキ 3 属性とレーン識別子が交絡）。
+詳報 `research/23_beat_score_analysis/phase16_action11_report.md`。
