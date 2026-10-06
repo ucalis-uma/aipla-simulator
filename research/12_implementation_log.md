@@ -1586,3 +1586,22 @@ S5 = `fan.png` のみ（デッキも組めない）。**S4/S5 はレーン別デ
   今回の over-produce を自動捕捉できる（現行の唯一の違反 = S3 L5）。下側ゲートは L3 が 0.04×（過小）で要設計
 - **engine.ts は未変更**（`git status` に `src/`・`data/`・`tests/` のエントリなし）。
   追加は `research/23_beat_score_analysis/` の解析スクリプト 2 本＋出力＋レポートのみ。一時プローブは削除済み
+
+
+## Phase 16 / Action 9 — フォト cost の「±6% 揺らぎ」を act 単位で裁いて最終裁定（2026-10-01 / cline）
+
+- 成果物: `research/23_beat_score_analysis/phase16_action9_photo_ledger.ts`（515 行出力）＋
+  `phase16_action9_photo_cost_conclusion.md`（結論メモ）。`src/**` は読み取りのみ
+- **[F] の新物差し**: engine の cost は**発火時点の live 状態**（`engine.ts:1435-1436`）、
+  `buffSnapshots` は **scoring 時点＝全 act 後**（`engine.ts:272`）。前ビート snapshot = 下限・当該ビート = 上限の区間で裁く。
+  A6 が目撃した「±6% の揺らぎ」は**この live/snapshot の取り違えが入口**だった
+- **照合 6 件 / 差ゼロ以外 5 件。±6% 帯域内に限ると残差は 2 件だけ**（S1 b60 +2.87% / S3 b13 +4.98%）。
+  帯域外 3 件（+47.8% / +200.0% / −39.2%）は台帳原価・読み取り・sim の boost 源欠落の別問題で「揺らぎ」とは無関係
+- **帯域内 1 件が数量一致で説明**: S1 b60 L1 伊吹渚 6/22 = engine 662（発動時 0 段）vs 実測 681 = `662 × 1030‰`。
+  当該レーンの当該ビートの発動 act はこのフォト 1 本だけ → **実機は発動 act 自身の boost を自 act の cost に織り込む疑い**
+  （engine は織り込まない：cost 計算 → 効果適用の順）。同 photo の b120 発動は engine 681 = 実測 681 で一致
+- **「同一ビート内の他 act との発動順」が原因の act は S1/S2/S3 で 0 件** → A6 の「発動順ズレ」は不支持
+- **留保**: 同じ +3 段は「boost 持続境界の off-by-one」でも出る（b60 単独では分離不能・どちらも決定論で乱数ではない）。
+  クリーンな照合が 6 件しかないので「±6% を全部説明した」とは言わない。S4/S5 は act 台帳を作れないため未検証
+- 検証: `npm run typecheck` 正常（ただし `tsconfig.json` の include が `src/tests/tools` なので research/ は型検査対象外＝実行成功で妥当性確認）、
+  `npx vitest run` **41 files / 518 passed / 1 skipped / 0 failed**（T5 golden 2,581,114,209 不変）。今タスクの一時ファイル 43 個を削除
