@@ -71,6 +71,15 @@
   `tests/golden/t5-scores.golden.test.ts`・`tests/unit/sim/ui-pipeline.test.ts`・`tests/unit/sim/build.test.ts`・
   `tests/unit/timeline/buff-snapshots.audit.test.ts`（T5 節）・`tests/unit/photo-link.test.ts`
   （＋「未指定なら注入しない」を新アサーションとして追加）。
+- **供給元の洗い出し（`goldenPhotoNames` を grep）**: 実測再現側はすべて渡している
+  （`src/cli/simulate.ts` の `loadGoldenPhotoNames()`・`ui/app.ts` の `GOLDEN_PHOTO_NAMES`・
+  `tools/analyze_beat_score_models.ts`（4 箇所すべて）・`tools/dump_samples_trace.ts`・
+  `tools/audit_hidden_cells_sim.ts`・`research/23` の 9c ハーネス）。
+  `src/optimizer/index.ts` は `options.goldenPhotoNames` をそのまま素通しする設計（未指定＝ゲート off が正しい既定）。
+  `tools/t5_solver.ts` は T5 実測デッキを使うのに未指定だったため、**F3 で名前を渡すよう修正**した
+  （テストと同じ「デッキ自身のフォト名＝T5 実測名」）。**過去の診断用ツール**
+  （`tools/debug_*`・`tools/dump_*`・`tools/trace_*`・`research/17〜22` の trace）は未指定のままなので、
+  F3 後は golden フォトスキルが入らない。これらの出力を実測と比べるときは名前を渡す改造が要る（歴史的成果物は再実行しない限り影響なし）。
 - **証拠（A10 の sim ダンプ・同条件）**: photo-gate=off（素の既定）と on（受け入れ経路）が
   **S1 114,162,150 / S2 74,669,710 / S3 77,425,702 で完全一致**（F3 前は off 側が
   S2 100,896,903・S3 73,020,495 と大きく違っていた）。研究ハーネスの `--legacy` も F3 後は既定と同一値。

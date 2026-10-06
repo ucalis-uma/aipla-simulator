@@ -83,7 +83,7 @@
 - **`buildSimulateInput` の `goldenPhotoNames` は省略すると golden フォトスキル（photo-L*）を注入しない
   （2026-10-02 F3・既定 off）**: 実測を再現する呼び出しは**必ず T5 実測フォト名を渡す**
   （CLI `loadGoldenPhotoNames()` / UI `GOLDEN_PHOTO_NAMES` / `tools/analyze_beat_score_models.ts` /
-  S1 の deck のように `disabledSkillIds` で無効化する経路）。旧実装は「未指定＝全件注入」で、
+  `tools/t5_solver.ts` / S1 の deck のように `disabledSkillIds` で無効化する経路）。旧実装は「未指定＝全件注入」で、
   渡し忘れた研究ハーネスに T5 由来のフォトスキルが混入し、S1/S2/S3 の実測に無いスタミナ消費・
   スコアが乗っていた（`phase16_action9b_report.md` §4・A10 隠れセルの 7.69×）
 - **`deck.json` の `audience` には「個人（レーン平均）来場数」だけを入れる（2026-09-30 追加・最重要）**:

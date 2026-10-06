@@ -1625,7 +1625,9 @@ S5 = `fan.png` のみ（デッキも組めない）。**S4/S5 はレーン別デ
   `goldenPhotoSkillApplies` の `goldenNames === undefined` を `true`（全件注入）から **`false`（注入しない）** へ。
   実測再現側は必ず名前を渡す（CLI `loadGoldenPhotoNames()` / UI `GOLDEN_PHOTO_NAMES` /
   `tools/analyze_beat_score_models.ts`。S1 は deck の `disabledSkillIds`）。テスト 5 本に名前供給を明示
-  （`golden/t5-scores`・`sim/ui-pipeline`・`sim/build`・`timeline/buff-snapshots.audit`・`photo-link`＋未指定時の非注入を追加）
+  （`golden/t5-scores`・`sim/ui-pipeline`・`sim/build`・`timeline/buff-snapshots.audit`・`photo-link`＋未指定時の非注入を追加）。
+  供給元の洗い出しで `tools/t5_solver.ts`（T5 実測デッキを使うのに未指定だった）も名前を渡すよう修正。
+  過去の診断ツール（`tools/debug_*`/`dump_*`/`trace_*`・`research/17〜22` の trace）は未指定のまま＝F3 後はフォトスキルが入らない（必要なら名前を渡す）
 - **受け入れ 8 項目すべて充足**: S1 **+0.25%**・S1 L1 **176/176**・b70×L5 = `stamina_short` で 0・
   b4×L2/b34×L2/b169×L3 発動（cost 1,131/1,131/492・セル 2,318,611/3,096,117/2,329,970 vs 実測 pop 2.3M/2.9M/2.5M）・
   S3 **−1.17%**・S2 **−3.65%**・`npx vitest run` **41 files / 519 passed / 1 skipped**＋typecheck 0 errors・

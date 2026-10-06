@@ -79,6 +79,10 @@ function buildBase(): ReturnType<typeof buildSimulateInput>["base"] {
     data,
     missedNotes: [1, 2, 3, 4, 5].map((lane) => ({ beat: 1, lane })),
     mentalOverride: CALIBRATED_MENTAL,
+    // 【Phase 16-A9c F3】golden フォトスキル（photo-L*）の注入ゲートは未指定だと off（＝注入しない）が既定。
+    // T5 実測を再現する本ソルバは、テスト（tests/golden・tests/unit/sim）や CLI と同じく
+    // デッキ自身のフォト名（= T5 実測フォト名）を渡してゲートを通す。
+    goldenPhotoNames: ver.characters.map((c) => (c.photos ?? []).map((p) => String(p.name ?? ""))),
   }).base;
   // 【2026-09-01 docs 引力式】T5 ステージ cap=80,000 → 個人来場 16,000 人（fan_bonus 表・62.0%）
   base.fanBaseCount = 16000;
