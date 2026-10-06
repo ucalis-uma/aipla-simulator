@@ -1,0 +1,109 @@
+=== S3: 発動ビート周辺の内訳（sim: 実測クリ再現・rand=1000） ===
+
+--- 満員会場（S3）でのファン経路の比較: 従来(引力度) 73,826,029 (-7.03%) / 新(laneFans 満員一律 1375‰) 73,020,495 (-8.05%) / 実測 79,411,389
+    新経路の laneFanFactorPermil = [1375,1375,1375,1375,1375]
+    warnings: L2: skill "sk-rui-05-fest-01-1" (もっと高く、もっと遠く) has 1 unsupported effect(s) from master (Estimate) | L4: ct_cuts applied (sk-rei-05-fest-01-1:0,sk-rei-05-fest-01-2:30,sk-rei-05-fest-01-3:50 → sk-rei-05-fest-01-1:0,sk-rei-05-fest-01-2:25,sk-rei-05-fest-01-3:50) | laneFans=(8515/7748/8535/8518/6684) 合計 40000 / cap 40000 → 満員: 全レーン一律 f(cap/5): [1375, 1375, 1375, 1375, 1375]‰（平均 1375‰）
+
+--- b61: 実測バー 271,835 / ポップ合計 183,100（差 88,735）/ act=[31,32]
+    実測ポップ: L1 +29.5K / L2 +28.9K / L3 +68.4K / L4 null / L5 +56.3K
+    sim beat 合計 266,322（events 5）
+      L1 beat      gained        30474 | basic      21202 b1 1060 combo 1000 fan 1356 crit 1000 rand 1000
+      L2 beat      gained        22691 | basic      15787 b1 1060 combo 1000 fan 1356 crit 1000 rand 1000
+      L3 beat      gained        68678 | basic      18219 b1 1484 combo 1000 fan 1568 crit 1620 rand 1000
+      L4 beat      gained        85673 | basic      48489 b1 1303 combo 1000 fan 1356 crit 1000 rand 1000
+      L5 beat      gained        58806 | basic      18184 b1 1060 combo 1000 fan 1356 crit 1000 rand 1000
+    sim レーン別: L1 30,474 / L2 22,691 / L3 68,678 / L4 85,673 / L5 58,806
+
+--- b62: 実測バー 275,271 / ポップ合計 275,100（差 171）/ act=[]
+    実測ポップ: L1 +30.9K / L2 +27.3K / L3 +68K / L4 +95.6K / L5 +53.3K
+    sim beat 合計 273,718（events 5）
+      L1 beat      gained        30474 | basic      21202 b1 1060 combo 1000 fan 1356 crit 1000 rand 1000
+      L2 beat      gained        22691 | basic      15787 b1 1060 combo 1000 fan 1356 crit 1000 rand 1000
+      L3 beat      gained        68678 | basic      18219 b1 1484 combo 1000 fan 1568 crit 1620 rand 1000
+      L4 beat      gained        93069 | basic      52675 b1 1303 combo 1000 fan 1356 crit 1000 rand 1000
+      L5 beat      gained        58806 | basic      18184 b1 1060 combo 1000 fan 1356 crit 1000 rand 1000
+    sim レーン別: L1 30,474 / L2 22,691 / L3 68,678 / L4 93,069 / L5 58,806
+
+--- b63: 実測バー 594,834 / ポップ合計 540,400（差 54,434）/ act=[33]
+    実測ポップ: L1 +30.6K / L2 +28.2K / L3 +44.2K / L4 +101.6K / L5 +335.8K
+    sim beat 合計 247,434（events 5）
+      L1 beat      gained        30474 | basic      21202 b1 1060 combo 1000 fan 1356 crit 1000 rand 1000
+      L2 beat      gained        22691 | basic      15787 b1 1060 combo 1000 fan 1356 crit 1000 rand 1000
+      L3 beat      gained        42394 | basic      18219 b1 1484 combo 1000 fan 1568 crit 1000 rand 1000
+      L4 beat      gained        93069 | basic      52675 b1 1303 combo 1000 fan 1356 crit 1000 rand 1000
+      L5 beat      gained        58806 | basic      18184 b1 1060 combo 1000 fan 1356 crit 1000 rand 1000
+    sim レーン別: L1 30,474 / L2 22,691 / L3 42,394 / L4 93,069 / L5 58,806
+
+--- b64: 実測バー 455,732 / ポップ合計 455,500（差 232）/ act=[]
+    実測ポップ: L1 +29.7K / L2 +27.6K / L3 +71.5K / L4 +270.3K / L5 +56.4K
+    sim beat 合計 402,248（events 5）
+      L1 beat      gained        30474 | basic      21202 b1 1060 combo 1000 fan 1356 crit 1000 rand 1000
+      L2 beat      gained        22691 | basic      15787 b1 1060 combo 1000 fan 1356 crit 1000 rand 1000
+      L3 beat      gained        68678 | basic      18219 b1 1484 combo 1000 fan 1568 crit 1620 rand 1000
+      L4 beat      gained       221599 | basic      52675 b1 1303 combo 1000 fan 1356 crit 2381 rand 1000
+      L5 beat      gained        58806 | basic      18184 b1 1060 combo 1000 fan 1356 crit 1000 rand 1000
+    sim レーン別: L1 30,474 / L2 22,691 / L3 68,678 / L4 221,599 / L5 58,806
+
+--- b70: 実測バー 0 / ポップ合計 0（差 0）/ act=[34]
+    実測ポップ: L1 null / L2 null / L3 null / L4 null / L5 null
+    sim beat 合計 2,911,310（events 2）
+      L5 A         gained      2719003 | basic     150074 b1 1381 combo 1000 fan 1356 crit 1000 rand 1000
+      L5 photo     gained       192307 | basic     150074 b1 1000 combo 1050 fan 1356 crit 1000 rand 1000
+    sim レーン別: L1 0 / L2 0 / L3 0 / L4 0 / L5 2,911,310
+
+--- b71: 実測バー 372,847 / ポップ合計 333,500（差 39,347）/ act=[35]
+    実測ポップ: L1 +30.1K / L2 +29.6K / L3 +120.4K / L4 +97.1K / L5 +56.3K
+    sim beat 合計 408,621（events 6）
+      L1 beat      gained        31998 | basic      21202 b1 1060 combo 1050 fan 1356 crit 1000 rand 1000
+      L2 beat      gained        23826 | basic      15787 b1 1060 combo 1050 fan 1356 crit 1000 rand 1000
+      L3 beat      gained        44513 | basic      18219 b1 1484 combo 1050 fan 1568 crit 1000 rand 1000
+      L4 beat      gained       112722 | basic      52675 b1 1503 combo 1050 fan 1356 crit 1000 rand 1000
+      L5 beat      gained        61746 | basic      18184 b1 1060 combo 1050 fan 1356 crit 1000 rand 1000
+      L3 photo     gained       133816 | basic     172933 b1 1175 combo 1050 fan 1568 crit 1000 rand 1000
+    sim レーン別: L1 31,998 / L2 23,826 / L3 178,329 / L4 112,722 / L5 61,746
+
+--- b72: 実測バー 255,802 / ポップ合計 255,400（差 402）/ act=[]
+    実測ポップ: L1 +29.7K / L2 +28.3K / L3 +41.6K / L4 +101.1K / L5 +54.7K
+    sim beat 合計 262,080（events 5）
+      L1 beat      gained        31998 | basic      21202 b1 1060 combo 1050 fan 1356 crit 1000 rand 1000
+      L2 beat      gained        23826 | basic      15787 b1 1060 combo 1050 fan 1356 crit 1000 rand 1000
+      L3 beat      gained        42984 | basic      17593 b1 1484 combo 1050 fan 1568 crit 1000 rand 1000
+      L4 beat      gained       101526 | basic      47443 b1 1503 combo 1050 fan 1356 crit 1000 rand 1000
+      L5 beat      gained        61746 | basic      18184 b1 1060 combo 1050 fan 1356 crit 1000 rand 1000
+    sim レーン別: L1 31,998 / L2 23,826 / L3 42,984 / L4 101,526 / L5 61,746
+
+--- b73: 実測バー 296,701 / ポップ合計 232,400（差 64,301）/ act=[36,37]
+    実測ポップ: L1 +60K / L2 +27.8K / L3 null / L4 +86.7K / L5 +57.9K
+    sim beat 合計 299,391（events 5）
+      L1 beat      gained        69309 | basic      21202 b1 1060 combo 1050 fan 1356 crit 2166 rand 1000
+      L2 beat      gained        23826 | basic      15787 b1 1060 combo 1050 fan 1356 crit 1000 rand 1000
+      L3 beat      gained        42984 | basic      17593 b1 1484 combo 1050 fan 1568 crit 1000 rand 1000
+      L4 beat      gained       101526 | basic      47443 b1 1503 combo 1050 fan 1356 crit 1000 rand 1000
+      L5 beat      gained        61746 | basic      18184 b1 1060 combo 1050 fan 1356 crit 1000 rand 1000
+    sim レーン別: L1 69,309 / L2 23,826 / L3 42,984 / L4 101,526 / L5 61,746
+
+--- b140: 実測バー 214,593 / ポップ合計 214,300（差 293）/ act=[]
+    実測ポップ: L1 +23.7K / L2 +41.8K / L3 +34K / L4 +58.8K / L5 +56K
+    sim beat 合計 207,708（events 5）
+      L1 beat      gained        24311 | basic      16852 b1 1060 combo 1000 fan 1361 crit 1000 rand 1000
+      L2 beat      gained        40978 | basic      17534 b1 1060 combo 1000 fan 1361 crit 1620 rand 1000
+      L3 beat      gained        35511 | basic      17593 b1 1309 combo 1000 fan 1542 crit 1000 rand 1000
+      L4 beat      gained        47884 | basic      28079 b1 1253 combo 1000 fan 1361 crit 1000 rand 1000
+      L5 beat      gained        59024 | basic      18184 b1 1060 combo 1000 fan 1361 crit 1000 rand 1000
+    sim レーン別: L1 24,311 / L2 40,978 / L3 35,511 / L4 47,884 / L5 59,024
+
+--- b141: 実測バー 326,032 / ポップ合計 270,800（差 55,232）/ act=[48]
+    実測ポップ: L1 +23.7K / L2 +27K / L3 +106K / L4 +59.9K / L5 +54.2K
+    sim beat 合計 298,690（events 6）
+      L1 beat      gained        24311 | basic      16852 b1 1060 combo 1000 fan 1361 crit 1000 rand 1000
+      L2 beat      gained        25295 | basic      17534 b1 1060 combo 1000 fan 1361 crit 1000 rand 1000
+      L3 beat      gained        35511 | basic      17593 b1 1309 combo 1000 fan 1542 crit 1000 rand 1000
+      L4 beat      gained        47884 | basic      28079 b1 1253 combo 1000 fan 1361 crit 1000 rand 1000
+      L5 beat      gained        59024 | basic      18184 b1 1060 combo 1000 fan 1361 crit 1000 rand 1000
+      L3 photo     gained       106665 | basic     172933 b1 1000 combo 1000 fan 1542 crit 1000 rand 1000
+    sim レーン別: L1 24,311 / L2 25,295 / L3 142,176 / L4 47,884 / L5 59,024
+
+--- b142: 実測バー 0 / ポップ合計 0（差 0）/ act=[49]
+    実測ポップ: L1 null / L2 null / L3 null / L4 null / L5 null
+    sim beat 合計 0（events 0）
+    sim レーン別: L1 0 / L2 0 / L3 0 / L4 0 / L5 0

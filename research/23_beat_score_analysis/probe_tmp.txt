@@ -1,0 +1,20 @@
+node:internal/modules/esm/resolve:271
+    throw new ERR_MODULE_NOT_FOUND(
+          ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module 'C:\Users\umaro\Documents\アイプラ\src\chart\song.js' imported from C:\Users\umaro\Documents\アイプラ\tools\probe_beats.ts
+    at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+    at moduleResolve (node:internal/modules/esm/resolve:865:10)
+    at defaultResolve (node:internal/modules/esm/resolve:992:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    at nextStep (node:internal/modules/customization_hooks:189:26)
+    at resolveBaseSync (file:///C:/Users/umaro/AppData/Local/npm-cache/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+    at resolveDirectorySync (file:///C:/Users/umaro/AppData/Local/npm-cache/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+    at resolveTsPathsSync (file:///C:/Users/umaro/AppData/Local/npm-cache/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+    at resolve (file:///C:/Users/umaro/AppData/Local/npm-cache/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///C:/Users/umaro/Documents/%E3%82%A2%E3%82%A4%E3%83%97%E3%83%A9/src/chart/song.js'
+}
+
+Node.js v24.18.0
