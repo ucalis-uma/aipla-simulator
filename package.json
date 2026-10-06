@@ -15,6 +15,7 @@
     "solve:t5": "npx -y tsx tools/t5_solver.ts",
     "build:data:ext": "node tools/importers/build_data_phase6.mjs",
     "validate:skills": "node tools/validate_skills_master.mjs",
+    "audit:hidden": "node tools/audit_hidden_cells.mjs S1,S2,S3",
     "download:icons": "node tools/download_card_icons.mjs",
     "tauri": "tauri",
     "tauri:dev": "tauri dev",

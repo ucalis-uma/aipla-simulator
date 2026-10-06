@@ -1,0 +1,323 @@
+=== Phase 16 Action 9c: 消費スタミナ仕様の 3 修正（F1/F2/F3）の段階検証 ===
+  実行: 2026-10-06 / label=baseline / --probe=OFF
+  方針: 実測は aipura_nox（読み取りのみ）＋ research/26_data_integrity の S2/S3 v3。
+  A9b の §[1]〜§[5] を継承し、9c の受け入れ用に §[0] サンプル総合・§[6] S1 L1 系列・§[7] S3 L4 回帰セルを追加。
+
+########## S1 qt-area-1-001 / chart-hsm-006-001 ##########
+  実測 act 34 件（スキーマ s1）/ sim act 成功 32 件 / ステージ重み 1000‰ / レーン属性 vocal,dance,vocal,vocal,vocal
+
+  --- [0] サンプル総合（受け入れ #1 S1 / #5 S3 / #6 S2） ---
+      実測   116,537,513 / sim   116,829,040 → 乖離 +0.25%
+
+  --- [1] 三角照合表（deck myPhotos ⇔ sim in-game stock ⇔ 実測 act）: A9 §1 の添字合わせを廃止 ---
+      対応づけ規則: (名前一致) ∧ (持続一致) ∧ (原価一致) を満たす組だけを「供給一致」とする。
+      L1（attr=vocal）
+        deck myPhotos : 伊吹渚 6/22 (Quality 135)[vocal_boost 3段 22b 原価662 対象vocal_type_1]
+        sim マイフォト: 伊吹渚 6/22 (Quality 135)[原価662 22b]
+        sim 全フォト枠: 伊吹渚 6/22 (Qual[662]
+      L2（attr=dance）
+        deck myPhotos : （0 枚）
+        sim マイフォト: （0 枚）
+        sim 全フォト枠: （空）
+      L3（attr=vocal）
+        deck myPhotos : 川咲さくら ありがとう (Quality 150)[score_up 3段 40b 原価552 対象self]
+        sim マイフォト: 川咲さくら ありがとう (Quality 150)[原価552 40b]
+        sim 全フォト枠: 川咲さくら ありがとう (Q[552]
+      L4（attr=vocal）
+        deck myPhotos : 小美山愛 輝く光を受けて (Quality 150)[critical_coeff_up 4段 48b 原価706 対象score_type_1]
+        sim マイフォト: 小美山愛 輝く光を受けて (Quality 150)[原価706 48b]
+        sim 全フォト枠: 小美山愛 輝く光を受けて ([706]
+      L5（attr=vocal）
+        deck myPhotos : （0 枚）
+        sim マイフォト: （0 枚）
+        sim 全フォト枠: （空）
+        ○ 供給一致 L1 伊吹渚 6/22 (Quality 135)[原価662 22b]
+        ○ 供給一致 L3 川咲さくら ありがとう (Quality 150)[原価552 40b]
+        ○ 供給一致 L4 小美山愛 輝く光を受けて (Quality 150)[原価706 48b]
+      → 供給一致 3 / 不一致 0（A9 §1 の「原価一致 0」は添字合わせの産物。上の規則で対応づけると内訳はこの行）
+
+  --- [2] T1 ①②分離: 「他ソースの boost が当該ビートで満了する」act の全件走査 ---
+      読み方: engine のコストは発火時点の live 状態（engine.ts:1435 snapshotOf）。
+        phase=first/main は step7/8（減算前）・phase=last は step11（step10 の減算**後**）に発火する。
+      実機の buff ライフタイムは S1 = timeline[].lanes[].effects[]（ビート別・段数つき）、S3 = act 行 effects_now。
+      | サンプル | L | beat | phase | act | engine cost | 適用段数 | 前ビート表示 | 当該ビート表示 | 当該ビートで満了したインスタンス | 判定 |
+      | S1 | 1 | 60 | last | 伊吹渚 6/22 (Quality  | 662（原価662×重み1000） | 0 | 3段 | 3段 | vocal_boost3段@麻奈も立った大舞台(rem0) | ②境界（他ソースの最終ビート） |
+      → 条件該当 act 1 件（②境界 1 / ① 自ソース由来 0）
+
+  --- [2b] S1 L1 伊吹渚 6/22（原価662・vocal_boost3段[22ビート]・CT60）の3発動を1ビートずつ ---
+      実測 act 行の対象: b1「ボーカルタイプ1人にボーカルブースト効果[22ビート]」targets=ボーカルタイプ1人（=L3） ｜ b60「ボーカルタイプ1人にボーカルブースト効果[22ビート]」targets=ボーカルタイプ1人（=L3） ｜ b120「ボーカルタイプ1人にボーカルブースト効果[22ビート]」targets=ボーカルタイプ1人（=L3）
+      → 実機では**このフォトの付与先は L3**（ボーカルタイプ1人=L3）。発動レーン L1 自身には付かない。
+      ▶ b1:
+        engine: phase=first cost=662（原価662）| 実測タイムライン L1 buff: 前ビート {"vocal":0,"dance":0,"visual":0,"all":["ボーカル上昇3"]} / 当該ビート {"vocal":0,"dance":0,"visual":0,"all":["ボーカル上昇3"]}
+        ビート終端の boost インスタンス: なし
+        段数換算: cost=662 / (原価662×重み1000=662) → 0.0% = 0.0段相当（1段=+1.0%）
+      ▶ b60:
+        engine: phase=last cost=662（原価662）| 実測タイムライン L1 buff: 前ビート {"vocal":3,"dance":0,"visual":0,"all":["ボーカルブースト3","クリティカル率上昇4","ボーカル上昇3"]} / 当該ビート {"vocal":3,"dance":0,"visual":0,"all":["ボーカルブースト3","クリティカル率上昇4","ボーカル上昇3"]}
+        ビート終端の boost インスタンス: vocal_boost3段@麻奈も立った大舞台(rem0)
+        段数換算: cost=662 / (原価662×重み1000=662) → 0.0% = 0.0段相当（1段=+1.0%）
+      ▶ b120:
+        engine: phase=last cost=681（原価662）| 実測タイムライン L1 buff: 前ビート {"vocal":3,"dance":0,"visual":0,"all":["ボーカル上昇3","ボーカルブースト3","クリティカル率上昇4"]} / 当該ビート {"vocal":3,"dance":0,"visual":0,"all":["ボーカル上昇3","ボーカルブースト3","クリティカル率上昇4"]}
+        ビート終端の boost インスタンス: vocal_boost3段@麻奈も立った大舞台(rem19)
+        段数換算: cost=681 / (原価662×重み1000=662) → 2.9% = 2.9段相当（1段=+1.0%）
+      裁定材料: 実機の表示ライフタイム（S1 timeline）と engine の phase を突き合わせると、
+        b60 は「他ソース（準備も立った大舞台＝L2 A スキル）の最終ビート」で、その buff は実機 b60 に表示・b61 で消滅。
+        engine も同じインスタンスを b60 の snapshot（step7）に持つが、**フォトは CT の関係で step11（phase=last）に発火**し、
+        step10 の減算で rem=0 になった後なので snapshotOf から落ちる → cost 662（実機 681）。
+
+  --- [3] 実測 act cost ÷ (原価×重み) の比と、実機が表示していた boost 段数の対照（±6% の正体） ---
+      「原価」は photo=deck myPhotos の staminaCost、A/P/SP=build が解決した SkillDef.staminaCost（＝マスタ Lv 別）。
+      S1 b  9 L5 A     殻をやぶる                実測   164 = 原価164×1000‰×(1000)‰ [0段] | engine cost   164 [0段・phase=main] | 表示 v0/d0/vi0（自属性vocal 0 / 他属性 0） | engine と一致
+      S1 b 25 L2 A     準備も立った大舞台            実測   162 = 原価162×1000‰×(1000)‰ [0段] | engine cost   162 [0段・phase=main] | 表示 v0/d0/vi0（自属性dance 0 / 他属性 0） | engine と一致
+      S1 b 40 L4 A     千紗ビーム！               実測   142 = 原価138×1000‰×(1030)‰ [3段] | engine cost   142 [3段・phase=main] | 表示 v3/d0/vi0（自属性vocal 3 / 他属性 0） | engine と一致
+      S1 b 50 L4 P     SOS団のマスコット第二号        実測   185 = 原価180×1000‰×(1030)‰ [3段] | engine cost   185 [3段・phase=last] | 表示 v3/d0/vi0（自属性vocal 3 / 他属性 0） | engine と一致
+      S1 b 50 L1 P     ゆらゆらドボーン！            実測   197 = 原価192×1000‰×(1030)‰ [3段] | engine cost   197 [3段・phase=last] | 表示 v3/d0/vi0（自属性vocal 3 / 他属性 0） | engine と一致
+      S1 b 51 L3 A     新たな衣装と新たな決意          実測   182 = 原価175×1000‰×(1040)‰ [4段] | engine cost   182 [4段・phase=main] | 表示 v4/d0/vi0（自属性vocal 4 / 他属性 0） | engine と一致
+      S1 b 60 L1 photo Voブーストスキル（マイフォト: 伊吹渚 実測   681 = 原価662×1000‰×(1030)‰ [3段] | engine cost   662 [0段・phase=last] | 表示 v3/d0/vi0（自属性vocal 3 / 他属性 0） | engine 過小（実測 3 段 / engine 0 段）:  / phase=last（持続の最終ビートを減算後に見ている）
+      S1 b 60 L5 P     さらけ出す                実測   183 = 原価183×1000‰×(1000)‰ [0段] | engine cost   183 [0段・phase=last] | 表示 v0/d0/vi0（自属性vocal 0 / 他属性 0） | engine と一致
+      S1 b 66 L1 A     夏を先取りお祭り騎ぎ           実測   165 = 原価165×1000‰×(1000)‰ [0段] | engine cost   165 [0段・phase=main] | 表示 v4/d0/vi0（自属性vocal 4 / 他属性 0） | engine と一致
+      S1 b 82 L5 A     殻をやぶる                実測   164 = 原価164×1000‰×(1000)‰ [0段] | engine cost   164 [0段・phase=main] | 表示 v0/d0/vi0（自属性vocal 0 / 他属性 0） | engine と一致
+      S1 b 97 L4 A     千紗ビーム！               実測   138 = 原価138×1000‰×(1000)‰ [0段] | engine cost   138 [0段・phase=main] | 表示 v0/d0/vi0（自属性vocal 0 / 他属性 0） | engine と一致
+      S1 b100 L4 P     SOS団のマスコット第二号        実測   180 = 原価180×1000‰×(1000)‰ [0段] | engine cost   180 [0段・phase=last] | 表示 v0/d0/vi0（自属性vocal 0 / 他属性 0） | engine と一致
+      S1 b100 L1 P     ゆらゆらドボーン！            実測   192 = 原価192×1000‰×(1000)‰ [0段] | engine cost   192 [0段・phase=last] | 表示 v0/d0/vi0（自属性vocal 0 / 他属性 0） | engine と一致
+      S1 b104 L2 A     準備も立った大舞台            実測   162 = 原価162×1000‰×(1000)‰ [0段] | engine cost   162 [0段・phase=main] | 表示 v0/d0/vi0（自属性dance 0 / 他属性 0） | engine と一致
+      S1 b115 L3 A     新たな衣装と新たな決意          実測   180 = 原価175×1000‰×(1030)‰ [3段] | engine cost   180 [3段・phase=main] | 表示 v3/d0/vi0（自属性vocal 3 / 他属性 0） | engine と一致
+      S1 b120 L1 photo Voブーストスキル（マイフォト: 伊吹渚 実測   681 = 原価662×1000‰×(1030)‰ [3段] | engine cost   681 [3段・phase=last] | 表示 v3/d0/vi0（自属性vocal 3 / 他属性 0） | engine と一致
+      S1 b120 L5 P     さらけ出す                実測   183 = 原価183×1000‰×(1000)‰ [0段] | engine cost   183 [0段・phase=last] | 表示 v0/d0/vi0（自属性vocal 0 / 他属性 0） | engine と一致
+      S1 b123 L1 A     夏を先取りお祭り騎ぎ           実測   169 = 原価165×1000‰×(1030)‰ [3段] | engine cost   169 [3段・phase=main] | 表示 v7/d0/vi0（自属性vocal 7 / 他属性 0） | engine と一致
+      S1 b130 L4 A     千紗ビーム！               実測   142 = 原価138×1000‰×(1030)‰ [3段] | engine cost   142 [3段・phase=main] | 表示 v3/d0/vi0（自属性vocal 3 / 他属性 0） | engine と一致
+      S1 b136 L2 P     過去の私へ                実測   316 = 原価316×1000‰×(1000)‰ [0段] | engine cost   316 [0段・phase=last] | 表示 v0/d0/vi0（自属性dance 0 / 他属性 0） | engine と一致
+      S1 b143 L4 P     かっこいい宇宙人さん           実測   223 = 原価217×1000‰×(1030)‰ [3段] | engine cost   223 [3段・phase=first] | 表示 v3/d0/vi0（自属性vocal 3 / 他属性 0） | engine と一致
+      S1 b143 L3 SP    それが勇気になるから           実測   550 = 原価505×1000‰×(1090)‰ [9段] | engine cost   550 [9段・phase=main] | 表示 v9/d0/vi0（自属性vocal 9 / 他属性 0） | engine と一致
+      S1 b148 L5 A     殻をやぶる                実測   164 = 原価164×1000‰×(1000)‰ [0段] | engine cost   164 [0段・phase=main] | 表示 v0/d0/vi0（自属性vocal 0 / 他属性 0） | engine と一致
+      S1 b170 L3 A     新たな衣装と新たな決意          実測   180 = 原価175×1000‰×(1030)‰ [3段] | engine cost   180 [3段・phase=main] | 表示 v3/d0/vi0（自属性vocal 3 / 他属性 0） | engine と一致
+      S1 b176 L1 A     夏を先取りお祭り騎ぎ           実測   169 = 原価165×1000‰×(1030)‰ [3段] | engine cost   169 [3段・phase=main] | 表示 v7/d0/vi0（自属性vocal 7 / 他属性 0） | engine と一致
+      → クリーン cost の act: 比 1.000 が 12 件 / 比 > 1 が 13 件。
+      engine と段数が食い違うセル（＝±6% の正体。実測＝発火瞬間の boost 合計段数として厳密再現）:
+        S1 b 60 L1 photo Voブーストスキル（マイフォト: 伊吹渚 実測   681 = 原価662×1000‰×(1030)‰ [3段] | engine cost   662 [0段・phase=last] | 表示 v3/d0/vi0（自属性vocal 3 / 他属性 0） | engine 過小（実測 3 段 / engine 0 段）:  / phase=last（持続の最終ビートを減算後に見ている）
+
+  --- [4] T2 α/β/γ 裁定（実測 act と sim のフォト同一性・コスト） ---
+      L1: 実測 photo act 3 件 [b1,b60,b120] / sim 成功 photo act 3 件 [b1:伊吹渚 6/22 (,b60:伊吹渚 6/22 (,b120:伊吹渚 6/22 (]
+      L2: 実測 photo act 0 件 [-] / sim 成功 photo act 0 件 [-]
+      L3: 実測 photo act 0 件 [-] / sim 成功 photo act 0 件 [-]
+      L4: 実測 photo act 0 件 [-] / sim 成功 photo act 0 件 [-]
+      L5: 実測 photo act 0 件 [-] / sim 成功 photo act 0 件 [-]
+
+  --- [5] T3 4 セルの現状 ---
+
+  --- [6] スタミナ系列の一致率（A6 と同一規約: sim staminaAfter[beat] vs 実測 timeline current_stamina[beat]） ---
+      L1: 一致 59/176 | 不一致例 b60(sim 7379 / 実測 7360) b61(sim 7379 / 実測 7360) b62(sim 7379 / 実測 7360) b63(sim 7379 / 実測 7360) b64(sim 7379 / 実測 7360) b65(sim 7379 / 実測 7360)
+      L2: 一致 175/175 | 完全一致
+      L3: 一致 176/176 | 完全一致
+      L4: 一致 176/176 | 完全一致
+      L5: 一致 172/172 | 完全一致
+      → 5 レーン合計 758/875
+
+  --- [7] 回帰セル（実測 cost と sim cost の対照） ---
+      ▶ S1 L1 b60: F2: 他ソース boost の最終ビート（phase=last）
+          実測: photo:Voブーストスキル（マイフォト: cost681
+          sim : photo:伊吹渚 6/22 (Qualit cost662
+      ▶ S1 L1 b120: F2: 寿命途中の boost（phase=last）
+          実測: photo:Voブーストスキル（マイフォト: cost681
+          sim : photo:伊吹渚 6/22 (Qualit cost681
+
+########## S3 qt-ex-tower-005-045 / chart-thrx-004-001 ##########
+  実測 act 54 件（スキーマ s3）/ sim act 成功 45 件 / ステージ重み 3000‰ / レーン属性 visual,vocal,visual,visual,visual
+
+  --- [0] サンプル総合（受け入れ #1 S1 / #5 S3 / #6 S2） ---
+      実測    79,411,389 / sim    78,485,270 → 乖離 -1.17%
+
+  --- [1] 三角照合表（deck myPhotos ⇔ sim in-game stock ⇔ 実測 act）: A9 §1 の添字合わせを廃止 ---
+      対応づけ規則: (名前一致) ∧ (持続一致) ∧ (原価一致) を満たす組だけを「供給一致」とする。
+      L1（attr=visual）
+        deck myPhotos : 成宮すず 3/7 (Quality 140)[visual_boost 3段 22b 原価662 対象visual_type_1]
+        sim マイフォト: 成宮すず 3/7 (Quality 140)[原価662 22b]
+        sim 全フォト枠: 成宮すず 3/7 (Qual[662]
+      L2（attr=vocal）
+        deck myPhotos : 井川葵 6/23 (Quality 140)[dance_boost 3段 22b 原価662 対象dance_type_1]
+        sim マイフォト: 井川葵 6/23 (Quality 140)[原価662 22b]
+        sim 全フォト枠: 井川葵 6/23 (Qual[662]
+      L3（attr=visual）
+        deck myPhotos : 成宮すず 6/24 (Quality 125)[visual_boost 3段 22b 原価662 対象visual_type_1] / TRINITYAiLE (Quality 60)[score_get -段 -b 原価180 対象self]
+        sim マイフォト: 成宮すず 6/24 (Quality 125)[原価662 22b] / TRINITYAiLE (Quality 60)[原価180 -b]
+        sim 全フォト枠: 成宮すず 6/24 (Qua[662] / TRINITYAiLE (Q[180]
+      L4（attr=visual）
+        deck myPhotos : 早坂芽衣 6/6 (Quality 165)[? -段 -b 原価null 対象-]
+        sim マイフォト: （0 枚）
+        sim 全フォト枠: （空）
+      L5（attr=visual）
+        deck myPhotos : 神崎莉央 (Quality 140)[score_up 2段 29b 原価266 対象score_type_1] / 早坂芽衣 (Quality 140)[critical_coeff_up 5段 40b 原価733 対象score_type_1] / 佐伯遙子 7/5 (Quality 145)[score_get -段 -b 原価540 対象self] / 小美山愛 (Quality 150)[critical_coeff_up 4段 48b 原価706 対象score_type_1]
+        sim マイフォト: 神崎莉央 (Quality 140)[原価266 29b] / 早坂芽衣 (Quality 140)[原価733 40b] / 佐伯遙子 7/5 (Quality 145)[原価540 -b] / 小美山愛 (Quality 150)[原価706 48b]
+        sim 全フォト枠: 神崎莉央 (Quality [266] / 早坂芽衣 (Quality [733] / 佐伯遙子 7/5 (Qual[540] / 小美山愛 (Quality [706]
+        ○ 供給一致 L1 成宮すず 3/7 (Quality 140)[原価662 22b]
+        ○ 供給一致 L2 井川葵 6/23 (Quality 140)[原価662 22b]
+        ○ 供給一致 L3 成宮すず 6/24 (Quality 125)[原価662 22b]
+        ○ 供給一致 L3 TRINITYAiLE (Quality 60)[原価180 nullb]
+        ✕ 供給不一致 L4 早坂芽衣 6/6 (Quality 165)[deck 原価null nullb] → sim 同名なし
+        ○ 供給一致 L5 神崎莉央 (Quality 140)[原価266 29b]
+        ○ 供給一致 L5 早坂芽衣 (Quality 140)[原価733 40b]
+        ○ 供給一致 L5 佐伯遙子 7/5 (Quality 145)[原価540 nullb]
+        ○ 供給一致 L5 小美山愛 (Quality 150)[原価706 48b]
+      → 供給一致 8 / 不一致 1（A9 §1 の「原価一致 0」は添字合わせの産物。上の規則で対応づけると内訳はこの行）
+
+  --- [2] T1 ①②分離: 「他ソースの boost が当該ビートで満了する」act の全件走査 ---
+      読み方: engine のコストは発火時点の live 状態（engine.ts:1435 snapshotOf）。
+        phase=first/main は step7/8（減算前）・phase=last は step11（step10 の減算**後**）に発火する。
+      実機の buff ライフタイムは S1 = timeline[].lanes[].effects[]（ビート別・段数つき）、S3 = act 行 effects_now。
+      | サンプル | L | beat | phase | act | engine cost | 適用段数 | 前ビート表示 | 当該ビート表示 | 当該ビートで満了したインスタンス | 判定 |
+      → 条件該当 act 0 件（②境界 0 / ① 自ソース由来 0）
+
+  --- [3] 実測 act cost ÷ (原価×重み) の比と、実機が表示していた boost 段数の対照（±6% の正体） ---
+      「原価」は photo=deck myPhotos の staminaCost、A/P/SP=build が解決した SkillDef.staminaCost（＝マスタ Lv 別）。
+      S3 b  1 L5 photo スコアUPスキル             実測   798 = 原価266×3000‰×(1000)‰ [0段] | engine cost   798 [0段・phase=first] | 表示 v0/d0/vi0（自属性visual 0 / 他属性 0） | engine と一致
+      S3 b  2 L5 photo 獲得スキル-スタミナ多          実測 1,620 = 原価540×3000‰×(1000)‰ [0段] | engine cost 1,620 [0段・phase=first] | 表示 v0/d0/vi0（自属性visual 0 / 他属性 0） | engine と一致
+      S3 b  2 L3 A     殻をやぶる                実測   492 = 原価164×3000‰×(1000)‰ [0段] | engine cost   492 [0段・phase=main] | 表示 v0/d0/vi0（自属性visual 0 / 他属性 0） | engine と一致
+      S3 b 13 L3 photo Viブーストスキル            実測 2,085 = 原価662×3000‰×(1050)‰ [5段] | engine cost 1,986 [0段・phase=last] | 表示 v5/d0/vi0（自属性visual 0 / 他属性 5） | engine 過小（実測 5 段 / engine 0 段）: 他属性 boost 5 段を engine が数えない / phase=last（持続の最終ビートを減算後に見ている）
+      S3 b 50 L5 photo スコアUPスキル             実測   798 = 原価266×3000‰×(1000)‰ [0段] | engine cost   798 [0段・phase=last] | 表示 v0/d0/vi0（自属性visual 0 / 他属性 0） | engine と一致
+      S3 b 51 L1 P     五人で起こした奇跡            実測 1,449 = 原価460×3000‰×(1050)‰ [5段] | engine cost 1,380 [0段・phase=last] | 表示 v5/d0/vi0（自属性visual 0 / 他属性 5） | engine 過小（実測 5 段 / engine 0 段）: 他属性 boost 5 段を engine が数えない / phase=last（持続の最終ビートを減算後に見ている）
+      S3 b 60 L2 photo Daブーストスキル            実測 1,986 = 原価662×3000‰×(1000)‰ [0段] | engine cost 1,986 [0段・phase=last] | 表示 v0/d0/vi0（自属性vocal 0 / 他属性 0） | engine と一致
+      S3 b 73 L3 photo Viブーストスキル            実測 2,085 = 原価662×3000‰×(1050)‰ [5段] | engine cost 1,986 [0段・phase=last] | 表示 v5/d0/vi0（自属性visual 0 / 他属性 5） | engine 過小（実測 5 段 / engine 0 段）: 他属性 boost 5 段を engine が数えない / phase=last（持続の最終ビートを減算後に見ている）
+      S3 b133 L3 photo Viブーストスキル            実測 1,986 = 原価662×3000‰×(1000)‰ [0段] | engine cost 1,986 [0段・phase=last] | 表示 v0/d0/vi0（自属性visual 0 / 他属性 0） | engine と一致
+      → クリーン cost の act: 比 1.000 が 6 件 / 比 > 1 が 3 件。
+      engine と段数が食い違うセル（＝±6% の正体。実測＝発火瞬間の boost 合計段数として厳密再現）:
+        S3 b 13 L3 photo Viブーストスキル            実測 2,085 = 原価662×3000‰×(1050)‰ [5段] | engine cost 1,986 [0段・phase=last] | 表示 v5/d0/vi0（自属性visual 0 / 他属性 5） | engine 過小（実測 5 段 / engine 0 段）: 他属性 boost 5 段を engine が数えない / phase=last（持続の最終ビートを減算後に見ている）
+        S3 b 51 L1 P     五人で起こした奇跡            実測 1,449 = 原価460×3000‰×(1050)‰ [5段] | engine cost 1,380 [0段・phase=last] | 表示 v5/d0/vi0（自属性visual 0 / 他属性 5） | engine 過小（実測 5 段 / engine 0 段）: 他属性 boost 5 段を engine が数えない / phase=last（持続の最終ビートを減算後に見ている）
+        S3 b 73 L3 photo Viブーストスキル            実測 2,085 = 原価662×3000‰×(1050)‰ [5段] | engine cost 1,986 [0段・phase=last] | 表示 v5/d0/vi0（自属性visual 0 / 他属性 5） | engine 過小（実測 5 段 / engine 0 段）: 他属性 boost 5 段を engine が数えない / phase=last（持続の最終ビートを減算後に見ている）
+
+  --- [4] T2 α/β/γ 裁定（実測 act と sim のフォト同一性・コスト） ---
+      L1: 実測 photo act 2 件 [b1,b60] / sim 成功 photo act 2 件 [b1:成宮すず 3/7 (,b60:成宮すず 3/7 (]
+      L2: 実測 photo act 2 件 [b1,b60] / sim 成功 photo act 2 件 [b1:井川葵 6/23 (,b60:井川葵 6/23 (]
+      L3: 実測 photo act 6 件 [b2,b13,b71,b73,b133,b141] / sim 成功 photo act 7 件 [b1:成宮すず 6/24 ,b2:TRINITYAiL,b13:成宮すず 6/24 ,b71:TRINITYAiL,b73:成宮すず 6/24 ,b133:成宮すず 6/24 ,b141:TRINITYAiL]
+      L4: 実測 photo act 0 件 [-] / sim 成功 photo act 0 件 [-]
+      L5: 実測 photo act 6 件 [b1,b2,b3,b50,b51,b63] / sim 成功 photo act 6 件 [b1:神崎莉央 (Qual,b2:佐伯遙子 7/5 (,b3:小美山愛 (Qual,b50:神崎莉央 (Qual,b51:早坂芽衣 (Qual,b63:佐伯遙子 7/5 (]
+
+  --- [5] T3 4 セルの現状 ---
+      ▶ L5 b70（実測=FAIL（スタミナ不足）→ FAIL 側になってほしい）
+          sim(現規則): A:こりごり二日酔い **FAIL**(stamina_short)
+          実測 act: A:Unknown
+          スタミナ b69: 実測    null / sim     125 | b70: 実測     125 / sim     125
+      ▶ L2 b4（実測=成功（新たな衣装とさらなる飛躍 Lv4）→ 成功側になってほしい）
+          sim(現規則): A:新たな衣装とさらなる飛躍 cost1131
+          実測 act: A:新たな衣装とさらなる飛躍
+          スタミナ b3: 実測    null / sim   8,606 | b4: 実測   7,475 / sim   7,475
+      ▶ L2 b34（実測=成功（おめかしバニティ Lv4）→ 成功側になってほしい）
+          sim(現規則): A:新たな衣装とさらなる飛躍 cost1131
+          実測 act: A:新たな衣装とさらなる飛躍
+          スタミナ b33: 実測    null / sim   7,475 | b34: 実測   6,344 / sim   6,344
+      ▶ L3 b169（実測=成功（殻をやぶる Lv4）→ 成功側になってほしい）
+          sim(現規則): A:殻をやぶる cost492
+          実測 act: A:殻をやぶる
+          スタミナ b168: 実測    null / sim   1,359 | b169: 実測     541 / sim     867
+
+  --- [6] スタミナ系列の一致率（A6 と同一規約: sim staminaAfter[beat] vs 実測 timeline current_stamina[beat]） ---
+      L1: 一致 48/169 | 不一致例 b1(sim 7425 / 実測 9411) b50(sim 4773 / 実測 4710) b51(sim 2289 / 実測 3551) b52(sim 2289 / 実測 2102) b53(sim 2289 / 実測 2102) b54(sim 2289 / 実測 2102)
+      L2: 一致 168/169 | 不一致例 b60(sim 233 / 実測 2219)
+      L3: 一致 10/169 | 不一致例 b1(sim 8667 / 実測 10608) b2(sim 7680 / 実測 8127) b13(sim 5640 / 実測 7599) b14(sim 5685 / 実測 5559) b15(sim 5730 / 実測 5604) b16(sim 5775 / 実測 5649)
+      L4: 一致 169/169 | 完全一致
+      L5: 一致 167/169 | 不一致例 b2(sim 6071 / 実測 6026) b50(sim 3269 / 実測 4067)
+      → 5 レーン合計 562/845
+
+  --- [7] 回帰セル（実測 cost と sim cost の対照） ---
+      ▶ S3 L4 b1: visual_boost 3段（自属性）×1.03 期待
+          実測: P:頑固じゃありません!
+          sim : P:頑固じゃありません！ cost1884
+      ▶ S3 L4 b3: visual_boost 6段（自属性）×1.06 期待
+          実測: P:頑固じゃありません!
+          sim : P:頑固じゃありません！ cost1939
+      ▶ S3 L4 b14: visual_boost 9段（自属性）×1.09 期待
+          実測: A:似た者親子のメッセージ
+          sim : A:似た者親子のメッセージ cost1386
+      ▶ S3 L4 b42: visual_boost 0段 ×1.00 期待
+          実測: A:似た者親子のメッセージ
+          sim : A:似た者親子のメッセージ cost1272
+      ▶ S3 L4 b61: visual_boost 3段 ×1.03 期待
+          実測: P:頑固じゃありません！
+          sim : P:頑固じゃありません！ cost1884
+      ▶ S3 L3 b13: F1: visual レーン×vocal boost 5段 ×1.05 期待
+          実測: P:さらけ出す + photo:Viブーストスキル cost2085
+          sim : P:さらけ出す cost549 + photo:成宮すず 6/24 (Quali cost1986
+      ▶ S3 L1 b51: F1: vocal boost 5段（P/A 2 act）
+          実測: A:手を伸ばすのは輝く夢 + P:五人で起こした奇跡 cost1449
+          sim : A:手を伸ばすのは輝く夢 cost1104 + P:五人で起こした奇跡 cost1380
+
+########## S2 qt-tower-680 / chart-sun-004-001 ##########
+  実測 act 44 件（スキーマ s2）/ sim act 成功 43 件 / ステージ重み 1000‰ / レーン属性 vocal,vocal,vocal,dance,vocal
+
+  --- [0] サンプル総合（受け入れ #1 S1 / #5 S3 / #6 S2） ---
+      実測    77,732,383 / sim    74,895,810 → 乖離 -3.65%
+
+  --- [1] 三角照合表（deck myPhotos ⇔ sim in-game stock ⇔ 実測 act）: A9 §1 の添字合わせを廃止 ---
+      対応づけ規則: (名前一致) ∧ (持続一致) ∧ (原価一致) を満たす組だけを「供給一致」とする。
+      L1（attr=vocal）
+        deck myPhotos : （0 枚）
+        sim マイフォト: （0 枚）
+        sim 全フォト枠: （空）
+      L2（attr=vocal）
+        deck myPhotos : （0 枚）
+        sim マイフォト: （0 枚）
+        sim 全フォト枠: （空）
+      L3（attr=vocal）
+        deck myPhotos : ありがとう (Quality 150)[score_up 3段 40b 原価552 対象self]
+        sim マイフォト: ありがとう (Quality 150)[原価552 40b]
+        sim 全フォト枠: ありがとう (Quality[552]
+      L4（attr=dance）
+        deck myPhotos : （0 枚）
+        sim マイフォト: （0 枚）
+        sim 全フォト枠: （空）
+      L5（attr=vocal）
+        deck myPhotos : （0 枚）
+        sim マイフォト: （0 枚）
+        sim 全フォト枠: （空）
+        ○ 供給一致 L3 ありがとう (Quality 150)[原価552 40b]
+      → 供給一致 1 / 不一致 0（A9 §1 の「原価一致 0」は添字合わせの産物。上の規則で対応づけると内訳はこの行）
+
+  --- [2] T1 ①②分離: 「他ソースの boost が当該ビートで満了する」act の全件走査 ---
+      読み方: engine のコストは発火時点の live 状態（engine.ts:1435 snapshotOf）。
+        phase=first/main は step7/8（減算前）・phase=last は step11（step10 の減算**後**）に発火する。
+      実機の buff ライフタイムは S1 = timeline[].lanes[].effects[]（ビート別・段数つき）、S3 = act 行 effects_now。
+      | サンプル | L | beat | phase | act | engine cost | 適用段数 | 前ビート表示 | 当該ビート表示 | 当該ビートで満了したインスタンス | 判定 |
+      → 条件該当 act 0 件（②境界 0 / ① 自ソース由来 0）
+
+  --- [3] 実測 act cost ÷ (原価×重み) の比と、実機が表示していた boost 段数の対照（±6% の正体） ---
+      「原価」は photo=deck myPhotos の staminaCost、A/P/SP=build が解決した SkillDef.staminaCost（＝マスタ Lv 別）。
+      → クリーン cost の act: 比 1.000 が 0 件 / 比 > 1 が 0 件。
+      engine と段数が食い違うセル（＝±6% の正体。実測＝発火瞬間の boost 合計段数として厳密再現）:
+
+  --- [4] T2 α/β/γ 裁定（実測 act と sim のフォト同一性・コスト） ---
+      L1: 実測 photo act 0 件 [-] / sim 成功 photo act 0 件 [-]
+      L2: 実測 photo act 0 件 [-] / sim 成功 photo act 0 件 [-]
+      L3: 実測 photo act 1 件 [b1] / sim 成功 photo act 1 件 [b1:ありがとう (Qua]
+      L4: 実測 photo act 0 件 [-] / sim 成功 photo act 0 件 [-]
+      L5: 実測 photo act 0 件 [-] / sim 成功 photo act 0 件 [-]
+
+  --- [5] T3 4 セルの現状 ---
+
+  --- [6] スタミナ系列の一致率（A6 と同一規約: sim staminaAfter[beat] vs 実測 timeline current_stamina[beat]） ---
+      L1: 一致 109/167 | 不一致例 b55(sim 8327 / 実測 8322) b56(sim 8327 / 実測 8322) b57(sim 8327 / 実測 8322) b58(sim 8327 / 実測 8322) b59(sim 8327 / 実測 8322) b60(sim 8327 / 実測 8322)
+      L2: 一致 157/167 | 不一致例 b80(sim 8647 / 実測 8642) b81(sim 8647 / 実測 8642) b82(sim 8647 / 実測 8642) b83(sim 8647 / 実測 8642) b84(sim 8647 / 実測 8642) b85(sim 8647 / 実測 8642)
+      L3: 一致 85/167 | 不一致例 b1(sim 7494 / 実測 8046) b2(sim 7494 / 実測 2494) b3(sim 7494 / 実測 2494) b4(sim 7494 / 実測 2494) b5(sim 7494 / 実測 2494) b6(sim 7494 / 実測 2494)
+      L4: 一致 129/167 | 不一致例 b1(sim 8670 / 実測 8620) b14(sim 7865 / 実測 2865) b15(sim 7865 / 実測 2865) b16(sim 7865 / 実測 2865) b17(sim 7865 / 実測 2865) b18(sim 7865 / 実測 2865)
+      L5: 一致 116/167 | 不一致例 b1(sim 6157 / 実測 6152) b2(sim 5697 / 実測 5692) b3(sim 5697 / 実測 5692) b4(sim 5697 / 実測 5692) b5(sim 5697 / 実測 5692) b6(sim 5697 / 実測 5692)
+      → 5 レーン合計 596/835
+
+  --- [7] 回帰セル（実測 cost と sim cost の対照） ---
+
+########## 総括 ##########
+  [T1] ①②の裁定:
+    ・実機の buff ライフタイムは S1 timeline のビート別表示で直接読める。S1 L1 伊吹渚 6/22 の 3 発動のうち
+      食い違うのは b60 だけ（engine 662 / 実測 681）。b60 は **他ソース（L2 A スキル「準備も立った大舞台」）の最終ビート**で、
+      その boost 3 段は実機 b60 に表示され b61 で消える（＝実機のライフタイムは申告どおり）。
+    ・engine は同じインスタンスを b60 の snapshot(step7) には持つが、フォトが CT 由来で **phase=last（step11）** に発火し、
+      step10 の減算後なのでコスト倍率から落ちる。→ **①自己バフ課金ではなく ②持続境界（最終ビートの扱い）** が原因。
+    ・①の反証: このフォトの付与先は実測で「ボーカルタイプ1人（=L3）」であり、発動レーン L1 自身ではない（S1 act 行 order4/13/22）。
+      自 act の付与を自分の cost に足す規則では L1 の 681 は出ない（L3 のコストにしか効かない）。
+  [T2] ±6% の正体（4 候補の潰し）:
+    ・①スタミナ消費削減系 effect_lines: 該当なし（+5% を示すセルにコスト低下系の表示は無い）。
+    ・②Lv バッジ誤読: フォトの staminaCost は Lv 非依存（マスタはカードスキルのみ Lv 別消費を持つ）。
+    ・③OCR 誤読: 同一セルの独立 2 観測（S3 b13/b73）が同一値 2,085、S1 は timeline と act 行が整合。
+    ・④現在値/最大値比例: 比が一定（1.0498）で現在値・最大値に依存しないことから棄却。
+    ・残った説明 = **レーンに乗っている boost の段数 × 1%**。engine は自属性ブーストのみ数える
+      （consumptionMultiplierPermil(snap, attr)）ため、他属性ブーストが乗っているセルだけ engine が安く出る。
+  --probe = OFF（F3 の模擬は --probe で実行）
+
+--- 検証フッター ---
+  再実行: npx tsx research/23_beat_score_analysis/phase16_action9c_cost_spec_harness.ts <label> [--probe]

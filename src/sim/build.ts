@@ -318,12 +318,18 @@ export interface BuildSimOptions {
    */
   userPhotoSkills?: ReadonlyArray<SkillDef>;
   /**
-   * 【Phase 8-B10 追補3】T5 実測サンプル（verification_data_v2.json）のレーン別フォト名。
-   * golden フォトスキル（photo-L*）は「装着位置のフォトが T5 実測フォトと同一名」の場合のみ
-   * 注入する（装着位置モデルの限定・汎用編成への T5 由来スキル混入の防止）。
+   * 【Phase 8-B10 追補3 / Phase 16-A9c F3】T5 実測サンプル（verification_data_v2.json）の
+   * レーン別フォト名。golden フォトスキル（photo-L*）は「装着位置のフォトが T5 実測フォトと
+   * 同一名」の場合のみ注入する（装着位置モデルの限定・汎用編成への T5 由来スキル混入の防止）。
    * レーン内の T5 フォト名と一致すれば同位置でなくても適用する（8-B5 の装備解除による
    * 詰め連動を維持）。マイフォト帳由来のフォトは【マイフォト】接頭辞のため一致しない。
-   * 省略時は従来どおり装着位置のみで判定（後方互換）。
+   *
+   * 【F3・2026-10-02】**省略時は注入しない（gate off）**。以前は「省略＝装着位置のみで判定
+   * （＝全件注入）」だったため、この引数を渡し忘れた研究ハーネス・外部呼び出しで T5 由来の
+   * フォトスキルが素通りし、S1/S2/S3 の実測に存在しないスタミナ消費・スコアが乗っていた
+   * （A9b §4: S3 L2 b4/b34・L3 b169 が実測と逆方向、L5 b70 が過剰）。実測データを再現する
+   * 呼び出し（CLI `loadGoldenPhotoNames()`・UI `GOLDEN_PHOTO_NAMES`・
+   * `tools/analyze_beat_score_models.ts`）は**必ず名前を渡す**こと。
    */
   goldenPhotoNames?: ReadonlyArray<ReadonlyArray<string>>;
 }
@@ -358,16 +364,20 @@ function toStatBonus(items: PhotoOrAccessory[]): StatBonus[] {
 }
 
 /**
- * 【Phase 8-B10 追補3】golden フォトスキルの注入判定。
- * goldenPhotoNames（T5 実測サンプルのレーン内フォト名一覧）が省略なら従来動作（true）。
- * 指定時は装着位置のフォト名が T5 実測フォトのいずれかと一致する場合のみ true。
+ * 【Phase 8-B10 追補3 / Phase 16-A9c F3】golden フォトスキルの注入判定。
+ * goldenPhotoNames（T5 実測サンプルのレーン内フォト名一覧）が**省略なら false**（注入しない・
+ * gate off が既定）。指定時は装着位置のフォト名が T5 実測フォトのいずれかと一致する場合のみ true。
  * 名前が無い/読めないフォト（"unreadable" 等）は同一名の T5 フォトが存在する場合のみ一致。
+ *
+ * 【F3・2026-10-02 実測確定】旧実装は「省略＝true（全件注入）」で、引数を渡し忘れた呼び出しに
+ * T5 由来スキルが混入した（A9b §4・A10 隠れセルゲート: S3 L5 の隠れセルに 12.49× の過剰配置）。
+ * 既定を「注入しない」に倒し、実測再現側は必ず名前を渡す（fail-safe 側の既定）。
  */
 function goldenPhotoSkillApplies(
   goldenNames: ReadonlyArray<string> | undefined,
   photoName: string | undefined,
 ): boolean {
-  if (goldenNames === undefined) return true;
+  if (goldenNames === undefined) return false;
   return photoName !== undefined && goldenNames.includes(photoName);
 }
 

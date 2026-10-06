@@ -367,8 +367,9 @@ function processBeat(
  *
  * - 適用順序はステージ→バフ（【Confirmed 2026-09-04: S3 L4 b3 の 1939 =
  *   floor(610×3=1830 ×1.06)。逆順では 1938 になり1ずれる】）
- * - バフ倍率 = consumptionMultiplierPermil（自属性ブースト +1%/段等。
- *   S3 L4 b1/b3/b14/b42/b61 = 1884/1939/1386/1272/1884 で1の位一致）
+ * - バフ倍率 = consumptionMultiplierPermil（属性不問のブースト段数合計 +1%/段 ほか。
+ *   S3 L4 b1/b3/b14/b42/b61 = 1884/1939/1386/1272/1884 で1の位一致・
+ *   他属性ブーストのセルは F1 修正（属性不問）で 2,085/1,449/1,159 へ一致）
  * - ステージ消費倍率 = StageInput.skillStaminaWeightPermil
  *   （Quest.skillStaminaWeightPermil。標準 1000・STAGE045 は 3000=3.0倍。
  *   サンプル3 F1: 424×3=1272 等 8 件以上で 1 の位一致【Confirmed: S3 実測】）
@@ -377,11 +378,10 @@ function staminaCostOf(
   skill: Pick<SkillDef, "staminaCost">,
   snap: BuffSnapshot,
   stageWeightPermil?: number,
-  attr?: "vocal" | "dance" | "visual",
 ): number {
   if (skill.staminaCost == null) return 0;
   const afterStage = mulPermil(skill.staminaCost, stageWeightPermil ?? 1000);
-  return mulPermil(afterStage, consumptionMultiplierPermil(snap, attr));
+  return mulPermil(afterStage, consumptionMultiplierPermil(snap));
 }
 
 /**
@@ -412,10 +412,27 @@ function orderedStates(states: readonly LaneState[]): LaneState[] {
   });
 }
 
-function snapshotOf(state: LaneState): BuffSnapshot {
-  // 残り0の効果は次ビート開始時の除去まで配列に残るため、集計では常に除外する
-  // （ステップ10で0になった効果は翌ビートのスコアに乗らない・research/13 §2）
-  return aggregateBuffs(state.effects.filter((e) => e.remainingBeats > 0));
+/**
+ * スナップショット（残り0の効果は次ビート開始時の除去まで配列に残るため、集計では常に除外する
+ * — ステップ10で0になった効果は翌ビートのスコアに乗らない・research/13 §2）。
+ *
+ * @param includeExpiredThisBeat コスト評価専用（F2）。true のとき、**当ビートのステップ10で
+ *   remainingBeats が 0 になったインスタンス**（＝実機でそのビートに表示されている最終ビートの
+ *   boost）も集計に含める。ビート開始時に前ビートの満了分は既に除去され、resolveSkillNote の
+ *   除去パス（ステップ8後）も expiredThisBeat を空にするだけなので、この時点で rem<=0 の
+ *   インスタンスは「当ビートで満了したもの」に限られる。
+ */
+function snapshotOf(state: LaneState, includeExpiredThisBeat = false): BuffSnapshot {
+  const active = state.effects.filter((e) => e.remainingBeats > 0);
+  if (!includeExpiredThisBeat) {
+    return aggregateBuffs(active);
+  }
+  // aggregateBuffs は remainingBeats > 0 を要求するため、表示上「当ビート有効」な
+  // 満了インスタンスは残り1ビートとして渡す（段数のみが効くため値は変わらない）。
+  const expired = state.effects
+    .filter((e) => e.remainingBeats <= 0)
+    .map((e) => ({ ...e, remainingBeats: 1 }));
+  return aggregateBuffs([...active, ...expired]);
 }
 
 /**
@@ -1433,11 +1450,18 @@ function tryActivate(
   }
 
   const snap = snapshotOf(state);
+  // 【F2・2026-10-02 実測確定】実機は「そのビートに表示されている boost」が**そのビート中の
+  // 発動（後半＝ステップ11 を含む）**に効く。後半 P/フォトはステップ10 の減算後に発動するため、
+  // 当ビートで満了した（remainingBeats が 0 になった）インスタンスが snapshotOf から落ち、
+  // 過小課金になっていた（S1 L1 b60: engine 662 / 実測 681 = vocal_boost 3 段ぶん。
+  // その boost 3 段は実機 b60 に表示され b61 で消える）。
+  // コスト評価だけを「そのビートの表示状態」に合わせる（採点用 buffSnapshots=ステップ7 と、
+  // ビートをまたぐ表示意味論は不変）。
+  const costSnap = phase === "last" ? snapshotOf(state, true) : snap;
   const cost = staminaCostOf(
     skill,
-    snap,
+    costSnap,
     ctx.input.stage.skillStaminaWeightPermil,
-    state.input.attribute,
   );
   if (state.stamina < cost) {
     return { trace: { ...baseTrace, success: false, failReason: "stamina_short" }, activated: false };
@@ -2321,7 +2345,6 @@ function settleSkillNote(
       skill,
       snap,
       ctx.input.stage.skillStaminaWeightPermil,
-      state.input.attribute,
     );
     if (state.stamina < cost) {
       blockedStamina = true;

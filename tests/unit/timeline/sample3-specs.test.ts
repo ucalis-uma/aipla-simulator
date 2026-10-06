@@ -474,8 +474,8 @@ describe("サンプル3確定仕様: characterAdvantagePermil", () => {
   });
 });
 
-/** S3-10: 消費のブースト副効果は自属性ブーストのみ（S3 L4 visual 他） */describe("サンプル3確定仕様: consumptionMultiplier は自属性ブースト", () => {
-  it("visual レーンの visual_boost 3 → 1030・vocal_boost は無視", async () => {
+/** S3-10: 消費のブースト副効果は属性不問（F1・2026-10-02 実測確定。旧「自属性のみ」は撤回） */describe("サンプル3確定仕様: consumptionMultiplier は属性不問のブースト段数合計", () => {
+  it("visual レーンの visual_boost 3 → 1030・他属性ブーストも同じ係数（多属性は足し算）", async () => {
     const { consumptionMultiplierPermil } = await import("../../../src/timeline/buffs.js");
     const snap = (overrides: Record<string, number>) => ({
       vocal_up: 0,
@@ -506,14 +506,19 @@ describe("サンプル3確定仕様: characterAdvantagePermil", () => {
       ...overrides,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }) as any;
-    // S3 L4（visual レーン）: visual_boost 3 → 1030
-    expect(consumptionMultiplierPermil(snap({ visual_boost: 3 }), "visual")).toBe(1030);
-    // S3 L2（vocal レーン）の dance_boost 3 は無視 → 1000（b4 新たな衣装 1131 と一致）
-    expect(consumptionMultiplierPermil(snap({ dance_boost: 3 }), "vocal")).toBe(1000);
+    // S3 L4（visual レーン）: visual_boost 3 → 1030（1884 = floor(610×3)×1.03 と1の位一致）
+    expect(consumptionMultiplierPermil(snap({ visual_boost: 3 }))).toBe(1030);
+    // 他属性ブーストも同じく +1%/段（S3 L3 の visual レーンに vocal ブースト 5 段 →
+    // 実測 2,085 = floor(662×3)×1.05。旧・自属性のみでは 1,986 で不一致だった。）
+    // 旧テストの「vocal レーンの dance_boost 3 は無視 → 1000」は実測により撤回（F1）。
+    expect(consumptionMultiplierPermil(snap({ vocal_boost: 5 }))).toBe(1050);
+    expect(consumptionMultiplierPermil(snap({ dance_boost: 3 }))).toBe(1030);
     // vocal レーンの vocal_boost 4 → 1040（従来どおり）
-    expect(consumptionMultiplierPermil(snap({ vocal_boost: 4 }), "vocal")).toBe(1040);
-    // attr 省略時は vocal（旧挙動）
     expect(consumptionMultiplierPermil(snap({ vocal_boost: 4 }))).toBe(1040);
+    // 多属性同時は**足し算**（ユーザー確認 2026-10-02・2 件サンプル）: 3+3+4 = 10 段 → +100‰
+    expect(
+      consumptionMultiplierPermil(snap({ visual_boost: 3, dance_boost: 3, vocal_boost: 4 })),
+    ).toBe(1100);
   });
 });
 

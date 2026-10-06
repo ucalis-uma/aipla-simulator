@@ -240,6 +240,9 @@ describe("Buff Snapshot Stage Audit (S1 / T5 / S3)", () => {
         data,
         missedNotes: [1, 2, 3, 4, 5].map((lane) => ({ beat: 1, lane })),
         mentalOverride: CALIBRATED_MENTAL,
+        // 【Phase 16-A9c F3】golden フォトスキルの注入ゲート（未指定＝注入しないが既定）に
+        // T5 実測フォト名を渡す（CLI / UI と同一経路。T5 では従来と同一結果）。
+        goldenPhotoNames: ver.characters.map((c) => (c.photos ?? []).map((p) => String(p.name ?? ""))),
       }).base;
       base.fanBaseCount = 16000;
 

@@ -453,33 +453,28 @@ export function liveStatusMultiplierPermil(
 /**
  * 消費スタミナ倍率（permil）を返す（research/01 §2.2「消費スタミナ+1%/段」・§4-4【Confirmed】）。
  *
- *   1000 − 50×stamina_cost_down + 50×stamina_cost_up + 10×自属性ブースト
+ *   1000 − 50×stamina_cost_down + 50×stamina_cost_up + 10×(vocal+dance+visual のブースト段数合計)
  *
  * - 【Peing確定 2026-08-31】消費増加（stamina_consumption_increase）は「スタミナ消費量に
  *   最大2倍の補正が入る低下効果」（質問箱 id=1190040607）。50‰×20段=+1000‰=2倍で
  *   上限と整合。バトル主体だが self 対象のものがスコアライブでも消費に乗る
  *
- * - ブースト副効果（消費 +1%/段）は**発動レーンの属性のブーストのみ**
- *   （【Confirmed 2026-09-04: S3 L4 visual レーンの visual_boost 3/6/9/0 が
- *   消費 1884/1939/1386/1272 と1の位一致。L2 vocal レーンの dance_boost 3 は
- *   無視され 1131 と一致。旧 vocal_boost 固定は S3 と矛盾]）。
- *   attr 省略時は vocal（旧挙動・既存テスト互換）。
+ * - ブースト副効果（消費 +1%/段）は**属性不問**（レーンに乗っている全属性のブースト段数を合計）
+ *   【実測確定 2026-10-02: S3 の visual レーンに vocal ブースト 5 段が乗ったセルで
+ *   実測 2,085 = floor(662×3)×1.05 / 1,449 = floor(460×3)×1.05（engine は旧・自属性のみで
+ *   1,986 / 1,380）。多属性同時は「足し算」で確定（ユーザー確認 2026-10-02・2 件サンプル）。
+ *   → 旧確定事項「消費のブースト副効果は自属性ブーストのみ」（Phase12 追補3）は**反証**。
+ *   S3 L4 の visual_boost 3/6/9 段セル（1884/1939/1386）は自属性ブーストの特殊例で、
+ *   本式でも同じ値になる（回帰セル）。
+ * - attr 引数は 2026-10-02 に**撤去**（属性で結果が変わらなくなったため）。
  * - vocal_up_extreme は含めない
  *   （research/01 §2.3 の表は「ブースト」行の副効果。extreme は上昇系の 30段上限版）。
  * - 【Unknown】stamina_cost_down が上限解放で30段に達すると 1000−1500 = −500 と
  *   負になり得る。ゲーム本体の負値時の挙動（0 クランプ等）は未観測のため
  *   本実装ではクランプしない（呼び出し側の消費計算で保護すること）。
  */
-export function consumptionMultiplierPermil(
-  snapshot: BuffSnapshot,
-  attr?: "vocal" | "dance" | "visual",
-): number {
-  const boost =
-    attr === "dance"
-      ? snapshot.dance_boost
-      : attr === "visual"
-        ? snapshot.visual_boost
-        : snapshot.vocal_boost;
+export function consumptionMultiplierPermil(snapshot: BuffSnapshot): number {
+  const boost = snapshot.vocal_boost + snapshot.dance_boost + snapshot.visual_boost;
   return (
     1000 -
     STAMINA_COST_DOWN_PER_STAGE_PERMIL * snapshot.stamina_cost_down +

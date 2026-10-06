@@ -46,6 +46,14 @@ const T5_DECK = readJson(
 
 const MENTAL: Record<string, number> = { 1: 105, 2: 102, 3: 104, 4: 103, 5: 101 };
 const MISSED_B1 = [1, 2, 3, 4, 5].map((lane) => ({ beat: 1, lane }));
+/**
+ * 【Phase 16-A9c F3】golden フォトスキル（photo-L*）注入ゲートに渡す T5 実測フォト名。
+ * F3 でゲートの既定が「未指定＝注入しない」になったため、T5 実測経路を再現する呼び出しは
+ * 名前を明示する（CLI `loadGoldenPhotoNames()` / UI `GOLDEN_PHOTO_NAMES` と同一）。
+ */
+const T5_GOLDEN_PHOTO_NAMES: string[][] = T5_DECK.characters.map((c) =>
+  (c.photos ?? []).map((p) => String(p.name ?? "")),
+);
 
 describe("laneAttributeOf", () => {
   it("qt-daily-003-19（laneAttributes=[2,2,1,2,2]）で L4 のみ dance になる", () => {
@@ -84,6 +92,7 @@ describe("buildSimulateInput", () => {
     data,
     missedNotes: MISSED_B1,
     mentalOverride: MENTAL,
+    goldenPhotoNames: T5_GOLDEN_PHOTO_NAMES,
   });
 
   it("5レーン構築・レーン属性導出・メンタル上書き", () => {

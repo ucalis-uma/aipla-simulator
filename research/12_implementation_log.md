@@ -1,4 +1,4 @@
-﻿# 12. 実装ログ（Implementation Log）
+# 12. 実装ログ（Implementation Log）
 
 - 目的: フェーズごとの実装記録・決定事項・発見事項を時系列で記録する（PLAN.md §14 に対応）
 
@@ -1605,3 +1605,58 @@ S5 = `fan.png` のみ（デッキも組めない）。**S4/S5 はレーン別デ
   クリーンな照合が 6 件しかないので「±6% を全部説明した」とは言わない。S4/S5 は act 台帳を作れないため未検証
 - 検証: `npm run typecheck` 正常（ただし `tsconfig.json` の include が `src/tests/tools` なので research/ は型検査対象外＝実行成功で妥当性確認）、
   `npx vitest run` **41 files / 518 passed / 1 skipped / 0 failed**（T5 golden 2,581,114,209 不変）。今タスクの一時ファイル 43 個を削除
+
+
+## Phase 16 / Action 9c — スタミナ消費の仕様 3 点修正（F1/F2/F3）（2026-10-02・engine.ts 変更）
+
+詳報: `research/23_beat_score_analysis/phase16_action9c_report.md`（段階別の生ログは
+`phase16_action9c_out_baseline/_F1/_F2/_F3/_F3legacy.txt`・基準ハーネスは `phase16_action9c_models_S1S2S3*.txt`）。
+手順書 `prompts/phase16-action9c-cost-spec-and-photo-gate.md`。9b のログ追記は未実施（詳報 `phase16_action9b_report.md` のみ）。
+
+- **F1（`src/timeline/buffs.ts` + `engine.ts`）: 消費スタミナのブースト副効果は属性不問**。
+  `consumptionMultiplierPermil(snapshot)` から `attr` を撤去し、`vocal_boost + dance_boost + visual_boost` の
+  **合計**で段数を見る（多属性は足し算・ユーザー確認済み）。証拠: S3 L3 b13/b73 = 実測 **2,085**（旧 engine 1,986）・
+  S3 L1 b51 A **1,159** / P **1,449**。系列一致率 **S3 L1 48/169 → 167/169・L3 10/169 → 162/169**
+- **F2（`engine.ts`）: phase=last のコストを実機表示（減算前）状態で評価**。`snapshotOf(state, true)` で
+  当ビート満了インスタンス（`remainingBeats=0`）を rem=1 として含める。**コスト評価だけ**に閉じ、
+  採点用 `buffSnapshots`（ステップ7）の意味論は不変。証拠: **S1 L1 b60 photo 662 → 681**（実測 681）で
+  **S1 L1 系列が 59/176 → 176/176**、b120（寿命途中）は 681 のまま不変・他 175 ビート不変
+- **F3（`src/sim/build.ts`）: golden フォトスキルの注入ゲートを既定 off に**。
+  `goldenPhotoSkillApplies` の `goldenNames === undefined` を `true`（全件注入）から **`false`（注入しない）** へ。
+  実測再現側は必ず名前を渡す（CLI `loadGoldenPhotoNames()` / UI `GOLDEN_PHOTO_NAMES` /
+  `tools/analyze_beat_score_models.ts`。S1 は deck の `disabledSkillIds`）。テスト 5 本に名前供給を明示
+  （`golden/t5-scores`・`sim/ui-pipeline`・`sim/build`・`timeline/buff-snapshots.audit`・`photo-link`＋未指定時の非注入を追加）
+- **受け入れ 8 項目すべて充足**: S1 **+0.25%**・S1 L1 **176/176**・b70×L5 = `stamina_short` で 0・
+  b4×L2/b34×L2/b169×L3 発動（cost 1,131/1,131/492・セル 2,318,611/3,096,117/2,329,970 vs 実測 pop 2.3M/2.9M/2.5M）・
+  S3 **−1.17%**・S2 **−3.65%**・`npx vitest run` **41 files / 519 passed / 1 skipped**＋typecheck 0 errors・
+  `audit_audience` と `dump_lane_pops` 緑（＋新設 `npm run audit:hidden` PASS）
+- **T5 ゴールデンは 4 段階すべて不変 = 2,581,114,209**（F1/F2/F3 の各段階で再取得。golden テストの
+  リプレイ 17,521,599,508 も不変）
+- **9b の記述の訂正**: ①9b ハーネスは `measured_data` の `critical_flags` ラッパーを見ておらず**クリ空**で走っていた
+  （9b の総合値は過小・比較不可。9c ハーネスで修正し基準ハーネスと一致）。②「S2 +37.40%」は S2 総合として
+  再現せず（A8 の S3 L5 レーン比 1/0.728 の派生値。実測可能な S2 総合は −3.65%）・「S3 −1.32%」も現行 −1.17%。
+  ③A6 の「S1 L1 176/176」は F2 前の engine では再現しない（59/176）＝**F2 が成立させた**
+- 未確定として残した点: **phase=last の一般則**（「通常どおりの発動順」説との分離には同一譜面・別編成の追加観測が必要。
+  撮影条件は `prompts/measure-new-sample.md` に依頼形で追記・本アクションでは撮影しない）。
+  S3 の残る系列不一致（L1 b1/b51・L2 b60・L3 b1/b2/b13/b24/b73/b79・L5 b2/b50）は A9c の 3 修正では動かない既知セル
+- 規律遵守: 全局乗数 `STAM_*` 未変更・`../aipura_nox/サンプル*/` は読み取りのみ・撮影なし
+
+
+## Phase 16 / Action 10 — 隠れセル検収ゲートの恒久化（2026-10-02）
+
+詳報: `research/23_beat_score_analysis/phase16_action10_report.md`
+（実行ログ `phase16_action10_audit_out_preF3.txt` = 赤・`phase16_action10_audit_out.txt` = 緑）
+
+- 新設: **`tools/audit_hidden_cells.mjs`**（実測側＋判定＋exit code）と **`tools/audit_hidden_cells_sim.ts`**
+  （実 engine から「pop 読込不能セル」のスコアだけを JSON 化）。`package.json` に **`npm run audit:hidden`**・
+  `AGENTS.md` の実効検査行に追記。A8 の 2 本の実装を移植（A5 出力の正規表現読みは廃止）
+- 判定: 比 = `sim(pop読込不能セル) ÷ 隠れ枠(上限)`。Σpop は「統合（内生＋遡及）」と「内生のみ（A8 口径）」、
+  sim は photo-gate off/on を併記し**最悪値**で **≥2.0 = FAIL / 1.5〜2.0 = WARN**、FAIL で exit 1。
+  `--ledger` で **S1 のスタミナ系列 全ビート一致**（L1 = 176/176 必須）も同時検査
+- **どの条件で赤になるか**: 実測で pop が読めていないセルに sim が実測の隠れ枠の 2 倍以上を置いたとき。
+  **今赤いのはどれか: F3 前の S3 L5**（12.49× 統合 / **7.69× 内生 = A8 と同値**・sim レーン合計 13,289,439）。
+  原因は `goldenPhotoNames` 未指定時のフォトスキル素通り＝**実装側の実バグ**で、**F3 適用により 0.86× / 0.95× へ解消**
+  （基準は一切緩めていない）。F3 後の現在は **FAIL 0 / WARN 0 = PASS / exit 0**、閉包 3/3 差 0・S1 L1 176/176
+- F3 後は素の既定（off）と受け入れ経路（on）が同値（S1 114,162,150 / S2 74,669,710 / S3 77,425,702）になり、
+  **off を常時走らせるので素通りが再導入されたら再び赤くなる**
+- 副次: A8 の逆方向観測（S3 L3 = 114,603 / 2,635,445 = 0.04×＝sim が少なすぎる）も再現。**下側ゲートは未実装**【Unknown】

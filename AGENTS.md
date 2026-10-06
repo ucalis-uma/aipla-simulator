@@ -74,6 +74,18 @@
   （2026-09-30 追加）: n=5 の層が ~1.0 であれば記録は健全。n<5 を混ぜると 0.4〜0.8 に沈み、
   「スキル発動ビートは pop が足りない」のような**架空の異常**を追いかけた（`phase16_action2d_lane_pops_audit.md`）。
   実効検査: `node tools/dump_lane_pops.mjs S1,S2,S3,S4`
+- **pop が読めないセル（＝実測で検証できないセル）に sim が実測以上にスコアを置いていないかを毎回検査する
+  （2026-10-02 追加・Phase 16-A10）**: 比 = `sim(pop読込不能セル)` ÷ `(レーン合計 − Σpop)`。
+  **比 ≥ 2.0 = FAIL（閾値は緩めない）／1.5〜2.0 = WARN**。隠れ枠は K 表記の切り捨てにより上限なので
+  比は過小評価側。実効検査: **`npm run audit:hidden`**（= `node tools/audit_hidden_cells.mjs S1,S2,S3`。
+  `--ledger` を付けると S1 のスタミナ系列 全ビート一致も同時に検査）。A8 で S3 L5 = 7.69×
+  （原因は下の `goldenPhotoNames` の既定）→ **F3 後 0.95×**。詳報 `research/23_beat_score_analysis/phase16_action10_report.md`
+- **`buildSimulateInput` の `goldenPhotoNames` は省略すると golden フォトスキル（photo-L*）を注入しない
+  （2026-10-02 F3・既定 off）**: 実測を再現する呼び出しは**必ず T5 実測フォト名を渡す**
+  （CLI `loadGoldenPhotoNames()` / UI `GOLDEN_PHOTO_NAMES` / `tools/analyze_beat_score_models.ts` /
+  S1 の deck のように `disabledSkillIds` で無効化する経路）。旧実装は「未指定＝全件注入」で、
+  渡し忘れた研究ハーネスに T5 由来のフォトスキルが混入し、S1/S2/S3 の実測に無いスタミナ消費・
+  スコアが乗っていた（`phase16_action9b_report.md` §4・A10 隠れセルの 7.69×）
 - **`deck.json` の `audience` には「個人（レーン平均）来場数」だけを入れる（2026-09-30 追加・最重要）**:
   `fan.png` には似た数字が 3 つ並ぶ — ①総ファン数（レーン別 17万人台など）・②**来場ファン数**（レーン別、
   満員なら合計が会場キャパと 1 人単位で一致／空席があるとそれより少ない）・③スコアボーナス（+x.x%）。`audience` に入れるのは **②の 5 レーン平均**

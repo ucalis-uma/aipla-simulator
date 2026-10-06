@@ -76,6 +76,12 @@ const deckOf = (l1Photos: unknown[]): DeckJsonV2 => ({
 });
 
 const OPTS = { stageFile: "st", chartFile: "ch", data } as const;
+/**
+ * 【Phase 16-A9c F3】golden フォトスキル（photo-L*）の注入ゲート。
+ * F3 で「未指定＝注入しない」が既定になったため、L1 のダミーフォト名を T5 実測名の
+ * 代わりに渡す（装着位置フォトの名前一致で注入＝Phase 8-B5 の連動を検証する意図は不変）。
+ */
+const GOLDEN_PHOTO_NAMES: string[][] = [["a", "b", "c", "d"]];
 const photoSkillIdsOf = (input: ReturnType<typeof buildSimulateInput>): string[] =>
   input.lanes
     .find((l) => l.lane === 1)!
@@ -95,14 +101,29 @@ describe("フォト装備 ↔ フォトスキルの連動（Phase 8-B5）", () =
     const full = buildSimulateInput({
       ...OPTS,
       deck: deckOf([dummyPhoto("a"), dummyPhoto("b"), dummyPhoto("c"), dummyPhoto("d")]),
+      goldenPhotoNames: GOLDEN_PHOTO_NAMES,
     });
     expect(photoSkillIdsOf(full)).toEqual(["photo-L1-1", "photo-L1-2", "photo-L1-3"]);
     // 2 枚まで装備を減らす → idx3 の photo-L1-3 も外れる
-    const two = buildSimulateInput({ ...OPTS, deck: deckOf([dummyPhoto("a"), dummyPhoto("b")]) });
+    const two = buildSimulateInput({
+      ...OPTS,
+      deck: deckOf([dummyPhoto("a"), dummyPhoto("b")]),
+      goldenPhotoNames: GOLDEN_PHOTO_NAMES,
+    });
     expect(photoSkillIdsOf(two)).toEqual(["photo-L1-1", "photo-L1-2"]);
     // 全外し → フォトスキルは 1 つも注入されない
-    const none = buildSimulateInput({ ...OPTS, deck: deckOf([]) });
+    const none = buildSimulateInput({
+      ...OPTS,
+      deck: deckOf([]),
+      goldenPhotoNames: GOLDEN_PHOTO_NAMES,
+    });
     expect(photoSkillIdsOf(none)).toEqual([]);
+    // 【F3】ゲートを渡さない（未指定）場合は、装着位置が一致していても注入しない（既定 off）
+    const ungated = buildSimulateInput({
+      ...OPTS,
+      deck: deckOf([dummyPhoto("a"), dummyPhoto("b"), dummyPhoto("c"), dummyPhoto("d")]),
+    });
+    expect(photoSkillIdsOf(ungated)).toEqual([]);
   });
 
   it("装備を減らすとステータスとスキルの両方が外れてスコアが下がる", () => {
@@ -110,9 +131,12 @@ describe("フォト装備 ↔ フォトスキルの連動（Phase 8-B5）", () =
       buildSimulateInput({
         ...OPTS,
         deck: deckOf([dummyPhoto("a"), dummyPhoto("b"), dummyPhoto("c"), dummyPhoto("d")]),
+        goldenPhotoNames: GOLDEN_PHOTO_NAMES,
       }),
     );
-    const none = run(buildSimulateInput({ ...OPTS, deck: deckOf([]) }));
+    const none = run(
+      buildSimulateInput({ ...OPTS, deck: deckOf([]), goldenPhotoNames: GOLDEN_PHOTO_NAMES }),
+    );
     expect(none).toBeLessThan(full);
   });
 });

@@ -400,6 +400,15 @@ describe("consumptionMultiplierPermil", () => {
     expect(consumptionMultiplierPermil(snapshotOf({ vocal_boost: 4 }))).toBe(1040);
   });
 
+  it("ブースト副効果は属性不問・多属性は合計（F1・2026-10-02 実測確定）", () => {
+    // 旧「自属性のみ」は実測で反証（S3 の visual レーン×vocal ブースト 5 段 = ×1.05）
+    expect(consumptionMultiplierPermil(snapshotOf({ dance_boost: 3 }))).toBe(1030);
+    expect(consumptionMultiplierPermil(snapshotOf({ visual_boost: 3 }))).toBe(1030);
+    expect(
+      consumptionMultiplierPermil(snapshotOf({ vocal_boost: 2, dance_boost: 3, visual_boost: 5 })),
+    ).toBe(1100);
+  });
+
   it("vocal_up_extreme は消費に影響しない（ブースト副効果の対象外）", () => {
     expect(consumptionMultiplierPermil(snapshotOf({ vocal_up_extreme: 10 }))).toBe(1000);
   });

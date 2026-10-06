@@ -40,6 +40,14 @@ function buildUiData(): {
 
 describe("UI pipeline（build_ui.mjs と同一のデータ形状）", () => {
   const { data, sampleDeck } = buildUiData();
+  /**
+   * 【Phase 16-A9c F3】golden フォトスキル注入ゲートに渡す T5 実測フォト名。
+   * UI（`ui/app.ts` の GOLDEN_PHOTO_NAMES）・CLI（`loadGoldenPhotoNames()`）と同じく
+   * 実測サンプルのフォト名を渡す（F3 で未指定＝注入しないが既定になったため必須）。
+   */
+  const GOLDEN_PHOTO_NAMES: string[][] = sampleDeck.characters.map((c) =>
+    (c.photos ?? []).map((p) => String(p.name ?? "")),
+  );
 
   it("確定値ランが完了し、CLI の確定値と一致する", () => {
     const built = buildSimulateInput({
@@ -51,6 +59,7 @@ describe("UI pipeline（build_ui.mjs と同一のデータ形状）", () => {
       successBasePermil: 1000,
       missedNotes: [1, 2, 3, 4, 5].map((lane) => ({ beat: 1, lane })),
       mentalOverride: { 1: 105, 2: 102, 3: 104, 4: 103, 5: 101 },
+      goldenPhotoNames: GOLDEN_PHOTO_NAMES,
     });
     const res = simulateTimeline({
       ...built.base,
