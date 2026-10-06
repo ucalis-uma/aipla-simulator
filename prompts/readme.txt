@@ -204,3 +204,21 @@ A8 が新設した検査「**ポップが読込めないセルだけで sim ≤ 
 `npm run audit:hidden`（違反で exit 1）と AGENTS.md の実効検査に載せる。S1 L1 の台帳 100% 一致も不変条件として同居させる
 （A9 の engine 修正の安全弁）。**既知の赤（S3 L5 = 7.69×）をゲート側を緩めて緑にしないこと**。
 
+【アクション9 の実績 2026-10-01 / コミット 3feefc7（2026-10-06 に後追いコミット）】フォト cost の「±6% 揺らぎ」は
+乱数ではなく **live/snapshot の取り違え**が入口（engine の cost は発火時点の live 状態 `engine.ts:1435-1436`、
+Harness が見る `buffSnapshots` は scoring 時点 `engine.ts:272`）。±6% 帯域内の残差は 2 件だけで、
+S1 b60 L1 は「発動 act 自身の boost を自 cost に織り込む」と数量一致。**ただし完了条件は未充足**:
+T3（予測→模擬）・`phase16_action9_report.md`・コミットが未実施、α/β/γ の裁定と ±6% 成因 4 候補の全潰しが不足。
+台帳 `[B]` の「原価一致 0」は**添字合わせ比較の欠陥**（`phase16_action9_photo_ledger.ts:548`）で実データの誤りではない。
+→ 残件は下の A9b で閉じる。**src/ は未変更（engine 修正はユーザー承認待ち）**。
+
+prompts/phase16-action9b-selfbuff-vs-boundary.md
+は Phase 16 アクション9b（2026-10-06 作成・**最優先・単独で着手可**・engine を触る可能性があるため A7 と同時実行禁止）。
+A9 が分離できずに終えた「①発動 act 自身の boost を自 cost に織り込む」vs「②boost 持続境界が実機で 1 ビート長い」を、
+**「自バフ photo が他ソースのバフ切れ直後に発動する act」の機械探索**で 1 つに寄せる（分離条件は A9 結論メモ §4）。
+併せて A9 の残件（三角照合の α/β/γ 裁定・T3 予測→模擬→反転・受け入れ 8 項目・報告書・コミット）を閉じる。
+engine 修正は T3 の模擬が「4 セル反転＋他レーン崩れなし」を示した場合のみ、**かつユーザー承認後**
+（①と②のどちらを採るかもユーザーが決める。どちらも T5 golden 2,581,114,209 が動く）。
+開始時のベースライン: T5 golden 2,581,114,209 / `npx vitest run` 41 files・518 passed・1 skipped / typecheck 0 エラー /
+`node tools/audit_audience.mjs` NG 1 件（S1 の既知の audience 誤入力のみ・仕様どおり）。
+
