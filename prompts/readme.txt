@@ -222,3 +222,12 @@ engine 修正は T3 の模擬が「4 セル反転＋他レーン崩れなし」�
 開始時のベースライン: T5 golden 2,581,114,209 / `npx vitest run` 41 files・518 passed・1 skipped / typecheck 0 エラー /
 `node tools/audit_audience.mjs` NG 1 件（S1 の既知の audience 誤入力のみ・仕様どおり）。
 
+
+prompts/phase16-action9c-cost-spec-and-photo-gate.md
+は Phase 16 アクション9c（2026-10-02 作成・**engine.ts を触るため単独で着手**・A7 と同時実行禁止／A10 は読み取り専用なので先に通すのは可）。
+9b で特定し**ユーザー承認済み**の 3 修正を実装する: F1=消費ブースト副効果の**属性フィルタ撤去**（全属性の段数を合計・ユーザー確認で足し算確定）、
+F2=phase=last のコストを**減算前（実機表示）状態**で評価（S1 L1 b60 が 662→681・該当は全サンプルで 1 件のみ）、
+F3=**カード枠フォトの golden ゲート**（実機に無い発動を止め、b70×L5 を FAIL 側・b4×L2/b34×L2/b169×L3 を成功側へ）。
+実装順序は F1→F2→（T5 再取得・A10）→F3。T5 ゴールデンは段階別に再取得して報告（9b 時点: 2,581,114,209）。
+受け入れは A9 手順書 §1 T5 の 8 項目をそのまま使用。9b の結論は research/23_beat_score_analysis/phase16_action9b_report.md。
+
