@@ -63,6 +63,14 @@ const NAME_TO_BUFF_KEY: Record<string, string> = {
   "コンボスコア上昇": "combo_score_up",
   "クリティカル率上昇": "critical_rate_up",
   "クリティカル係数上昇": "critical_coeff_up",
+  // 【Phase 16-A13 2026-10-07】超化行（capExtend）・上限開放行（limitRelease）を区別して引く
+  // （超化行の表示段数はダミー・実効は一律 +5段）。完全一致で引くこと（`/クリティカル係数/` は
+  // 超化行にも当たる）。
+  "クリティカル係数上昇超化": "@capExtend:critical_coeff_up",
+  "ビジュアル上昇上限開放": "@limitRelease:visual_up",
+  "ボーカル上昇上限開放": "@limitRelease:vocal_up",
+  "ダンス上昇上限開放": "@limitRelease:dance_up",
+  "テンション上限開放": "@limitRelease:tension_up",
   "テンションUP": "tension_up",
   "集目": "focus",
   "ステルス": "stealth",

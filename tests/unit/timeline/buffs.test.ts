@@ -530,12 +530,62 @@ describe("Phase 9: 超化（capExtend）の上限拡張", () => {
     expect(snap.score_up).toBe(20);
   });
 
-  it("超化の上限拡張は最大のインスタンスを採用（効果は常に一定の解釈）", () => {
+  it("超化の上限拡張は最大のインスタンスを採用（段数は各インスタンスぶん加算）", () => {
     const snap = aggregateBuffs([
+      effect({ type: "score_up", stages: 5, sourceSkillId: "base" }),
       effect({ type: "score_up", stages: 5, capExtend: true, sourceSkillId: "choka-a" }),
       effect({ type: "score_up", stages: 5, capExtend: true, sourceSkillId: "choka-b" }),
     ]);
-    expect(snap.score_up).toBe(10);
+    expect(snap.score_up).toBe(15);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 16-A13（2026-10-07 実測確定）: 超化は「基本キーへの独立修飾子」
+//   マスタ efficacyId = `ef-add_effect_value_<基本キー>-10`（値 10 = 25‰ 単位 = +250‰ = +5段）。
+//   段数算術: 基本の段数へ +5（実測 S2 L3 = 8段 + 超化 → 13段 = critF 2504）。
+//   加算則: **基本キーの段数が 0 の間は加算しない**（S3 のビジュアル上昇超化が
+//   基本 visual_up = 0 の 26 セルで stat に現れない・S2 b100 の A セルは ccu=0）。
+//   寿命: 超化自身のマスタ表記 N−1 ビート（基本の失効・入れ替えに影響されない）。
+// ---------------------------------------------------------------------------
+describe("Phase 16-A13: 超化の段数算術（基本キーへの修飾子）", () => {
+  it("基本 ccu 8段 + 超化5段 → 13段（実測 critF 2504 と一致）", () => {
+    const snap = aggregateBuffs([
+      effect({ type: "critical_coeff_up", stages: 8 }),
+      effect({ type: "critical_coeff_up", stages: 5, capExtend: true, sourceSkillId: "choka" }),
+    ]);
+    expect(snap.critical_coeff_up).toBe(13);
+  });
+
+  it("表示 10 ではなく +5段（表記段数はダミー・Peing確定）", () => {
+    const snap = aggregateBuffs([
+      effect({ type: "critical_coeff_up", stages: 8 }),
+      effect({ type: "critical_coeff_up", stages: 5, capExtend: true, sourceSkillId: "choka" }),
+    ]);
+    expect(snap.critical_coeff_up).not.toBe(18);
+    expect(snap.critical_coeff_up).not.toBe(8);
+  });
+
+  it("基本が 0 の間は超化段を加算しない（加算先が無い・S3 超化 26 セル/b100 A セル）", () => {
+    const snap = aggregateBuffs([
+      effect({ type: "critical_coeff_up", stages: 5, capExtend: true, sourceSkillId: "choka" }),
+    ]);
+    expect(snap.critical_coeff_up).toBe(0);
+    // 別キーの基本が生きていても、そのキーの超化だけは加算されない
+    const snap2 = aggregateBuffs([
+      effect({ type: "visual_up", stages: 4 }),
+      effect({ type: "critical_coeff_up", stages: 5, capExtend: true, sourceSkillId: "choka" }),
+    ]);
+    expect(snap2.critical_coeff_up).toBe(0);
+  });
+
+  it("上限拡張は超化の生存中のみ効く（基本 20段 + 超化 → 25段でクランプ）", () => {
+    const snap = aggregateBuffs([
+      effect({ type: "score_up", stages: 29 }),
+      effect({ type: "score_up", stages: 5, capExtend: true, sourceSkillId: "choka" }),
+    ]);
+    // 基本キーの上限 20 + 超化の上限拡張 5 = 25 でクランプ（超化なしなら 20）
+    expect(snap.score_up).toBe(25);
   });
 });
 

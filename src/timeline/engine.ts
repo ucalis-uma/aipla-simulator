@@ -34,6 +34,7 @@ import {
 import {
   CRIT_RATE_BASE_CAP,
   CRIT_RATE_UP_PER_STAGE,
+  EXTREME_GRANT_STAGES,
   IDOL_PRIORITY_ORDER,
   POSITION_TO_LANE,
   UNIT_MEMBERS,
@@ -1545,32 +1546,40 @@ function applyEffect(
   if (mapped !== null) {
     const targets = resolveTargets(effect.target, self, states, triggerLanes);
     for (const target of targets) {
-      // 【サンプル2実測確定 2026-09-02・ユーザー計算式】超化（add_effect_value_*・
-      // capExtend=true の効果行）は**増強型**: 対象レーンに同種バフのアクティブ・
-      // インスタンスが存在するときのみ、残りビート最大のインスタンスへ +stages 段
-      // （Peing確定: 表記段階数はダミーで一律+5段階分）を加算し、そのインスタンスの
-      // 生存中は同種バフの上限を capExtend（加算量）ぶん拡張する。
-      // **同種バフが存在しない場合は何もしない**。
-      // 実測根拠（S2 L3 の ccu・トレース検証済み。千紗P2 みんなで走った海岸通り =
-      // ccu8段[45b] を b1/b50/b100/b150 に付与、千紗A1 星見の海の波 超化(+5) は b14/b88/b148）:
-      //   b41 = 13 段（P2@b1 の 8 段へ A1@b14 が +5 → critF 2504 = ユーザー式どおり）
-      //   b100 = 0 段（P2@b50 分は b95 期限切れ・A1@b88 の +5 もそのインスタンスと共に消滅 → critF 1854）
-      //   b142 = 8 段（P2@b100 分のみ・A1@b148 は基底消滅後で不発 → critF 2254）
-      // 旧実装（独立 5 段インスタンス+capExtend）は b100 で ccu 5 を返し実測と矛盾した。
-      // T5 golden の vocal_up_extreme（fest-03-2・独立キー）は発動ビート（b2/b69/b156）の
-      // すべてで基底 vocal_up（逆襲）が有効なため加算値は同一・golden 不変。
-      if (effect.capExtend === true) {
-        amplifyLongestOfKey(target, mapped.key, effect.stages ?? 5);
-        continue;
-      }
+      // 【Phase 16-A13 実測確定 2026-10-07】超化（capExtend=true の効果行）は
+      // **基本キーとは別の独立インスタンス**である（増強型・最長インスタンスへの合算は誤り）。
+      // - 段数は一律 +5（Peing確定: マスタ表記段階数はダミー）。生存中は同キーへ加算され、
+      //   同キーの上限を自身の段数ぶん拡張する（インスタンスに capExtend を記録 → buffs.ts が
+      //   extensions の最大値を上限へ加算）。
+      // - 寿命は**自分のマスタ表記 N−1 ビート**（= 通常インスタンスと同じ規則・
+      //   effect_extension「センターの強化効果を N 延長」の対象）。基底バフの寿命とは独立。
+      // 実測根拠（サンプル2 L3・`../aipura_nox` は読み取り専用。A1 = sk-chs-05-fest-00-1
+      // ccu超化 5段[31b] Lv4 → 実効 30 ビート・発動 b14/b88/b148）:
+      //   ①表示行の窓が独立寿命と 1 ビートまで一致: b14–43（b14+29）／b88–127
+      //     （b88+29 = b117 に ktn P2「暗闇を照らす月」Lv4 の +10 延長で b127）／
+      //     b148–167（曲末打ち切り）。基底 ccu 8段[35b] Lv4 の窓 b2–44 / b51–94 / b101–144 とは
+      //     別の窓（b45–50 と b95–100 で基底だけが消える）。
+      //   ②pop 逆算（他レーン pop でノート乱数を除去・_a13_gammafit）:
+      //     基底+超化の窓 13.3±0.4 段（= 8+5）／超化なしの窓 8.0±0.4 段（= 8）／
+      //     旧実装が 8 を返していた b101–127 = 13.9±0.5 段・b151–167 = 13.7±0.6 段。
+      //     b151–167 は「基底消滅中の b148 に付与された超化」が効いている証拠（増強型なら不発）。
+      //   ③基本が消えている間（b95–100・b148–150）は加算先が無いため 0 段（b48-50・
+      //     b95-100 の機械表示は超化行のみで基本行が無い）。S2 b100 の A セル
+      //     （基本 ccu 消滅中・K 丸め ±1.85%）は ccu=0 を ±0.35 段で示す。
+      //     孤立窓の pop 逆算は 3 セルが 11.7 / 3.4 / 0 段と互いに矛盾し【Unknown】
+      //     （b95 は 13 段相当・b97 は 5 段相当・b100 は 0 段相当。裁定は
+      //      research/23_beat_score_analysis/phase16_action13_buff_rows.md §5 参照）。
+      //     → 加算則（基本が 0 のとき加算しない）は buffs.ts の extendStages が実装。
+      // T5 golden の vocal_up_extreme（fest-03-2・独立キー）は本経路を通らない（golden 不変）。
       // 【ユーザー確定 2026-08-30】付与時に上限で切り捨てない（超過分は内部保持）。
       // 19段に+4段→内部23/表示20。期限切れ（インスタンス単位除去）後も内部段数が
       // 上限以上なら上限を維持する。クランプは aggregateBuffs（スナップショット時）のみ。
-      // capExtend=true の独立付与は存在しない（上で増強型へ分岐・types.ts の型は互換のため残置）。
       target.effects.push({
         type: effect.type,
         stages: effect.stages ?? 1,
         limitRelease: mapped.limitRelease || effect.limitRelease === true,
+        // 超化のみ: 同キー上限の拡張量を記録（生存中のみ有効・複数時は最大値）
+        ...(effect.capExtend === true ? { capExtend: effect.stages ?? EXTREME_GRANT_STAGES } : {}),
         // 【実機仕様 2026-09-21 Phase 14】発動ビート終了時にも減算処理が走り、
         // 表記Nビートのバフは実質 N-1 ビート持続する（S1 b67/b131, T5 b32/b39/b44/b97 実機画面確定）
         remainingBeats: effect.durationBeats == null ? PERMANENT_BEATS : Math.max(1, effect.durationBeats - 1),
@@ -1883,33 +1892,10 @@ function amplifyLongestPerKey(state: LaneState, value: number, affectsExtreme: b
 }
 
 /**
- * 指定キーの同種バフ・インスタンスのうち残りビート最大の 1 件へ段数を加算する。
- * 【サンプル2実測確定 2026-09-02・ユーザー計算式】超化（add_effect_value_*）は
- * この増強型であり、**同種バフのアクティブ・インスタンスが存在しない場合は不発**
- * （独立インスタンスを新規付与しない。b100 の L3 ccu=0 実測が根拠・applyEffect 参照）。
- * 上限解放変数型（limitRelease 実体）は段数を持たないため対象外（amplifyLongestPerKey と同一）。
- * 加算時の上限切り捨てなし（超過分は内部保持・ユーザー確定 2026-08-30）。
+ * 【Phase 16-A13 で削除】旧 `amplifyLongestOfKey`（超化を最長インスタンスへ合算する増強型）は
+ * 実測（サンプル2 L3 b101–127・b151–167 の pop 逆算 = 13.9±0.5 / 13.7±0.6 段）と矛盾したため撤去。
+ * 超化は `applyEffect` の通常付与経路で**独立インスタンス**として付与する（capExtend を記録）。
  */
-function amplifyLongestOfKey(target: LaneState, key: BuffKey, value: number): void {
-  let best: ActiveEffect | undefined;
-  for (const active of target.effects) {
-    const mapped = mapEffectToBuffKey(active.type);
-    if (mapped === null || mapped.key !== key || mapped.limitRelease) {
-      continue;
-    }
-    if (best === undefined || active.remainingBeats > best.remainingBeats) {
-      best = active;
-    }
-  }
-  if (best !== undefined) {
-    best.stages += value;
-    // 上限拡張量を受け取ったインスタンスに記録（生存中は同種バフの上限を拡張）。
-    // aggregateBuffs が capExtend の最大値を上限へ加算する（buffs.ts）。
-    const prevExt = typeof best.capExtend === "number" ? best.capExtend : 0;
-    best.capExtend = prevExt + value;
-  }
-}
-
 /**
  * 【Phase 9】ステルス（audience_amount_reduction）副効果のファンボーナス加算。
  * ステルス中のレーン**以外**の4レーンのファンボーナス（B3）に加算される

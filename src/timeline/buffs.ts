@@ -339,6 +339,18 @@ export function aggregateBuffs(active: readonly ActiveEffect[]): BuffSnapshot {
   // 複数の超化が同キーに付与された場合は最大値を採用（「効果は常に一定」の解釈・上限解放
   // releases と同方針。加算説は資料が無いため未採用）。
   const extensions = new Map<BuffKey, number>();
+  // 【Phase 16-A13 実測確定 2026-10-07】超化（capExtend）インスタンスの段数は
+  // **基本キーの段数が 0 でない間だけ**加算する（基本が切れている間は「加算先が無い」）。
+  // 根拠: ①マスタの efficacyId が `ef-add_effect_value_<基本キー>-10`
+  //   （例: sk-chs-05-fest-00-1 = `ef-add_effect_value_critical_bonus_permil_up-10-...`、
+  //    sk-rei-05-fest-01-2 = `ef-add_effect_value_visual_up-10-...`）= 独立キーではなく
+  //   **基本キーへの +250‰（= +5段階）修飾子**。値 10 は 25‰ 単位（通常 1 段 = 50‰ = 2 単位）。
+  // ②S3 のビジュアル上昇超化は基本 visual_up が 0 のビートで stat に現れない
+  //   （実測 26 セル: b40-50・b98-110 の stat = デッキ素 305,202 のまま）。
+  // ③S2 b100 の A セル（基本 ccu が消えているビート）は ccu=0 を ±0.35 段で示す。
+  // ※ 複数の超化が同時に生存した場合の段数加算則（加算 or 最大）は実測が無く【Unknown】
+  //   （上限拡張量 extensions は既存規則どおり最大値を採用）。加算側は加算で実装する。
+  const extendStages = new Map<BuffKey, number>();
   for (const effect of active) {
     if (!Number.isInteger(effect.stages) || effect.stages <= 0) {
       throw new Error(
@@ -365,6 +377,11 @@ export function aggregateBuffs(active: readonly ActiveEffect[]): BuffSnapshot {
       const extAmount = typeof effect.capExtend === "number" ? effect.capExtend : effect.stages;
       const prevExt = extensions.get(mapped.key) ?? 0;
       extensions.set(mapped.key, Math.max(prevExt, extAmount));
+      // 段数は「基本キーの段数 > 0」のときだけ加算する（理由は extendStages の宣言部）。
+      // 順序に依存しないよう、いったん別 Map に積んでループ後に合算する
+      // （超化自身の段数が「基本の段数」判定に混ざらないようにするため）。
+      extendStages.set(mapped.key, (extendStages.get(mapped.key) ?? 0) + effect.stages);
+      continue;
     }
     if (mapped.key === "combo_continue") {
       snapshot.combo_continue += 1;
@@ -382,6 +399,12 @@ export function aggregateBuffs(active: readonly ActiveEffect[]): BuffSnapshot {
       // 上限自体は caps 側の stageCap(type, true) で拡張済みのためここでは何もしない。
     } else {
       snapshot[mapped.key] += effect.stages;
+    }
+  }
+  // 超化段の合算（基本キーの段数が 0 でないときのみ・上記 extendStages 参照）
+  for (const [key, stages] of extendStages) {
+    if ((snapshot[key] ?? 0) > 0) {
+      snapshot[key] += stages;
     }
   }
   for (const [key, cap] of caps) {
