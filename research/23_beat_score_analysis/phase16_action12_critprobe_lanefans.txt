@@ -1,0 +1,183 @@
+﻿
+########## S1 (qt-area-1-001) mode=lanefans n=771 ##########
+  lane 属性/adv/flat/critExtras: L1:vocal/1000/213691/386  L2:dance/1000/0/478  L3:vocal/1000/44437/581  L4:vocal/1000/177075/354  L5:vocal/1000/0/433
+  --- L1 (n=152) ---
+     タイミング検証: 同一ビートの内訳から C1 を再構成して snapStages と一致 152/152 ／ 前ビート基準 152/152
+     要求段数 − snapStages: 平均 -9.94 rms 7.85
+     要求段数 − C1_sumAll_cap20or30   : 平均 -9.94 rms 7.85
+     要求段数 − C2_sumUpOnly_cap20    : 平均 -9.94 rms 7.85
+     要求段数 − C3_maxAll             : 平均 -9.94 rms 7.85
+     要求段数 − C4_sumAll_cap30       : 平均 -9.94 rms 7.85
+     要求段数 − C5_sumUp_cap30        : 平均 -9.94 rms 7.85
+     要求段数 − C6_sumUpOnly_noCap    : 平均 -9.94 rms 7.85
+     crit=1000: n= 69  要求段数(sim基準) 平均 -18.45  ｜ 正規化 pop/sim 比 1.0000 → 正規化要求 crit 1000・段数 -17.72  （sim 段数 0）
+     crit=1886: n= 83  要求段数(sim基準) 平均 -2.88  ｜ 正規化 pop/sim 比 0.9585 → 正規化要求 crit 1808・段数 -1.56  （sim 段数 0）
+  --- L2 (n=155) ---
+     タイミング検証: 同一ビートの内訳から C1 を再構成して snapStages と一致 155/155 ／ 前ビート基準 155/155
+     要求段数 − snapStages: 平均 -10.73 rms 8.15
+     要求段数 − C1_sumAll_cap20or30   : 平均 -10.73 rms 8.15
+     要求段数 − C2_sumUpOnly_cap20    : 平均 -10.73 rms 8.15
+     要求段数 − C3_maxAll             : 平均 -10.73 rms 8.15
+     要求段数 − C4_sumAll_cap30       : 平均 -10.73 rms 8.15
+     要求段数 − C5_sumUp_cap30        : 平均 -10.73 rms 8.15
+     要求段数 − C6_sumUpOnly_noCap    : 平均 -10.73 rms 8.15
+     crit=1000: n= 55  要求段数(sim基準) 平均 -21.66  ｜ 正規化 pop/sim 比 1.0000 → 正規化要求 crit 1000・段数 -19.56  （sim 段数 0）
+     crit=1978: n=100  要求段数(sim基準) 平均 -4.72  ｜ 正規化 pop/sim 比 0.9840 → 正規化要求 crit 1946・段数 -0.63  （sim 段数 0）
+  --- L3 (n=158) ---
+     タイミング検証: 同一ビートの内訳から C1 を再構成して snapStages と一致 158/158 ／ 前ビート基準 158/158
+     要求段数 − snapStages: 平均 -0.48 rms 7.15
+     要求段数 − C1_sumAll_cap20or30   : 平均 -0.48 rms 7.15
+     要求段数 − C2_sumUpOnly_cap20    : 平均 -0.48 rms 7.15
+     要求段数 − C3_maxAll             : 平均 -0.48 rms 7.15
+     要求段数 − C4_sumAll_cap30       : 平均 -0.48 rms 7.15
+     要求段数 − C5_sumUp_cap30        : 平均 -0.48 rms 7.15
+     要求段数 − C6_sumUpOnly_noCap    : 平均 -0.48 rms 7.15
+     crit=1000: n= 16  要求段数(sim基準) 平均 -20.75  ｜ 正規化 pop/sim 比 1.0000 → 正規化要求 crit 1000・段数 -21.62  （sim 段数 0）
+     crit=2081: n=142  要求段数(sim基準) 平均 1.81  ｜ 正規化 pop/sim 比 1.0000 → 正規化要求 crit 2081・段数 0.00  （sim 段数 0）
+  --- L4 (n=154) ---
+     タイミング検証: 同一ビートの内訳から C1 を再構成して snapStages と一致 154/154 ／ 前ビート基準 154/154
+     要求段数 − snapStages: 平均 -9.46 rms 7.53
+     要求段数 − C1_sumAll_cap20or30   : 平均 -9.46 rms 7.53
+     要求段数 − C2_sumUpOnly_cap20    : 平均 -9.46 rms 7.53
+     要求段数 − C3_maxAll             : 平均 -9.46 rms 7.53
+     要求段数 − C4_sumAll_cap30       : 平均 -9.46 rms 7.53
+     要求段数 − C5_sumUp_cap30        : 平均 -9.46 rms 7.53
+     要求段数 − C6_sumUpOnly_noCap    : 平均 -9.46 rms 7.53
+     crit=1000: n= 64  要求段数(sim基準) 平均 -18.32  ｜ 正規化 pop/sim 比 1.0000 → 正規化要求 crit 1000・段数 -17.08  （sim 段数 0）
+     crit=1854: n= 90  要求段数(sim基準) 平均 -3.15  ｜ 正規化 pop/sim 比 0.9756 → 正規化要求 crit 1809・段数 -0.91  （sim 段数 0）
+  --- L5 (n=152) ---
+     タイミング検証: 同一ビートの内訳から C1 を再構成して snapStages と一致 152/152 ／ 前ビート基準 152/152
+     要求段数 − snapStages: 平均 -13.93 rms 8.10
+     要求段数 − C1_sumAll_cap20or30   : 平均 -13.93 rms 8.10
+     要求段数 − C2_sumUpOnly_cap20    : 平均 -13.93 rms 8.10
+     要求段数 − C3_maxAll             : 平均 -13.93 rms 8.10
+     要求段数 − C4_sumAll_cap30       : 平均 -13.93 rms 8.10
+     要求段数 − C5_sumUp_cap30        : 平均 -13.93 rms 8.10
+     要求段数 − C6_sumUpOnly_noCap    : 平均 -13.93 rms 8.10
+     crit=1000: n= 84  要求段数(sim基準) 平均 -21.18  ｜ 正規化 pop/sim 比 1.0000 → 正規化要求 crit 1000・段数 -18.66  （sim 段数 0）
+     crit=1933: n= 68  要求段数(sim基準) 平均 -4.98  ｜ 正規化 pop/sim 比 0.9967 → 正規化要求 crit 1927・段数 -0.13  （sim 段数 0）
+
+########## S2 (qt-tower-680) mode=lanefans n=727 ##########
+  lane 属性/adv/flat/critExtras: L1:vocal/1000/47601/570  L2:vocal/1000/0/533  L3:vocal/1000/66641/354  L4:dance/1000/44437/347  L5:vocal/1000/81451/120
+  --- L1 (n=145) ---
+     タイミング検証: 同一ビートの内訳から C1 を再構成して snapStages と一致 145/145 ／ 前ビート基準 145/145
+     要求段数 − snapStages: 平均 -18.76 rms 7.07
+     要求段数 − C1_sumAll_cap20or30   : 平均 -18.76 rms 7.07
+     要求段数 − C2_sumUpOnly_cap20    : 平均 -18.76 rms 7.07
+     要求段数 − C3_maxAll             : 平均 -18.76 rms 7.07
+     要求段数 − C4_sumAll_cap30       : 平均 -18.76 rms 7.07
+     要求段数 − C5_sumUp_cap30        : 平均 -18.76 rms 7.07
+     要求段数 − C6_sumUpOnly_noCap    : 平均 -18.76 rms 7.07
+     crit=1000: n=129  要求段数(sim基準) 平均 -21.23  ｜ 正規化 pop/sim 比 1.0000 → 正規化要求 crit 1000・段数 -21.40  （sim 段数 0）
+     crit=2070: n= 16  要求段数(sim基準) 平均 1.19  ｜ 正規化 pop/sim 比 1.0201 → 正規化要求 crit 2112・段数 0.83  （sim 段数 0）
+  --- L2 (n=149) ---
+     タイミング検証: 同一ビートの内訳から C1 を再構成して snapStages と一致 149/149 ／ 前ビート基準 149/149
+     要求段数 − snapStages: 平均 -18.05 rms 5.93
+     要求段数 − C1_sumAll_cap20or30   : 平均 -18.05 rms 5.93
+     要求段数 − C2_sumUpOnly_cap20    : 平均 -18.05 rms 5.93
+     要求段数 − C3_maxAll             : 平均 -18.05 rms 5.93
+     要求段数 − C4_sumAll_cap30       : 平均 -18.05 rms 5.93
+     要求段数 − C5_sumUp_cap30        : 平均 -18.05 rms 5.93
+     要求段数 − C6_sumUpOnly_noCap    : 平均 -18.05 rms 5.93
+     crit=1000: n=137  要求段数(sim基準) 平均 -19.80  ｜ 正規化 pop/sim 比 1.0000 → 正規化要求 crit 1000・段数 -20.66  （sim 段数 0）
+     crit=2033: n= 12  要求段数(sim基準) 平均 1.90  ｜ 正規化 pop/sim 比 1.0035 → 正規化要求 crit 2040・段数 0.14  （sim 段数 0）
+  --- L3 (n=147) ---
+     タイミング検証: 同一ビートの内訳から C1 を再構成して snapStages と一致 147/147 ／ 前ビート基準 144/147
+     要求段数 − snapStages: 平均 -2.81 rms 13.02
+     要求段数 − C1_sumAll_cap20or30   : 平均 -2.81 rms 13.02
+     要求段数 − C2_sumUpOnly_cap20    : 平均 -2.81 rms 13.02
+     要求段数 − C3_maxAll             : 平均 -2.81 rms 13.02
+     要求段数 − C4_sumAll_cap30       : 平均 -2.81 rms 13.02
+     要求段数 − C5_sumUp_cap30        : 平均 -2.81 rms 13.02
+     要求段数 − C6_sumUpOnly_noCap    : 平均 -2.81 rms 13.02
+     crit=1000: n= 41  要求段数(sim基準) 平均 -15.95  ｜ 正規化 pop/sim 比 1.0000 → 正規化要求 crit 1000・段数 -17.08  （sim 段数 8）
+     crit=1854: n=  6  要求段数(sim基準) 平均 6.07  ｜ 正規化 pop/sim 比 1.1017 → 正規化要求 crit 2043・段数 3.77  （sim 段数 0）
+     crit=2254: n= 73  要求段数(sim基準) 平均 13.76  ｜ 正規化 pop/sim 比 1.0676 → 正規化要求 crit 2406・段数 11.05  （sim 段数 8）
+     crit=2504: n= 27  要求段数(sim基準) 平均 15.56  ｜ 正規化 pop/sim 比 0.9952 → 正規化要求 crit 2492・段数 12.76  （sim 段数 13）
+  --- L4 (n=143) ---
+     タイミング検証: 同一ビートの内訳から C1 を再構成して snapStages と一致 143/143 ／ 前ビート基準 143/143
+     要求段数 − snapStages: 平均 -11.67 rms 4.85
+     要求段数 − C1_sumAll_cap20or30   : 平均 -11.67 rms 4.85
+     要求段数 − C2_sumUpOnly_cap20    : 平均 -11.67 rms 4.85
+     要求段数 − C3_maxAll             : 平均 -11.67 rms 4.85
+     要求段数 − C4_sumAll_cap30       : 平均 -11.67 rms 4.85
+     要求段数 − C5_sumUp_cap30        : 平均 -11.67 rms 4.85
+     要求段数 − C6_sumUpOnly_noCap    : 平均 -11.67 rms 4.85
+     crit=1000: n=134  要求段数(sim基準) 平均 -12.91  ｜ 正規化 pop/sim 比 1.0000 → 正規化要求 crit 1000・段数 -16.94  （sim 段数 0）
+     crit=1847: n=  9  要求段数(sim基準) 平均 6.80  ｜ 正規化 pop/sim 比 0.9854 → 正規化要求 crit 1820・段数 -0.54  （sim 段数 0）
+  --- L5 (n=143) ---
+     タイミング検証: 同一ビートの内訳から C1 を再構成して snapStages と一致 143/143 ／ 前ビート基準 143/143
+     要求段数 − snapStages: 平均 -9.47 rms 3.58
+     要求段数 − C1_sumAll_cap20or30   : 平均 -9.47 rms 3.58
+     要求段数 − C2_sumUpOnly_cap20    : 平均 -9.47 rms 3.58
+     要求段数 − C3_maxAll             : 平均 -9.47 rms 3.58
+     要求段数 − C4_sumAll_cap30       : 平均 -9.47 rms 3.58
+     要求段数 − C5_sumUp_cap30        : 平均 -9.47 rms 3.58
+     要求段数 − C6_sumUpOnly_noCap    : 平均 -9.47 rms 3.58
+     crit=1000: n=130  要求段数(sim基準) 平均 -10.58  ｜ 正規化 pop/sim 比 1.0000 → 正規化要求 crit 1000・段数 -12.40  （sim 段数 0）
+     crit=1620: n= 13  要求段数(sim基準) 平均 1.66  ｜ 正規化 pop/sim 比 0.9635 → 正規化要求 crit 1561・段数 -1.18  （sim 段数 0）
+
+########## S3 (qt-ex-tower-005-045) mode=lanefans n=716 ##########
+  lane 属性/adv/flat/critExtras: L1:visual/1000/77376/666  L2:vocal/1000/0/120  L3:visual/1000/0/120  L4:visual/1000/92262/581  L5:visual/2250/0/350
+  --- L1 (n=145) ---
+     タイミング検証: 同一ビートの内訳から C1 を再構成して snapStages と一致 145/145 ／ 前ビート基準 142/145
+     要求段数 − snapStages: 平均 -25.20 rms 7.62
+     要求段数 − C1_sumAll_cap20or30   : 平均 -25.20 rms 7.62
+     要求段数 − C2_sumUpOnly_cap20    : 平均 -25.20 rms 7.62
+     要求段数 − C3_maxAll             : 平均 -25.16 rms 7.57
+     要求段数 − C4_sumAll_cap30       : 平均 -25.20 rms 7.62
+     要求段数 − C5_sumUp_cap30        : 平均 -25.20 rms 7.62
+     要求段数 − C6_sumUpOnly_noCap    : 平均 -25.20 rms 7.62
+     crit=1000: n=131  要求段数(sim基準) 平均 -24.42  ｜ 正規化 pop/sim 比 1.0000 → 正規化要求 crit 1000・段数 -23.32  （sim 段数 0）
+     crit=2166: n=  4  要求段数(sim基準) 平均 -3.73  ｜ 正規化 pop/sim 比 0.9669 → 正規化要求 crit 2094・段数 -1.43  （sim 段数 0）
+     crit=2466: n= 10  要求段数(sim基準) 平均 2.17  ｜ 正規化 pop/sim 比 0.9758 → 正規化要求 crit 2406・段数 4.80  （sim 段数 6）
+  --- L2 (n=144) ---
+     タイミング検証: 同一ビートの内訳から C1 を再構成して snapStages と一致 144/144 ／ 前ビート基準 144/144
+     要求段数 − snapStages: 平均 -8.47 rms 4.80
+     要求段数 − C1_sumAll_cap20or30   : 平均 -8.47 rms 4.80
+     要求段数 − C2_sumUpOnly_cap20    : 平均 -8.47 rms 4.80
+     要求段数 − C3_maxAll             : 平均 -8.47 rms 4.80
+     要求段数 − C4_sumAll_cap30       : 平均 -8.47 rms 4.80
+     要求段数 − C5_sumUp_cap30        : 平均 -8.47 rms 4.80
+     要求段数 − C6_sumUpOnly_noCap    : 平均 -8.47 rms 4.80
+     crit=1000: n=114  要求段数(sim基準) 平均 -10.89  ｜ 正規化 pop/sim 比 1.0000 → 正規化要求 crit 1000・段数 -12.40  （sim 段数 0）
+     crit=1620: n= 30  要求段数(sim基準) 平均 0.74  ｜ 正規化 pop/sim 比 0.9513 → 正規化要求 crit 1541・段数 -1.58  （sim 段数 0）
+  --- L3 (n=143) ---
+     タイミング検証: 同一ビートの内訳から C1 を再構成して snapStages と一致 143/143 ／ 前ビート基準 143/143
+     要求段数 − snapStages: 平均 -7.24 rms 5.99
+     要求段数 − C1_sumAll_cap20or30   : 平均 -7.24 rms 5.99
+     要求段数 − C2_sumUpOnly_cap20    : 平均 -7.24 rms 5.99
+     要求段数 − C3_maxAll             : 平均 -7.24 rms 5.99
+     要求段数 − C4_sumAll_cap30       : 平均 -7.24 rms 5.99
+     要求段数 − C5_sumUp_cap30        : 平均 -7.24 rms 5.99
+     要求段数 − C6_sumUpOnly_noCap    : 平均 -7.24 rms 5.99
+     crit=1000: n=103  要求段数(sim基準) 平均 -10.86  ｜ 正規化 pop/sim 比 1.0000 → 正規化要求 crit 1000・段数 -12.40  （sim 段数 0）
+     crit=1620: n= 40  要求段数(sim基準) 平均 2.11  ｜ 正規化 pop/sim 比 0.9891 → 正規化要求 crit 1602・段数 -0.35  （sim 段数 0）
+  --- L4 (n=142) ---
+     タイミング検証: 同一ビートの内訳から C1 を再構成して snapStages と一致 142/142 ／ 前ビート基準 138/142
+     要求段数 − snapStages: 平均 -24.41 rms 7.12
+     要求段数 − C1_sumAll_cap20or30   : 平均 -24.41 rms 7.12
+     要求段数 − C2_sumUpOnly_cap20    : 平均 -24.41 rms 7.12
+     要求段数 − C3_maxAll             : 平均 -22.62 rms 6.19
+     要求段数 − C4_sumAll_cap30       : 平均 -24.41 rms 7.12
+     要求段数 − C5_sumUp_cap30        : 平均 -24.41 rms 7.12
+     要求段数 − C6_sumUpOnly_noCap    : 平均 -24.41 rms 7.12
+     crit=1000: n=137  要求段数(sim基準) 平均 -20.04  ｜ 正規化 pop/sim 比 1.0000 → 正規化要求 crit 1000・段数 -21.62  （sim 段数 4）
+     crit=2081: n=  1  要求段数(sim基準) 平均 1.38  ｜ 正規化 pop/sim 比 0.9575 → 正規化要求 crit 1993・段数 -1.77  （sim 段数 0）
+     crit=2281: n=  1  要求段数(sim基準) 平均 6.51  ｜ 正規化 pop/sim 比 0.9778 → 正規化要求 crit 2230・段数 2.99  （sim 段数 4）
+     crit=2381: n=  1  要求段数(sim基準) 平均 9.93  ｜ 正規化 pop/sim 比 1.0034 → 正規化要求 crit 2389・段数 6.16  （sim 段数 6）
+     crit=2581: n=  1  要求段数(sim基準) 平均 16.45  ｜ 正規化 pop/sim 比 1.0426 → 正規化要求 crit 2691・段数 12.20  （sim 段数 10）
+     crit=2631: n=  1  要求段数(sim基準) 平均 15.66  ｜ 正規化 pop/sim 比 1.0090 → 正規化要求 crit 2655・段数 11.47  （sim 段数 11）
+  --- L5 (n=142) ---
+     タイミング検証: 同一ビートの内訳から C1 を再構成して snapStages と一致 142/142 ／ 前ビート基準 142/142
+     要求段数 − snapStages: 平均 -17.97 rms 2.51
+     要求段数 − C1_sumAll_cap20or30   : 平均 -17.97 rms 2.51
+     要求段数 − C2_sumUpOnly_cap20    : 平均 -17.97 rms 2.51
+     要求段数 − C3_maxAll             : 平均 -17.97 rms 2.51
+     要求段数 − C4_sumAll_cap30       : 平均 -17.97 rms 2.51
+     要求段数 − C5_sumUp_cap30        : 平均 -17.97 rms 2.51
+     要求段数 − C6_sumUpOnly_noCap    : 平均 -17.97 rms 2.51
+     crit=1000: n=139  要求段数(sim基準) 平均 -18.33  ｜ 正規化 pop/sim 比 1.0000 → 正規化要求 crit 1000・段数 -17.00  （sim 段数 0）
+     crit=1850: n=  3  要求段数(sim基準) 平均 -1.33  ｜ 正規化 pop/sim 比 1.0328 → 正規化要求 crit 1911・段数 1.21  （sim 段数 0）
+
+[critprobe] wrote research/23_beat_score_analysis/phase16_action12_critprobe_lanefans.json

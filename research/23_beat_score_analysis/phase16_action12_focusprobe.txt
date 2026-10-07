@@ -1,0 +1,107 @@
+﻿
+########## S1 (qt-area-1-001) base=20 laneFan=[1002,1002,1002,1002,1002] n=771 ##########
+  L1: n=152  focus>0 のセル 0 / stealth>0 0
+    要求/実測lanefan −1 : 平均 -5.81%  rms 4.29%
+    要求/legacy引力式 −1 : 平均 -5.73%  rms 4.29%
+    要求/lanefan+集目+ステルス −1: 平均 -5.81%  rms 4.29%
+    要求/lanefan+集目のみ   −1: 平均 -5.81%  rms 4.29%
+  L2: n=155  focus>0 のセル 0 / stealth>0 0
+    要求/実測lanefan −1 : 平均 -11.42%  rms 2.76%
+    要求/legacy引力式 −1 : 平均 -11.35%  rms 2.76%
+    要求/lanefan+集目+ステルス −1: 平均 -11.42%  rms 2.76%
+    要求/lanefan+集目のみ   −1: 平均 -11.42%  rms 2.76%
+  L3: n=158  focus>0 のセル 139 / stealth>0 0
+    要求/実測lanefan −1 : 平均 4.34%  rms 5.30%
+    要求/legacy引力式 −1 : 平均 0.15%  rms 4.89%
+    要求/lanefan+集目+ステルス −1: 平均 0.15%  rms 4.89%
+    要求/lanefan+集目のみ   −1: 平均 0.15%  rms 4.89%
+  L4: n=154  focus>0 のセル 0 / stealth>0 0
+    要求/実測lanefan −1 : 平均 -7.54%  rms 3.01%
+    要求/legacy引力式 −1 : 平均 -7.46%  rms 3.02%
+    要求/lanefan+集目+ステルス −1: 平均 -7.54%  rms 3.01%
+    要求/lanefan+集目のみ   −1: 平均 -7.54%  rms 3.01%
+  L5: n=152  focus>0 のセル 0 / stealth>0 0
+    要求/実測lanefan −1 : 平均 -12.72%  rms 2.83%
+    要求/legacy引力式 −1 : 平均 -12.64%  rms 2.83%
+    要求/lanefan+集目+ステルス −1: 平均 -12.72%  rms 2.83%
+    要求/lanefan+集目のみ   −1: 平均 -12.72%  rms 2.83%
+  --- レーン×集目段数ごとの「要求 − laneFan」 ---
+    L1 focus= 0: n=152  要求−laneFan 平均 -58.3  （+集目則 0）  要求 943.7 / legacy 1001.1
+    L2 focus= 0: n=155  要求−laneFan 平均 -114.5  （+集目則 0）  要求 887.5 / legacy 1001.1
+    L3 focus= 0: n= 19  要求−laneFan 平均 7.9  （+集目則 0）  要求 1009.9 / legacy 1002.0
+    L3 focus= 7: n= 35  要求−laneFan 平均 39.3  （+集目則 41）  要求 1041.3 / legacy 1043.0
+    L3 focus=10: n=104  要求−laneFan 平均 51.4  （+集目則 50）  要求 1053.4 / legacy 1052.0
+    L4 focus= 0: n=154  要求−laneFan 平均 -75.6  （+集目則 0）  要求 926.4 / legacy 1001.1
+    L5 focus= 0: n=152  要求−laneFan 平均 -127.4  （+集目則 0）  要求 874.6 / legacy 1001.1
+
+########## S2 (qt-tower-680) base=13206 laneFan=[1539,1570,1574,1565,1569] n=727 ##########
+  L1: n=145  focus>0 のセル 0 / stealth>0 0
+    要求/実測lanefan −1 : 平均 1.07%  rms 3.19%
+    要求/legacy引力式 −1 : 平均 0.12%  rms 3.08%
+    要求/lanefan+集目+ステルス −1: 平均 1.07%  rms 3.19%
+    要求/lanefan+集目のみ   −1: 平均 1.07%  rms 3.19%
+  L2: n=149  focus>0 のセル 0 / stealth>0 0
+    要求/実測lanefan −1 : 平均 4.33%  rms 2.82%
+    要求/legacy引力式 −1 : 平均 5.45%  rms 2.90%
+    要求/lanefan+集目+ステルス −1: 平均 4.33%  rms 2.82%
+    要求/lanefan+集目のみ   −1: 平均 4.33%  rms 2.82%
+  L3: n=147  focus>0 のセル 105 / stealth>0 0
+    要求/実測lanefan −1 : 平均 9.52%  rms 7.95%
+    要求/legacy引力式 −1 : 平均 5.52%  rms 6.88%
+    要求/lanefan+集目+ステルス −1: 平均 7.63%  rms 7.38%
+    要求/lanefan+集目のみ   −1: 平均 7.63%  rms 7.38%
+  L4: n=143  focus>0 のセル 0 / stealth>0 0
+    要求/実測lanefan −1 : 平均 20.06%  rms 3.91%
+    要求/legacy引力式 −1 : 平均 20.95%  rms 3.84%
+    要求/lanefan+集目+ステルス −1: 平均 20.06%  rms 3.91%
+    要求/lanefan+集目のみ   −1: 平均 20.06%  rms 3.91%
+  L5: n=143  focus>0 のセル 0 / stealth>0 0
+    要求/実測lanefan −1 : 平均 8.74%  rms 3.36%
+    要求/legacy引力式 −1 : 平均 9.83%  rms 3.32%
+    要求/lanefan+集目+ステルス −1: 平均 8.74%  rms 3.36%
+    要求/lanefan+集目のみ   −1: 平均 8.74%  rms 3.36%
+  --- レーン×集目段数ごとの「要求 − laneFan」 ---
+    L1 focus= 0: n=145  要求−laneFan 平均 16.4  （+集目則 0）  要求 1555.4 / legacy 1553.4
+    L2 focus= 0: n=149  要求−laneFan 平均 68.0  （+集目則 0）  要求 1638.0 / legacy 1553.3
+    L3 focus= 0: n= 42  要求−laneFan 平均 59.7  （+集目則 0）  要求 1633.7 / legacy 1564.0
+    L3 focus= 6: n=105  要求−laneFan 平均 185.8  （+集目則 38）  要求 1759.8 / legacy 1661.0
+    L4 focus= 0: n=143  要求−laneFan 平均 313.9  （+集目則 0）  要求 1878.9 / legacy 1553.4
+    L5 focus= 0: n=143  要求−laneFan 平均 137.1  （+集目則 0）  要求 1706.1 / legacy 1553.4
+
+########## S3 (qt-ex-tower-005-045) base=8000 laneFan=[1375,1375,1375,1375,1375] n=716 ##########
+  L1: n=145  focus>0 のセル 0 / stealth>0 0
+    要求/実測lanefan −1 : 平均 -5.72%  rms 3.14%
+    要求/legacy引力式 −1 : 平均 -4.73%  rms 3.16%
+    要求/lanefan+集目+ステルス −1: 平均 -5.72%  rms 3.14%
+    要求/lanefan+集目のみ   −1: 平均 -5.72%  rms 3.14%
+  L2: n=144  focus>0 のセル 0 / stealth>0 0
+    要求/実測lanefan −1 : 平均 6.44%  rms 4.08%
+    要求/legacy引力式 −1 : 平均 7.56%  rms 4.07%
+    要求/lanefan+集目+ステルス −1: 平均 6.44%  rms 4.08%
+    要求/lanefan+集目のみ   −1: 平均 6.44%  rms 4.08%
+  L3: n=143  focus>0 のセル 123 / stealth>0 0
+    要求/実測lanefan −1 : 平均 7.35%  rms 5.64%
+    要求/legacy引力式 −1 : 平均 -3.35%  rms 3.65%
+    要求/lanefan+集目+ステルス −1: 平均 4.33%  rms 4.75%
+    要求/lanefan+集目のみ   −1: 平均 4.33%  rms 4.75%
+  L4: n=142  focus>0 のセル 0 / stealth>0 0
+    要求/実測lanefan −1 : 平均 7.89%  rms 6.48%
+    要求/legacy引力式 −1 : 平均 9.01%  rms 6.60%
+    要求/lanefan+集目+ステルス −1: 平均 7.89%  rms 6.48%
+    要求/lanefan+集目のみ   −1: 平均 7.89%  rms 6.48%
+  L5: n=142  focus>0 のセル 0 / stealth>0 0
+    要求/実測lanefan −1 : 平均 -6.57%  rms 2.82%
+    要求/legacy引力式 −1 : 平均 -5.60%  rms 2.79%
+    要求/lanefan+集目+ステルス −1: 平均 -6.57%  rms 2.82%
+    要求/lanefan+集目のみ   −1: 平均 -6.57%  rms 2.82%
+  --- レーン×集目段数ごとの「要求 − laneFan」 ---
+    L1 focus= 0: n=145  要求−laneFan 平均 -78.7  （+集目則 0）  要求 1296.3 / legacy 1360.7
+    L2 focus= 0: n=144  要求−laneFan 平均 88.6  （+集目則 0）  要求 1463.6 / legacy 1360.8
+    L3 focus= 0: n= 20  要求−laneFan 平均 -28.8  （+集目則 0）  要求 1346.2 / legacy 1375.0
+    L3 focus= 6: n=  6  要求−laneFan 平均 57.9  （+集目則 38）  要求 1432.9 / legacy 1462.0
+    L3 focus= 7: n= 49  要求−laneFan 平均 111.8  （+集目則 41）  要求 1486.8 / legacy 1542.0
+    L3 focus=10: n= 68  要求−laneFan 平均 135.4  （+集目則 50）  要求 1510.4 / legacy 1568.0
+    L4 focus= 0: n=142  要求−laneFan 平均 108.4  （+集目則 0）  要求 1483.4 / legacy 1360.8
+    L5 focus= 0: n=142  要求−laneFan 平均 -90.4  （+集目則 0）  要求 1284.6 / legacy 1360.8
+
+[focusprobe] wrote research/23_beat_score_analysis/phase16_action12_focusprobe.json

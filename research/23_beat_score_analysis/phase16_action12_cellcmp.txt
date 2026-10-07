@@ -1,0 +1,330 @@
+﻿
+########## S1 (qt-area-1-001) — 実測 116,537,513 / ..\aipura_nox\サンプル1\measured_data_v2.json ##########
+  sim[legacy] total 116,829,040 / fan 1002 / laneFan null
+  sim[lanefans] total 114,162,150 / fan 1002 / laneFan [1002,1002,1002,1002,1002]
+
+  --- A[legacy]: レーン別 sim/pop（beat 単独セル・実測 act なし・pop≥3000） ---
+   レーン  非クリ(sim/pop)   n   |  クリ(sim/pop)   n   |   全体   | legacy比
+     L1     1.0409    69   |     1.0837    83   | 1.0715 | 
+     L2     1.1180    55   |     1.1343   100   | 1.1306 | 
+     L3     1.0017    16   |     0.9996   142   | 0.9996 | 
+     L4     1.0671    64   |     1.0942    90   | 1.0868 | 
+     L5     1.1417    84   |     1.1469    68   | 1.1448 | 
+     全体 sim/pop = 1.0591（Σsim 19,058,930 / Σpop 17,995,500）
+
+  --- A[lanefans]: レーン別 sim/pop（beat 単独セル・実測 act なし・pop≥3000） ---
+   レーン  非クリ(sim/pop)   n   |  クリ(sim/pop)   n   |   全体   | legacy比
+     L1     1.0418    69   |     1.0847    83   | 1.0724 | 
+     L2     1.1190    55   |     1.1352   100   | 1.1316 | 
+     L3     0.9579    16   |     0.9589   142   | 0.9588 | 
+     L4     1.0681    64   |     1.0952    90   | 1.0877 | 
+     L5     1.1427    84   |     1.1479    68   | 1.1458 | 
+     全体 sim/pop = 1.0419（Σsim 18,749,141 / Σpop 17,995,500）
+
+   --- A 比較（lanefans ÷ legacy の比） ---
+     L1  非クリ legacy 1.0409 → lanefans 1.0418   /  クリ 1.0837 → 1.0847
+     L2  非クリ legacy 1.1180 → lanefans 1.1190   /  クリ 1.1343 → 1.1352
+     L3  非クリ legacy 1.0017 → lanefans 0.9579   /  クリ 0.9996 → 0.9589
+     L4  非クリ legacy 1.0671 → lanefans 1.0681   /  クリ 1.0942 → 1.0952
+     L5  非クリ legacy 1.1417 → lanefans 1.1427   /  クリ 1.1469 → 1.1479
+
+  --- B[legacy]: sourceKind 別（可読セル / 隠れセル） ---
+     Σpop(可読) 115,496,900 / sim(可読) 116,605,526 / 隠れ枠 1,040,613 / sim(隠れ) 223,514
+     kind      |  sim(可読)   n | sim(隠れ)   n
+     beat      |   19,202,821  776 |    223,514   19
+     active    |   46,986,584   15 |          0    0
+     special   |   50,416,121    2 |          0    0
+     passive   |            0    0 |          0    0
+     photo     |            0    0 |          0    0
+     live_bonus|            0    0 |          0    0
+     可読セルの形: 単独beat 776 セル (sim 19,202,821 / pop 18,129,400) / 単独その他 15 (sim 46,986,584 / pop 45,867,500) / 複数イベント 1 (sim 50,416,121 / pop 51,500,000)
+
+  --- B[lanefans]: sourceKind 別（可読セル / 隠れセル） ---
+     Σpop(可読) 115,496,900 / sim(可読) 113,938,434 / 隠れ枠 1,040,613 / sim(隠れ) 223,716
+     kind      |  sim(可読)   n | sim(隠れ)   n
+     beat      |   18,893,131  776 |    223,716   19
+     active    |   46,670,382   15 |          0    0
+     special   |   48,374,921    2 |          0    0
+     passive   |            0    0 |          0    0
+     photo     |            0    0 |          0    0
+     live_bonus|            0    0 |          0    0
+     可読セルの形: 単独beat 776 セル (sim 18,893,131 / pop 18,129,400) / 単独その他 15 (sim 46,670,382 / pop 45,867,500) / 複数イベント 1 (sim 48,374,921 / pop 51,500,000)
+
+  --- B 比較: 実測内訳（Δ = 実測 − sim）---
+     実測 = Σpop(可読) 115,496,900 + 隠れ枠 1,040,613 = 116,537,513（実測合計 116,537,513）
+     [legacy] sim = 可読 116,605,526 + 隠れ 223,514 = 116,829,040（実測との差 291,527）
+        可読セルの不足 = -1,108,626 / 隠れセルの不足 = 817,099
+     [lanefans] sim = 可読 113,938,434 + 隠れ 223,716 = 114,162,150（実測との差 -2,375,363）
+        可読セルの不足 = 1,558,466 / 隠れセルの不足 = 816,897
+
+  --- C: crit 係数層別（pop≥3000・beat 単独・act なし） ---
+    [legacy]
+      L1 crit=1000  sim/pop 1.0409  n= 69  Σpop 997,500
+      L1 crit=1886  sim/pop 1.0837  n= 83  Σpop 2,486,700
+      L2 crit=1000  sim/pop 1.1180  n= 55  Σpop 541,500
+      L2 crit=1978  sim/pop 1.1343  n=100  Σpop 1,887,100
+      L3 crit=1000  sim/pop 1.0017  n= 16  Σpop 307,500
+      L3 crit=2081  sim/pop 0.9996  n=142  Σpop 7,523,700
+      L4 crit=1000  sim/pop 1.0671  n= 64  Σpop 549,700
+      L4 crit=1854  sim/pop 1.0942  n= 90  Σpop 1,445,000
+      L5 crit=1000  sim/pop 1.1417  n= 84  Σpop 881,600
+      L5 crit=1933  sim/pop 1.1469  n= 68  Σpop 1,375,200
+    [lanefans]
+      L1 crit=1000  sim/pop 1.0418  n= 69  Σpop 997,500
+      L1 crit=1886  sim/pop 1.0847  n= 83  Σpop 2,486,700
+      L2 crit=1000  sim/pop 1.1190  n= 55  Σpop 541,500
+      L2 crit=1978  sim/pop 1.1352  n=100  Σpop 1,887,100
+      L3 crit=1000  sim/pop 0.9579  n= 16  Σpop 307,500
+      L3 crit=2081  sim/pop 0.9589  n=142  Σpop 7,523,700
+      L4 crit=1000  sim/pop 1.0681  n= 64  Σpop 549,700
+      L4 crit=1854  sim/pop 1.0952  n= 90  Σpop 1,445,000
+      L5 crit=1000  sim/pop 1.1427  n= 84  Σpop 881,600
+      L5 crit=1933  sim/pop 1.1479  n= 68  Σpop 1,375,200
+
+  --- D: 実測が要求するファンファクター（beat 単独・pop≥3000） ---
+     lane | fan(legacy) | fan(lanefans) |  n | pop/sim_lanefans | 要求 fan（= fan_lanefans × pop/sim）
+     L1|legacy=1001|lanefans=1002             n=133  0.9329  → 944.9
+     L1|legacy=1002|lanefans=1002             n= 19  0.9294  → 935.3
+     L2|legacy=1001|lanefans=1002             n=135  0.8823  → 886.0
+     L2|legacy=1002|lanefans=1002             n= 20  0.8933  → 897.7
+     L3|legacy=1002|lanefans=1002             n= 19  1.0080  → 1009.9
+     L3|legacy=1043|lanefans=1002             n= 35  1.0402  → 1041.3
+     L3|legacy=1052|lanefans=1002             n=104  1.0493  → 1053.4
+     L4|legacy=1001|lanefans=1002             n=135  0.9200  → 927.4
+     L4|legacy=1002|lanefans=1002             n= 19  0.9152  → 919.4
+     L5|legacy=1001|lanefans=1002             n=132  0.8714  → 873.3
+     L5|legacy=1002|lanefans=1002             n= 20  0.8815  → 882.7
+     --- 20 ビート帯ごとのセル数（レーン×fan） ---
+     L1|fan1002           b0:17 b20:19 b40:16 b60:18 b80:18 b100:17 b120:17 b140:15 b160:15
+     L2|fan1002           b0:18 b20:19 b40:17 b60:19 b80:18 b100:17 b120:17 b140:15 b160:15
+     L3|fan1002           b0:18 b20:19 b40:16 b60:19 b80:18 b100:18 b120:18 b140:17 b160:15
+     L4|fan1002           b0:17 b20:19 b40:16 b60:19 b80:18 b100:17 b120:17 b140:16 b160:15
+     L5|fan1002           b0:16 b20:19 b40:17 b60:18 b80:17 b100:18 b120:16 b140:16 b160:15
+
+########## S2 (qt-tower-680) — 実測 77,732,383 / ..\aipura_nox\サンプル2\measured_data_v3.json ##########
+  sim[legacy] total 74,895,810 / fan 1564 / laneFan null
+  sim[lanefans] total 74,669,710 / fan 1563 / laneFan [1539,1570,1574,1565,1569]
+
+  --- A[legacy]: レーン別 sim/pop（beat 単独セル・実測 act なし・pop≥3000） ---
+   レーン  非クリ(sim/pop)   n   |  クリ(sim/pop)   n   |   全体   | legacy比
+     L1     1.0007   129   |     0.9813    16   | 0.9968 | 
+     L2     0.9499   137   |     0.9460    12   | 0.9493 | 
+     L3     0.9790    41   |     0.9347   106   | 0.9407 | 
+     L4     0.8273   134   |     0.8356     9   | 0.8282 | 
+     L5     0.9085   130   |     0.9409    13   | 0.9131 | 
+     全体 sim/pop = 0.9244（Σsim 16,925,530 / Σpop 18,309,500）
+
+  --- A[lanefans]: レーン別 sim/pop（beat 単独セル・実測 act なし・pop≥3000） ---
+   レーン  非クリ(sim/pop)   n   |  クリ(sim/pop)   n   |   全体   | legacy比
+     L1     0.9913   129   |     0.9724    16   | 0.9875 | 
+     L2     0.9600   137   |     0.9558    12   | 0.9594 | 
+     L3     0.9460    41   |     0.8993   106   | 0.9056 | 
+     L4     0.8334   134   |     0.8432     9   | 0.8345 | 
+     L5     0.9176   130   |     0.9512    13   | 0.9224 | 
+     全体 sim/pop = 0.9124（Σsim 16,706,284 / Σpop 18,309,500）
+
+   --- A 比較（lanefans ÷ legacy の比） ---
+     L1  非クリ legacy 1.0007 → lanefans 0.9913   /  クリ 0.9813 → 0.9724
+     L2  非クリ legacy 0.9499 → lanefans 0.9600   /  クリ 0.9460 → 0.9558
+     L3  非クリ legacy 0.9790 → lanefans 0.9460   /  クリ 0.9347 → 0.8993
+     L4  非クリ legacy 0.8273 → lanefans 0.8334   /  クリ 0.8356 → 0.8432
+     L5  非クリ legacy 0.9085 → lanefans 0.9176   /  クリ 0.9409 → 0.9512
+
+  --- B[legacy]: sourceKind 別（可読セル / 隠れセル） ---
+     Σpop(可読) 76,911,500 / sim(可読) 74,603,734 / 隠れ枠 820,883 / sim(隠れ) 292,076
+     kind      |  sim(可読)   n | sim(隠れ)   n
+     beat      |   16,952,420  728 |    292,076   17
+     active    |   28,895,209   16 |          0    0
+     special   |   28,756,105    2 |          0    0
+     passive   |            0    0 |          0    0
+     photo     |            0    0 |          0    0
+     live_bonus|            0    0 |          0    0
+     可読セルの形: 単独beat 728 セル (sim 16,952,420 / pop 18,337,800) / 単独その他 16 (sim 28,895,209 / pop 29,073,700) / 複数イベント 1 (sim 28,756,105 / pop 29,500,000)
+
+  --- B[lanefans]: sourceKind 別（可読セル / 隠れセル） ---
+     Σpop(可読) 76,911,500 / sim(可読) 74,377,095 / 隠れ枠 820,883 / sim(隠れ) 292,615
+     kind      |  sim(可読)   n | sim(隠れ)   n
+     beat      |   16,733,521  728 |    292,615   17
+     active    |   28,851,076   16 |          0    0
+     special   |   28,792,498    2 |          0    0
+     passive   |            0    0 |          0    0
+     photo     |            0    0 |          0    0
+     live_bonus|            0    0 |          0    0
+     可読セルの形: 単独beat 728 セル (sim 16,733,521 / pop 18,337,800) / 単独その他 16 (sim 28,851,076 / pop 29,073,700) / 複数イベント 1 (sim 28,792,498 / pop 29,500,000)
+
+  --- B 比較: 実測内訳（Δ = 実測 − sim）---
+     実測 = Σpop(可読) 76,911,500 + 隠れ枠 820,883 = 77,732,383（実測合計 77,732,383）
+     [legacy] sim = 可読 74,603,734 + 隠れ 292,076 = 74,895,810（実測との差 -2,836,573）
+        可読セルの不足 = 2,307,766 / 隠れセルの不足 = 528,807
+     [lanefans] sim = 可読 74,377,095 + 隠れ 292,615 = 74,669,710（実測との差 -3,062,673）
+        可読セルの不足 = 2,534,405 / 隠れセルの不足 = 528,268
+
+  --- C: crit 係数層別（pop≥3000・beat 単独・act なし） ---
+    [legacy]
+      L1 crit=1000  sim/pop 1.0007  n=129  Σpop 2,052,000
+      L1 crit=2070  sim/pop 0.9813  n= 16  Σpop 519,200
+      L2 crit=1000  sim/pop 0.9499  n=137  Σpop 1,711,200
+      L2 crit=2033  sim/pop 0.9460  n= 12  Σpop 301,800
+      L3 crit=1000  sim/pop 0.9790  n= 41  Σpop 1,015,800
+      L3 crit=1854  sim/pop 0.8519  n=  6  Σpop 306,000
+      L3 crit=2254  sim/pop 0.9258  n= 73  Σpop 4,648,000
+      L3 crit=2504  sim/pop 0.9778  n= 27  Σpop 1,545,200
+      L4 crit=1000  sim/pop 0.8273  n=134  Σpop 3,022,500
+      L4 crit=1847  sim/pop 0.8356  n=  9  Σpop 370,800
+      L5 crit=1000  sim/pop 0.9085  n=130  Σpop 2,415,600
+      L5 crit=1620  sim/pop 0.9409  n= 13  Σpop 401,400
+    [lanefans]
+      L1 crit=1000  sim/pop 0.9913  n=129  Σpop 2,052,000
+      L1 crit=2070  sim/pop 0.9724  n= 16  Σpop 519,200
+      L2 crit=1000  sim/pop 0.9600  n=137  Σpop 1,711,200
+      L2 crit=2033  sim/pop 0.9558  n= 12  Σpop 301,800
+      L3 crit=1000  sim/pop 0.9460  n= 41  Σpop 1,015,800
+      L3 crit=1854  sim/pop 0.8574  n=  6  Σpop 306,000
+      L3 crit=2254  sim/pop 0.8849  n= 73  Σpop 4,648,000
+      L3 crit=2504  sim/pop 0.9510  n= 27  Σpop 1,545,200
+      L4 crit=1000  sim/pop 0.8334  n=134  Σpop 3,022,500
+      L4 crit=1847  sim/pop 0.8432  n=  9  Σpop 370,800
+      L5 crit=1000  sim/pop 0.9176  n=130  Σpop 2,415,600
+      L5 crit=1620  sim/pop 0.9512  n= 13  Σpop 401,400
+
+  --- D: 実測が要求するファンファクター（beat 単独・pop≥3000） ---
+     lane | fan(legacy) | fan(lanefans) |  n | pop/sim_lanefans | 要求 fan（= fan_lanefans × pop/sim）
+     L1|legacy=1549|lanefans=1539             n=102  1.0068  → 1547.6
+     L1|legacy=1564|lanefans=1539             n= 43  1.0262  → 1573.8
+     L2|legacy=1549|lanefans=1570             n=106  1.0429  → 1638.6
+     L2|legacy=1564|lanefans=1570             n= 43  1.0410  → 1636.4
+     L3|legacy=1564|lanefans=1574             n= 42  1.0356  → 1633.7
+     L3|legacy=1661|lanefans=1574             n=105  1.1294  → 1759.8
+     L4|legacy=1549|lanefans=1565             n=101  1.1932  → 1869.3
+     L4|legacy=1564|lanefans=1565             n= 42  1.2118  → 1902.0
+     L5|legacy=1549|lanefans=1569             n=101  1.0795  → 1698.8
+     L5|legacy=1564|lanefans=1569             n= 42  1.0959  → 1723.6
+     --- 20 ビート帯ごとのセル数（レーン×fan） ---
+     L1|fan1539           b0:15 b20:17 b40:17 b60:19 b80:17 b100:17 b120:18 b140:18 b160:7
+     L2|fan1570           b0:16 b20:17 b40:18 b60:19 b80:17 b100:18 b120:18 b140:18 b160:8
+     L3|fan1574           b0:15 b20:17 b40:18 b60:19 b80:17 b100:18 b120:18 b140:17 b160:8
+     L4|fan1565           b0:14 b20:17 b40:17 b60:19 b80:17 b100:17 b120:18 b140:16 b160:8
+     L5|fan1569           b0:14 b20:17 b40:17 b60:19 b80:17 b100:17 b120:18 b140:16 b160:8
+
+########## S3 (qt-ex-tower-005-045) — 実測 79,411,389 / ..\aipura_nox\サンプル3\measured_data_v3.json ##########
+  sim[legacy] total 78,485,270 / fan 1375 / laneFan null
+  sim[lanefans] total 77,425,702 / fan 1375 / laneFan [1375,1375,1375,1375,1375]
+
+  --- A[legacy]: レーン別 sim/pop（beat 単独セル・実測 act なし・pop≥3000） ---
+   レーン  非クリ(sim/pop)   n   |  クリ(sim/pop)   n   |   全体   | legacy比
+     L1     1.0466   131   |     1.0738    14   | 1.0521 | 
+     L2     0.9215   114   |     0.9701    30   | 0.9356 | 
+     L3     1.0315   103   |     1.0472    40   | 1.0376 | 
+     L4     0.9191   137   |     0.9140     5   | 0.9187 | 
+     L5     1.0604   139   |     1.0274     3   | 1.0590 | 
+     全体 sim/pop = 0.9937（Σsim 35,259,993 / Σpop 35,483,970）
+
+  --- A[lanefans]: レーン別 sim/pop（beat 単独セル・実測 act なし・pop≥3000） ---
+   レーン  非クリ(sim/pop)   n   |  クリ(sim/pop)   n   |   全体   | legacy比
+     L1     1.0578   131   |     1.0873    14   | 1.0639 | 
+     L2     0.9314   114   |     0.9801    30   | 0.9455 | 
+     L3     0.9264   103   |     0.9376    40   | 0.9307 | 
+     L4     0.9295   137   |     0.9247     5   | 0.9291 | 
+     L5     1.0716   139   |     1.0371     3   | 1.0702 | 
+     全体 sim/pop = 0.9820（Σsim 34,846,040 / Σpop 35,483,970）
+
+   --- A 比較（lanefans ÷ legacy の比） ---
+     L1  非クリ legacy 1.0466 → lanefans 1.0578   /  クリ 1.0738 → 1.0873
+     L2  非クリ legacy 0.9215 → lanefans 0.9314   /  クリ 0.9701 → 0.9801
+     L3  非クリ legacy 1.0315 → lanefans 0.9264   /  クリ 1.0472 → 0.9376
+     L4  非クリ legacy 0.9191 → lanefans 0.9295   /  クリ 0.9140 → 0.9247
+     L5  非クリ legacy 1.0604 → lanefans 1.0716   /  クリ 1.0274 → 1.0371
+
+  --- B[legacy]: sourceKind 別（可読セル / 隠れセル） ---
+     Σpop(可読) 75,794,770 / sim(可読) 77,663,646 / 隠れ枠 3,616,619 / sim(隠れ) 821,624
+     kind      |  sim(可読)   n | sim(隠れ)   n
+     beat      |   35,683,819  725 |    821,624   15
+     active    |   40,835,682   11 |          0    0
+     special   |            0    0 |          0    0
+     passive   |            0    0 |          0    0
+     photo     |    1,144,145    5 |          0    0
+     live_bonus|            0    0 |          0    0
+     可読セルの形: 単独beat 722 セル (sim 35,547,935 / pop 35,779,470) / 単独その他 11 (sim 39,263,051 / pop 39,329,800) / 複数イベント 4 (sim 2,852,660 / pop 685,500)
+
+  --- B[lanefans]: sourceKind 別（可読セル / 隠れセル） ---
+     Σpop(可読) 75,794,770 / sim(可読) 76,607,655 / 隠れ枠 3,616,619 / sim(隠れ) 818,047
+     kind      |  sim(可読)   n | sim(隠れ)   n
+     beat      |   35,268,315  725 |    818,047   15
+     active    |   40,218,420   11 |          0    0
+     special   |            0    0 |          0    0
+     passive   |            0    0 |          0    0
+     photo     |    1,120,920    5 |          0    0
+     live_bonus|            0    0 |          0    0
+     可読セルの形: 単独beat 722 セル (sim 35,137,926 / pop 35,779,470) / 単独その他 11 (sim 38,900,754 / pop 39,329,800) / 複数イベント 4 (sim 2,568,975 / pop 685,500)
+
+  --- B 比較: 実測内訳（Δ = 実測 − sim）---
+     実測 = Σpop(可読) 75,794,770 + 隠れ枠 3,616,619 = 79,411,389（実測合計 79,411,389）
+     [legacy] sim = 可読 77,663,646 + 隠れ 821,624 = 78,485,270（実測との差 -926,119）
+        可読セルの不足 = -1,868,876 / 隠れセルの不足 = 2,794,995
+     [lanefans] sim = 可読 76,607,655 + 隠れ 818,047 = 77,425,702（実測との差 -1,985,687）
+        可読セルの不足 = -812,885 / 隠れセルの不足 = 2,798,572
+
+  --- C: crit 係数層別（pop≥3000・beat 単独・act なし） ---
+    [legacy]
+      L1 crit=1000  sim/pop 1.0466  n=131  Σpop 3,564,000
+      L1 crit=2166  sim/pop 1.0847  n=  4  Σpop 206,800
+      L1 crit=2466  sim/pop 1.0706  n= 10  Σpop 710,800
+      L2 crit=1000  sim/pop 0.9215  n=114  Σpop 3,178,700
+      L2 crit=1620  sim/pop 0.9701  n= 30  Σpop 1,299,700
+      L3 crit=1000  sim/pop 1.0315  n=103  Σpop 4,127,300
+      L3 crit=1620  sim/pop 1.0472  n= 40  Σpop 2,632,200
+      L4 crit=1000  sim/pop 0.9191  n=137  Σpop 10,345,600
+      L4 crit=2081  sim/pop 0.9680  n=  1  Σpop 109,200
+      L4 crit=2281  sim/pop 0.9348  n=  1  Σpop 206,800
+      L4 crit=2381  sim/pop 0.9143  n=  1  Σpop 182,800
+      L4 crit=2581  sim/pop 0.8767  n=  1  Σpop 215,700
+      L4 crit=2631  sim/pop 0.9059  n=  1  Σpop 270,300
+      L5 crit=1000  sim/pop 1.0604  n=139  Σpop 8,088,370
+      L5 crit=1850  sim/pop 1.0274  n=  3  Σpop 345,700
+    [lanefans]
+      L1 crit=1000  sim/pop 1.0578  n=131  Σpop 3,564,000
+      L1 crit=2166  sim/pop 1.0954  n=  4  Σpop 206,800
+      L1 crit=2466  sim/pop 1.0850  n= 10  Σpop 710,800
+      L2 crit=1000  sim/pop 0.9314  n=114  Σpop 3,178,700
+      L2 crit=1620  sim/pop 0.9801  n= 30  Σpop 1,299,700
+      L3 crit=1000  sim/pop 0.9264  n=103  Σpop 4,127,300
+      L3 crit=1620  sim/pop 0.9376  n= 40  Σpop 2,632,200
+      L4 crit=1000  sim/pop 0.9295  n=137  Σpop 10,345,600
+      L4 crit=2081  sim/pop 0.9680  n=  1  Σpop 109,200
+      L4 crit=2281  sim/pop 0.9479  n=  1  Σpop 206,800
+      L4 crit=2381  sim/pop 0.9237  n=  1  Σpop 182,800
+      L4 crit=2581  sim/pop 0.8890  n=  1  Σpop 215,700
+      L4 crit=2631  sim/pop 0.9186  n=  1  Σpop 270,300
+      L5 crit=1000  sim/pop 1.0716  n=139  Σpop 8,088,370
+      L5 crit=1850  sim/pop 1.0371  n=  3  Σpop 345,700
+
+  --- D: 実測が要求するファンファクター（beat 単独・pop≥3000） ---
+     lane | fan(legacy) | fan(lanefans) |  n | pop/sim_lanefans | 要求 fan（= fan_lanefans × pop/sim）
+     L1|legacy=1356|lanefans=1375             n= 68  0.9399  → 1297.5
+     L1|legacy=1361|lanefans=1375             n= 49  0.9335  → 1286.1
+     L1|legacy=1363|lanefans=1375             n=  8  0.9465  → 1311.7
+     L1|legacy=1375|lanefans=1375             n= 20  0.9541  → 1311.3
+     L2|legacy=1356|lanefans=1375             n= 66  1.0403  → 1440.3
+     L2|legacy=1361|lanefans=1375             n= 50  1.0804  → 1491.1
+     L2|legacy=1363|lanefans=1375             n=  8  1.0697  → 1470.8
+     L2|legacy=1375|lanefans=1375             n= 20  1.0633  → 1469.0
+     L3|legacy=1375|lanefans=1375             n= 20  0.9753  → 1346.2
+     L3|legacy=1462|lanefans=1375             n=  6  1.0378  → 1432.9
+     L3|legacy=1542|lanefans=1375             n= 49  1.0803  → 1486.8
+     L3|legacy=1568|lanefans=1375             n= 68  1.0958  → 1510.4
+     L4|legacy=1356|lanefans=1375             n= 64  1.0784  → 1487.7
+     L4|legacy=1361|lanefans=1375             n= 50  1.0797  → 1486.4
+     L4|legacy=1363|lanefans=1375             n=  8  1.0551  → 1452.4
+     L4|legacy=1375|lanefans=1375             n= 20  1.0702  → 1474.6
+     L5|legacy=1356|lanefans=1375             n= 64  0.9292  → 1277.3
+     L5|legacy=1361|lanefans=1375             n= 50  0.9359  → 1286.8
+     L5|legacy=1363|lanefans=1375             n=  8  0.9385  → 1290.4
+     L5|legacy=1375|lanefans=1375             n= 20  0.9473  → 1300.1
+     --- 20 ビート帯ごとのセル数（レーン×fan） ---
+     L1|fan1375           b0:15 b20:18 b40:17 b60:17 b80:17 b100:18 b120:18 b140:17 b160:8
+     L2|fan1375           b0:14 b20:18 b40:16 b60:17 b80:17 b100:18 b120:18 b140:18 b160:8
+     L3|fan1375           b0:14 b20:18 b40:18 b60:15 b80:17 b100:18 b120:18 b140:17 b160:8
+     L4|fan1375           b0:13 b20:18 b40:16 b60:16 b80:17 b100:18 b120:18 b140:18 b160:8
+     L5|fan1375           b0:14 b20:18 b40:16 b60:15 b80:17 b100:18 b120:18 b140:18 b160:8
+
+[cellcmp] wrote research/23_beat_score_analysis/phase16_action12_cellcmp.json

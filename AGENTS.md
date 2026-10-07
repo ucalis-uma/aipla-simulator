@@ -80,6 +80,13 @@
   比は過小評価側。実効検査: **`npm run audit:hidden`**（= `node tools/audit_hidden_cells.mjs S1,S2,S3`。
   `--ledger` を付けると S1 のスタミナ系列 全ビート一致も同時に検査）。A8 で S3 L5 = 7.69×
   （原因は下の `goldenPhotoNames` の既定）→ **F3 後 0.95×**。詳報 `research/23_beat_score_analysis/phase16_action10_report.md`
+- **同じ比の「低い側」も検査する（2026-10-02 追加・Phase 16-A12 タスク2）**: 比 ≤ 0.25 = FAIL(下)／
+  0.25〜0.5 = WARN(下)。下側は「**sim がそのレーンの実測を説明できていない**（＝不足の在処）」の検出で、
+  上側の閾値・分母は一切変更していない。判定対象は「pop 読込不能セルが 1 つ以上 **かつ**
+  実測レーン合計 > sim レーン合計」のレーンだけ（前者が無いと K 表記の切り捨て残差だけで 0.00× になり、
+  後者が無いと過剰配置のレーンを誤検知する）。**下側 FAIL は exit 1 に効く**（上側のみの受け入れ判定は
+  `npm run audit:hidden -- --low-gate=warn`）。現状 S2 L3 0.19×・S3 L3 0.04× が FAIL（未解決の不足）、
+  S2 L4 0.31×・S3 L2 0.45× が WARN。詳報 `research/23_beat_score_analysis/phase16_action12_report.md`
 - **`buildSimulateInput` の `goldenPhotoNames` は省略すると golden フォトスキル（photo-L*）を注入しない
   （2026-10-02 F3・既定 off）**: 実測を再現する呼び出しは**必ず T5 実測フォト名を渡す**
   （CLI `loadGoldenPhotoNames()` / UI `GOLDEN_PHOTO_NAMES` / `tools/analyze_beat_score_models.ts` /

@@ -1,0 +1,2173 @@
+{
+ "generatedBy": "phase16_action12_mode_probe.ts",
+ "samples": {
+  "S1": {
+   "stage": "qt-area-1-001",
+   "chart": "chart-hsm-006-001",
+   "totals": {
+    "legacy": 116829040,
+    "legacy+mental": 116829040,
+    "lanefans": 114162150,
+    "lanefans-nomental": 114162150
+   },
+   "baseInfo": {
+    "legacy": {
+     "fanFactorPermil": 1002,
+     "laneFanFactorPermil": null,
+     "fanBaseCount": 20,
+     "warnings": []
+    },
+    "legacy+mental": {
+     "fanFactorPermil": 1002,
+     "laneFanFactorPermil": null,
+     "fanBaseCount": 20,
+     "warnings": []
+    },
+    "lanefans": {
+     "fanFactorPermil": 1002,
+     "laneFanFactorPermil": [
+      1002,
+      1002,
+      1002,
+      1002,
+      1002
+     ],
+     "fanBaseCount": 20,
+     "warnings": [
+      "laneFans=(19/19/18/22/22) 合計 100 / cap 100 → 満員: 全レーン一律 f(cap/5): [1002, 1002, 1002, 1002, 1002]‰（平均 1002‰）"
+     ]
+    },
+    "lanefans-nomental": {
+     "fanFactorPermil": 1002,
+     "laneFanFactorPermil": [
+      1002,
+      1002,
+      1002,
+      1002,
+      1002
+     ],
+     "fanBaseCount": 20,
+     "warnings": [
+      "laneFans=(19/19/18/22/22) 合計 100 / cap 100 → 満員: 全レーン一律 f(cap/5): [1002, 1002, 1002, 1002, 1002]‰（平均 1002‰）"
+     ]
+    }
+   },
+   "byKind": {
+    "legacy": {
+     "beat": 19426335,
+     "A": 46986584,
+     "SP": 50416121
+    },
+    "legacy+mental": {
+     "beat": 19426335,
+     "A": 46986584,
+     "SP": 50416121
+    },
+    "lanefans": {
+     "beat": 19116847,
+     "A": 46670382,
+     "SP": 48374921
+    },
+    "lanefans-nomental": {
+     "beat": 19116847,
+     "A": 46670382,
+     "SP": 48374921
+    }
+   },
+   "kindDelta": {
+    "beat": {
+     "n": 795,
+     "dLegacy": -309488,
+     "nDiff": 695,
+     "dFan": 695
+    },
+    "A": {
+     "n": 15,
+     "dLegacy": -316202,
+     "nDiff": 12,
+     "dFan": 12
+    },
+    "SP": {
+     "n": 2,
+     "dLegacy": -2041200,
+     "nDiff": 2,
+     "dFan": 1
+    }
+   },
+   "fanDiffHist": {
+    "beat:1001->1002": 556,
+    "beat:1043->1002": 35,
+    "A:1001->1002": 11,
+    "beat:1052->1002": 104,
+    "SP:1052->1002": 1,
+    "A:1052->1002": 1
+   },
+   "bandDelta": {
+    "0": {
+     "d": -6199,
+     "n": 41
+    },
+    "10": {
+     "d": -12841,
+     "n": 50
+    },
+    "20": {
+     "d": -12311,
+     "n": 46
+    },
+    "30": {
+     "d": -12506,
+     "n": 40
+    },
+    "50": {
+     "d": -15397,
+     "n": 35
+    },
+    "60": {
+     "d": -17439,
+     "n": 46
+    },
+    "70": {
+     "d": -16465,
+     "n": 50
+    },
+    "80": {
+     "d": -16445,
+     "n": 46
+    },
+    "90": {
+     "d": -13139,
+     "n": 46
+    },
+    "100": {
+     "d": -10038,
+     "n": 31
+    },
+    "110": {
+     "d": -9593,
+     "n": 20
+    },
+    "120": {
+     "d": -26499,
+     "n": 46
+    },
+    "130": {
+     "d": -28096,
+     "n": 46
+    },
+    "140": {
+     "d": -2064988,
+     "n": 42
+    },
+    "150": {
+     "d": -29439,
+     "n": 46
+    },
+    "160": {
+     "d": -30651,
+     "n": 50
+    },
+    "170": {
+     "d": -344844,
+     "n": 27
+    }
+   },
+   "cellDeltaTop": [
+    {
+     "beat": 143,
+     "lane": 3,
+     "delta": -2041200,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "SP"
+     ]
+    },
+    {
+     "beat": 170,
+     "lane": 3,
+     "delta": -334743,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "A"
+     ]
+    },
+    {
+     "beat": 176,
+     "lane": 1,
+     "delta": 4267,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "A"
+     ]
+    },
+    {
+     "beat": 151,
+     "lane": 3,
+     "delta": -3693,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 152,
+     "lane": 3,
+     "delta": -3693,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 153,
+     "lane": 3,
+     "delta": -3693,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 127,
+     "lane": 3,
+     "delta": -3563,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 128,
+     "lane": 3,
+     "delta": -3563,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 129,
+     "lane": 3,
+     "delta": -3563,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 137,
+     "lane": 3,
+     "delta": -3497,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 138,
+     "lane": 3,
+     "delta": -3497,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 139,
+     "lane": 3,
+     "delta": -3497,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 140,
+     "lane": 3,
+     "delta": -3497,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 141,
+     "lane": 3,
+     "delta": -3497,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 142,
+     "lane": 3,
+     "delta": -3497,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 144,
+     "lane": 3,
+     "delta": -3497,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 145,
+     "lane": 3,
+     "delta": -3497,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 146,
+     "lane": 3,
+     "delta": -3497,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 147,
+     "lane": 3,
+     "delta": -3497,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 149,
+     "lane": 3,
+     "delta": -3497,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 150,
+     "lane": 3,
+     "delta": -3497,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 157,
+     "lane": 3,
+     "delta": -3487,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 158,
+     "lane": 3,
+     "delta": -3487,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 159,
+     "lane": 3,
+     "delta": -3487,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 160,
+     "lane": 3,
+     "delta": -3487,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 161,
+     "lane": 3,
+     "delta": -3487,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 162,
+     "lane": 3,
+     "delta": -3487,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 163,
+     "lane": 3,
+     "delta": -3487,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 148,
+     "lane": 5,
+     "delta": 3409,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "A"
+     ]
+    },
+    {
+     "beat": 124,
+     "lane": 3,
+     "delta": -3341,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 125,
+     "lane": 3,
+     "delta": -3341,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 126,
+     "lane": 3,
+     "delta": -3341,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 154,
+     "lane": 3,
+     "delta": -3306,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 155,
+     "lane": 3,
+     "delta": -3306,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 131,
+     "lane": 3,
+     "delta": -3296,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 132,
+     "lane": 3,
+     "delta": -3296,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 133,
+     "lane": 3,
+     "delta": -3296,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 134,
+     "lane": 3,
+     "delta": -3296,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 135,
+     "lane": 3,
+     "delta": -3296,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 136,
+     "lane": 3,
+     "delta": -3296,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 164,
+     "lane": 3,
+     "delta": -2965,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 165,
+     "lane": 3,
+     "delta": -2965,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 166,
+     "lane": 3,
+     "delta": -2965,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 167,
+     "lane": 3,
+     "delta": -2965,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 168,
+     "lane": 3,
+     "delta": -2965,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 169,
+     "lane": 3,
+     "delta": -2965,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 171,
+     "lane": 3,
+     "delta": -2965,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 172,
+     "lane": 3,
+     "delta": -2965,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 173,
+     "lane": 3,
+     "delta": -2965,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 174,
+     "lane": 3,
+     "delta": -2965,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 175,
+     "lane": 3,
+     "delta": -2965,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 121,
+     "lane": 3,
+     "delta": -2829,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 122,
+     "lane": 3,
+     "delta": -2829,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 52,
+     "lane": 3,
+     "delta": -2600,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 53,
+     "lane": 3,
+     "delta": -2600,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 54,
+     "lane": 3,
+     "delta": -2600,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 55,
+     "lane": 3,
+     "delta": -2600,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 67,
+     "lane": 3,
+     "delta": -2538,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 116,
+     "lane": 3,
+     "delta": -2485,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 117,
+     "lane": 3,
+     "delta": -2485,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    }
+   ],
+   "cellCount": 811,
+   "cellDiff": 708
+  },
+  "S2": {
+   "stage": "qt-tower-680",
+   "chart": "chart-sun-004-001",
+   "totals": {
+    "legacy": 74895810,
+    "legacy+mental": 74895810,
+    "lanefans": 74669710,
+    "lanefans-nomental": 74669710
+   },
+   "baseInfo": {
+    "legacy": {
+     "fanFactorPermil": 1564,
+     "laneFanFactorPermil": null,
+     "fanBaseCount": 13206,
+     "warnings": []
+    },
+    "legacy+mental": {
+     "fanFactorPermil": 1564,
+     "laneFanFactorPermil": null,
+     "fanBaseCount": 13206,
+     "warnings": []
+    },
+    "lanefans": {
+     "fanFactorPermil": 1563,
+     "laneFanFactorPermil": [
+      1539,
+      1570,
+      1574,
+      1565,
+      1569
+     ],
+     "fanBaseCount": 13206,
+     "warnings": [
+      "laneFans=(11996/13543/13741/13255/13496) 合計 66031 / cap 70000 → 空席: レーン別表引き: [1539, 1570, 1574, 1565, 1569]‰（平均 1563‰）"
+     ]
+    },
+    "lanefans-nomental": {
+     "fanFactorPermil": 1563,
+     "laneFanFactorPermil": [
+      1539,
+      1570,
+      1574,
+      1565,
+      1569
+     ],
+     "fanBaseCount": 13206,
+     "warnings": [
+      "laneFans=(11996/13543/13741/13255/13496) 合計 66031 / cap 70000 → 空席: レーン別表引き: [1539, 1570, 1574, 1565, 1569]‰（平均 1563‰）"
+     ]
+    }
+   },
+   "byKind": {
+    "legacy": {
+     "beat": 17244496,
+     "A": 28895209,
+     "SP": 28756105
+    },
+    "legacy+mental": {
+     "beat": 17244496,
+     "A": 28895209,
+     "SP": 28756105
+    },
+    "lanefans": {
+     "beat": 17026136,
+     "A": 28851076,
+     "SP": 28792498
+    },
+    "lanefans-nomental": {
+     "beat": 17026136,
+     "A": 28851076,
+     "SP": 28792498
+    }
+   },
+   "kindDelta": {
+    "beat": {
+     "n": 745,
+     "dLegacy": -218360,
+     "nDiff": 745,
+     "dFan": 745
+    },
+    "A": {
+     "n": 16,
+     "dLegacy": -44133,
+     "nDiff": 16,
+     "dFan": 16
+    },
+    "SP": {
+     "n": 2,
+     "dLegacy": 36393,
+     "nDiff": 2,
+     "dFan": 1
+    }
+   },
+   "fanDiffHist": {
+    "beat:1549->1539": 106,
+    "beat:1549->1570": 106,
+    "beat:1661->1574": 106,
+    "beat:1549->1565": 106,
+    "beat:1549->1569": 106,
+    "A:1549->1570": 3,
+    "A:1661->1574": 1,
+    "A:1549->1565": 1,
+    "A:1549->1539": 3,
+    "beat:1564->1539": 43,
+    "beat:1564->1570": 43,
+    "beat:1564->1574": 43,
+    "beat:1564->1565": 43,
+    "beat:1564->1569": 43,
+    "A:1564->1574": 3,
+    "A:1564->1569": 1,
+    "A:1564->1565": 2,
+    "SP:1564->1574": 1,
+    "A:1549->1569": 1,
+    "A:1564->1570": 1
+   },
+   "bandDelta": {
+    "0": {
+     "d": -5095,
+     "n": 41
+    },
+    "10": {
+     "d": -139827,
+     "n": 42
+    },
+    "20": {
+     "d": -19590,
+     "n": 42
+    },
+    "30": {
+     "d": -7308,
+     "n": 45
+    },
+    "40": {
+     "d": 18801,
+     "n": 46
+    },
+    "50": {
+     "d": -13666,
+     "n": 46
+    },
+    "60": {
+     "d": -15041,
+     "n": 50
+    },
+    "70": {
+     "d": -20262,
+     "n": 46
+    },
+    "80": {
+     "d": 2875,
+     "n": 42
+    },
+    "90": {
+     "d": 37023,
+     "n": 46
+    },
+    "100": {
+     "d": -1200,
+     "n": 46
+    },
+    "110": {
+     "d": -8949,
+     "n": 46
+    },
+    "120": {
+     "d": -30188,
+     "n": 46
+    },
+    "130": {
+     "d": -6774,
+     "n": 46
+    },
+    "140": {
+     "d": 26967,
+     "n": 42
+    },
+    "150": {
+     "d": -22028,
+     "n": 50
+    },
+    "160": {
+     "d": -21838,
+     "n": 40
+    }
+   },
+   "cellDeltaTop": [
+    {
+     "beat": 10,
+     "lane": 3,
+     "delta": -151321,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "A"
+     ]
+    },
+    {
+     "beat": 90,
+     "lane": 3,
+     "delta": 36393,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "SP"
+     ]
+    },
+    {
+     "beat": 14,
+     "lane": 4,
+     "delta": 28088,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "A"
+     ]
+    },
+    {
+     "beat": 142,
+     "lane": 3,
+     "delta": 24381,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "A"
+     ]
+    },
+    {
+     "beat": 41,
+     "lane": 3,
+     "delta": 18057,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "A"
+     ]
+    },
+    {
+     "beat": 100,
+     "lane": 3,
+     "delta": 16712,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "A"
+     ]
+    },
+    {
+     "beat": 126,
+     "lane": 1,
+     "delta": -12642,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "A"
+     ]
+    },
+    {
+     "beat": 112,
+     "lane": 5,
+     "delta": 12636,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "A"
+     ]
+    },
+    {
+     "beat": 80,
+     "lane": 2,
+     "delta": 8136,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "A"
+     ]
+    },
+    {
+     "beat": 5,
+     "lane": 2,
+     "delta": 6781,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "A"
+     ]
+    },
+    {
+     "beat": 27,
+     "lane": 2,
+     "delta": 6563,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "A"
+     ]
+    },
+    {
+     "beat": 71,
+     "lane": 1,
+     "delta": -5403,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "A"
+     ]
+    },
+    {
+     "beat": 22,
+     "lane": 1,
+     "delta": -5168,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "A"
+     ]
+    },
+    {
+     "beat": 133,
+     "lane": 3,
+     "delta": -3581,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 153,
+     "lane": 3,
+     "delta": -3581,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 154,
+     "lane": 3,
+     "delta": -3581,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 155,
+     "lane": 3,
+     "delta": -3581,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 157,
+     "lane": 3,
+     "delta": -3581,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 158,
+     "lane": 3,
+     "delta": -3581,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 159,
+     "lane": 3,
+     "delta": -3581,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 160,
+     "lane": 3,
+     "delta": -3581,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 161,
+     "lane": 3,
+     "delta": -3581,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 162,
+     "lane": 3,
+     "delta": -3581,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 163,
+     "lane": 3,
+     "delta": -3581,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 164,
+     "lane": 3,
+     "delta": -3581,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 165,
+     "lane": 3,
+     "delta": -3581,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 167,
+     "lane": 3,
+     "delta": -3581,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 151,
+     "lane": 3,
+     "delta": -3447,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 31,
+     "lane": 3,
+     "delta": -3434,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 28,
+     "lane": 3,
+     "delta": -3284,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 29,
+     "lane": 3,
+     "delta": -3284,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 30,
+     "lane": 3,
+     "delta": -3284,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 73,
+     "lane": 3,
+     "delta": -3185,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 75,
+     "lane": 3,
+     "delta": -3185,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 104,
+     "lane": 3,
+     "delta": -3104,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 106,
+     "lane": 3,
+     "delta": -3104,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 107,
+     "lane": 3,
+     "delta": -3104,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 108,
+     "lane": 3,
+     "delta": -3104,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 109,
+     "lane": 3,
+     "delta": -3104,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 110,
+     "lane": 3,
+     "delta": -3104,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 111,
+     "lane": 3,
+     "delta": -3104,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 113,
+     "lane": 3,
+     "delta": -3104,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 114,
+     "lane": 3,
+     "delta": -3104,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 115,
+     "lane": 3,
+     "delta": -3104,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 116,
+     "lane": 3,
+     "delta": -3104,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 118,
+     "lane": 3,
+     "delta": -3104,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 119,
+     "lane": 3,
+     "delta": -3104,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 120,
+     "lane": 3,
+     "delta": -3104,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 121,
+     "lane": 3,
+     "delta": -3104,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 122,
+     "lane": 3,
+     "delta": -3104,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 124,
+     "lane": 3,
+     "delta": -3104,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 127,
+     "lane": 3,
+     "delta": -3104,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 130,
+     "lane": 3,
+     "delta": -3104,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 131,
+     "lane": 3,
+     "delta": -3104,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 132,
+     "lane": 3,
+     "delta": -3104,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 23,
+     "lane": 3,
+     "delta": -3092,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 24,
+     "lane": 3,
+     "delta": -3092,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 25,
+     "lane": 3,
+     "delta": -3092,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 26,
+     "lane": 3,
+     "delta": -3092,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 76,
+     "lane": 3,
+     "delta": -3043,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    }
+   ],
+   "cellCount": 762,
+   "cellDiff": 762
+  },
+  "S3": {
+   "stage": "qt-ex-tower-005-045",
+   "chart": "chart-thrx-004-001",
+   "totals": {
+    "legacy": 78485270,
+    "legacy+mental": 78485270,
+    "lanefans": 77425702,
+    "lanefans-nomental": 77425702
+   },
+   "baseInfo": {
+    "legacy": {
+     "fanFactorPermil": 1375,
+     "laneFanFactorPermil": null,
+     "fanBaseCount": 8000,
+     "warnings": []
+    },
+    "legacy+mental": {
+     "fanFactorPermil": 1375,
+     "laneFanFactorPermil": null,
+     "fanBaseCount": 8000,
+     "warnings": []
+    },
+    "lanefans": {
+     "fanFactorPermil": 1375,
+     "laneFanFactorPermil": [
+      1375,
+      1375,
+      1375,
+      1375,
+      1375
+     ],
+     "fanBaseCount": 8000,
+     "warnings": [
+      "laneFans=(8515/7748/8535/8518/6684) 合計 40000 / cap 40000 → 満員: 全レーン一律 f(cap/5): [1375, 1375, 1375, 1375, 1375]‰（平均 1375‰）"
+     ]
+    },
+    "lanefans-nomental": {
+     "fanFactorPermil": 1375,
+     "laneFanFactorPermil": [
+      1375,
+      1375,
+      1375,
+      1375,
+      1375
+     ],
+     "fanBaseCount": 8000,
+     "warnings": [
+      "laneFans=(8515/7748/8535/8518/6684) 合計 40000 / cap 40000 → 満員: 全レーン一律 f(cap/5): [1375, 1375, 1375, 1375, 1375]‰（平均 1375‰）"
+     ]
+    }
+   },
+   "byKind": {
+    "legacy": {
+     "beat": 36505443,
+     "photo": 1144145,
+     "A": 40835682
+    },
+    "legacy+mental": {
+     "beat": 36505443,
+     "photo": 1144145,
+     "A": 40835682
+    },
+    "lanefans": {
+     "beat": 36086362,
+     "photo": 1120920,
+     "A": 40218420
+    },
+    "lanefans-nomental": {
+     "beat": 36086362,
+     "photo": 1120920,
+     "A": 40218420
+    }
+   },
+   "kindDelta": {
+    "beat": {
+     "n": 740,
+     "dLegacy": -419081,
+     "nDiff": 640,
+     "dFan": 640
+    },
+    "photo": {
+     "n": 5,
+     "dLegacy": -23225,
+     "nDiff": 5,
+     "dFan": 5
+    },
+    "A": {
+     "n": 11,
+     "dLegacy": -617262,
+     "nDiff": 10,
+     "dFan": 10
+    }
+   },
+   "fanDiffHist": {
+    "beat:1356->1375": 280,
+    "beat:1568->1375": 70,
+    "photo:1568->1375": 1,
+    "A:1568->1375": 3,
+    "photo:1356->1375": 2,
+    "A:1356->1375": 6,
+    "beat:1363->1375": 32,
+    "beat:1462->1375": 8,
+    "photo:1462->1375": 1,
+    "beat:1361->1375": 200,
+    "beat:1542->1375": 50,
+    "photo:1542->1375": 1,
+    "A:1542->1375": 1
+   },
+   "bandDelta": {
+    "0": {
+     "d": -245736,
+     "n": 38
+    },
+    "10": {
+     "d": 174496,
+     "n": 46
+    },
+    "20": {
+     "d": -285509,
+     "n": 46
+    },
+    "30": {
+     "d": 3776,
+     "n": 46
+    },
+    "40": {
+     "d": -2356,
+     "n": 46
+    },
+    "50": {
+     "d": -24649,
+     "n": 46
+    },
+    "60": {
+     "d": -20822,
+     "n": 45
+    },
+    "70": {
+     "d": -280580,
+     "n": 41
+    },
+    "80": {
+     "d": 50830,
+     "n": 41
+    },
+    "90": {
+     "d": -33785,
+     "n": 45
+    },
+    "100": {
+     "d": -27159,
+     "n": 45
+    },
+    "110": {
+     "d": -2134,
+     "n": 5
+    },
+    "130": {
+     "d": -14855,
+     "n": 30
+    },
+    "140": {
+     "d": -30614,
+     "n": 45
+    },
+    "150": {
+     "d": -19827,
+     "n": 45
+    },
+    "160": {
+     "d": -300644,
+     "n": 41
+    }
+   },
+   "cellDeltaTop": [
+    {
+     "beat": 169,
+     "lane": 3,
+     "delta": -282986,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "A"
+     ]
+    },
+    {
+     "beat": 2,
+     "lane": 3,
+     "delta": -264376,
+     "fanDiffEvents": 2,
+     "kinds": [
+      "photo",
+      "A"
+     ]
+    },
+    {
+     "beat": 24,
+     "lane": 3,
+     "delta": -252101,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "A"
+     ]
+    },
+    {
+     "beat": 79,
+     "lane": 3,
+     "delta": -248689,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "A"
+     ]
+    },
+    {
+     "beat": 14,
+     "lane": 4,
+     "delta": 197278,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "A"
+     ]
+    },
+    {
+     "beat": 81,
+     "lane": 4,
+     "delta": 81698,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "A"
+     ]
+    },
+    {
+     "beat": 34,
+     "lane": 2,
+     "delta": 42783,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "A"
+     ]
+    },
+    {
+     "beat": 42,
+     "lane": 4,
+     "delta": 42440,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "A"
+     ]
+    },
+    {
+     "beat": 4,
+     "lane": 2,
+     "delta": 32039,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "A"
+     ]
+    },
+    {
+     "beat": 51,
+     "lane": 1,
+     "delta": 18965,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "A"
+     ]
+    },
+    {
+     "beat": 141,
+     "lane": 3,
+     "delta": -15398,
+     "fanDiffEvents": 2,
+     "kinds": [
+      "beat",
+      "photo"
+     ]
+    },
+    {
+     "beat": 56,
+     "lane": 3,
+     "delta": -11475,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 59,
+     "lane": 3,
+     "delta": -11475,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 35,
+     "lane": 3,
+     "delta": -11393,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 37,
+     "lane": 3,
+     "delta": -11393,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 44,
+     "lane": 3,
+     "delta": -10486,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 45,
+     "lane": 3,
+     "delta": -10486,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 27,
+     "lane": 3,
+     "delta": -10098,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 48,
+     "lane": 3,
+     "delta": -9717,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 49,
+     "lane": 3,
+     "delta": -9717,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 50,
+     "lane": 3,
+     "delta": -9717,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 71,
+     "lane": 3,
+     "delta": -9546,
+     "fanDiffEvents": 2,
+     "kinds": [
+      "beat",
+      "photo"
+     ]
+    },
+    {
+     "beat": 20,
+     "lane": 3,
+     "delta": -9334,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 82,
+     "lane": 3,
+     "delta": -9334,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 61,
+     "lane": 3,
+     "delta": -9180,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 62,
+     "lane": 3,
+     "delta": -9180,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 64,
+     "lane": 3,
+     "delta": -9180,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 9,
+     "lane": 3,
+     "delta": -8889,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 74,
+     "lane": 3,
+     "delta": -8889,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 75,
+     "lane": 3,
+     "delta": -8889,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 76,
+     "lane": 3,
+     "delta": -8889,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 84,
+     "lane": 3,
+     "delta": -8889,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 87,
+     "lane": 3,
+     "delta": -8163,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 89,
+     "lane": 3,
+     "delta": -7200,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 52,
+     "lane": 3,
+     "delta": -7083,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 53,
+     "lane": 3,
+     "delta": -7083,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 54,
+     "lane": 3,
+     "delta": -7083,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 55,
+     "lane": 3,
+     "delta": -7083,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 57,
+     "lane": 3,
+     "delta": -7083,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 58,
+     "lane": 3,
+     "delta": -7083,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 36,
+     "lane": 3,
+     "delta": -7032,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 38,
+     "lane": 3,
+     "delta": -7032,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 31,
+     "lane": 3,
+     "delta": -6517,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 32,
+     "lane": 3,
+     "delta": -6517,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 33,
+     "lane": 3,
+     "delta": -6517,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 41,
+     "lane": 3,
+     "delta": -6473,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 43,
+     "lane": 3,
+     "delta": -6473,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 2,
+     "lane": 5,
+     "delta": 6276,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "photo"
+     ]
+    },
+    {
+     "beat": 25,
+     "lane": 3,
+     "delta": -6233,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 26,
+     "lane": 3,
+     "delta": -6233,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 28,
+     "lane": 3,
+     "delta": -6233,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 29,
+     "lane": 3,
+     "delta": -6233,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 30,
+     "lane": 3,
+     "delta": -6233,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 91,
+     "lane": 3,
+     "delta": -6230,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 92,
+     "lane": 3,
+     "delta": -6230,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 94,
+     "lane": 3,
+     "delta": -6230,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 95,
+     "lane": 3,
+     "delta": -6230,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 96,
+     "lane": 3,
+     "delta": -6230,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 97,
+     "lane": 3,
+     "delta": -6230,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    },
+    {
+     "beat": 99,
+     "lane": 3,
+     "delta": -6230,
+     "fanDiffEvents": 1,
+     "kinds": [
+      "beat"
+     ]
+    }
+   ],
+   "cellCount": 752,
+   "cellDiff": 651
+  }
+ }
+}

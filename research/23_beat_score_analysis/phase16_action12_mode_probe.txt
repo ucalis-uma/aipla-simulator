@@ -1,0 +1,111 @@
+
+===== S1 (qt-area-1-001) =====
+  legacy             total    116829040 / fan=1002 / laneFan=null / base=20
+  legacy+mental      total    116829040 / fan=1002 / laneFan=null / base=20
+  lanefans           total    114162150 / fan=1002 / laneFan=[1002,1002,1002,1002,1002] / base=20
+  lanefans-nomental  total    114162150 / fan=1002 / laneFan=[1002,1002,1002,1002,1002] / base=20
+  Δ(lanefans − legacy)            = -2666890 (-2.28% of legacy)
+  Δ(legacy+mental − legacy)       = 0  ← legacy ハーネスが S2 で mental を渡していない分
+  --- セル（beat:lane）: 全 811 / 差のあるセル 708 ---
+  --- sourceKind 別 Δ(score) ---
+    SP         n=   2  差イベント    2  Δscore     -2041200  fan差分イベント 1
+    A          n=  15  差イベント   12  Δscore      -316202  fan差分イベント 12
+    beat       n= 795  差イベント  695  Δscore      -309488  fan差分イベント 695
+  --- fanFactorPermil の差（kind: legacy->lanefans 件数） ---
+    beat:1001->1002  ×556
+    beat:1052->1002  ×104
+    beat:1043->1002  ×35
+    A:1001->1002  ×11
+    SP:1052->1002  ×1
+    A:1052->1002  ×1
+  --- 10 ビート帯ごとの Δ ---
+    b0:-6K(41) b10:-13K(50) b20:-12K(46) b30:-13K(40) b50:-15K(35) b60:-17K(46) b70:-16K(50) b80:-16K(46) b90:-13K(46) b100:-10K(31) b110:-10K(20) b120:-26K(46) b130:-28K(46) b140:-2065K(42) b150:-29K(46) b160:-31K(50) b170:-345K(27)
+  --- |Δ| 上位セル ---
+    b143 L3 Δ-2041200 kinds=[SP] fanDiff=1
+    b170 L3 Δ-334743 kinds=[A] fanDiff=1
+    b176 L1 Δ4267 kinds=[A] fanDiff=1
+    b151 L3 Δ-3693 kinds=[beat] fanDiff=1
+    b152 L3 Δ-3693 kinds=[beat] fanDiff=1
+    b153 L3 Δ-3693 kinds=[beat] fanDiff=1
+    b127 L3 Δ-3563 kinds=[beat] fanDiff=1
+    b128 L3 Δ-3563 kinds=[beat] fanDiff=1
+    b129 L3 Δ-3563 kinds=[beat] fanDiff=1
+    b137 L3 Δ-3497 kinds=[beat] fanDiff=1
+
+===== S2 (qt-tower-680) =====
+  legacy             total     74895810 / fan=1564 / laneFan=null / base=13206
+  legacy+mental      total     74895810 / fan=1564 / laneFan=null / base=13206
+  lanefans           total     74669710 / fan=1563 / laneFan=[1539,1570,1574,1565,1569] / base=13206
+  lanefans-nomental  total     74669710 / fan=1563 / laneFan=[1539,1570,1574,1565,1569] / base=13206
+  Δ(lanefans − legacy)            = -226100 (-0.30% of legacy)
+  Δ(legacy+mental − legacy)       = 0  ← legacy ハーネスが S2 で mental を渡していない分
+  --- セル（beat:lane）: 全 762 / 差のあるセル 762 ---
+  --- sourceKind 別 Δ(score) ---
+    beat       n= 745  差イベント  745  Δscore      -218360  fan差分イベント 745
+    A          n=  16  差イベント   16  Δscore       -44133  fan差分イベント 16
+    SP         n=   2  差イベント    2  Δscore        36393  fan差分イベント 1
+  --- fanFactorPermil の差（kind: legacy->lanefans 件数） ---
+    beat:1549->1539  ×106
+    beat:1549->1570  ×106
+    beat:1661->1574  ×106
+    beat:1549->1565  ×106
+    beat:1549->1569  ×106
+    beat:1564->1539  ×43
+    beat:1564->1570  ×43
+    beat:1564->1574  ×43
+    beat:1564->1565  ×43
+    beat:1564->1569  ×43
+    A:1549->1570  ×3
+    A:1549->1539  ×3
+  --- 10 ビート帯ごとの Δ ---
+    b0:-5K(41) b10:-140K(42) b20:-20K(42) b30:-7K(45) b40:19K(46) b50:-14K(46) b60:-15K(50) b70:-20K(46) b80:3K(42) b90:37K(46) b100:-1K(46) b110:-9K(46) b120:-30K(46) b130:-7K(46) b140:27K(42) b150:-22K(50) b160:-22K(40)
+  --- |Δ| 上位セル ---
+    b10 L3 Δ-151321 kinds=[A] fanDiff=1
+    b90 L3 Δ36393 kinds=[SP] fanDiff=1
+    b14 L4 Δ28088 kinds=[A] fanDiff=1
+    b142 L3 Δ24381 kinds=[A] fanDiff=1
+    b41 L3 Δ18057 kinds=[A] fanDiff=1
+    b100 L3 Δ16712 kinds=[A] fanDiff=1
+    b126 L1 Δ-12642 kinds=[A] fanDiff=1
+    b112 L5 Δ12636 kinds=[A] fanDiff=1
+    b80 L2 Δ8136 kinds=[A] fanDiff=1
+    b5 L2 Δ6781 kinds=[A] fanDiff=1
+
+===== S3 (qt-ex-tower-005-045) =====
+  legacy             total     78485270 / fan=1375 / laneFan=null / base=8000
+  legacy+mental      total     78485270 / fan=1375 / laneFan=null / base=8000
+  lanefans           total     77425702 / fan=1375 / laneFan=[1375,1375,1375,1375,1375] / base=8000
+  lanefans-nomental  total     77425702 / fan=1375 / laneFan=[1375,1375,1375,1375,1375] / base=8000
+  Δ(lanefans − legacy)            = -1059568 (-1.35% of legacy)
+  Δ(legacy+mental − legacy)       = 0  ← legacy ハーネスが S2 で mental を渡していない分
+  --- セル（beat:lane）: 全 752 / 差のあるセル 651 ---
+  --- sourceKind 別 Δ(score) ---
+    A          n=  11  差イベント   10  Δscore      -617262  fan差分イベント 10
+    beat       n= 740  差イベント  640  Δscore      -419081  fan差分イベント 640
+    photo      n=   5  差イベント    5  Δscore       -23225  fan差分イベント 5
+  --- fanFactorPermil の差（kind: legacy->lanefans 件数） ---
+    beat:1356->1375  ×280
+    beat:1361->1375  ×200
+    beat:1568->1375  ×70
+    beat:1542->1375  ×50
+    beat:1363->1375  ×32
+    beat:1462->1375  ×8
+    A:1356->1375  ×6
+    A:1568->1375  ×3
+    photo:1356->1375  ×2
+    photo:1568->1375  ×1
+    photo:1462->1375  ×1
+    photo:1542->1375  ×1
+  --- 10 ビート帯ごとの Δ ---
+    b0:-246K(38) b10:174K(46) b20:-286K(46) b30:4K(46) b40:-2K(46) b50:-25K(46) b60:-21K(45) b70:-281K(41) b80:51K(41) b90:-34K(45) b100:-27K(45) b110:-2K(5) b130:-15K(30) b140:-31K(45) b150:-20K(45) b160:-301K(41)
+  --- |Δ| 上位セル ---
+    b169 L3 Δ-282986 kinds=[A] fanDiff=1
+    b2 L3 Δ-264376 kinds=[photo,A] fanDiff=2
+    b24 L3 Δ-252101 kinds=[A] fanDiff=1
+    b79 L3 Δ-248689 kinds=[A] fanDiff=1
+    b14 L4 Δ197278 kinds=[A] fanDiff=1
+    b81 L4 Δ81698 kinds=[A] fanDiff=1
+    b34 L2 Δ42783 kinds=[A] fanDiff=1
+    b42 L4 Δ42440 kinds=[A] fanDiff=1
+    b4 L2 Δ32039 kinds=[A] fanDiff=1
+    b51 L1 Δ18965 kinds=[A] fanDiff=1
