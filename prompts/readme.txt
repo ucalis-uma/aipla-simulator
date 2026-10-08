@@ -1,4 +1,4 @@
-AGENTS.md（リポジトリルート）
+﻿AGENTS.md（リポジトリルート）
 は全エージェント共通の大元規約。prompts/ 配下の各プロンプトは冒頭でこれを読ませる前提
 
 deck-json-from-images.md
@@ -381,4 +381,4 @@ B4 `NAME_TO_BUFF_KEY` 追加の影響確認（**S1 監査は実行済みで出�
 **完了: Phase 16 Action14（2026-10-07）** — タスク A1–A5・B1–B4 を全実施（A4 は検査3 としてゲート化・B3 は回帰テスト 9 件・
 B1/B2 は【Unknown】据え置き）。ゲート: vitest **43 files / 535 passed・1 skipped**・typecheck 0・T5 `2,581,114,209` 不変・
 `npm run audit:hidden -- --low-gate=warn` **PASS**（検査2 上側 FAIL 0/WARN 0・検査3 FAIL 0/WARN 4）。詳細は
-`research/12_implementation_log.md` の Phase 16 Action14 節。コミット HASH_PLACEHOLDER。
+`research/12_implementation_log.md` の Phase 16 Action14 節。コミット 542eaa3。
