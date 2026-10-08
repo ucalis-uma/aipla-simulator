@@ -1,10 +1,58 @@
+﻿
+> aipura-score-calc@0.1.0 audit:hidden
+> node tools/audit_hidden_cells.mjs S1,S2,S3 --low-gate=warn
+
 === Phase 16 Action10: 隠れセル・ゲート（pop 読込不能セルへの sim 過剰配置の回帰検出） ===
   実測側: 内生 pop + lane_pops_backfill（K 表記は切り捨て＝下界・隠れ枠は上限）
   sim 側 : tools/audit_hidden_cells_sim.ts（mode=lanefans・実測クリ注入／NeutralRng）
   ゲート : 比 = sim(pop読込不能セル) / (レーン合計 − Σpop)。比 ≥ 2.0 = FAIL ／ 1.5〜2.0 = WARN
   下側   : 比 ≤ 0.25 = FAIL(下) ／ 0.25〜0.5 = WARN(下)（sim が実測を説明できていない）。適用は pop 読込不能セルが 1 つ以上あるレーンだけ。扱い=warn
   基準   : Σpop は「統合」と「内生のみ（A8 口径）」、sim は photo-gate off/on を併記し **悪い方**で判定
+[deck] S1: sim レーン素ステータス vs 記録値（total_after_non_skill_modifiers）
+   L1 card-kkr-05-mizg-02 Lv182 絆19: vocal 215424→215424(+0) dance 108997→108997(+0) visual 94170→94170(+0) stamina 9092→9092(+0)
+   L2 card-rio-05-fest-01 Lv182 絆12: vocal 184121→184121(+0) dance 101384→101384(+0) visual 68385→68385(+0) stamina 8909→8909(+0)
+   L3 card-ai-05-fest-00 Lv182 絆20: vocal 240233→240233(+0) dance 148049→148049(+0) visual 136705→136705(+0) stamina 6933→6933(+0)
+   L4 card-chs-05-hruh-00 Lv182 絆14: vocal 91712→91712(+0) dance 167309→167309(+0) visual 143574→143574(+0) stamina 8343→8343(+0)
+   L5 card-ski-05-waso-00 Lv182 絆15: vocal 190040→190040(+0) dance 102913→102913(+0) visual 82610→82610(+0) stamina 8855→8855(+0)
+[sim] S1: total 114162150 / cells 811 / fan=1002 / laneFans=[1002,1002,1002,1002,1002]
+[deck] S2: sim レーン素ステータス vs 記録値（total_after_non_skill_modifiers）
+   L1 card-hrk-05-sail-00 Lv182 絆9: vocal 95327→95327(+0) dance 117828→117828(+0) visual 154199→154199(+0) stamina 8833→8833(+0)
+   L2 card-skr-05-fest-00 Lv182 絆15: vocal 60351→60351(+0) dance 93070→93070(+0) visual 187383→187383(+0) stamina 9126→9126(+0)
+   L3 card-rei-05-fest-01 Lv183 絆18: vocal 118235→118235(+0) dance 134408→134408(+0) visual 281705→281705(+0) stamina 8656→8656(+0)
+   L4 card-chs-05-fest-00 Lv182 絆14: vocal 97666→97666(+0) dance 214094→214094(+0) visual 100838→100838(+0) stamina 9232→9232(+0)
+   L5 card-ktn-05-fest-02 Lv182 絆14: vocal 119535→119535(+0) dance 91551→91551(+0) visual 191884→191884(+0) stamina 6581→6581(+0)
+[sim] S2: total 74886541 / cells 762 / fan=1563 / laneFans=[1539,1570,1574,1565,1569]
+[deck] S3: sim レーン素ステータス vs 記録値（total_after_non_skill_modifiers）
+   L1 card-ktn-05-fest-02 Lv182 絆14: vocal 149146→149146(+0) dance 100162→100162(+0) visual 158587→158587(+0) stamina 10683→10683(+0)
+   L2 card-rui-05-fest-01 Lv182 絆18: vocal 244588→244588(+0) dance 155289→155289(+0) visual 89496→89496(+0) stamina 10592→10592(+0)
+   L3 card-ski-05-waso-00 Lv182 絆15: vocal 146078→146078(+0) dance 91123→91123(+0) visual 172933→172933(+0) stamina 11157→11157(+0)
+   L4 card-rei-05-fest-01 Lv183 絆18: vocal 145788→145788(+0) dance 113459→113459(+0) visual 305202→305202(+0) stamina 12607→12607(+0)
+   L5 card-mhk-05-poli-00 Lv182 絆6: vocal 183936→183936(+0) dance 153896→153896(+0) visual 150074→150074(+0) stamina 9770→9770(+0)
+[sim] S3: total 77425702 / cells 752 / fan=1375 / laneFans=[1375,1375,1375,1375,1375]
+[sim] wrote research\23_beat_score_analysis\phase16_action10_sim_cells_off.json
   sim ダンプ[off]: research\23_beat_score_analysis\phase16_action10_sim_cells_off.json（goldenPhotoNames=omitted(--legacy-photo)）
+[deck] S1: sim レーン素ステータス vs 記録値（total_after_non_skill_modifiers）
+   L1 card-kkr-05-mizg-02 Lv182 絆19: vocal 215424→215424(+0) dance 108997→108997(+0) visual 94170→94170(+0) stamina 9092→9092(+0)
+   L2 card-rio-05-fest-01 Lv182 絆12: vocal 184121→184121(+0) dance 101384→101384(+0) visual 68385→68385(+0) stamina 8909→8909(+0)
+   L3 card-ai-05-fest-00 Lv182 絆20: vocal 240233→240233(+0) dance 148049→148049(+0) visual 136705→136705(+0) stamina 6933→6933(+0)
+   L4 card-chs-05-hruh-00 Lv182 絆14: vocal 91712→91712(+0) dance 167309→167309(+0) visual 143574→143574(+0) stamina 8343→8343(+0)
+   L5 card-ski-05-waso-00 Lv182 絆15: vocal 190040→190040(+0) dance 102913→102913(+0) visual 82610→82610(+0) stamina 8855→8855(+0)
+[sim] S1: total 114162150 / cells 811 / fan=1002 / laneFans=[1002,1002,1002,1002,1002]
+[deck] S2: sim レーン素ステータス vs 記録値（total_after_non_skill_modifiers）
+   L1 card-hrk-05-sail-00 Lv182 絆9: vocal 95327→95327(+0) dance 117828→117828(+0) visual 154199→154199(+0) stamina 8833→8833(+0)
+   L2 card-skr-05-fest-00 Lv182 絆15: vocal 60351→60351(+0) dance 93070→93070(+0) visual 187383→187383(+0) stamina 9126→9126(+0)
+   L3 card-rei-05-fest-01 Lv183 絆18: vocal 118235→118235(+0) dance 134408→134408(+0) visual 281705→281705(+0) stamina 8656→8656(+0)
+   L4 card-chs-05-fest-00 Lv182 絆14: vocal 97666→97666(+0) dance 214094→214094(+0) visual 100838→100838(+0) stamina 9232→9232(+0)
+   L5 card-ktn-05-fest-02 Lv182 絆14: vocal 119535→119535(+0) dance 91551→91551(+0) visual 191884→191884(+0) stamina 6581→6581(+0)
+[sim] S2: total 74886541 / cells 762 / fan=1563 / laneFans=[1539,1570,1574,1565,1569]
+[deck] S3: sim レーン素ステータス vs 記録値（total_after_non_skill_modifiers）
+   L1 card-ktn-05-fest-02 Lv182 絆14: vocal 149146→149146(+0) dance 100162→100162(+0) visual 158587→158587(+0) stamina 10683→10683(+0)
+   L2 card-rui-05-fest-01 Lv182 絆18: vocal 244588→244588(+0) dance 155289→155289(+0) visual 89496→89496(+0) stamina 10592→10592(+0)
+   L3 card-ski-05-waso-00 Lv182 絆15: vocal 146078→146078(+0) dance 91123→91123(+0) visual 172933→172933(+0) stamina 11157→11157(+0)
+   L4 card-rei-05-fest-01 Lv183 絆18: vocal 145788→145788(+0) dance 113459→113459(+0) visual 305202→305202(+0) stamina 12607→12607(+0)
+   L5 card-mhk-05-poli-00 Lv182 絆6: vocal 183936→183936(+0) dance 153896→153896(+0) visual 150074→150074(+0) stamina 9770→9770(+0)
+[sim] S3: total 77425702 / cells 752 / fan=1375 / laneFans=[1375,1375,1375,1375,1375]
+[sim] wrote research\23_beat_score_analysis\phase16_action10_sim_cells_on.json
   sim ダンプ[on]: research\23_beat_score_analysis\phase16_action10_sim_cells_on.json（goldenPhotoNames=passed(T5 names)）
 
   S1: ..\aipura_nox\サンプル1\measured_data_v2.json（timeline 177 ビート / 末尾 b176）／内生 pop 0 セル + 遡及のみ 792 セル = 統合 792 セル／レーン合計キー scores_by_lane／sim[off] 114,162,150 / sim[on] 114,162,150
@@ -124,30 +172,12 @@
     S3 L5 | 比(対称) 1.304× | 比(現行) 0.95 | 可読比 1.075 | レーン比 1.068（sim 10,209,817 / 実測 9,560,444・未説明 -649,373） | 参考（下側の対象外）
     S3 L1 | 比(対称) 1.440× | 比(現行) 0.45 | 可読比 1.075 | レーン比 1.062（sim 6,298,942 / 実測 5,931,931・未説明 -367,011） | 参考（下側の対象外）
 
-########## 検査3: 可読セル比 = sim(可読セル) / Σpop（A14/A4 で追加） ##########
-  閾値: 比 ≥ 1.20 = FAIL ／ 1.07〜 = WARN ／ 0.93〜1.07 = OK ／ 〜0.93 = WARN(下) ／ ≤ 0.80 = FAIL(下)
-   S1 L2（photo-gate=off）: sim(可読) 6,472,820 / Σpop 5,868,200 = 1.103× [WARN]
-   S1 L5（photo-gate=off）: sim(可読) 8,365,447 / Σpop 7,756,800 = 1.078× [WARN]
-   S3 L1（photo-gate=off）: sim(可読) 6,242,112 / Σpop 5,805,300 = 1.075× [WARN]
-   S3 L5（photo-gate=off）: sim(可読) 9,947,443 / Σpop 9,255,970 = 1.075× [WARN]
-   S3 L3（photo-gate=off）: sim(可読) 16,497,332 / Σpop 15,709,200 = 1.050× [OK]
-   S2 L4（photo-gate=off）: sim(可読) 11,331,985 / Σpop 11,893,300 = 0.953× [OK]
-   S1 L3（photo-gate=off）: sim(可読) 81,607,393 / Σpop 84,776,600 = 0.963× [OK]
-   S3 L4（photo-gate=off）: sim(可読) 34,212,182 / Σpop 35,283,100 = 0.970× [OK]
-   S2 L3（photo-gate=off）: sim(可読) 48,129,647 / Σpop 49,615,000 = 0.970× [OK]
-   S1 L4（photo-gate=off）: sim(可読) 5,939,186 / Σpop 5,780,000 = 1.028× [OK]
-   S2 L5（photo-gate=off）: sim(可読) 4,580,491 / Σpop 4,704,200 = 0.974× [OK]
-   S1 L1（photo-gate=off）: sim(可読) 11,553,588 / Σpop 11,315,300 = 1.021× [OK]
-   S2 L2（photo-gate=off）: sim(可読) 4,297,542 / Σpop 4,379,100 = 0.981× [OK]
-   S2 L1（photo-gate=off）: sim(可読) 6,254,261 / Σpop 6,319,900 = 0.990× [OK]
-   S3 L2（photo-gate=off）: sim(可読) 9,708,586 / Σpop 9,741,200 = 0.997× [OK]
-  検査3 集計: FAIL 0 件（上 0 / 下 0） / WARN 4 件
-
 ########## まとめ ##########
   検査1（実測の閉包）: OK
   検査2（隠れセル比・上側）: FAIL 0 件 / WARN 0 件
   検査2（隠れセル比・下側 = sim が実測を説明できていない）: FAIL 1 件 / WARN 0 件（最小 0.22×）（扱い=warn）
-  検査3（可読セル比・A14/A4）: FAIL 0 件（上 0 / 下 0） / WARN 4 件（最悪 1.103× = S1 L2）
   上側ゲート: PASS
   下側ゲート: WARN 止まり（1 件・exit に効かない）
   ゲート結果: PASS
+
+[out] research\23_beat_score_analysis\phase16_action10_audit_out.txt

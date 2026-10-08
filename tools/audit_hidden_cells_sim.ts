@@ -21,6 +21,7 @@ import { fileURLToPath } from "node:url";
 
 import { buildSimulateInput, type SimSourceData } from "../src/sim/build.js";
 import { simulateTimeline } from "../src/timeline/engine.js";
+import { focusFanBonusPermil, stealthFanBonusPermil } from "../src/timeline/buffs.js";
 import { NeutralRng } from "../src/rng/neutral.js";
 import { mergePhotoEquipStatuses, myPhotoToSkillDef, type MyPhotoDef } from "../src/photos.js";
 
@@ -36,6 +37,11 @@ const MODE = (argv.find((a) => a.startsWith("--mode="))?.split("=")[1] ?? "lanef
   | "lanefans"
   | "legacy";
 const LEGACY_PHOTO = argv.includes("--legacy-photo");
+/** 【Phase 16 Action14】`--events=S2`（カンマ区切り・複数可）でセル別イベント生データを追加出力 */
+const EVENTS_FOR = (argv.find((a) => a.startsWith("--events="))?.split("=")[1] ?? "")
+  .split(",")
+  .map((s) => s.trim().toUpperCase())
+  .filter((s) => s.length > 0);
 
 /* ===================== サンプル定義（A5/A8/A9 と同一） ===================== */
 const CASES: any[] = [
@@ -230,16 +236,72 @@ for (const c of CASES) {
   });
   const cells: Record<string, number> = {};
   const staminaAfter: Record<string, number> = {};
+  /** 【Phase 16 Action14】`--events=S2` でセル別のイベント生データ（ratio 基準・スキル電力・
+   *  crit/コンボ因子・時点累積）を出す。既定は出さない（監査の出力サイズを変えない）。 */
+  const cellEvents: Record<string, any[]> | null = EVENTS_FOR.includes(c.id) ? {} : null;
+  let cum = 0;
   for (const b of res.beats as any[]) {
     for (const ev of (b.events ?? []) as any[]) {
       const k = `${b.beat}:${ev.lane}`;
       cells[k] = (cells[k] ?? 0) + (Number(ev.gainedScore) || 0);
+      cum += Number(ev.gainedScore) || 0;
+      if (cellEvents !== null) {
+        (cellEvents[k] ??= []).push({
+          beat: b.beat,
+          lane: ev.lane,
+          sourceKind: ev.sourceKind ?? null,
+          skillId: ev.skillId ?? null,
+          skillName: ev.skillName ?? null,
+          isRatioScore: ev.isRatioScore === true,
+          ratioBaseCumScore: ev.ratioBaseCumScore ?? null,
+          skillPowerPermil: ev.skillPowerPermil ?? null,
+          comboFactorPermil: ev.comboFactorPermil ?? null,
+          fanFactorPermil: ev.fanFactorPermil ?? null,
+          critFactorPermil: ev.critFactorPermil ?? null,
+          basicScore: ev.basicScore ?? null,
+          b1Permil: ev.b1Permil ?? null,
+          randPermil: ev.randPermil ?? null,
+          gainedScore: Number(ev.gainedScore) || 0,
+          cumAfterEvent: cum,
+          /** 【Phase 16 Action14 / A5】fan 口径の修正予測用（A12 の裁定式
+           *  `fanF = laneFanF + focusFanBonusPermil(snap.focus) + stealthBonusOthers(...)`）。
+           *  集目は自レーン、ステルスは**他 4 レーン**の段数から engine と同じ関数で算出する。 */
+          focus: (b.buffSnapshots ?? [])[ev.lane - 1]?.focus ?? 0,
+          stealth: (b.buffSnapshots ?? [])[ev.lane - 1]?.stealth ?? 0,
+          focusBonusPermil: focusFanBonusPermil((b.buffSnapshots ?? [])[ev.lane - 1]?.focus ?? 0),
+          stealthBonusPermil: [1, 2, 3, 4, 5]
+            .filter((l) => l !== ev.lane)
+            .reduce((a, l) => {
+              const st = (b.buffSnapshots ?? [])[l - 1]?.stealth ?? 0;
+              return a + (st > 0 ? stealthFanBonusPermil(st) : 0);
+            }, 0),
+        });
+      }
     }
     for (let l = 1; l <= 5; l++) {
       const v = b.staminaAfter?.[l - 1];
       if (typeof v === "number") staminaAfter[`${b.beat}:${l}`] = v;
     }
   }
+  /** 【Phase 16 Action14 / A3】デッキ入力の検証: sim が使ったレーン素ステータスと、
+   *  `deck.json` に記録された画面値（`stats.total_after_non_skill_modifiers`）を突合する。 */
+  const rawDeck = readJson(c.deck);
+  const deckChars: any[] = (rawDeck.deck ?? rawDeck).characters ?? [];
+  const recorded = deckChars.map((ch) => ({
+    lane: ch.lane,
+    card_id: ch.card_id,
+    level: ch.level,
+    rarity: ch.rarity,
+    kouryu_level: ch.kouryu_level ?? null,
+    recorded: ch.stats?.total_after_non_skill_modifiers ?? null,
+    photos: (ch.photos ?? []).length,
+    accessories: (ch.accessories ?? []).length,
+  }));
+  const laneDecks = ((base as any).lanes ?? []).map((ln: any, i: number) => ({
+    lane: ln?.lane ?? i + 1,
+    deck: ln?.deck ?? ln?.deckStatus ?? ln?.status ?? null,
+    role: ln?.role ?? null,
+  }));
   samples[c.id] = {
     stage: c.stageFile,
     chart: c.chartFile,
@@ -247,8 +309,27 @@ for (const c of CASES) {
     laneTotals: (res.laneTotals ?? res.scoresByLane ?? null) as any,
     cells,
     staminaAfter,
+    deckCheck: { recorded, laneDecks },
+    ...(cellEvents === null ? {} : { cellEvents }),
     warnings,
   };
+  if (process.argv.includes("--deck-check")) {
+    console.log(`[deck] ${c.id}: sim レーン素ステータス vs 記録値（total_after_non_skill_modifiers）`);
+    for (const r of recorded) {
+      const ld = laneDecks.find((x: any) => x.lane === r.lane);
+      const sim = (ld?.deck ?? {}) as any;
+      const rec = (r.recorded ?? {}) as any;
+      const diffs = ["vocal", "dance", "visual", "stamina"]
+        .map((k) => {
+          const a = Number(sim[k]);
+          const b = Number(rec[k]);
+          if (!Number.isFinite(a) || !Number.isFinite(b)) return `${k}:n/a`;
+          return `${k} ${b}→${a}(${a - b >= 0 ? "+" : ""}${a - b})`;
+        })
+        .join(" ");
+      console.log(`   L${r.lane} ${r.card_id} Lv${r.level}${r.kouryu_level != null ? ` 絆${r.kouryu_level}` : ""}: ${diffs}`);
+    }
+  }
   console.log(
     `[sim] ${c.id}: total ${res.totalScore} / cells ${Object.keys(cells).length} / fan=${
       (base as any).fanFactorPermil

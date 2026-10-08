@@ -16,14 +16,28 @@
  * ゲート（§2）:
  *   隠れ枠 = レーン合計 − Σpop（K 表記は切り捨てなので **上限**）
  *   sim(隠れ) = そのレーンの pop 読込不能セルに sim が置いたスコア合計
- *   比 = sim(隠れ) / 隠れ枠 →  **比 ≥ 2.0 = FAIL / 1.5 ≤ 比 < 2.0 = WARN / それ未満 = OK**
+ *   比 = 分子 / 隠れ枠 →  **比 ≥ 2.0 = FAIL / 1.5 ≤ 比 < 2.0 = WARN / それ未満 = OK**
  *   FAIL が 1 件でもあれば exit 1。**閾値は緩めない**（閾値を上げて通すのは禁止・§8）。
+ *
+ * 【Phase 16 Action14 タスク A1】**分子を対称化**した（分母・閾値は 1 も動かしていない）:
+ *   分子 = sim(pop 不能セル) ＋ Σ_b min( 可読セルの sim 超過 E_b, そのビートの実測未記録額 R_b )
+ *   動機 = 実測側の分母には「**pop は読めているが、そのセルを覆いきっていない分**」も入る。
+ *     代表例 S3 b2 L3: pop は +123.3K（フォト行）だけだが同ビートに A スキル「殻をやぶる」が
+ *     発動しており、実測残差（beat_gained_score − Σpop）= **2,109,487** がその分。
+ *     sim は同セルに 1,883,500 を置いており、従来はこれが「可読セル」として分母の外にあった
+ *     ＝ 実測 2.11M は分母へ / sim 1.88M は分子の外、という非対称が **0.04×** の正体
+ *     （`research/23_beat_score_analysis/phase16_action13_s3_l3_cells.md` §3）。
+ *   性質: min(…) ≥ 0 なので **新分子 ≥ 旧分子**。上側ゲートは厳しくなる方向にしか動かない。
+ *   現行比（simHidden / 隠れ枠）も全行に併記する（差分の監査用）。
  *
  * 【Phase 16 Action12 タスク2】**下側ゲート**を新設（上側は一切変更しない）:
  *   同じ比の**低い側**も検査する。sim が「実測で検証できないセル」にスコアを置かなさすぎる
  *   ＝ **sim がそのレーンの実測を説明できていない**（不足の在処の候補）ことを検出する。
  *     **比 ≤ 0.25 = FAIL / 0.25 < 比 ≤ 0.5 = WARN / それ超 = OK**
- *   根拠（A10 の記録）: S3 L3 = sim(隠れ) 116,039 / 隠れ枠 2,635,445 = **0.04×**。
+ *   根拠（A10 の記録）: S3 L3 = sim(隠れ) 116,039 / 隠れ枠 2,635,445 = **0.04×**
+ *     → **A14 タスク A1 で正体を特定**: pop が読めているセルの未表示分（b2 L3 の A スキル
+ *       約 2.11M）が分母にだけ入る非対称が原因で、**分子の対称化により 0.75× = OK** になった
+ *       （分母 2,635,445 と閾値 0.25/0.5 は不変・sim 側の不足は レーン比 0.906 として残る）。
  *   上側と同じく photo-gate off/on × Σpop 口径（統合／内生）の**全組み合わせの最悪値**で判定する
  *   （下側の「最悪」＝最小値）。
  *   **下限は `hiddenCells > 0` のレーンにだけ適用する**: pop 読込不能セルが 1 つも無いレーンの
@@ -32,7 +46,14 @@
  *   表しているときだけ判定する。`--low-gate=warn` で WARN 止まり、`--low-gate=off` で下側を出さない
  *   （**上側の閾値・分母はこのオプションでも一切変わらない**）。
  *   診断用に `sim(可読)/Σpop` も併記する（≒1 なら「配分だけが隠れセル側に寄っている」、
- *   低ければ「レーン合計そのものを説明できていない」）。この列は判定には使わない。
+ *   低ければ「レーン合計そのものを説明できていない」）。**A14 タスク A4 でこの列を検査3 に昇格**した:
+ *     比 ≥ 1.20 = FAIL(可読) ／ 1.07〜1.20 = WARN(可読) ／ 0.93〜1.07 = OK ／
+ *     0.80〜0.93 = WARN(可読・下) ／ ≤ 0.80 = FAIL(可読・下)
+ *   閾値の根拠: 15 レーン × photo-gate off/on の実測分布が **0.953〜1.103**（Σpop は K/M 切り捨てで
+ *   高々 +0.6% しか過小評価しないため、±7% を超えるずれは測定誤差では説明できない）。
+ *   **検査1（閉包）・検査2（隠れセル比）の分母・閾値は 1 も動かしていない**。上側 FAIL は exit に効き、
+ *   下側 FAIL は `--low-gate` の扱い（既定 fail／`warn`／`off`）に従う。
+ *   ※ スタミナ系列の検査は **検査4**（`--ledger`・A6 と同一規約）。
  *
  *   Σpop の基準は 2 系統を併記し、判定は**悪い方**で行う:
  *     「統合」   = 内生 pop ＋ lane_pops_backfill（全サンプルで使える・既定）
@@ -116,6 +137,8 @@ const LANES = [1, 2, 3, 4, 5];
 const fmt = (v) =>
   v === null || v === undefined || Number.isNaN(v) ? "null" : Math.round(v).toLocaleString("en-US");
 const pad = (s, w) => String(s).padStart(w);
+/** 【A14/A1】現行比の併記用（null は "n/a"） */
+const fmtRatio = (v) => (v === null || v === undefined || Number.isNaN(v) ? "n/a" : v.toFixed(2));
 
 const lines = [];
 const say = (s = "") => {
@@ -337,6 +360,43 @@ for (const c of ctx) {
 say("  ※ Σbeat_gained_score は各レーンの丸めを含むため ±0.5% を許容（レーン合計・total_score は厳密一致を要求）");
 
 // ---------------------------------------------------- 検査2: 隠れセル比
+/**
+ * 【Phase 16 Action14 / タスク A1】**分子の対称化**（分母・閾値は不変）。
+ *
+ * 動機: 実測側の分母（レーン合計 − Σpop）には「**pop は読めているが、その pop が
+ * そのセルの実測を覆いきっていない分**」も入る。代表例 = S3 b2 L3:
+ *   pop は +123.3K（フォト行）だけだが、同ビートに L3 の A スキル「殻をやぶる」が発動しており、
+ *   実測の残差（beat_gained_score − Σpop）= **2,109,487** がその分。
+ *   sim は同セルに 1,883,500 を置いており、これは「可読セル」として分母の外に置かれる
+ *   → 実測 2.11M は分母へ / sim 1.88M は分子の外、という**非対称**が 0.04× の正体だった。
+ *
+ * 対称化（ビート単位）:
+ *   R_b = max(0, beat_gained_score_b − Σpop(可読セル))   ← 実測が「未記録」と証明した額
+ *   H_b = sim(pop 不能セル)                              ← 従来の分子
+ *   E_b = Σ max(0, sim − pop) over 可読セル              ← sim の pop 超過
+ *   寄与 = H_b + min(E_b, max(0, R_b − H_b))
+ *
+ * 性質: min(...) ≥ 0 なので **新分子 ≥ 旧分子**。よって
+ *   - 上側ゲート（過剰配置の検出）は厳しくなる方向にしか動かない（検出力は落ちない）
+ *   - 分母（レーン合計 − Σpop）と閾値（上 2.0/1.5・下 0.25/0.5）は 1 も動かさない
+ *   - 実測が「未記録」と証明できない超過は数えない（モデル誤差を過剰配置と誤認しない）
+ * R_b はビート単位の共有値なので `R_b − H_b` はレーン単独の H で引く（= 上限側に保守的・厳しい側）。
+ */
+function residByBeatFor(c, src) {
+  const m = new Map();
+  for (const row of c.meas.timeline) {
+    if (typeof row?.beat !== "number") continue;
+    let sp = 0;
+    for (const l of LANES) {
+      const t = src.get(`${row.beat}:${l}`);
+      if (t !== undefined) sp += parseK(t) ?? 0;
+    }
+    const bgs = typeof row.beat_gained_score === "number" ? row.beat_gained_score : 0;
+    m.set(row.beat, Math.max(0, bgs - sp));
+  }
+  return m;
+}
+
 /** 1 基準ぶんの Σpop / 隠れ枠 を作る */
 function popBasis(c, basis) {
   const popSum = [0, 0, 0, 0, 0];
@@ -359,6 +419,7 @@ function popBasis(c, basis) {
 
 function rowsFor(c, basis, sim) {
   const { src, popSum, cells } = popBasis(c, basis);
+  const residByBeat = residByBeatFor(c, src);
   const out = [];
   for (const l of LANES) {
     const li = l - 1;
@@ -366,6 +427,7 @@ function rowsFor(c, basis, sim) {
     const hiddenCap = laneTotal === null ? null : laneTotal - popSum[li];
     let simRead = 0;
     let simHidden = 0;
+    let symNum = 0;
     let hiddenCells = 0;
     let readCells = 0;
     if (sim !== null) {
@@ -375,8 +437,15 @@ function rowsFor(c, basis, sim) {
         if (src.has(`${b}:${l}`)) {
           simRead += v;
           readCells++;
+          const pop = parseK(src.get(`${b}:${l}`)) ?? 0;
+          const E = Math.max(0, v - pop);
+          if (E > 0) {
+            const R = residByBeat.get(Number(b)) ?? 0;
+            symNum += Math.min(E, R); // H_b = 0（可読セルなので同ビート同レーンの不能分は無い）
+          }
         } else {
           simHidden += v;
+          symNum += v;
           hiddenCells++;
         }
       }
@@ -391,11 +460,18 @@ function rowsFor(c, basis, sim) {
       hiddenCap,
       simRead,
       simHidden,
+      /** 【A14/A1】対称化した分子（≥ simHidden）。分母・閾値は不変 */
+      symNum,
       hiddenCells,
       readCells,
       ratio: hiddenCap === null || hiddenCap <= 0 ? null : simHidden / hiddenCap,
+      /** 【A14/A1】対称比 = symNum / 隠れ枠（分母は現行と同一） */
+      ratioSym: hiddenCap === null || hiddenCap <= 0 ? null : symNum / hiddenCap,
       /** 診断用（判定には使わない）: 可読セルへの配置比 = sim(可読)/Σpop */
       readRatio: popSum[li] > 0 && sim !== null ? simRead / popSum[li] : null,
+      /** 【A14/A4】検査3 用の内訳 */
+      simRead,
+      popSumLane: popSum[li],
       simLaneTotal: sim === null ? null : simRead + simHidden,
       /** 【A12 タスク2】レーン合計の未説明分 = 実測レーン合計 − sim レーン合計（正 = sim が不足） */
       laneDeficit: laneTotal === null || sim === null ? null : laneTotal - (simRead + simHidden),
@@ -425,7 +501,7 @@ for (const sd of simDocs.length > 0 ? simDocs : [{ gate: null, sim: null }]) {
     );
     say(
       "   レーン| Σpop(統合)|読込| レーン合計| 隠れ枠(統合)|sim(隠れ・統合)|  比| Σpop(内生)| 隠れ枠(内生)|sim(隠れ・内生)|  比| " +
-        "sim(隠れセル数)| sim(可読)/Σpop| 判定",
+        "sim(隠れセル数)| sim(可読)/Σpop| 比(対称)| 判定",
     );
     for (const r of rowsM) {
       const ri = rowsI.find((x) => x.lane === r.lane) ?? null;
@@ -435,12 +511,19 @@ for (const sd of simDocs.length > 0 ? simDocs : [{ gate: null, sim: null }]) {
           : r.ratio === null
             ? ri.ratio
             : Math.max(r.ratio, ri.ratio);
+      /* 【A14/A1】判定は対称比（分母・閾値は不変・新分子 ≥ 旧分子）で行う */
+      const worstSym =
+        ri === null || ri.ratioSym === null
+          ? r.ratioSym
+          : r.ratioSym === null
+            ? ri.ratioSym
+            : Math.max(r.ratioSym, ri.ratioSym);
       const judge =
-        worst === null
+        worstSym === null
           ? "n/a"
-          : worst >= 2
+          : worstSym >= 2
             ? "FAIL"
-            : worst >= 1.5
+            : worstSym >= 1.5
               ? "WARN"
               : r.hiddenCells <= 0
                 ? "OK(下対象外)"
@@ -448,9 +531,9 @@ for (const sd of simDocs.length > 0 ? simDocs : [{ gate: null, sim: null }]) {
                   ? "OK(説明済)"
                   : LOW_GATE === "off"
                     ? "OK"
-                    : worst <= 0.25
+                    : worstSym <= 0.25
                       ? "FAIL(下)"
-                      : worst <= 0.5
+                      : worstSym <= 0.5
                         ? "WARN(下)"
                         : "OK";
       say(
@@ -458,19 +541,35 @@ for (const sd of simDocs.length > 0 ? simDocs : [{ gate: null, sim: null }]) {
           `${pad(fmt(r.hiddenCap), 13)} | ${pad(fmt(r.simHidden), 17)} | ${pad(r.ratio === null ? "n/a" : r.ratio.toFixed(2), 4)} | ` +
           `${pad(ri === null ? "-" : fmt(ri.popSum), 10)} | ${pad(ri === null ? "-" : fmt(ri.hiddenCap), 12)} | ` +
           `${pad(ri === null ? "-" : fmt(ri.simHidden), 14)} | ${pad(ri === null || ri.ratio === null ? "-" : ri.ratio.toFixed(2), 4)} | ` +
-          `${pad(r.hiddenCells, 14)} | ${pad(r.readRatio === null ? "-" : r.readRatio.toFixed(3), 13)} | ${judge}`,
+          `${pad(r.hiddenCells, 14)} | ${pad(r.readRatio === null ? "-" : r.readRatio.toFixed(3), 13)} | ` +
+          `${pad(worstSym === null ? "n/a" : worstSym.toFixed(2), 8)} | ${judge}`,
       );
+      if (worst !== null && worstSym !== null && Math.abs(worstSym - worst) > 1e-9) {
+        const symRow = (r.ratioSym ?? -1) >= (ri?.ratioSym ?? -1) ? r : ri;
+        say(
+          `          └ 対称分子の内訳: sim(不能) ${fmt(symRow.simHidden)} + 可読セル超過の実測証明分 ${fmt(symRow.symNum - symRow.simHidden)}` +
+            ` = ${fmt(symRow.symNum)}（現行分子 ${fmt(symRow.simHidden)}・分母は共通 ${fmt(symRow.hiddenCap)}）`,
+        );
+      }
     }
   }
 }
 
 // ---------------------------------------------------- 判定（全 mode × 全 basis の最悪）
+/** 【A14/A1】判定は **対称比**（symNum / 隠れ枠）で行う。分母・閾値は現行と同一。
+ *  現行比（simHidden / 隠れ枠）も worstByLane に残して併記する（差分の監査用）。 */
 const worstByLane = new Map();
+const worstSymByLane = new Map();
 for (const r of allRows) {
-  if (r.ratio === null) continue;
   const key = `${r.tag} L${r.lane}`;
-  const cur = worstByLane.get(key);
-  if (cur === undefined || r.ratio > cur.ratio) worstByLane.set(key, r);
+  if (r.ratio !== null) {
+    const cur = worstByLane.get(key);
+    if (cur === undefined || r.ratio > cur.ratio) worstByLane.set(key, r);
+  }
+  if (r.ratioSym !== null) {
+    const cur = worstSymByLane.get(key);
+    if (cur === undefined || r.ratioSym > cur.ratioSym) worstSymByLane.set(key, r);
+  }
 }
 /** 【A12 タスク2】下側の最悪値 = 最小比。**分母（隠れ枠）が「未検証セルの実体」を表し、
  *  かつレーン合計が未説明（実測 > sim）の行だけ**を対象にする:
@@ -480,46 +579,60 @@ for (const r of allRows) {
  */
 const lowWorstByLane = new Map();
 for (const r of allRows) {
-  if (r.ratio === null || r.hiddenCells <= 0) continue;
+  if (r.ratioSym === null || r.hiddenCells <= 0) continue;
   if (r.laneDeficit === null || r.laneDeficit <= 0) continue;
   const key = `${r.tag} L${r.lane}`;
   const cur = lowWorstByLane.get(key);
-  if (cur === undefined || r.ratio < cur.ratio) lowWorstByLane.set(key, r);
+  if (cur === undefined || r.ratioSym < cur.ratioSym) lowWorstByLane.set(key, r);
 }
-const fails = [...worstByLane.values()].filter((r) => r.ratio >= 2);
-const warns = [...worstByLane.values()].filter((r) => r.ratio >= 1.5 && r.ratio < 2);
-const lowFails = [...lowWorstByLane.values()].filter((r) => r.ratio <= 0.25);
-const lowWarns = [...lowWorstByLane.values()].filter((r) => r.ratio > 0.25 && r.ratio <= 0.5);
-const noHidden = [...worstByLane.values()].filter((r) => r.hiddenCells <= 0);
+const fails = [...worstSymByLane.values()].filter((r) => r.ratioSym >= 2);
+const warns = [...worstSymByLane.values()].filter((r) => r.ratioSym >= 1.5 && r.ratioSym < 2);
+const lowFails = [...lowWorstByLane.values()].filter((r) => r.ratioSym <= 0.25);
+const lowWarns = [...lowWorstByLane.values()].filter((r) => r.ratioSym > 0.25 && r.ratioSym <= 0.5);
+const noHidden = [...worstSymByLane.values()].filter((r) => r.hiddenCells <= 0);
 /** 下側の対象から外れたレーン（レーン合計を説明済み = sim ≥ 実測） */
-const lowExcludedExplained = [...worstByLane.values()].filter(
+const lowExcludedExplained = [...worstSymByLane.values()].filter(
   (r) => r.hiddenCells > 0 && r.laneDeficit !== null && r.laneDeficit <= 0,
 );
+/** 【A14/A1】対称化で判定が変わったレーン（現行比 → 対称比）の監査表示 */
+const legacyOf = (r) => worstByLane.get(`${r.tag} L${r.lane}`)?.ratio ?? null;
 say("\n########## 判定（photo-gate × Σpop 基準 の全組み合わせの最悪値） ##########");
+say(
+  "  ※ 【A14/A1】判定の分子は**対称化**した（分母 = レーン合計 − Σpop と閾値は現行と同一）。",
+);
+say(
+  "     分子 = sim(pop 不能セル) + min( 可読セルの sim 超過, そのビートの実測未記録額 )。",
+);
+say(
+  "     実測側の分母には「pop が読めているセルの未表示分」（例: S3 b2 L3 の A スキル約 2.11M）も",
+);
+say(
+  "     入るため、sim 側でも同額を未検証として数える（min ≥ 0 なので**上側は厳しくなる方向のみ**）。",
+);
 say(
   `  FAIL（比 ≥ 2.0）= ${fails.length} 件` +
     (fails.length === 0
       ? ""
-      : `: ${fails.map((r) => `${r.tag} L${r.lane} ${r.ratio.toFixed(2)}×`).join(" / ")}`),
+      : `: ${fails.map((r) => `${r.tag} L${r.lane} ${r.ratioSym.toFixed(2)}×（現行比 ${fmtRatio(legacyOf(r))}）`).join(" / ")}`),
 );
 say(
   `  WARN（1.5 ≤ 比 < 2.0）= ${warns.length} 件` +
     (warns.length === 0
       ? ""
-      : `: ${warns.map((r) => `${r.tag} L${r.lane} ${r.ratio.toFixed(2)}×`).join(" / ")}`),
+      : `: ${warns.map((r) => `${r.tag} L${r.lane} ${r.ratioSym.toFixed(2)}×（現行比 ${fmtRatio(legacyOf(r))}）`).join(" / ")}`),
 );
 say(
   `  【下側】FAIL（比 ≤ 0.25）= ${lowFails.length} 件` +
     (lowFails.length === 0
       ? ""
-      : `: ${lowFails.map((r) => `${r.tag} L${r.lane} ${r.ratio.toFixed(2)}×`).join(" / ")}`) +
+      : `: ${lowFails.map((r) => `${r.tag} L${r.lane} ${r.ratioSym.toFixed(2)}×（現行比 ${fmtRatio(legacyOf(r))}）`).join(" / ")}`) +
     `（扱い=${LOW_GATE}）`,
 );
 say(
   `  【下側】WARN（0.25 < 比 ≤ 0.5）= ${lowWarns.length} 件` +
     (lowWarns.length === 0
       ? ""
-      : `: ${lowWarns.map((r) => `${r.tag} L${r.lane} ${r.ratio.toFixed(2)}×`).join(" / ")}`),
+      : `: ${lowWarns.map((r) => `${r.tag} L${r.lane} ${r.ratioSym.toFixed(2)}×（現行比 ${fmtRatio(legacyOf(r))}）`).join(" / ")}`),
 );
 say(
   `  【下側】対象外（pop 読込不能セル 0 = 隠れ枠が切り捨て残差のみ）= ${noHidden.length} レーン: ` +
@@ -528,13 +641,14 @@ say(
 say(
   `  【下側】対象外（レーン合計を説明済み = sim ≥ 実測。低比は配分の偏り）= ${lowExcludedExplained.length} レーン: ` +
     lowExcludedExplained
-      .map((r) => `${r.tag} L${r.lane}（比 ${r.ratio.toFixed(2)}×・レーン比 ${r.simLaneTotal === null || r.laneTotal === null ? "n/a" : (r.simLaneTotal / r.laneTotal).toFixed(3)}）`)
+      .map((r) => `${r.tag} L${r.lane}（比 ${r.ratioSym.toFixed(2)}×・レーン比 ${r.simLaneTotal === null || r.laneTotal === null ? "n/a" : (r.simLaneTotal / r.laneTotal).toFixed(3)}）`)
       .join(" / "),
 );
 for (const r of lowFails) {
   say(
-    `    [FAIL(下)] ${r.tag} L${r.lane}（photo-gate=${r.gate} / Σpop=${r.basis}）: sim(隠れセル) ${fmt(r.simHidden)} / ` +
-      `隠れ枠 ${fmt(r.hiddenCap)} = ${r.ratio.toFixed(2)}×（隠れセル ${r.hiddenCells} セル・` +
+    `    [FAIL(下)] ${r.tag} L${r.lane}（photo-gate=${r.gate} / Σpop=${r.basis}）: 分子(対称) ${fmt(r.symNum)} / ` +
+      `隠れ枠 ${fmt(r.hiddenCap)} = ${r.ratioSym.toFixed(2)}×（sim(不能) ${fmt(r.simHidden)} + 可読超過の実測証明分 ${fmt(r.symNum - r.simHidden)}・` +
+      `現行比 ${fmtRatio(legacyOf(r))}・隠れセル ${r.hiddenCells} セル・` +
       `sim レーン合計 ${fmt(r.simLaneTotal)} / 実測レーン合計 ${fmt(r.laneTotal)}・` +
       `sim が実測レーン合計のうち ${fmt(r.laneTotal === null || r.simLaneTotal === null ? null : r.laneTotal - r.simLaneTotal)} を説明できていない）`,
   );
@@ -543,13 +657,13 @@ for (const r of lowFails) {
 say("  -- 下側比の一覧（最小比 = 統合×最悪 photo-gate。可読比 = sim(可読)/Σpop・レーン比 = sim レーン合計/実測レーン合計） --");
 const lowListAll = new Map();
 for (const r of [...lowWorstByLane.values(), ...lowExcludedExplained, ...noHidden]) lowListAll.set(`${r.tag} L${r.lane}`, r);
-for (const r of [...lowListAll.values()].sort((a, b) => a.ratio - b.ratio)) {
+for (const r of [...lowListAll.values()].sort((a, b) => a.ratioSym - b.ratioSym)) {
   const rr = allRows
     .filter((x) => x.tag === r.tag && x.lane === r.lane && x.readRatio !== null)
     .map((x) => x.readRatio);
   const judged = lowWorstByLane.get(`${r.tag} L${r.lane}`) !== undefined;
   say(
-    `    ${r.tag} L${r.lane} | 比(隠れ) ${r.ratio.toFixed(3)}× | 可読比 ${rr.length === 0 ? "n/a" : (rr.reduce((a, b) => a + b, 0) / rr.length).toFixed(3)} | ` +
+    `    ${r.tag} L${r.lane} | 比(対称) ${r.ratioSym.toFixed(3)}× | 比(現行) ${fmtRatio(legacyOf(r))} | 可読比 ${rr.length === 0 ? "n/a" : (rr.reduce((a, b) => a + b, 0) / rr.length).toFixed(3)} | ` +
       `レーン比 ${r.laneTotal === null || r.simLaneTotal === null ? "n/a" : (r.simLaneTotal / r.laneTotal).toFixed(3)}` +
       `（sim ${fmt(r.simLaneTotal)} / 実測 ${fmt(r.laneTotal)}・未説明 ${fmt(r.laneDeficit)}） | ` +
       `${judged ? "判定対象" : "参考（下側の対象外）"}`,
@@ -557,27 +671,27 @@ for (const r of [...lowListAll.values()].sort((a, b) => a.ratio - b.ratio)) {
 }
 for (const r of fails) {
   say(
-    `    [FAIL] ${r.tag} L${r.lane}（photo-gate=${r.gate} / Σpop=${r.basis}）: sim(隠れセル) ${fmt(r.simHidden)} / ` +
-      `隠れ枠 ${fmt(r.hiddenCap)} = ${r.ratio.toFixed(2)}×（隠れセル ${r.hiddenCells} セル・` +
+    `    [FAIL] ${r.tag} L${r.lane}（photo-gate=${r.gate} / Σpop=${r.basis}）: 分子(対称) ${fmt(r.symNum)} / ` +
+      `隠れ枠 ${fmt(r.hiddenCap)} = ${r.ratioSym.toFixed(2)}×（sim(不能) ${fmt(r.simHidden)}・現行比 ${fmtRatio(legacyOf(r))}・隠れセル ${r.hiddenCells} セル・` +
       `sim レーン合計 ${fmt(r.simLaneTotal)} / 実測レーン合計 ${fmt(r.laneTotal)}）`,
   );
 }
 // 2× を超えた行を全て列挙する（最悪値だけだと A8 の口径との照合ができないため）
-const overRows = allRows.filter((r) => r.ratio !== null && r.ratio >= 2);
+const overRows = allRows.filter((r) => r.ratioSym !== null && r.ratioSym >= 2);
 if (overRows.length > 0) {
-  say("  -- 比 ≥ 2.0 の全行（photo-gate × Σpop 基準） --");
+  say("  -- 比(対称) ≥ 2.0 の全行（photo-gate × Σpop 基準） --");
   for (const r of overRows) {
     say(
-      `    ${r.tag} L${r.lane} | photo-gate=${r.gate} | Σpop=${r.basis} | sim(隠れ) ${fmt(r.simHidden)} / ` +
-        `隠れ枠 ${fmt(r.hiddenCap)} = ${r.ratio.toFixed(2)}×（隠れセル ${r.hiddenCells}）`,
+      `    ${r.tag} L${r.lane} | photo-gate=${r.gate} | Σpop=${r.basis} | 分子(対称) ${fmt(r.symNum)} / ` +
+        `隠れ枠 ${fmt(r.hiddenCap)} = ${r.ratioSym.toFixed(2)}×（現行比 ${fmtRatio(r.ratio)}・sim(不能) ${fmt(r.simHidden)}・隠れセル ${r.hiddenCells}）`,
     );
   }
 }
 
-// ---------------------------------------------------- 検査3: スタミナ系列（--ledger）
+// ---------------------------------------------------- 検査4: スタミナ系列（--ledger）
 let ledgerFail = 0;
 if (WITH_LEDGER) {
-  say("\n########## 検査3: スタミナ系列の全ビート一致（--ledger・A6 と同一規約） ##########");
+  say("\n########## 検査4: スタミナ系列の全ビート一致（--ledger・A6 と同一規約） ##########");
   say("  sim = engine の staminaAfter[beat] / 実測 = timeline[].lanes[].current_stamina[beat]");
   // 受け入れ経路（on）があればそれを使う。S1 は deck 側で photo-L* を無効化しているため off=on。
   const use = simDocs.find((d) => d.gate === "on") ?? simDocs[0] ?? null;
@@ -616,21 +730,85 @@ if (WITH_LEDGER) {
   }
 }
 
+// ---------------------------------------------------- 検査3（A14/A4）: 可読セル比
+/**
+ * 【Phase 16 Action14 / A4】`sim(可読セル) / Σpop` を正式なゲートに昇格。
+ *
+ * 意味: 検査2 は「pop が読めないセル」だけを見るため、**可読セルの配分がずれている**
+ * ケース（sim が可読セルに実測より少なく置いている = S2 L3、多く置いている = S3 L5）を
+ * 検出できない。実測 Σpop は K/M 表記の切り捨てで最大 +0.6%（K 単位）しか過小評価しないので、
+ * 比が 1 から大きく離れていれば測定誤差では説明できない。
+ *
+ * 閾値（15 レーンの実測分布から決定。**検査2 の分母・閾値は一切動かしていない**）:
+ *   実測分布（S1/S2/S3 × 5 レーン・30 行=15 レーン×2 photo-gate）: min 0.953 / max 1.103
+ *   → 比 ≥ 1.20 = FAIL(可読) ／ 1.07〜1.20 = WARN(可読)
+ *      比 ≤ 0.80 = FAIL(可読・下) ／ 0.80〜0.93 = WARN(可読・下)
+ *   上側 FAIL は検査2 と同様に exit へ効く。下側 FAIL は `--low-gate` の扱いに従う。
+ */
+const READ_FAIL_HI = 1.2;
+const READ_WARN_HI = 1.07;
+const READ_WARN_LO = 0.93;
+const READ_FAIL_LO = 0.8;
+const readWorst = new Map();
+for (const r of allRows) {
+  if (r.basis !== "merged" || r.readRatio === null) continue;
+  const k = `${r.tag} L${r.lane}`;
+  const cur = readWorst.get(k);
+  if (cur === undefined || Math.abs(r.readRatio - 1) > Math.abs(cur.readRatio - 1)) readWorst.set(k, r);
+}
+const readAll = [...readWorst.values()].sort((a, b) => Math.abs(b.readRatio - 1) - Math.abs(a.readRatio - 1));
+const readHiFails = readAll.filter((r) => r.readRatio >= READ_FAIL_HI);
+const readLoFails = readAll.filter((r) => r.readRatio <= READ_FAIL_LO);
+const readWarns3 = readAll.filter(
+  (r) =>
+    !readHiFails.includes(r) &&
+    !readLoFails.includes(r) &&
+    (r.readRatio >= READ_WARN_HI || r.readRatio <= READ_WARN_LO),
+);
+say("\n########## 検査3: 可読セル比 = sim(可読セル) / Σpop（A14/A4 で追加） ##########");
+say(
+  `  閾値: 比 ≥ ${READ_FAIL_HI.toFixed(2)} = FAIL ／ ${READ_WARN_HI.toFixed(2)}〜 = WARN ／ ` +
+    `${READ_WARN_LO.toFixed(2)}〜${READ_WARN_HI.toFixed(2)} = OK ／ 〜${READ_WARN_LO.toFixed(2)} = WARN(下) ／ ≤ ${READ_FAIL_LO.toFixed(2)} = FAIL(下)`,
+);
+for (const r of readAll) {
+  const v =
+    r.readRatio >= READ_FAIL_HI
+      ? "FAIL"
+      : r.readRatio <= READ_FAIL_LO
+        ? "FAIL(下)"
+        : r.readRatio >= READ_WARN_HI
+          ? "WARN"
+          : r.readRatio <= READ_WARN_LO
+            ? "WARN(下)"
+            : "OK";
+  say(
+    `   ${r.tag} L${r.lane}（photo-gate=${r.gate}）: sim(可読) ${fmt(r.simRead ?? null)} / Σpop ${fmt(r.popSumLane ?? null)} = ` +
+      `${r.readRatio.toFixed(3)}× [${v}]`,
+  );
+}
+say(`  検査3 集計: FAIL ${readHiFails.length + readLoFails.length} 件（上 ${readHiFails.length} / 下 ${readLoFails.length}） / WARN ${readWarns3.length} 件`);
+
 // ---------------------------------------------------- まとめ
 say("\n########## まとめ ##########");
 say(`  検査1（実測の閉包）: ${closureFail === 0 ? "OK" : `要確認 ${closureFail} 件`}`);
 say(
   `  検査2（隠れセル比・上側）: FAIL ${fails.length} 件 / WARN ${warns.length} 件` +
-    (fails.length === 0 ? "" : `（最大 ${Math.max(...fails.map((r) => r.ratio)).toFixed(2)}×）`),
+    (fails.length === 0 ? "" : `（最大 ${Math.max(...fails.map((r) => r.ratioSym)).toFixed(2)}×）`),
 );
 say(
   `  検査2（隠れセル比・下側 = sim が実測を説明できていない）: FAIL ${lowFails.length} 件 / WARN ${lowWarns.length} 件` +
-    (lowFails.length === 0 ? "" : `（最小 ${Math.min(...lowFails.map((r) => r.ratio)).toFixed(2)}×）`) +
+    (lowFails.length === 0 ? "" : `（最小 ${Math.min(...lowFails.map((r) => r.ratioSym)).toFixed(2)}×）`) +
     `（扱い=${LOW_GATE}）`,
 );
-if (WITH_LEDGER) say(`  検査3（スタミナ系列・S1 L1 必須）: ${ledgerFail === 0 ? "OK" : "FAIL"}`);
-const upperFail = fails.length > 0 || ledgerFail > 0 || closureFail > 0;
-const lowFail = LOW_GATE === "fail" && lowFails.length > 0;
+if (WITH_LEDGER) say(`  検査4（スタミナ系列・S1 L1 必須）: ${ledgerFail === 0 ? "OK" : "FAIL"}`);
+say(
+  `  検査3（可読セル比・A14/A4）: FAIL ${readHiFails.length + readLoFails.length} 件（上 ${readHiFails.length} / 下 ${readLoFails.length}） / WARN ${readWarns3.length} 件` +
+    (readAll.length === 0 ? "" : `（最悪 ${readAll[0].readRatio.toFixed(3)}× = ${readAll[0].tag} L${readAll[0].lane}）`),
+);
+const upperFail =
+  fails.length > 0 || ledgerFail > 0 || closureFail > 0 || readHiFails.length > 0;
+const lowFail =
+  (LOW_GATE === "fail" && lowFails.length > 0) || (LOW_GATE === "fail" && readLoFails.length > 0);
 const gateFail = upperFail || lowFail;
 say(
   `  上側ゲート: ${upperFail ? "FAIL（隠れセル過剰配置または系列不一致あり）" : "PASS"}` +

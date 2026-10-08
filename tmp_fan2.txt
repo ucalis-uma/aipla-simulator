@@ -1,0 +1,60 @@
+﻿--- around fanPermil call ---
+ step: number; raw: string }>;
+  /** "beat:lane" → 実測のレーン能力値表示（ライブ中のステータス） */
+  stats: Map<string, number>;
+  /** "beat:lane" → 実測の強化効果表示（名前一緒） */
+  effects: Map<string, { name: string; stage: number }[]>;
+  laneTotals: Map<number, number>;
+}
+
+
+interface Sample {
+  tag: SampleTag;
+  label: string;
+  built: any;
+  resNeutral: TimelineResult;
+  /** 実測クリティカル再現・乱数中立（1000）ラン。判定はすべてこのランで行う */
+  resReplay: TimelineResult;
+  photo: PhotoTerm[];
+  meas: MeasData;
+  /** プロンプト指定の保存トレース（陈旧性の確認用） */
+  stored: { path: string; exists: boolean; totalScore: number | null; note: string };
+  /** プロンプトが記録した「乱数中立の実測基準値」（S3 の 72,176,945 など） */
+  recordedConfirmed: number | null;
+}
+
+/**
+ * deck.json の audience（個人来場ファン数）誤入力チェック【Phase 16-A2b・2026-09-29 発覚】
+ *
+ * サンプル1 の deck.json は audience=71000 だが、qt-area-1-001 の **目標スコア clear=71000**
+ * （左上スコア表示「18,780,790/71,000」＝ research/05_data_quality.md の記載）と完全一致する。
+ * つまり 71000 は来場ファン数ではなく目標スコアの誤読で、そのままだと fan はテーブル上限
+ * 2000‰ に化けて全ビートスコアが約 2 倍 over-produce する
+ * （実測ポップから逆算した示唆 fan は 884〜1,049‰ ＝ 全 5 レーン一致）。
+ *
+ * 補正規則は src/cli/simulate.ts:283-295 と同一: 個人来場ファン数 = floor(会場キャパ cap / 5)。
+ * 発動条件は「宣言値がステージの clear と一致」または「テーブル上限 50,000 超過」だけで、
+ * 正常な宣言値（S2 13,206 / S3 8,000 など: fan.png 由来の実測値）は一切変更しない。
+ */
+const audienceNotes = new Map<string, string>();
+/** --raw-inputs 指定時は宣言値をそのまま使う（補正前の乖離を再現して証拠として残すためのフラグ） */
+let rawInputs = false;
+let _fanTable: { audience: number; advantagePermil: number }[] | null = null;
+function fanPermil(audience: number): number {
+  const table = (_fanTable ??= readJson(path.join(repoRoot, "data", "stages", "audience_advantage.json")));
+  let v = 1000;
+  for (const r of table) if (r.audience <= audience) v = r.advantagePermil;
+  return v;
+}
+function resolveAudience(tag: string, declared: number | undefined, stageId: string): number | undefined {
+  if (declared === undefined || rawInputs) return declared;
+  const idx = readJson(path.join(repoRoot, "data", "stages_index.json"));
+  const q = (idx.quests as any[]).find((x) => x.id === stageId);
+  const cap: number | undefined = idx.configs?.[q?.c]?.cap;
+  if (cap === undefined) return declared;
+  const derived = Math.max(0, Math.min(50000, Math.floor(cap / 5)));
+  const asClear = q?.clear === declared;
+  const overVenue = declared > cap;
+  if (asClear || overVenue) {
+    const why = asClear
+      ? `宣言値 ${declared

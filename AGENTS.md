@@ -85,8 +85,24 @@
   上側の閾値・分母は一切変更していない。判定対象は「pop 読込不能セルが 1 つ以上 **かつ**
   実測レーン合計 > sim レーン合計」のレーンだけ（前者が無いと K 表記の切り捨て残差だけで 0.00× になり、
   後者が無いと過剰配置のレーンを誤検知する）。**下側 FAIL は exit 1 に効く**（上側のみの受け入れ判定は
-  `npm run audit:hidden -- --low-gate=warn`）。現状 S2 L3 0.19×・S3 L3 0.04× が FAIL（未解決の不足）、
-  S2 L4 0.31×・S3 L2 0.45× が WARN。詳報 `research/23_beat_score_analysis/phase16_action12_report.md`
+  `npm run audit:hidden -- --low-gate=warn`）。詳報 `research/23_beat_score_analysis/phase16_action12_report.md`
+- **比の分子は「対称化」してある（2026-10-07 追加・Phase 16-A14 タスク A1。分母・閾値は 1 も変えていない）**:
+  分子 = `sim(pop読込不能セル)` ＋ `Σ_b min(可読セルの sim 超過 E_b, そのビートの実測未記録額 R_b)`、
+  `R_b = max(0, beat_gained_score_b − Σpop(可読セル))`。実測側の分母（レーン合計 − Σpop）には
+  「**pop は読めているがそのセルを覆いきっていない分**」も入るため（実例: S3 b2 L3 の A スキル約 2.11M は
+  pop 未表示で、sim は同セルに 1.88M を置いていた＝分母に入る額と分子に入る額が非対称だった）、
+  sim 側でも「実測が未記録と証明した額」までを未検証として数える。`min ≥ 0` なので
+  **上側ゲートは厳しくなる方向にしか動かない**（S3 L3 の 0.04× は 0.75× = OK になった。
+  下側に残る FAIL は S2 L3 0.22× の 1 件）。現行比も全行に併記される。詳報
+  `research/23_beat_score_analysis/phase16_action13_s3_l3_cells.md`
+- **可読セル比 `sim(可読)/Σpop` を検査3 として正式にゲート化した（2026-10-07 追加・Phase 16-A14 タスク A4。
+  検査2 の分母・閾値は不変）**: 検査2 は「pop が読めないセル」しか見ないため、可読セルの配分ずれ
+  （sim が可読セルに実測より少なく置く = S2 L3 0.970×、多く置く = S1 L2 1.103×）を検出できない。
+  閾値は **15 レーン × photo-gate off/on の実測分布 0.953〜1.103** から決定し、
+  `比 ≥ 1.20 = FAIL ／ 1.07〜 = WARN ／ 0.93〜1.07 = OK ／ 〜0.93 = WARN(下) ／ ≤ 0.80 = FAIL(下)`。
+  上側 FAIL は exit に効き、下側 FAIL は `--low-gate` の扱いに従う（現状 FAIL 0・WARN 4）。
+  同じツールのスタミナ系列検査は **検査4**（`--ledger`）に改番。
+  実効検査: `npm run audit:hidden -- --low-gate=warn`。詳報 `research/23_beat_score_analysis/phase16_action14_a4_readable_gate.md`
 - **`buildSimulateInput` の `goldenPhotoNames` は省略すると golden フォトスキル（photo-L*）を注入しない
   （2026-10-02 F3・既定 off）**: 実測を再現する呼び出しは**必ず T5 実測フォト名を渡す**
   （CLI `loadGoldenPhotoNames()` / UI `GOLDEN_PHOTO_NAMES` / `tools/analyze_beat_score_models.ts` /

@@ -1797,3 +1797,58 @@ S5 = `fan.png` のみ（デッキも組めない）。**S4/S5 はレーン別デ
 - 規律遵守: **新規撮影なし・`../aipura_nox/` は読み取りのみ**／上側閾値・分母は未変更／失効値は未使用／
   読めない値は null ＋【Unknown】/【Estimate】注記。コミット b0ad71c。詳報
   `research/23_beat_score_analysis/phase16_action13_report.md`（表本体は `phase16_action13_buff_rows.md`）。
+
+## Phase 16 Action14: 再撮影なしで進められる残タスク（A1-A5 / B1-B4）— 2026-10-07
+
+- **A1（S3 L3 の下側 FAIL 0.04× の正体）**: **分子/分母の非対称**だった。実測の分母（レーン合計 − Σpop）には
+  「pop は読めているがそのセルを覆いきっていない分」も入るため、b2 の A スキル約 2.11M が分母にだけ入っていた。
+  分子を対称化（`sim(不能セル) + Σ_b min(可読超過 E_b, 実測未記録額 R_b)`・`R_b = max(0, bgs_b − Σpop(可読))`）→
+  **0.75× = OK**。**分母・閾値は 1 も動かしていない**（`min ≥ 0` なので上側は厳しくなる方向にしか動かない）。
+  残る下側 FAIL は S2 L3 0.22× の 1 件（分子 50,643 / 隠れ枠 226,012・sim レーン合計 48,173,385 / 実測 49,841,012・未説明 1,667,627）。
+  全行に現行比を併記。詳報 `research/23_beat_score_analysis/phase16_action13_s3_l3_cells.md`。
+- **A2（S2 の SP セル 707,502 = SPスキルスコア上昇）**: 比率型の累積基準の順序仮説は**棄却**（R1「スキル開始時点」= 21,067,856・
+  現行 R2「行実行時点」= 29,538,545）。SP セル b90:3 は sim 28,790,151 に対し実測 29,538,545（0.9747）で、
+  **両行に一様な k = 1.01769〜1.02041** が必要（row1/row2 比 1.438026 対 モデル 1.438025）。A セル 16 枚は 0.9796
+  （per-cell 0.974〜1.082）で尾は写真 A スコアのフラット。実測突合のみの台帳（`closureOk` フィルタ）を出力。
+  詳報 `research/23_beat_score_analysis/phase16_action14_a2_s2_ratio.md`。
+- **A3（レーン別オフセット＝入力か機構か）**: `deck.json` の記録値（`stats.total_after_non_skill_modifiers`）と
+  sim のレーン素ステータスは **15 レーンすべて ±0** ＝ 入力は正しい。λ と属性重みの分離フィットは**棄却**
+  （どの (λ, w) でも 5 レーンを ±12% でしか合わせられない）。レーン別 φ = 実測/sim は **時間的に一定**
+  （前後半の差 <1.5%）: L1 1.027 / L2 1.064 / L3 1.074 / L4 1.214 / L5 1.103。
+  A/SP セルは φ 0.92〜1.03 と beat セル（1.03〜1.21）より小さい → 種別依存係数 or 観測バイアスが残件。
+  詳報 `research/23_beat_score_analysis/phase16_action14_a3_lane_offset.md`。
+- **A4（可読セル比を検査3 に昇格）**: 15 レーン×photo-gate の実測分布 **0.953〜1.103** から
+  `≥1.20 FAIL / 1.07〜 WARN / 0.93〜1.07 OK / 〜0.93 WARN(下) / ≤0.80 FAIL(下)` を採用（検査2 の分母・閾値は不変・
+  スタミナ系列検査は**検査4**に改番）。現状 **FAIL 0 / WARN 4（最悪 1.103× = S1 L2）**・`--low-gate=warn` で exit 0。
+  詳報 `research/23_beat_score_analysis/phase16_action14_a4_readable_gate.md`。
+- **A5（正しい fan 口径の予測・`src/` 無変更）**: A12 の裁定式（`laneFanF + focusFanBonusPermil(focus) + Σ他レーン ステルス`）を
+  オフライン適用（`tools/audit_hidden_cells_sim.ts` に focus/stealth の出力列を追加・fan 因子だけ差し替え＝厳密）→
+  **S1 114,162,150 → 116,243,426（乖離 −2.038% → −0.252%）／S2 74,886,541 → 75,078,540（−3.661% → −3.414%）／
+  S3 77,425,702 → 77,892,728（−2.501% → −1.912%）**。変化は全サンプル L3 のみ（focus/stealth を持つレーン）。
+  S1 は目標達成、**S2 は届かず**（fan 口径だけでは不足を説明できない＝A12 の結論を再確認）。満員会場の focus の効き方は
+  未確定で、この値は加算則での下限側【Estimate】。詳報 `research/23_beat_score_analysis/phase16_action14_a5_fan_predict.md`。
+- **B1（`sp_skill_score_up` の寿命）**: マスタ `ef-special_skill_score_up-<段階>-target-trigger-5` は
+  **全レベルで `[Nビート]` 表記なし**、同系列の `-999` には [Nビート] 付きが多数存在 → **末尾コードはビート数ではない**
+  （23,020 行の全数解析）。sim の 4 ビートは importer が末尾数値を duration と読む【Estimate】。
+  実機 b90–167 / sim b90–93 / **スコア差 0**（b90 の SP で消費・sim の b1Permil 1397 が実測 SP セルと整合）→
+  手順書どおり **【Unknown】** として据え置き（当てずっぽうの式は書かない）。S1 は ±1 ビート・S3 は行なし＝S2 固有。
+  詳報 `research/23_beat_score_analysis/phase16_action14_b1_sp_lifespan.md`。
+- **B2（孤立窓 b95–100 の再検証）**: γ 推定器の分解能を 552 セルで実測 → **±1.0 段**（A13 の「±2〜3段」は過小評価。
+  対象レーン自身のノート乱数 ±2.7% は原理的に除去できない）。b95 = 14.43±1.4 段（13段と 1σ 整合・0/5 を 6σ で棄却）／
+  b97 = 4.20±1.1 段（5段と 0.6σ 整合・13段を 6σ で棄却）＝ **同一窓の 2 枚が ≈6σ 矛盾**（両者とも pop 閉合は取れている）
+  → **【Unknown】据え置き**。b100 の A セルは **±5.8 段**（A13 の「0 ± 0.35段」は訂正・スコアの 83% がフラット加算）で
+  13段を 2.2σ で弱く棄却。実機の表示規約（`critical_rate_up` 15→7 = 基本2+超化5）と sim の一致は窓境界で確定。
+  詳報 `research/23_beat_score_analysis/phase16_action14_b2_isolated_window.md`。
+- **B3（超化 gate の同一性を回帰テスト化）**: `tests/unit/timeline/extreme-gate-parity.test.ts` を新規追加（**9 件**）。
+  独立キー経路（`*_up_extreme`）と capExtend 経路が「基本 0 では加算しない・基本 n では同一倍率・上限拡張も同値」で
+  あることを `aggregateBuffs` と engine 経由（合成入力 visual_up 0 + 超化）の両方で固定。
+- **B4（`NAME_TO_BUFF_KEY` 追加の影響・S2/S3）**: A13 直前版と現行版を同一 `src/` で S2/S3 に走らせて深い差分 →
+  **数値差分 0 件**。差分は `meta.generatedAt` と診断ラベル 3 件（`sim?` → `sim0`・不一致件数 ×15/×26/×27 は不変）のみ ＝
+  **スコア経路は非依存**（行突合の集計のみ）。詳報 `research/26_data_integrity/phase16_action14_b4_s2s3_check.md`。
+- **ゲート（完了時）**: `npx vitest run` = **43 files / 535 passed・1 skipped**（A13: 42/526+1）／`npm run typecheck` = 0／
+  **T5 ゴールデン `2,581,114,209` 不変**／`npm run audit:hidden -- --low-gate=warn` = **検査2 上側 FAIL 0・WARN 0／
+  検査3 FAIL 0・WARN 4／ゲート PASS（exit 0）**・既定実行は exit 1（検査2 下側 S2 L3 0.22× のみ・A12 と同数）。
+- **規律**: 新規撮影なし・`../aipura_nox/` は読み取りのみ／**閾値と分母は未変更**（A1 は分子の対称化のみ・A4 は新検査の追加のみ）／
+  読めない値は null ＋【Unknown】/【Estimate】注記／暴走防止の連続ツール呼び出し上限に留意しつつ 1 セッションで完走。
+- **残件（撮影が要るもの）**: 満員会場での focus の効き方（S3 型・1 会場で段数を振る）／孤立窓に crit セルが 3 枚以上ある
+  サンプル（SP を 2 回撃つ譜面）／S2 の未説明 1.67M の正体（A3 の φ 種別依存）。

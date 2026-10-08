@@ -1,0 +1,13 @@
+import fs from "node:fs";
+const j = JSON.parse(fs.readFileSync("research/23_beat_score_analysis/phase16_action14_a2_s2_events.json", "utf8"));
+const s = j.samples.S2;
+const ck = Object.keys(s.cells);
+const ek = Object.keys(s.cellEvents);
+console.log("cells keys sample:", ck.slice(0, 3).join(" | "), "…", ck.slice(-2).join(" | "));
+console.log("cellEvents keys sample:", ek.slice(0, 3).join(" | "));
+const k = ck.find((x) => /(^|:)3(:|$)/.test(x) && /100/.test(x));
+console.log("matched key:", k);
+const near = ck.filter((x) => x.includes("100")).slice(0, 6);
+console.log("keys containing 100:", near.join(" | "));
+const k2 = ek.find((x) => x.includes("100"));
+console.log("event key w/100:", k2, JSON.stringify(s.cellEvents[k2]).slice(0, 900));

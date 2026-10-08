@@ -1,0 +1,20 @@
+﻿fan.ts:38: export function fanBonusPermil(
+build.ts:16: import { fanBonusPermil, type AudienceAdvantageRow } from "../formula/fan.js";
+build.ts:728: fanFactorPermil = fanBonusPermil(options.audience, data.audienceAdvantage);
+buffs.ts:203: // 実装する副効果（他4レーンのファンボーナス加算）は stealthFanBonusPermil のテーブル参照。
+buffs.ts:594: export function fanBonusPermilFromCount(fans: number): number {
+buffs.ts:624: *   → fan_bonus 表（fanBonusPermilFromCount）→ +1000
+buffs.ts:625: *   → 集目固定加算（focusFanBonusPermil、Peing 0.7/0.3 テーブル）を加算。
+buffs.ts:645: return 1000 + fanBonusPermilFromCount(count) + focusFanBonusPermil(focus);
+buffs.ts:658: export function focusFanBonusPermil(focusStages: number): number {
+buffs.ts:660: throw new Error(`focusFanBonusPermil: focusStages must be a non-negative integer, got ${focusStages}`);
+buffs.ts:671: throw new Error(`focusFanBonusPermil: no table entry for focusStages=${focusStages}`);
+buffs.ts:687: export function stealthFanBonusPermil(stealthStages: number): number {
+buffs.ts:690: `stealthFanBonusPermil: stealthStages must be a non-negative integer, got ${stealthStages}`,
+buffs.ts:702: throw new Error(`stealthFanBonusPermil: no table entry for stealthStages=${stealthStages}`);
+buffs.ts:710: *   basePermil + focusFanBonusPermil(focusStages)
+buffs.ts:723: return basePermil + focusFanBonusPermil(focusStages);
+engine.ts:29: stealthFanBonusPermil,
+engine.ts:1903: bonus += stealthFanBonusPermil(stages);
+analyze_beat_score_models.ts:236: function fanPermil(audience: number): number {
+analyze_beat_score_models.ts:257: `audience 補正: deck.json ${declared} → ${derived}人（fan ${fanPermil(declared)}‰ → ${fanPermil(derived)}‰）。` +

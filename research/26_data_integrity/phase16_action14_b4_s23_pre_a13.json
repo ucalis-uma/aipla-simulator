@@ -1,0 +1,6116 @@
+{
+  "meta": {
+    "generatedAt": "2026-10-07T23:50:38.593Z",
+    "tolerance": [
+      0.95,
+      1.05
+    ],
+    "models": [
+      {
+        "key": "A",
+        "lambda": "8/140",
+        "photo": "max",
+        "label": "λ=8/140 + photo max（現行）"
+      },
+      {
+        "key": "B",
+        "lambda": "1/20",
+        "photo": "sum",
+        "label": "λ=1/20 + photo sum（docs本命）"
+      },
+      {
+        "key": "C",
+        "lambda": "1/20",
+        "photo": "max",
+        "label": "λ=1/20 + photo max"
+      },
+      {
+        "key": "D",
+        "lambda": "8/140",
+        "photo": "sum",
+        "label": "λ=8/140 + photo sum"
+      }
+    ],
+    "note": "src/ は未変更。各モデル値はエンジンのビートファクター（basicSum/b1/combo/fan/stage/rand/crit/adv/photo sum-max 差分）から再計算した値。"
+  },
+  "verdicts": [
+    {
+      "sample": "S2",
+      "model": "A",
+      "lam": "8/140",
+      "photo": "max",
+      "allPass": false,
+      "whitePass": false,
+      "meanRatio": 0.9356
+    },
+    {
+      "sample": "S2",
+      "model": "B",
+      "lam": "1/20",
+      "photo": "sum",
+      "allPass": false,
+      "whitePass": false,
+      "meanRatio": 0.8476
+    },
+    {
+      "sample": "S2",
+      "model": "C",
+      "lam": "1/20",
+      "photo": "max",
+      "allPass": false,
+      "whitePass": false,
+      "meanRatio": 0.8313
+    },
+    {
+      "sample": "S2",
+      "model": "D",
+      "lam": "8/140",
+      "photo": "sum",
+      "allPass": false,
+      "whitePass": false,
+      "meanRatio": 0.9541
+    },
+    {
+      "sample": "S3",
+      "model": "A",
+      "lam": "8/140",
+      "photo": "max",
+      "allPass": false,
+      "whitePass": false,
+      "meanRatio": 0.9927
+    },
+    {
+      "sample": "S3",
+      "model": "B",
+      "lam": "1/20",
+      "photo": "sum",
+      "allPass": false,
+      "whitePass": false,
+      "meanRatio": 0.9102
+    },
+    {
+      "sample": "S3",
+      "model": "C",
+      "lam": "1/20",
+      "photo": "max",
+      "allPass": false,
+      "whitePass": false,
+      "meanRatio": 0.8782
+    },
+    {
+      "sample": "S3",
+      "model": "D",
+      "lam": "8/140",
+      "photo": "sum",
+      "allPass": false,
+      "whitePass": false,
+      "meanRatio": 1.0293
+    }
+  ],
+  "samples": [
+    {
+      "tag": "S2",
+      "label": "S2（タワー680・3BEAT）",
+      "storedTrace": {
+        "path": "research/20_sample2_gap_analysis/sim_trace_full.json",
+        "exists": true,
+        "totalScore": null,
+        "note": "research/26_data_integrity/samples_trace_summary.json にフェーズ別合計値"
+      },
+      "photoBeatTerms": [
+        {
+          "lane": 1,
+          "items": [
+            {
+              "name": "フォト2 (Quality 140)",
+              "pct": 20.7
+            }
+          ],
+          "fixedItems": [],
+          "fixedSum": 0,
+          "fixedMax": 0,
+          "maxPct": 20.7,
+          "sumPct": 20.7
+        },
+        {
+          "lane": 2,
+          "items": [
+            {
+              "name": "フォト4 (Quality 100)",
+              "pct": 17.7
+            }
+          ],
+          "fixedItems": [
+            {
+              "name": "フォト3 (Quality 135)",
+              "value": 474
+            }
+          ],
+          "fixedSum": 474,
+          "fixedMax": 474,
+          "maxPct": 17.7,
+          "sumPct": 17.7
+        },
+        {
+          "lane": 3,
+          "items": [
+            {
+              "name": "フォト1 (Quality 140)",
+              "pct": 19.3
+            }
+          ],
+          "fixedItems": [],
+          "fixedSum": 0,
+          "fixedMax": 0,
+          "maxPct": 19.3,
+          "sumPct": 19.3
+        },
+        {
+          "lane": 4,
+          "items": [
+            {
+              "name": "フォト1 (Quality 150)",
+              "pct": 17.5
+            },
+            {
+              "name": "フォト3 (Quality 155)",
+              "pct": 20.6
+            }
+          ],
+          "fixedItems": [
+            {
+              "name": "フォト4 (Quality 150)",
+              "value": 1150
+            }
+          ],
+          "fixedSum": 1150,
+          "fixedMax": 1150,
+          "maxPct": 20.6,
+          "sumPct": 38.1
+        },
+        {
+          "lane": 5,
+          "items": [
+            {
+              "name": "フォト3 (Quality 115)",
+              "pct": 15.6
+            }
+          ],
+          "fixedItems": [
+            {
+              "name": "フォト1 (Quality 155)",
+              "value": 1148
+            },
+            {
+              "name": "フォト4 (Quality 85)",
+              "value": 230
+            }
+          ],
+          "fixedSum": 1378,
+          "fixedMax": 1148,
+          "maxPct": 15.6,
+          "sumPct": 15.6
+        }
+      ],
+      "measCoverage": {
+        "popCells": 745,
+        "statCells": 840,
+        "effectCells": 543,
+        "actDetailBeats": 27
+      },
+      "laneDiag": [
+        {
+          "lane": 1,
+          "n": 124,
+          "attribute": "vocal",
+          "ratioMean": 1.0064510204799009,
+          "ratioMin": 0.9506103549880736,
+          "ratioMax": 1.0803639120545867,
+          "basicMean": 6539.129032258064,
+          "basicSumMean": 114445.70967741935,
+          "b1Mean": 1267,
+          "comboMean": 1237.0967741935483,
+          "fanMean": 1553.5967741935483,
+          "stage": 1000,
+          "adv": 1000,
+          "photoFixedSum": 0,
+          "photoFixedMax": 0,
+          "photoPctMax": 20.7,
+          "photoPctSum": 20.7,
+          "measStatMean": 95322,
+          "simStatMean": 95327,
+          "statRatioMean": 0.9999475489630462,
+          "statMatch": 0,
+          "effectMatchCells": 100,
+          "effectDiffCells": 0,
+          "effectDiffTop": [],
+          "dBasicMean": 42.34039240578629,
+          "dBasicSd": 205.59152018856153,
+          "dB1Mean": 8.173442948034225,
+          "dFanMean": 10.040525263749837,
+          "dComboMean": 8.125939919984871,
+          "dAdvMean": 6.451020479900728,
+          "ratioMeanPhotoSum": 1.0064510204799009,
+          "ratioMeanFixedA": 1.0064510204799009,
+          "ratioMeanFixedABasic": 1.0064510204799009,
+          "ratioMeanFixedDBasic": 1.0064510204799009,
+          "ratioSdFixedDBasic": 0.03141444137918917,
+          "ratioMeanFixedD": 1.0064510204799009,
+          "ratioSdFixedD": 0.03141444137918917,
+          "impliedFanMean": 1563.6372994572996,
+          "impliedAdvMean": 1006.4510204799011
+        },
+        {
+          "lane": 2,
+          "n": 128,
+          "attribute": "vocal",
+          "ratioMean": 1.0612756463642792,
+          "ratioMin": 0.9951105295778527,
+          "ratioMax": 1.13368401959006,
+          "basicMean": 5004,
+          "basicSumMean": 87584,
+          "b1Mean": 1237,
+          "comboMean": 1233.203125,
+          "fanMean": 1553.453125,
+          "stage": 1000,
+          "adv": 1000,
+          "photoFixedSum": 474,
+          "photoFixedMax": 474,
+          "photoPctMax": 17.7,
+          "photoPctSum": 17.7,
+          "measStatMean": 60351,
+          "simStatMean": 60351,
+          "statRatioMean": 1,
+          "statMatch": 128,
+          "effectMatchCells": 0,
+          "effectDiffCells": 0,
+          "effectDiffTop": [],
+          "dBasicMean": 306.6233344068533,
+          "dBasicSd": 158.01594201083327,
+          "dB1Mean": 75.79797455261348,
+          "dFanMean": 95.15039794195818,
+          "dComboMean": 73.79452693924718,
+          "dAdvMean": 61.27564636427926,
+          "ratioMeanPhotoSum": 1.0612756463642792,
+          "ratioMeanFixedA": 1.0205626965553476,
+          "ratioMeanFixedABasic": 0.9694426701518989,
+          "ratioMeanFixedDBasic": 0.9694426701518989,
+          "ratioSdFixedDBasic": 0.028847667503709064,
+          "ratioMeanFixedD": 1.0205626965553476,
+          "ratioSdFixedD": 0.03021018075621215,
+          "impliedFanMean": 1648.6035229419576,
+          "impliedAdvMean": 1061.27564636428
+        },
+        {
+          "lane": 3,
+          "n": 39,
+          "attribute": "vocal",
+          "ratioMean": 1.0276306899376375,
+          "ratioMin": 0.9719633278807015,
+          "ratioMax": 1.100225687320476,
+          "basicMean": 9775,
+          "basicSumMean": 171068.28205128206,
+          "b1Mean": 1260.6923076923076,
+          "comboMean": 1216.6666666666667,
+          "fanMean": 1626.179487179487,
+          "stage": 1000,
+          "adv": 1000,
+          "photoFixedSum": 0,
+          "photoFixedMax": 0,
+          "photoPctMax": 19.3,
+          "photoPctSum": 19.3,
+          "measStatMean": 118235,
+          "simStatMean": 118235,
+          "statRatioMean": 1,
+          "statMatch": 39,
+          "effectMatchCells": 20,
+          "effectDiffCells": 19,
+          "effectDiffTop": [
+            "SPスキルスコア上昇(実測6/sim0)×16",
+            "クリティカル係数上昇超化(実測10/sim?)×15",
+            "クリティカル係数上昇(実測8/sim13)×11"
+          ],
+          "dBasicMean": 273.31227991021433,
+          "dBasicSd": 313.8569518477357,
+          "dB1Mean": 34.73163259532922,
+          "dFanMean": 44.61224385412681,
+          "dComboMean": 33.17773852710598,
+          "dAdvMean": 27.630689937637325,
+          "ratioMeanPhotoSum": 1.0276306899376375,
+          "ratioMeanFixedA": 1.0276306899376375,
+          "ratioMeanFixedABasic": 1.0276306899376375,
+          "ratioMeanFixedDBasic": 1.0276306899376375,
+          "ratioSdFixedDBasic": 0.03189073637044936,
+          "ratioMeanFixedD": 1.0276306899376375,
+          "ratioSdFixedD": 0.03189073637044936,
+          "impliedFanMean": 1670.7917310336136,
+          "impliedAdvMean": 1027.6306899376375
+        },
+        {
+          "lane": 4,
+          "n": 132,
+          "attribute": "dance",
+          "ratioMean": 1.2146377478613193,
+          "ratioMin": 1.137496208345972,
+          "ratioMax": 1.3660569576290809,
+          "basicMean": 7271,
+          "basicSumMean": 127247,
+          "b1Mean": 1338.7272727272727,
+          "comboMean": 1231.439393939394,
+          "fanMean": 1553.659090909091,
+          "stage": 1000,
+          "adv": 1000,
+          "photoFixedSum": 1150,
+          "photoFixedMax": 1150,
+          "photoPctMax": 20.6,
+          "photoPctSum": 38.1,
+          "measStatMean": 214094,
+          "simStatMean": 214094,
+          "statRatioMean": 1,
+          "statMatch": 132,
+          "effectMatchCells": 96,
+          "effectDiffCells": 0,
+          "effectDiffTop": [],
+          "dBasicMean": 1560.6310646996528,
+          "dBasicSd": 298.04348077883316,
+          "dB1Mean": 287.06533108837044,
+          "dFanMean": 333.5109344620436,
+          "dComboMean": 262.11027676811085,
+          "dAdvMean": 214.6377478613193,
+          "ratioMeanPhotoSum": 1.0740640512345014,
+          "ratioMeanFixedA": 1.1517113209355856,
+          "ratioMeanFixedABasic": 1.0487531047779053,
+          "ratioMeanFixedDBasic": 0.9273738450661689,
+          "ratioSdFixedDBasic": 0.030923580143074475,
+          "ratioMeanFixedD": 1.0184251240104163,
+          "ratioSdFixedD": 0.034024504554378034,
+          "impliedFanMean": 1887.1700253711351,
+          "impliedAdvMean": 1214.6377478613194
+        },
+        {
+          "lane": 5,
+          "n": 128,
+          "attribute": "vocal",
+          "ratioMean": 1.1091164386208752,
+          "ratioMin": 1.0504806308639842,
+          "ratioMax": 1.1904051554388686,
+          "basicMean": 7286.46875,
+          "basicSumMean": 127527.84375,
+          "b1Mean": 1216,
+          "comboMean": 1223.828125,
+          "fanMean": 1553.5703125,
+          "stage": 1000,
+          "adv": 1000,
+          "photoFixedSum": 1378,
+          "photoFixedMax": 1148,
+          "photoPctMax": 15.6,
+          "photoPctSum": 15.6,
+          "measStatMean": 119535,
+          "simStatMean": 119535,
+          "statRatioMean": 1,
+          "statMatch": 128,
+          "effectMatchCells": 92,
+          "effectDiffCells": 0,
+          "effectDiffTop": [],
+          "dBasicMean": 795.1329857484728,
+          "dBasicSd": 236.8498260542178,
+          "dB1Mean": 132.6855893629834,
+          "dFanMean": 169.5187165223863,
+          "dComboMean": 132.028959606319,
+          "dAdvMean": 109.11643862087459,
+          "ratioMeanPhotoSum": 1.1091164386208752,
+          "ratioMeanFixedA": 1.0258889799561821,
+          "ratioMeanFixedABasic": 0.9326611453666401,
+          "ratioMeanFixedDBasic": 0.9326611453666401,
+          "ratioSdFixedDBasic": 0.027493803624755085,
+          "ratioMeanFixedD": 1.0258889799561821,
+          "ratioSdFixedD": 0.031071663574581236,
+          "impliedFanMean": 1723.0890290223865,
+          "impliedAdvMean": 1109.1164386208739
+        }
+      ],
+      "lanePhotoDeltaPermil": [
+        {
+          "lane": 1,
+          "adv": 1000,
+          "photoDeltaPermil": 0
+        },
+        {
+          "lane": 2,
+          "adv": 1000,
+          "photoDeltaPermil": 0
+        },
+        {
+          "lane": 3,
+          "adv": 1000,
+          "photoDeltaPermil": 0
+        },
+        {
+          "lane": 4,
+          "adv": 1000,
+          "photoDeltaPermil": 175
+        },
+        {
+          "lane": 5,
+          "adv": 1000,
+          "photoDeltaPermil": 0
+        }
+      ],
+      "analysis": {
+        "tag": "S2",
+        "label": "S2（タワー680・3BEAT）",
+        "totals": {
+          "meas": 77732383,
+          "simNeutral": 43118707,
+          "simReplay": 75125099,
+          "modelNeutral": {
+            "A": 43118707,
+            "B": 41796885,
+            "C": 41479270,
+            "D": 43481703
+          },
+          "modelReplay": {
+            "A": 75125099,
+            "B": 73274503,
+            "C": 72940799,
+            "D": 75506483
+          },
+          "replayGap": -2607284,
+          "replayGapPct": -0.03354179943254798,
+          "critPremiumSim": 32006392,
+          "recordedConfirmed": null,
+          "impliedPremiumOfRecord": null,
+          "storedTraceTotal": null
+        },
+        "selfCheck": {
+          "beatEvents": 745,
+          "otherEvents": 18,
+          "mismatchCells": 0,
+          "unverifiedCells": 0,
+          "sample": []
+        },
+        "counts": {
+          "white": 32,
+          "white_crit": 108,
+          "skill": 25,
+          "empty": 3
+        },
+        "groups": {
+          "white": {
+            "nBeats": 32,
+            "perModel": {
+              "A": {
+                "n": 32,
+                "pass": 1,
+                "passRate": 0.03125,
+                "meanRatio": 0.9250381648636433,
+                "sdRatio": 0.013034734579097861,
+                "minRatio": 0.9024446470298534,
+                "maxRatio": 0.9572380075108057,
+                "p05": 0.9081317786037986,
+                "p95": 0.9398133626097867,
+                "fails": [
+                  {
+                    "beat": 94,
+                    "ratio": 0.9024
+                  },
+                  {
+                    "beat": 53,
+                    "ratio": 0.9035
+                  },
+                  {
+                    "beat": 74,
+                    "ratio": 0.9081
+                  },
+                  {
+                    "beat": 72,
+                    "ratio": 0.9085
+                  },
+                  {
+                    "beat": 58,
+                    "ratio": 0.91
+                  },
+                  {
+                    "beat": 63,
+                    "ratio": 0.9107
+                  },
+                  {
+                    "beat": 61,
+                    "ratio": 0.9142
+                  },
+                  {
+                    "beat": 77,
+                    "ratio": 0.9149
+                  },
+                  {
+                    "beat": 79,
+                    "ratio": 0.9166
+                  },
+                  {
+                    "beat": 43,
+                    "ratio": 0.9167
+                  },
+                  {
+                    "beat": 34,
+                    "ratio": 0.9184
+                  },
+                  {
+                    "beat": 78,
+                    "ratio": 0.9188
+                  }
+                ]
+              },
+              "B": {
+                "n": 32,
+                "pass": 0,
+                "passRate": 0,
+                "meanRatio": 0.8319370075605735,
+                "sdRatio": 0.012004385442771538,
+                "minRatio": 0.8120188557669481,
+                "maxRatio": 0.8605009565648692,
+                "p05": 0.8157034472223637,
+                "p95": 0.8462202007528231,
+                "fails": [
+                  {
+                    "beat": 53,
+                    "ratio": 0.812
+                  },
+                  {
+                    "beat": 94,
+                    "ratio": 0.8125
+                  },
+                  {
+                    "beat": 74,
+                    "ratio": 0.8157
+                  },
+                  {
+                    "beat": 72,
+                    "ratio": 0.8161
+                  },
+                  {
+                    "beat": 58,
+                    "ratio": 0.8177
+                  },
+                  {
+                    "beat": 63,
+                    "ratio": 0.8183
+                  },
+                  {
+                    "beat": 61,
+                    "ratio": 0.8215
+                  },
+                  {
+                    "beat": 77,
+                    "ratio": 0.8221
+                  },
+                  {
+                    "beat": 79,
+                    "ratio": 0.8236
+                  },
+                  {
+                    "beat": 43,
+                    "ratio": 0.8249
+                  },
+                  {
+                    "beat": 34,
+                    "ratio": 0.8254
+                  },
+                  {
+                    "beat": 78,
+                    "ratio": 0.8256
+                  }
+                ]
+              },
+              "C": {
+                "n": 32,
+                "pass": 0,
+                "passRate": 0,
+                "meanRatio": 0.809425571980213,
+                "sdRatio": 0.01140397433030693,
+                "minRatio": 0.7896849098320288,
+                "maxRatio": 0.8375876851130164,
+                "p05": 0.7946229441417587,
+                "p95": 0.8223154537850272,
+                "fails": [
+                  {
+                    "beat": 94,
+                    "ratio": 0.7897
+                  },
+                  {
+                    "beat": 53,
+                    "ratio": 0.7906
+                  },
+                  {
+                    "beat": 74,
+                    "ratio": 0.7946
+                  },
+                  {
+                    "beat": 72,
+                    "ratio": 0.795
+                  },
+                  {
+                    "beat": 58,
+                    "ratio": 0.7963
+                  },
+                  {
+                    "beat": 63,
+                    "ratio": 0.7969
+                  },
+                  {
+                    "beat": 61,
+                    "ratio": 0.8
+                  },
+                  {
+                    "beat": 77,
+                    "ratio": 0.8006
+                  },
+                  {
+                    "beat": 79,
+                    "ratio": 0.8021
+                  },
+                  {
+                    "beat": 43,
+                    "ratio": 0.8021
+                  },
+                  {
+                    "beat": 34,
+                    "ratio": 0.8037
+                  },
+                  {
+                    "beat": 78,
+                    "ratio": 0.804
+                  }
+                ]
+              },
+              "D": {
+                "n": 32,
+                "pass": 15,
+                "passRate": 0.46875,
+                "meanRatio": 0.9507679444168424,
+                "sdRatio": 0.013721088735045699,
+                "minRatio": 0.9280247792812651,
+                "maxRatio": 0.9834195422659959,
+                "p05": 0.9322266917867509,
+                "p95": 0.967129339188624,
+                "fails": [
+                  {
+                    "beat": 53,
+                    "ratio": 0.928
+                  },
+                  {
+                    "beat": 94,
+                    "ratio": 0.9285
+                  },
+                  {
+                    "beat": 74,
+                    "ratio": 0.9322
+                  },
+                  {
+                    "beat": 72,
+                    "ratio": 0.9327
+                  },
+                  {
+                    "beat": 58,
+                    "ratio": 0.9345
+                  },
+                  {
+                    "beat": 63,
+                    "ratio": 0.9352
+                  },
+                  {
+                    "beat": 61,
+                    "ratio": 0.9388
+                  },
+                  {
+                    "beat": 77,
+                    "ratio": 0.9395
+                  },
+                  {
+                    "beat": 79,
+                    "ratio": 0.9413
+                  },
+                  {
+                    "beat": 43,
+                    "ratio": 0.9427
+                  },
+                  {
+                    "beat": 34,
+                    "ratio": 0.9432
+                  },
+                  {
+                    "beat": 78,
+                    "ratio": 0.9435
+                  }
+                ]
+              }
+            }
+          },
+          "white_crit": {
+            "nBeats": 108,
+            "perModel": {
+              "A": {
+                "n": 108,
+                "pass": 23,
+                "passRate": 0.21296296296296297,
+                "meanRatio": 0.9358818919836919,
+                "sdRatio": 0.020617042230741657,
+                "minRatio": 0.8226388953750837,
+                "maxRatio": 0.967547121833381,
+                "p05": 0.9087933194154488,
+                "p95": 0.9611616213120798,
+                "fails": [
+                  {
+                    "beat": 95,
+                    "ratio": 0.8226
+                  },
+                  {
+                    "beat": 45,
+                    "ratio": 0.8613
+                  },
+                  {
+                    "beat": 145,
+                    "ratio": 0.8675
+                  },
+                  {
+                    "beat": 155,
+                    "ratio": 0.906
+                  },
+                  {
+                    "beat": 47,
+                    "ratio": 0.9076
+                  },
+                  {
+                    "beat": 33,
+                    "ratio": 0.9088
+                  },
+                  {
+                    "beat": 37,
+                    "ratio": 0.911
+                  },
+                  {
+                    "beat": 44,
+                    "ratio": 0.9116
+                  },
+                  {
+                    "beat": 76,
+                    "ratio": 0.9136
+                  },
+                  {
+                    "beat": 97,
+                    "ratio": 0.9168
+                  },
+                  {
+                    "beat": 82,
+                    "ratio": 0.9186
+                  },
+                  {
+                    "beat": 35,
+                    "ratio": 0.9189
+                  }
+                ]
+              },
+              "B": {
+                "n": 108,
+                "pass": 0,
+                "passRate": 0,
+                "meanRatio": 0.8356704637544534,
+                "sdRatio": 0.01770454035924889,
+                "minRatio": 0.7367798377932409,
+                "maxRatio": 0.8637201614697562,
+                "p05": 0.8142979866954492,
+                "p95": 0.8561408360411547,
+                "fails": [
+                  {
+                    "beat": 95,
+                    "ratio": 0.7368
+                  },
+                  {
+                    "beat": 45,
+                    "ratio": 0.7687
+                  },
+                  {
+                    "beat": 145,
+                    "ratio": 0.7857
+                  },
+                  {
+                    "beat": 33,
+                    "ratio": 0.8096
+                  },
+                  {
+                    "beat": 37,
+                    "ratio": 0.8127
+                  },
+                  {
+                    "beat": 47,
+                    "ratio": 0.8143
+                  },
+                  {
+                    "beat": 44,
+                    "ratio": 0.8145
+                  },
+                  {
+                    "beat": 76,
+                    "ratio": 0.8151
+                  },
+                  {
+                    "beat": 155,
+                    "ratio": 0.8161
+                  },
+                  {
+                    "beat": 57,
+                    "ratio": 0.819
+                  },
+                  {
+                    "beat": 35,
+                    "ratio": 0.8196
+                  },
+                  {
+                    "beat": 82,
+                    "ratio": 0.82
+                  }
+                ]
+              },
+              "C": {
+                "n": 108,
+                "pass": 0,
+                "passRate": 0,
+                "meanRatio": 0.8189084377030734,
+                "sdRatio": 0.018038076021342896,
+                "minRatio": 0.719843085975809,
+                "maxRatio": 0.8465878389116684,
+                "p05": 0.7952150313152401,
+                "p95": 0.8410536802717353,
+                "fails": [
+                  {
+                    "beat": 95,
+                    "ratio": 0.7198
+                  },
+                  {
+                    "beat": 45,
+                    "ratio": 0.7536
+                  },
+                  {
+                    "beat": 145,
+                    "ratio": 0.7591
+                  },
+                  {
+                    "beat": 155,
+                    "ratio": 0.7927
+                  },
+                  {
+                    "beat": 47,
+                    "ratio": 0.7942
+                  },
+                  {
+                    "beat": 33,
+                    "ratio": 0.7952
+                  },
+                  {
+                    "beat": 37,
+                    "ratio": 0.7972
+                  },
+                  {
+                    "beat": 44,
+                    "ratio": 0.7977
+                  },
+                  {
+                    "beat": 76,
+                    "ratio": 0.7994
+                  },
+                  {
+                    "beat": 97,
+                    "ratio": 0.8022
+                  },
+                  {
+                    "beat": 82,
+                    "ratio": 0.8037
+                  },
+                  {
+                    "beat": 35,
+                    "ratio": 0.8041
+                  }
+                ]
+              },
+              "D": {
+                "n": 108,
+                "pass": 71,
+                "passRate": 0.6574074074074074,
+                "meanRatio": 0.9550382443460921,
+                "sdRatio": 0.020235539552158188,
+                "minRatio": 0.8420040785192796,
+                "maxRatio": 0.9871189726963542,
+                "p05": 0.9306246971232213,
+                "p95": 0.9784610356552509,
+                "fails": [
+                  {
+                    "beat": 95,
+                    "ratio": 0.842
+                  },
+                  {
+                    "beat": 45,
+                    "ratio": 0.8785
+                  },
+                  {
+                    "beat": 145,
+                    "ratio": 0.8979
+                  },
+                  {
+                    "beat": 33,
+                    "ratio": 0.9253
+                  },
+                  {
+                    "beat": 37,
+                    "ratio": 0.9287
+                  },
+                  {
+                    "beat": 47,
+                    "ratio": 0.9306
+                  },
+                  {
+                    "beat": 44,
+                    "ratio": 0.9308
+                  },
+                  {
+                    "beat": 76,
+                    "ratio": 0.9316
+                  },
+                  {
+                    "beat": 155,
+                    "ratio": 0.9327
+                  },
+                  {
+                    "beat": 57,
+                    "ratio": 0.9359
+                  },
+                  {
+                    "beat": 35,
+                    "ratio": 0.9366
+                  },
+                  {
+                    "beat": 82,
+                    "ratio": 0.9372
+                  }
+                ]
+              }
+            }
+          },
+          "skill": {
+            "nBeats": 25,
+            "perModel": {
+              "A": {
+                "n": 25,
+                "pass": 18,
+                "passRate": 0.72,
+                "meanRatio": 0.947706196293262,
+                "sdRatio": 0.10868083229751266,
+                "minRatio": 0.47918198844860216,
+                "maxRatio": 1.0240634084609035,
+                "p05": 0.7824381481680497,
+                "p95": 1.0142213401084066,
+                "fails": [
+                  {
+                    "beat": 2,
+                    "ratio": 0.4792
+                  },
+                  {
+                    "beat": 150,
+                    "ratio": 0.7824
+                  },
+                  {
+                    "beat": 41,
+                    "ratio": 0.9184
+                  },
+                  {
+                    "beat": 51,
+                    "ratio": 0.9333
+                  },
+                  {
+                    "beat": 110,
+                    "ratio": 0.9348
+                  },
+                  {
+                    "beat": 55,
+                    "ratio": 0.9369
+                  },
+                  {
+                    "beat": 101,
+                    "ratio": 0.9458
+                  }
+                ]
+              },
+              "B": {
+                "n": 25,
+                "pass": 16,
+                "passRate": 0.64,
+                "meanRatio": 0.9189112069296412,
+                "sdRatio": 0.13025565432398606,
+                "minRatio": 0.4277547338177468,
+                "maxRatio": 1.0240634084609035,
+                "p05": 0.7047002018868359,
+                "p95": 1.0142213401084066,
+                "fails": [
+                  {
+                    "beat": 2,
+                    "ratio": 0.4278
+                  },
+                  {
+                    "beat": 150,
+                    "ratio": 0.7047
+                  },
+                  {
+                    "beat": 110,
+                    "ratio": 0.8337
+                  },
+                  {
+                    "beat": 51,
+                    "ratio": 0.8396
+                  },
+                  {
+                    "beat": 55,
+                    "ratio": 0.8444
+                  },
+                  {
+                    "beat": 101,
+                    "ratio": 0.8488
+                  },
+                  {
+                    "beat": 151,
+                    "ratio": 0.8489
+                  },
+                  {
+                    "beat": 165,
+                    "ratio": 0.8598
+                  },
+                  {
+                    "beat": 41,
+                    "ratio": 0.9184
+                  }
+                ]
+              },
+              "C": {
+                "n": 25,
+                "pass": 16,
+                "passRate": 0.64,
+                "meanRatio": 0.9130728612932688,
+                "sdRatio": 0.13590984500492578,
+                "minRatio": 0.41929711018935273,
+                "maxRatio": 1.0240634084609035,
+                "p05": 0.6846496917963323,
+                "p95": 1.0142213401084066,
+                "fails": [
+                  {
+                    "beat": 2,
+                    "ratio": 0.4193
+                  },
+                  {
+                    "beat": 150,
+                    "ratio": 0.6846
+                  },
+                  {
+                    "beat": 51,
+                    "ratio": 0.8166
+                  },
+                  {
+                    "beat": 110,
+                    "ratio": 0.8179
+                  },
+                  {
+                    "beat": 55,
+                    "ratio": 0.8198
+                  },
+                  {
+                    "beat": 101,
+                    "ratio": 0.8276
+                  },
+                  {
+                    "beat": 151,
+                    "ratio": 0.8323
+                  },
+                  {
+                    "beat": 165,
+                    "ratio": 0.8434
+                  },
+                  {
+                    "beat": 41,
+                    "ratio": 0.9184
+                  }
+                ]
+              },
+              "D": {
+                "n": 25,
+                "pass": 22,
+                "passRate": 0.88,
+                "meanRatio": 0.9543791282454589,
+                "sdRatio": 0.10572387927806125,
+                "minRatio": 0.48884574275095855,
+                "maxRatio": 1.0240634084609035,
+                "p05": 0.8053519202278328,
+                "p95": 1.0142213401084066,
+                "fails": [
+                  {
+                    "beat": 2,
+                    "ratio": 0.4888
+                  },
+                  {
+                    "beat": 150,
+                    "ratio": 0.8054
+                  },
+                  {
+                    "beat": 41,
+                    "ratio": 0.9184
+                  }
+                ]
+              }
+            }
+          },
+          "empty": {
+            "nBeats": 3,
+            "perModel": {
+              "A": {
+                "n": 0,
+                "pass": 0,
+                "passRate": 0,
+                "meanRatio": 0,
+                "sdRatio": 0,
+                "minRatio": 0,
+                "maxRatio": 0,
+                "p05": 0,
+                "p95": 0,
+                "fails": []
+              },
+              "B": {
+                "n": 0,
+                "pass": 0,
+                "passRate": 0,
+                "meanRatio": 0,
+                "sdRatio": 0,
+                "minRatio": 0,
+                "maxRatio": 0,
+                "p05": 0,
+                "p95": 0,
+                "fails": []
+              },
+              "C": {
+                "n": 0,
+                "pass": 0,
+                "passRate": 0,
+                "meanRatio": 0,
+                "sdRatio": 0,
+                "minRatio": 0,
+                "maxRatio": 0,
+                "p05": 0,
+                "p95": 0,
+                "fails": []
+              },
+              "D": {
+                "n": 0,
+                "pass": 0,
+                "passRate": 0,
+                "meanRatio": 0,
+                "sdRatio": 0,
+                "minRatio": 0,
+                "maxRatio": 0,
+                "p05": 0,
+                "p95": 0,
+                "fails": []
+              }
+            }
+          }
+        },
+        "overall": {
+          "A": {
+            "n": 165,
+            "pass": 42,
+            "passRate": 0.2545454545454545,
+            "meanRatio": 0.935570427377011,
+            "sdRatio": 0.04563023347399588,
+            "minRatio": 0.47918198844860216,
+            "maxRatio": 1.0240634084609035,
+            "p05": 0.9076060619410546,
+            "p95": 0.9888721171777499,
+            "fails": [
+              {
+                "beat": 2,
+                "ratio": 0.4792
+              },
+              {
+                "beat": 150,
+                "ratio": 0.7824
+              },
+              {
+                "beat": 95,
+                "ratio": 0.8226
+              },
+              {
+                "beat": 45,
+                "ratio": 0.8613
+              },
+              {
+                "beat": 145,
+                "ratio": 0.8675
+              },
+              {
+                "beat": 94,
+                "ratio": 0.9024
+              },
+              {
+                "beat": 53,
+                "ratio": 0.9035
+              },
+              {
+                "beat": 155,
+                "ratio": 0.906
+              },
+              {
+                "beat": 47,
+                "ratio": 0.9076
+              },
+              {
+                "beat": 74,
+                "ratio": 0.9081
+              },
+              {
+                "beat": 72,
+                "ratio": 0.9085
+              },
+              {
+                "beat": 33,
+                "ratio": 0.9088
+              }
+            ]
+          },
+          "B": {
+            "n": 165,
+            "pass": 16,
+            "passRate": 0.09696969696969697,
+            "meanRatio": 0.8475586333373356,
+            "sdRatio": 0.060261407251953045,
+            "minRatio": 0.4277547338177468,
+            "maxRatio": 1.0240634084609035,
+            "p05": 0.812681910831427,
+            "p95": 0.9888721171777499,
+            "fails": [
+              {
+                "beat": 2,
+                "ratio": 0.4278
+              },
+              {
+                "beat": 150,
+                "ratio": 0.7047
+              },
+              {
+                "beat": 95,
+                "ratio": 0.7368
+              },
+              {
+                "beat": 45,
+                "ratio": 0.7687
+              },
+              {
+                "beat": 145,
+                "ratio": 0.7857
+              },
+              {
+                "beat": 33,
+                "ratio": 0.8096
+              },
+              {
+                "beat": 53,
+                "ratio": 0.812
+              },
+              {
+                "beat": 94,
+                "ratio": 0.8125
+              },
+              {
+                "beat": 37,
+                "ratio": 0.8127
+              },
+              {
+                "beat": 47,
+                "ratio": 0.8143
+              },
+              {
+                "beat": 44,
+                "ratio": 0.8145
+              },
+              {
+                "beat": 76,
+                "ratio": 0.8151
+              }
+            ]
+          },
+          "C": {
+            "n": 165,
+            "pass": 16,
+            "passRate": 0.09696969696969697,
+            "meanRatio": 0.8313366733795786,
+            "sdRatio": 0.06445016241254688,
+            "minRatio": 0.41929711018935273,
+            "maxRatio": 1.0240634084609035,
+            "p05": 0.7941539274857923,
+            "p95": 0.9888721171777499,
+            "fails": [
+              {
+                "beat": 2,
+                "ratio": 0.4193
+              },
+              {
+                "beat": 150,
+                "ratio": 0.6846
+              },
+              {
+                "beat": 95,
+                "ratio": 0.7198
+              },
+              {
+                "beat": 45,
+                "ratio": 0.7536
+              },
+              {
+                "beat": 145,
+                "ratio": 0.7591
+              },
+              {
+                "beat": 94,
+                "ratio": 0.7897
+              },
+              {
+                "beat": 53,
+                "ratio": 0.7906
+              },
+              {
+                "beat": 155,
+                "ratio": 0.7927
+              },
+              {
+                "beat": 47,
+                "ratio": 0.7942
+              },
+              {
+                "beat": 74,
+                "ratio": 0.7946
+              },
+              {
+                "beat": 72,
+                "ratio": 0.795
+              },
+              {
+                "beat": 33,
+                "ratio": 0.7952
+              }
+            ]
+          },
+          "D": {
+            "n": 165,
+            "pass": 108,
+            "passRate": 0.6545454545454545,
+            "meanRatio": 0.95411019889002,
+            "sdRatio": 0.04405952016458073,
+            "minRatio": 0.48884574275095855,
+            "maxRatio": 1.0240634084609035,
+            "p05": 0.9285152934519506,
+            "p95": 0.9888721171777499,
+            "fails": [
+              {
+                "beat": 2,
+                "ratio": 0.4888
+              },
+              {
+                "beat": 150,
+                "ratio": 0.8054
+              },
+              {
+                "beat": 95,
+                "ratio": 0.842
+              },
+              {
+                "beat": 45,
+                "ratio": 0.8785
+              },
+              {
+                "beat": 145,
+                "ratio": 0.8979
+              },
+              {
+                "beat": 41,
+                "ratio": 0.9184
+              },
+              {
+                "beat": 33,
+                "ratio": 0.9253
+              },
+              {
+                "beat": 53,
+                "ratio": 0.928
+              },
+              {
+                "beat": 94,
+                "ratio": 0.9285
+              },
+              {
+                "beat": 37,
+                "ratio": 0.9287
+              },
+              {
+                "beat": 47,
+                "ratio": 0.9306
+              },
+              {
+                "beat": 44,
+                "ratio": 0.9308
+              }
+            ]
+          }
+        },
+        "overallBeatKind": {
+          "A": {
+            "n": 160,
+            "pass": 26,
+            "passRate": 0.1625,
+            "meanRatio": 0.860024316247166,
+            "sdRatio": 0.24924488408740952,
+            "minRatio": 0,
+            "maxRatio": 0.967547121833381,
+            "p05": 0,
+            "p95": 0.9606841497887838,
+            "fails": [
+              {
+                "beat": 5,
+                "ratio": 0
+              },
+              {
+                "beat": 14,
+                "ratio": 0
+              },
+              {
+                "beat": 22,
+                "ratio": 0
+              },
+              {
+                "beat": 27,
+                "ratio": 0
+              },
+              {
+                "beat": 41,
+                "ratio": 0
+              },
+              {
+                "beat": 71,
+                "ratio": 0
+              },
+              {
+                "beat": 80,
+                "ratio": 0
+              },
+              {
+                "beat": 90,
+                "ratio": 0
+              },
+              {
+                "beat": 100,
+                "ratio": 0
+              },
+              {
+                "beat": 126,
+                "ratio": 0
+              },
+              {
+                "beat": 142,
+                "ratio": 0
+              },
+              {
+                "beat": 148,
+                "ratio": 0
+              }
+            ]
+          },
+          "B": {
+            "n": 160,
+            "pass": 0,
+            "passRate": 0,
+            "meanRatio": 0.7692621536437501,
+            "sdRatio": 0.2228680048097909,
+            "minRatio": 0,
+            "maxRatio": 0.8637201614697562,
+            "p05": 0,
+            "p95": 0.8559570001908275,
+            "fails": [
+              {
+                "beat": 5,
+                "ratio": 0
+              },
+              {
+                "beat": 14,
+                "ratio": 0
+              },
+              {
+                "beat": 22,
+                "ratio": 0
+              },
+              {
+                "beat": 27,
+                "ratio": 0
+              },
+              {
+                "beat": 41,
+                "ratio": 0
+              },
+              {
+                "beat": 71,
+                "ratio": 0
+              },
+              {
+                "beat": 80,
+                "ratio": 0
+              },
+              {
+                "beat": 90,
+                "ratio": 0
+              },
+              {
+                "beat": 100,
+                "ratio": 0
+              },
+              {
+                "beat": 126,
+                "ratio": 0
+              },
+              {
+                "beat": 142,
+                "ratio": 0
+              },
+              {
+                "beat": 148,
+                "ratio": 0
+              }
+            ]
+          },
+          "C": {
+            "n": 160,
+            "pass": 0,
+            "passRate": 0,
+            "meanRatio": 0.7525332574373137,
+            "sdRatio": 0.21809246711102356,
+            "minRatio": 0,
+            "maxRatio": 0.8465878389116684,
+            "p05": 0,
+            "p95": 0.8406111254382358,
+            "fails": [
+              {
+                "beat": 5,
+                "ratio": 0
+              },
+              {
+                "beat": 14,
+                "ratio": 0
+              },
+              {
+                "beat": 22,
+                "ratio": 0
+              },
+              {
+                "beat": 27,
+                "ratio": 0
+              },
+              {
+                "beat": 41,
+                "ratio": 0
+              },
+              {
+                "beat": 71,
+                "ratio": 0
+              },
+              {
+                "beat": 80,
+                "ratio": 0
+              },
+              {
+                "beat": 90,
+                "ratio": 0
+              },
+              {
+                "beat": 100,
+                "ratio": 0
+              },
+              {
+                "beat": 126,
+                "ratio": 0
+              },
+              {
+                "beat": 142,
+                "ratio": 0
+              },
+              {
+                "beat": 148,
+                "ratio": 0
+              }
+            ]
+          },
+          "D": {
+            "n": 160,
+            "pass": 92,
+            "passRate": 0.575,
+            "meanRatio": 0.8791434556199567,
+            "sdRatio": 0.25470272887523615,
+            "minRatio": 0,
+            "maxRatio": 0.9871189726963542,
+            "p05": 0,
+            "p95": 0.9782456586731124,
+            "fails": [
+              {
+                "beat": 5,
+                "ratio": 0
+              },
+              {
+                "beat": 14,
+                "ratio": 0
+              },
+              {
+                "beat": 22,
+                "ratio": 0
+              },
+              {
+                "beat": 27,
+                "ratio": 0
+              },
+              {
+                "beat": 41,
+                "ratio": 0
+              },
+              {
+                "beat": 71,
+                "ratio": 0
+              },
+              {
+                "beat": 80,
+                "ratio": 0
+              },
+              {
+                "beat": 90,
+                "ratio": 0
+              },
+              {
+                "beat": 100,
+                "ratio": 0
+              },
+              {
+                "beat": 126,
+                "ratio": 0
+              },
+              {
+                "beat": 142,
+                "ratio": 0
+              },
+              {
+                "beat": 148,
+                "ratio": 0
+              }
+            ]
+          }
+        },
+        "pop": {
+          "nCells": 160,
+          "perModel": {
+            "A": {
+              "n": 160,
+              "inInterval": 4,
+              "within5": 61,
+              "meanRatio": 1.0847,
+              "perLaneMeanRatio": {
+                "1": 1.0069,
+                "2": 1.0681,
+                "3": 1.0285,
+                "4": 1.2171,
+                "5": 1.103
+              }
+            },
+            "B": {
+              "n": 160,
+              "inInterval": 0,
+              "within5": 0,
+              "meanRatio": 1.2072,
+              "perLaneMeanRatio": {
+                "1": 1.1506,
+                "2": 1.2205,
+                "3": 1.1754,
+                "4": 1.2289,
+                "5": 1.2605
+              }
+            },
+            "C": {
+              "n": 160,
+              "inInterval": 0,
+              "within5": 0,
+              "meanRatio": 1.2396,
+              "perLaneMeanRatio": {
+                "1": 1.1506,
+                "2": 1.2205,
+                "3": 1.1754,
+                "4": 1.391,
+                "5": 1.2605
+              }
+            },
+            "D": {
+              "n": 160,
+              "inInterval": 4,
+              "within5": 70,
+              "meanRatio": 1.0563,
+              "perLaneMeanRatio": {
+                "1": 1.0069,
+                "2": 1.0681,
+                "3": 1.0285,
+                "4": 1.0753,
+                "5": 1.103
+              }
+            }
+          }
+        },
+        "classMismatch": {
+          "simActNoMeas": 0,
+          "measActNoSim": 1
+        },
+        "beatShareOfWhite": 1,
+        "rows": [
+          {
+            "beat": 2,
+            "group": "skill",
+            "meas": 203958,
+            "measAct": true,
+            "simAct": [
+              "P",
+              "P"
+            ],
+            "measBeatKind": 203958
+          },
+          {
+            "beat": 3,
+            "group": "white",
+            "meas": 76895,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 76895
+          },
+          {
+            "beat": 4,
+            "group": "white_crit",
+            "meas": 106917,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 106917
+          },
+          {
+            "beat": 5,
+            "group": "skill",
+            "meas": 507773,
+            "measAct": true,
+            "simAct": [
+              "A"
+            ],
+            "measBeatKind": 7636
+          },
+          {
+            "beat": 6,
+            "group": "white_crit",
+            "meas": 102880,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 102880
+          },
+          {
+            "beat": 7,
+            "group": "white_crit",
+            "meas": 103427,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 103427
+          },
+          {
+            "beat": 8,
+            "group": "white_crit",
+            "meas": 103603,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 103603
+          },
+          {
+            "beat": 9,
+            "group": "white_crit",
+            "meas": 119581,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 119581
+          },
+          {
+            "beat": 10,
+            "group": "skill",
+            "meas": 2914212,
+            "measAct": true,
+            "simAct": [
+              "A"
+            ],
+            "measBeatKind": -41444
+          },
+          {
+            "beat": 11,
+            "group": "white_crit",
+            "meas": 107550,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 107550
+          },
+          {
+            "beat": 12,
+            "group": "white_crit",
+            "meas": 132681,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 132681
+          },
+          {
+            "beat": 13,
+            "group": "white_crit",
+            "meas": 109103,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 109103
+          },
+          {
+            "beat": 14,
+            "group": "skill",
+            "meas": 2896874,
+            "measAct": true,
+            "simAct": [
+              "A"
+            ],
+            "measBeatKind": 133241
+          },
+          {
+            "beat": 15,
+            "group": "white_crit",
+            "meas": 113730,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 113730
+          },
+          {
+            "beat": 16,
+            "group": "white_crit",
+            "meas": 115094,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 115094
+          },
+          {
+            "beat": 17,
+            "group": "white_crit",
+            "meas": 116763,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 116763
+          },
+          {
+            "beat": 18,
+            "group": "white_crit",
+            "meas": 127477,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 127477
+          },
+          {
+            "beat": 19,
+            "group": "white_crit",
+            "meas": 90569,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 90569
+          },
+          {
+            "beat": 20,
+            "group": "white_crit",
+            "meas": 116083,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 116083
+          },
+          {
+            "beat": 21,
+            "group": "white_crit",
+            "meas": 120176,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 120176
+          },
+          {
+            "beat": 22,
+            "group": "skill",
+            "meas": 863257,
+            "measAct": true,
+            "simAct": [
+              "A"
+            ],
+            "measBeatKind": 15180
+          },
+          {
+            "beat": 23,
+            "group": "white_crit",
+            "meas": 125341,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 125341
+          },
+          {
+            "beat": 24,
+            "group": "white_crit",
+            "meas": 125176,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 125176
+          },
+          {
+            "beat": 25,
+            "group": "white_crit",
+            "meas": 133150,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 133150
+          },
+          {
+            "beat": 26,
+            "group": "white_crit",
+            "meas": 140188,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 140188
+          },
+          {
+            "beat": 27,
+            "group": "skill",
+            "meas": 489581,
+            "measAct": true,
+            "simAct": [
+              "A"
+            ],
+            "measBeatKind": 5448
+          },
+          {
+            "beat": 28,
+            "group": "white_crit",
+            "meas": 145282,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 145282
+          },
+          {
+            "beat": 29,
+            "group": "white_crit",
+            "meas": 138735,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 138735
+          },
+          {
+            "beat": 30,
+            "group": "white_crit",
+            "meas": 127203,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 127203
+          },
+          {
+            "beat": 31,
+            "group": "white_crit",
+            "meas": 132730,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 132730
+          },
+          {
+            "beat": 33,
+            "group": "white_crit",
+            "meas": 119750,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 119750
+          },
+          {
+            "beat": 34,
+            "group": "white",
+            "meas": 80315,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 80315
+          },
+          {
+            "beat": 35,
+            "group": "white_crit",
+            "meas": 112619,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 112619
+          },
+          {
+            "beat": 36,
+            "group": "white_crit",
+            "meas": 107215,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 107215
+          },
+          {
+            "beat": 37,
+            "group": "white_crit",
+            "meas": 112349,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 112349
+          },
+          {
+            "beat": 38,
+            "group": "white_crit",
+            "meas": 118452,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 118452
+          },
+          {
+            "beat": 39,
+            "group": "white_crit",
+            "meas": 121201,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 121201
+          },
+          {
+            "beat": 40,
+            "group": "white_crit",
+            "meas": 108200,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 108200
+          },
+          {
+            "beat": 41,
+            "group": "skill",
+            "meas": 3147521,
+            "measAct": true,
+            "simAct": [
+              "A"
+            ],
+            "measBeatKind": 256809
+          },
+          {
+            "beat": 42,
+            "group": "white_crit",
+            "meas": 107338,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 107338
+          },
+          {
+            "beat": 43,
+            "group": "white",
+            "meas": 80274,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 80274
+          },
+          {
+            "beat": 44,
+            "group": "white_crit",
+            "meas": 108907,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 108907
+          },
+          {
+            "beat": 45,
+            "group": "white_crit",
+            "meas": 121170,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 121170
+          },
+          {
+            "beat": 46,
+            "group": "white_crit",
+            "meas": 105300,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 105300
+          },
+          {
+            "beat": 47,
+            "group": "white_crit",
+            "meas": 90796,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 90796
+          },
+          {
+            "beat": 48,
+            "group": "white",
+            "meas": 76512,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 76512
+          },
+          {
+            "beat": 49,
+            "group": "white",
+            "meas": 77991,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 77991
+          },
+          {
+            "beat": 50,
+            "group": "skill",
+            "meas": 858939,
+            "measAct": true,
+            "simAct": [
+              "A",
+              "P",
+              "P",
+              "P"
+            ],
+            "measBeatKind": -20669
+          },
+          {
+            "beat": 51,
+            "group": "skill",
+            "meas": 78933,
+            "measAct": true,
+            "simAct": [
+              "P",
+              "P"
+            ],
+            "measBeatKind": 78933
+          },
+          {
+            "beat": 52,
+            "group": "white_crit",
+            "meas": 111166,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 111166
+          },
+          {
+            "beat": 53,
+            "group": "white",
+            "meas": 88461,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 88461
+          },
+          {
+            "beat": 54,
+            "group": "white_crit",
+            "meas": 131721,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 131721
+          },
+          {
+            "beat": 55,
+            "group": "skill",
+            "meas": 142350,
+            "measAct": true,
+            "simAct": [
+              "P"
+            ],
+            "measBeatKind": 142350
+          },
+          {
+            "beat": 56,
+            "group": "white_crit",
+            "meas": 134866,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 134866
+          },
+          {
+            "beat": 57,
+            "group": "white_crit",
+            "meas": 131768,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 131768
+          },
+          {
+            "beat": 58,
+            "group": "white",
+            "meas": 88613,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 88613
+          },
+          {
+            "beat": 59,
+            "group": "white_crit",
+            "meas": 117622,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 117622
+          },
+          {
+            "beat": 60,
+            "group": "white",
+            "meas": 87134,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 87134
+          },
+          {
+            "beat": 61,
+            "group": "white",
+            "meas": 88203,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 88203
+          },
+          {
+            "beat": 62,
+            "group": "white",
+            "meas": 86037,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 86037
+          },
+          {
+            "beat": 63,
+            "group": "white",
+            "meas": 92570,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 92570
+          },
+          {
+            "beat": 64,
+            "group": "white_crit",
+            "meas": 151372,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 151372
+          },
+          {
+            "beat": 65,
+            "group": "white_crit",
+            "meas": 123168,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 123168
+          },
+          {
+            "beat": 66,
+            "group": "white_crit",
+            "meas": 123170,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 123170
+          },
+          {
+            "beat": 67,
+            "group": "white_crit",
+            "meas": 124350,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 124350
+          },
+          {
+            "beat": 68,
+            "group": "white_crit",
+            "meas": 108656,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 108656
+          },
+          {
+            "beat": 69,
+            "group": "white_crit",
+            "meas": 106357,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 106357
+          },
+          {
+            "beat": 70,
+            "group": "white_crit",
+            "meas": 123754,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 123754
+          },
+          {
+            "beat": 71,
+            "group": "skill",
+            "meas": 885502,
+            "measAct": true,
+            "simAct": [
+              "A"
+            ],
+            "measBeatKind": 1040
+          },
+          {
+            "beat": 72,
+            "group": "white",
+            "meas": 94061,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 94061
+          },
+          {
+            "beat": 73,
+            "group": "white_crit",
+            "meas": 129546,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 129546
+          },
+          {
+            "beat": 74,
+            "group": "white",
+            "meas": 98195,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 98195
+          },
+          {
+            "beat": 75,
+            "group": "white_crit",
+            "meas": 146776,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 146776
+          },
+          {
+            "beat": 76,
+            "group": "white_crit",
+            "meas": 131664,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 131664
+          },
+          {
+            "beat": 77,
+            "group": "white",
+            "meas": 96151,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 96151
+          },
+          {
+            "beat": 78,
+            "group": "white",
+            "meas": 95743,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 95743
+          },
+          {
+            "beat": 79,
+            "group": "white",
+            "meas": 95969,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 95969
+          },
+          {
+            "beat": 80,
+            "group": "skill",
+            "meas": 617757,
+            "measAct": true,
+            "simAct": [
+              "A"
+            ],
+            "measBeatKind": 17592
+          },
+          {
+            "beat": 81,
+            "group": "white_crit",
+            "meas": 126019,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 126019
+          },
+          {
+            "beat": 82,
+            "group": "white_crit",
+            "meas": 127251,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 127251
+          },
+          {
+            "beat": 83,
+            "group": "white_crit",
+            "meas": 125844,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 125844
+          },
+          {
+            "beat": 84,
+            "group": "white_crit",
+            "meas": 129147,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 129147
+          },
+          {
+            "beat": 85,
+            "group": "white_crit",
+            "meas": 124582,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 124582
+          },
+          {
+            "beat": 86,
+            "group": "white",
+            "meas": 92048,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 92048
+          },
+          {
+            "beat": 87,
+            "group": "white",
+            "meas": 93479,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 93479
+          },
+          {
+            "beat": 88,
+            "group": "skill",
+            "meas": 2573284,
+            "measAct": true,
+            "simAct": [
+              "A"
+            ],
+            "measBeatKind": -23912
+          },
+          {
+            "beat": 89,
+            "group": "white_crit",
+            "meas": 126172,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 126172
+          },
+          {
+            "beat": 90,
+            "group": "skill",
+            "meas": 29538545,
+            "measAct": true,
+            "simAct": [
+              "P",
+              "SP"
+            ],
+            "measBeatKind": 784770
+          },
+          {
+            "beat": 91,
+            "group": "white_crit",
+            "meas": 138858,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 138858
+          },
+          {
+            "beat": 92,
+            "group": "white_crit",
+            "meas": 125287,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 125287
+          },
+          {
+            "beat": 93,
+            "group": "white_crit",
+            "meas": 148922,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 148922
+          },
+          {
+            "beat": 94,
+            "group": "white",
+            "meas": 95433,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 95433
+          },
+          {
+            "beat": 95,
+            "group": "white_crit",
+            "meas": 128478,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 128478
+          },
+          {
+            "beat": 96,
+            "group": "white",
+            "meas": 93403,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 93403
+          },
+          {
+            "beat": 97,
+            "group": "white_crit",
+            "meas": 112892,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 112892
+          },
+          {
+            "beat": 98,
+            "group": "white",
+            "meas": 90467,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 90467
+          },
+          {
+            "beat": 99,
+            "group": "white",
+            "meas": 91027,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 91027
+          },
+          {
+            "beat": 100,
+            "group": "skill",
+            "meas": 2712868,
+            "measAct": true,
+            "simAct": [
+              "A",
+              "P",
+              "P",
+              "P"
+            ],
+            "measBeatKind": 32495
+          },
+          {
+            "beat": 101,
+            "group": "skill",
+            "meas": 101945,
+            "measAct": true,
+            "simAct": [
+              "P",
+              "P"
+            ],
+            "measBeatKind": 101945
+          },
+          {
+            "beat": 102,
+            "group": "white_crit",
+            "meas": 136857,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 136857
+          },
+          {
+            "beat": 103,
+            "group": "white",
+            "meas": 98033,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 98033
+          },
+          {
+            "beat": 104,
+            "group": "white_crit",
+            "meas": 143095,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 143095
+          },
+          {
+            "beat": 105,
+            "group": "white",
+            "meas": 99365,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 99365
+          },
+          {
+            "beat": 106,
+            "group": "white_crit",
+            "meas": 140127,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 140127
+          },
+          {
+            "beat": 107,
+            "group": "white_crit",
+            "meas": 139676,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 139676
+          },
+          {
+            "beat": 108,
+            "group": "white_crit",
+            "meas": 143484,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 143484
+          },
+          {
+            "beat": 109,
+            "group": "white_crit",
+            "meas": 138036,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 138036
+          },
+          {
+            "beat": 110,
+            "group": "skill",
+            "meas": 141598,
+            "measAct": true,
+            "simAct": [
+              "P"
+            ],
+            "measBeatKind": 141598
+          },
+          {
+            "beat": 111,
+            "group": "white_crit",
+            "meas": 142437,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 142437
+          },
+          {
+            "beat": 112,
+            "group": "skill",
+            "meas": 1050563,
+            "measAct": true,
+            "simAct": [
+              "A"
+            ],
+            "measBeatKind": -9605
+          },
+          {
+            "beat": 113,
+            "group": "white_crit",
+            "meas": 144291,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 144291
+          },
+          {
+            "beat": 114,
+            "group": "white_crit",
+            "meas": 190572,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 190572
+          },
+          {
+            "beat": 115,
+            "group": "white_crit",
+            "meas": 142890,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 142890
+          },
+          {
+            "beat": 116,
+            "group": "white_crit",
+            "meas": 143268,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 143268
+          },
+          {
+            "beat": 117,
+            "group": "white",
+            "meas": 100380,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 100380
+          },
+          {
+            "beat": 118,
+            "group": "white_crit",
+            "meas": 157210,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 157210
+          },
+          {
+            "beat": 119,
+            "group": "white_crit",
+            "meas": 143602,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 143602
+          },
+          {
+            "beat": 120,
+            "group": "white_crit",
+            "meas": 143471,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 143471
+          },
+          {
+            "beat": 121,
+            "group": "white_crit",
+            "meas": 139203,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 139203
+          },
+          {
+            "beat": 122,
+            "group": "white_crit",
+            "meas": 141949,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 141949
+          },
+          {
+            "beat": 123,
+            "group": "white_crit",
+            "meas": 134192,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 134192
+          },
+          {
+            "beat": 124,
+            "group": "white_crit",
+            "meas": 142662,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 142662
+          },
+          {
+            "beat": 125,
+            "group": "white_crit",
+            "meas": 153371,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 153371
+          },
+          {
+            "beat": 126,
+            "group": "skill",
+            "meas": 2027569,
+            "measAct": true,
+            "simAct": [
+              "A"
+            ],
+            "measBeatKind": 21713
+          },
+          {
+            "beat": 127,
+            "group": "white_crit",
+            "meas": 160000,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 160000
+          },
+          {
+            "beat": 128,
+            "group": "white",
+            "meas": 100845,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 100845
+          },
+          {
+            "beat": 129,
+            "group": "white_crit",
+            "meas": 112880,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 112880
+          },
+          {
+            "beat": 130,
+            "group": "white_crit",
+            "meas": 142684,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 142684
+          },
+          {
+            "beat": 131,
+            "group": "white_crit",
+            "meas": 132426,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 132426
+          },
+          {
+            "beat": 132,
+            "group": "white_crit",
+            "meas": 136242,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 136242
+          },
+          {
+            "beat": 133,
+            "group": "white_crit",
+            "meas": 165631,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 165631
+          },
+          {
+            "beat": 134,
+            "group": "white_crit",
+            "meas": 153391,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 153391
+          },
+          {
+            "beat": 135,
+            "group": "skill",
+            "meas": 751252,
+            "measAct": true,
+            "simAct": [
+              "A"
+            ],
+            "measBeatKind": -6219
+          },
+          {
+            "beat": 136,
+            "group": "white_crit",
+            "meas": 172131,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 172131
+          },
+          {
+            "beat": 137,
+            "group": "white_crit",
+            "meas": 145183,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 145183
+          },
+          {
+            "beat": 138,
+            "group": "white_crit",
+            "meas": 163775,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 163775
+          },
+          {
+            "beat": 139,
+            "group": "white_crit",
+            "meas": 144077,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 144077
+          },
+          {
+            "beat": 140,
+            "group": "white_crit",
+            "meas": 146353,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 146353
+          },
+          {
+            "beat": 141,
+            "group": "white_crit",
+            "meas": 143400,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 143400
+          },
+          {
+            "beat": 142,
+            "group": "skill",
+            "meas": 3915708,
+            "measAct": true,
+            "simAct": [
+              "A"
+            ],
+            "measBeatKind": 35894
+          },
+          {
+            "beat": 143,
+            "group": "white",
+            "meas": 110383,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 110383
+          },
+          {
+            "beat": 144,
+            "group": "white_crit",
+            "meas": 143473,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 143473
+          },
+          {
+            "beat": 145,
+            "group": "white_crit",
+            "meas": 181656,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 181656
+          },
+          {
+            "beat": 146,
+            "group": "white_crit",
+            "meas": 158500,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 158500
+          },
+          {
+            "beat": 147,
+            "group": "white",
+            "meas": 109827,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 109827
+          },
+          {
+            "beat": 148,
+            "group": "skill",
+            "meas": 3238448,
+            "measAct": true,
+            "simAct": [
+              "A"
+            ],
+            "measBeatKind": 130700
+          },
+          {
+            "beat": 149,
+            "group": "white",
+            "meas": 109146,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 109146
+          },
+          {
+            "beat": 150,
+            "group": "skill",
+            "meas": 130271,
+            "measAct": true,
+            "simAct": [
+              "P",
+              "P",
+              "P"
+            ],
+            "measBeatKind": 130271
+          },
+          {
+            "beat": 151,
+            "group": "skill",
+            "meas": 155863,
+            "measAct": true,
+            "simAct": [
+              "P",
+              "P"
+            ],
+            "measBeatKind": 155863
+          },
+          {
+            "beat": 152,
+            "group": "white",
+            "meas": 117123,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 117123
+          },
+          {
+            "beat": 153,
+            "group": "white_crit",
+            "meas": 188906,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 188906
+          },
+          {
+            "beat": 154,
+            "group": "white_crit",
+            "meas": 174890,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 174890
+          },
+          {
+            "beat": 155,
+            "group": "white_crit",
+            "meas": 204409,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 204409
+          },
+          {
+            "beat": 156,
+            "group": "white",
+            "meas": 116078,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 116078
+          },
+          {
+            "beat": 157,
+            "group": "white_crit",
+            "meas": 162183,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 162183
+          },
+          {
+            "beat": 158,
+            "group": "white_crit",
+            "meas": 159107,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 159107
+          },
+          {
+            "beat": 159,
+            "group": "white_crit",
+            "meas": 160256,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 160256
+          },
+          {
+            "beat": 160,
+            "group": "white_crit",
+            "meas": 164410,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 164410
+          },
+          {
+            "beat": 161,
+            "group": "white_crit",
+            "meas": 160906,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 160906
+          },
+          {
+            "beat": 162,
+            "group": "white_crit",
+            "meas": 161886,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 161886
+          },
+          {
+            "beat": 163,
+            "group": "white_crit",
+            "meas": 177224,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 177224
+          },
+          {
+            "beat": 164,
+            "group": "white_crit",
+            "meas": 161353,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 161353
+          },
+          {
+            "beat": 165,
+            "group": "skill",
+            "meas": 158436,
+            "measAct": true,
+            "simAct": [
+              "P"
+            ],
+            "measBeatKind": 158436
+          },
+          {
+            "beat": 166,
+            "group": "white",
+            "meas": 112904,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 112904
+          },
+          {
+            "beat": 167,
+            "group": "white_crit",
+            "meas": 162442,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 162442
+          }
+        ]
+      },
+      "gap": null
+    },
+    {
+      "tag": "S3",
+      "label": "S3（EXタワーSTAGE045・4BEAT・char優位2250‰）",
+      "storedTrace": {
+        "path": "research/21_sample3_gap_analysis/sim_trace_full.json",
+        "exists": true,
+        "totalScore": 78485270,
+        "note": "research/24_result_vs_pop_sum/s3_full_trace.json に neutral/replay 合計値の記録あり"
+      },
+      "photoBeatTerms": [
+        {
+          "lane": 1,
+          "items": [],
+          "fixedItems": [],
+          "fixedSum": 0,
+          "fixedMax": 0,
+          "maxPct": 0,
+          "sumPct": 0
+        },
+        {
+          "lane": 2,
+          "items": [],
+          "fixedItems": [
+            {
+              "name": "フォト2 (Quality 170)",
+              "value": 1300
+            },
+            {
+              "name": "フォト3 (Quality 155)",
+              "value": 1148
+            },
+            {
+              "name": "フォト4 (Quality 150)",
+              "value": 1150
+            }
+          ],
+          "fixedSum": 3598,
+          "fixedMax": 1300,
+          "maxPct": 0,
+          "sumPct": 0
+        },
+        {
+          "lane": 3,
+          "items": [
+            {
+              "name": "フォト4 (Quality 170)",
+              "pct": 24.9
+            }
+          ],
+          "fixedItems": [
+            {
+              "name": "フォト3 (Quality 150)",
+              "value": 920
+            }
+          ],
+          "fixedSum": 920,
+          "fixedMax": 920,
+          "maxPct": 24.9,
+          "sumPct": 24.9
+        },
+        {
+          "lane": 4,
+          "items": [
+            {
+              "name": "フォト2 (Quality 150)",
+              "pct": 17.5
+            },
+            {
+              "name": "フォト4 (Quality 140)",
+              "pct": 19.3
+            }
+          ],
+          "fixedItems": [],
+          "fixedSum": 0,
+          "fixedMax": 0,
+          "maxPct": 19.3,
+          "sumPct": 36.8
+        },
+        {
+          "lane": 5,
+          "items": [],
+          "fixedItems": [],
+          "fixedSum": 0,
+          "fixedMax": 0,
+          "maxPct": 0,
+          "sumPct": 0
+        }
+      ],
+      "measCoverage": {
+        "popCells": 733,
+        "statCells": 850,
+        "effectCells": 623,
+        "actDetailBeats": 32
+      },
+      "laneDiag": [
+        {
+          "lane": 1,
+          "n": 124,
+          "attribute": "visual",
+          "ratioMean": 0.9590162080665035,
+          "ratioMin": 0.9028834683887952,
+          "ratioMax": 1.0837255387664106,
+          "basicMean": 18715.9435483871,
+          "basicSumMean": 327542.3951612903,
+          "b1Mean": 1060,
+          "comboMean": 1042.741935483871,
+          "fanMean": 1361.1774193548388,
+          "stage": 1000,
+          "adv": 1000,
+          "photoFixedSum": 0,
+          "photoFixedMax": 0,
+          "photoPctMax": 0,
+          "photoPctSum": 0,
+          "measStatMean": 176747.54032258064,
+          "simStatMean": 176747.54032258064,
+          "statRatioMean": 1,
+          "statMatch": 124,
+          "effectMatchCells": 50,
+          "effectDiffCells": 26,
+          "effectDiffTop": [
+            "ビジュアル上昇上限開放(実測10/sim?)×26"
+          ],
+          "dBasicMean": -761.0215486935352,
+          "dBasicSd": 601.0948382796806,
+          "dB1Mean": -43.44281944950652,
+          "dFanMean": -55.80299437786903,
+          "dComboMean": -42.56143568604472,
+          "dAdvMean": -40.98379193349674,
+          "ratioMeanPhotoSum": 0.9590162080665035,
+          "ratioMeanFixedA": 0.9590162080665035,
+          "ratioMeanFixedABasic": 0.9590162080665035,
+          "ratioMeanFixedDBasic": 0.9590162080665035,
+          "ratioSdFixedDBasic": 0.0323290402178108,
+          "ratioMeanFixedD": 0.9590162080665035,
+          "ratioSdFixedD": 0.0323290402178108,
+          "impliedFanMean": 1305.3744249769702,
+          "impliedAdvMean": 959.0162080665034
+        },
+        {
+          "lane": 2,
+          "n": 108,
+          "attribute": "vocal",
+          "ratioMean": 1.0914973137942074,
+          "ratioMin": 1.0200707601759085,
+          "ratioMax": 1.1701427003293086,
+          "basicMean": 17032.38888888889,
+          "basicSumMean": 298072.39814814815,
+          "b1Mean": 1060,
+          "comboMean": 1041.6666666666667,
+          "fanMean": 1360.7037037037037,
+          "stage": 1000,
+          "adv": 1000,
+          "photoFixedSum": 3598,
+          "photoFixedMax": 1300,
+          "photoPctMax": 0,
+          "photoPctSum": 0,
+          "measStatMean": 288183.3611111111,
+          "simStatMean": 288183.3611111111,
+          "statRatioMean": 1,
+          "statMatch": 108,
+          "effectMatchCells": 97,
+          "effectDiffCells": 0,
+          "effectDiffTop": [],
+          "dBasicMean": 1539.957595208271,
+          "dBasicSd": 533.7381355802015,
+          "dB1Mean": 96.98715262186023,
+          "dFanMean": 124.51163264722112,
+          "dComboMean": 94.75584590559508,
+          "dAdvMean": 91.49731379420776,
+          "ratioMeanPhotoSum": 1.0914973137942074,
+          "ratioMeanFixedA": 0.9494816403382331,
+          "ratioMeanFixedABasic": 0.9004221248853739,
+          "ratioMeanFixedDBasic": 0.9004221248853739,
+          "ratioSdFixedDBasic": 0.02470428345392024,
+          "ratioMeanFixedD": 0.9494816403382331,
+          "ratioSdFixedD": 0.030415716317084503,
+          "impliedFanMean": 1485.2153363509244,
+          "impliedAdvMean": 1091.4973137942084
+        },
+        {
+          "lane": 3,
+          "n": 99,
+          "attribute": "visual",
+          "ratioMean": 0.972567703821512,
+          "ratioMin": 0.9145647721902295,
+          "ratioMax": 1.1526922469603664,
+          "basicMean": 18491.333333333332,
+          "basicSumMean": 323608.23232323234,
+          "b1Mean": 1379.7070707070707,
+          "comboMean": 1043.4343434343434,
+          "fanMean": 1524.4949494949494,
+          "stage": 1000,
+          "adv": 1000,
+          "photoFixedSum": 920,
+          "photoFixedMax": 920,
+          "photoPctMax": 24.9,
+          "photoPctSum": 24.9,
+          "measStatMean": 172933,
+          "simStatMean": 172933,
+          "statRatioMean": 1,
+          "statMatch": 99,
+          "effectMatchCells": 56,
+          "effectDiffCells": 43,
+          "effectDiffTop": [
+            "スタミナ継続回復(実測3/sim?)×43",
+            "ボーカル上昇(実測7/sim3)×2"
+          ],
+          "dBasicMean": -510.79797714666205,
+          "dBasicSd": 714.5437190952692,
+          "dB1Mean": -38.56542367077717,
+          "dFanMean": -42.47304380917753,
+          "dComboMean": -28.803749577357113,
+          "dAdvMean": -27.432296178488087,
+          "ratioMeanPhotoSum": 0.972567703821512,
+          "ratioMeanFixedA": 0.949361642305813,
+          "ratioMeanFixedABasic": 0.9263146846123597,
+          "ratioMeanFixedDBasic": 0.9263146846123597,
+          "ratioSdFixedDBasic": 0.0356418812661671,
+          "ratioMeanFixedD": 0.949361642305813,
+          "ratioSdFixedD": 0.03696732890476195,
+          "impliedFanMean": 1482.0219056857711,
+          "impliedAdvMean": 972.5677038215118
+        },
+        {
+          "lane": 4,
+          "n": 132,
+          "attribute": "visual",
+          "ratioMean": 1.0930691372084609,
+          "ratioMin": 1.0188910783608067,
+          "ratioMax": 1.4867268153032012,
+          "basicMean": 38066.833333333336,
+          "basicSumMean": 666177.7045454546,
+          "b1Mean": 1267.7727272727273,
+          "comboMean": 1046.2121212121212,
+          "fanMean": 1360.871212121212,
+          "stage": 1000,
+          "adv": 1000,
+          "photoFixedSum": 0,
+          "photoFixedMax": 0,
+          "photoPctMax": 19.3,
+          "photoPctSum": 36.8,
+          "measStatMean": 460057.0833333333,
+          "simStatMean": 460057.0833333333,
+          "statRatioMean": 1,
+          "statMatch": 132,
+          "effectMatchCells": 35,
+          "effectDiffCells": 74,
+          "effectDiffTop": [
+            "ビジュアル上昇超化(実測10/sim5)×67",
+            "ビジュアル上昇上限開放(実測10/sim?)×27",
+            "ボーカルブースト(実測5/sim0)×1"
+          ],
+          "dBasicMean": 3446.1363414991333,
+          "dBasicSd": 2493.1453425127684,
+          "dB1Mean": 117.6650680068154,
+          "dFanMean": 126.61140942899031,
+          "dComboMean": 97.91150040431893,
+          "dAdvMean": 93.06913720846099,
+          "ratioMeanPhotoSum": 0.9604262187095468,
+          "ratioMeanFixedA": 1.0930691372084609,
+          "ratioMeanFixedABasic": 1.0930691372084609,
+          "ratioMeanFixedDBasic": 0.9604262187095468,
+          "ratioSdFixedDBasic": 0.05953362457083067,
+          "ratioMeanFixedD": 0.9604262187095468,
+          "ratioSdFixedD": 0.05953362457083067,
+          "impliedFanMean": 1487.4826215502017,
+          "impliedAdvMean": 1093.0691372084614
+        },
+        {
+          "lane": 5,
+          "n": 130,
+          "attribute": "visual",
+          "ratioMean": 0.9443370619289652,
+          "ratioMin": 0.8980228404688836,
+          "ratioMax": 0.9947964493419039,
+          "basicMean": 18184,
+          "basicSumMean": 318224,
+          "b1Mean": 1060,
+          "comboMean": 1046.5384615384614,
+          "fanMean": 1360.8692307692309,
+          "stage": 1000,
+          "adv": 2250,
+          "photoFixedSum": 0,
+          "photoFixedMax": 0,
+          "photoPctMax": 0,
+          "photoPctSum": 0,
+          "measStatMean": 150074,
+          "simStatMean": 150074,
+          "statRatioMean": 1,
+          "statMatch": 130,
+          "effectMatchCells": 0,
+          "effectDiffCells": 30,
+          "effectDiffTop": [
+            "スタミナ継続回復(実測3/sim?)×30"
+          ],
+          "dBasicMean": -1012.1748658836905,
+          "dBasicSd": 523.0402114874615,
+          "dB1Mean": -59.002714355296526,
+          "dFanMean": -75.74540946944435,
+          "dComboMean": -58.613517410112664,
+          "dAdvMean": -125.2416106598275,
+          "ratioMeanPhotoSum": 0.9443370619289652,
+          "ratioMeanFixedA": 0.9443370619289652,
+          "ratioMeanFixedABasic": 0.9443370619289652,
+          "ratioMeanFixedDBasic": 0.9443370619289652,
+          "ratioSdFixedDBasic": 0.028763759980612716,
+          "ratioMeanFixedD": 0.9443370619289652,
+          "ratioSdFixedD": 0.028763759980612716,
+          "impliedFanMean": 1285.1238212997862,
+          "impliedAdvMean": 2124.7583893401734
+        }
+      ],
+      "lanePhotoDeltaPermil": [
+        {
+          "lane": 1,
+          "adv": 1000,
+          "photoDeltaPermil": 0
+        },
+        {
+          "lane": 2,
+          "adv": 1000,
+          "photoDeltaPermil": 0
+        },
+        {
+          "lane": 3,
+          "adv": 1000,
+          "photoDeltaPermil": 0
+        },
+        {
+          "lane": 4,
+          "adv": 1000,
+          "photoDeltaPermil": 175
+        },
+        {
+          "lane": 5,
+          "adv": 2250,
+          "photoDeltaPermil": 0
+        }
+      ],
+      "analysis": {
+        "tag": "S3",
+        "label": "S3（EXタワーSTAGE045・4BEAT・char優位2250‰）",
+        "totals": {
+          "meas": 79411389,
+          "simNeutral": 65954705,
+          "simReplay": 78485270,
+          "modelNeutral": {
+            "A": 65954705,
+            "B": 62985217,
+            "C": 61741607,
+            "D": 67375968
+          },
+          "modelReplay": {
+            "A": 78485270,
+            "B": 75228862,
+            "C": 73921942,
+            "D": 79978888
+          },
+          "replayGap": -926119,
+          "replayGapPct": -0.01166229443486999,
+          "critPremiumSim": 12530565,
+          "recordedConfirmed": 72176945,
+          "impliedPremiumOfRecord": 7234444,
+          "storedTraceTotal": 78485270
+        },
+        "selfCheck": {
+          "beatEvents": 740,
+          "otherEvents": 16,
+          "mismatchCells": 0,
+          "unverifiedCells": 0,
+          "sample": []
+        },
+        "counts": {
+          "white": 70,
+          "white_crit": 67,
+          "skill": 22,
+          "empty": 11
+        },
+        "groups": {
+          "white": {
+            "nBeats": 70,
+            "perModel": {
+              "A": {
+                "n": 70,
+                "pass": 67,
+                "passRate": 0.9571428571428572,
+                "meanRatio": 0.9896521625252784,
+                "sdRatio": 0.01817323905089299,
+                "minRatio": 0.9057602416684548,
+                "maxRatio": 1.021739595867036,
+                "p05": 0.9593101143975434,
+                "p95": 1.0134530358405718,
+                "fails": [
+                  {
+                    "beat": 90,
+                    "ratio": 0.9058
+                  },
+                  {
+                    "beat": 40,
+                    "ratio": 0.9315
+                  },
+                  {
+                    "beat": 72,
+                    "ratio": 0.9457
+                  }
+                ]
+              },
+              "B": {
+                "n": 70,
+                "pass": 0,
+                "passRate": 0,
+                "meanRatio": 0.901369243884322,
+                "sdRatio": 0.017184286529913426,
+                "minRatio": 0.8285138483934349,
+                "maxRatio": 0.937567822289643,
+                "p05": 0.8755501105789883,
+                "p95": 0.9234511274295496,
+                "fails": [
+                  {
+                    "beat": 90,
+                    "ratio": 0.8285
+                  },
+                  {
+                    "beat": 40,
+                    "ratio": 0.842
+                  },
+                  {
+                    "beat": 72,
+                    "ratio": 0.8662
+                  },
+                  {
+                    "beat": 57,
+                    "ratio": 0.8756
+                  },
+                  {
+                    "beat": 155,
+                    "ratio": 0.8759
+                  },
+                  {
+                    "beat": 163,
+                    "ratio": 0.8804
+                  },
+                  {
+                    "beat": 143,
+                    "ratio": 0.8822
+                  },
+                  {
+                    "beat": 166,
+                    "ratio": 0.8854
+                  },
+                  {
+                    "beat": 115,
+                    "ratio": 0.8865
+                  },
+                  {
+                    "beat": 88,
+                    "ratio": 0.89
+                  },
+                  {
+                    "beat": 137,
+                    "ratio": 0.8904
+                  },
+                  {
+                    "beat": 126,
+                    "ratio": 0.8918
+                  }
+                ]
+              },
+              "C": {
+                "n": 70,
+                "pass": 0,
+                "passRate": 0,
+                "meanRatio": 0.8659425293122183,
+                "sdRatio": 0.01589963510572734,
+                "minRatio": 0.792549677929662,
+                "maxRatio": 0.8940039479825467,
+                "p05": 0.8393915769041065,
+                "p95": 0.8867666826821855,
+                "fails": [
+                  {
+                    "beat": 90,
+                    "ratio": 0.7925
+                  },
+                  {
+                    "beat": 40,
+                    "ratio": 0.8151
+                  },
+                  {
+                    "beat": 72,
+                    "ratio": 0.8275
+                  },
+                  {
+                    "beat": 57,
+                    "ratio": 0.8394
+                  },
+                  {
+                    "beat": 155,
+                    "ratio": 0.8464
+                  },
+                  {
+                    "beat": 88,
+                    "ratio": 0.848
+                  },
+                  {
+                    "beat": 143,
+                    "ratio": 0.8491
+                  },
+                  {
+                    "beat": 163,
+                    "ratio": 0.8512
+                  },
+                  {
+                    "beat": 80,
+                    "ratio": 0.8522
+                  },
+                  {
+                    "beat": 166,
+                    "ratio": 0.856
+                  },
+                  {
+                    "beat": 115,
+                    "ratio": 0.8564
+                  },
+                  {
+                    "beat": 10,
+                    "ratio": 0.8569
+                  }
+                ]
+              },
+              "D": {
+                "n": 70,
+                "pass": 63,
+                "passRate": 0.9,
+                "meanRatio": 1.0301393167040078,
+                "sdRatio": 0.019642398468749142,
+                "minRatio": 0.9468573424043151,
+                "maxRatio": 1.0715152015800482,
+                "p05": 1.0006364258325244,
+                "p95": 1.0553859491823079,
+                "fails": [
+                  {
+                    "beat": 18,
+                    "ratio": 1.0715
+                  },
+                  {
+                    "beat": 136,
+                    "ratio": 1.0593
+                  },
+                  {
+                    "beat": 47,
+                    "ratio": 1.056
+                  },
+                  {
+                    "beat": 26,
+                    "ratio": 1.0554
+                  },
+                  {
+                    "beat": 90,
+                    "ratio": 0.9469
+                  },
+                  {
+                    "beat": 55,
+                    "ratio": 1.052
+                  },
+                  {
+                    "beat": 52,
+                    "ratio": 1.0514
+                  }
+                ]
+              }
+            }
+          },
+          "white_crit": {
+            "nBeats": 67,
+            "perModel": {
+              "A": {
+                "n": 67,
+                "pass": 65,
+                "passRate": 0.9701492537313433,
+                "meanRatio": 0.9958975774522676,
+                "sdRatio": 0.022811203325117154,
+                "minRatio": 0.9116896490982426,
+                "maxRatio": 1.0369127151062045,
+                "p05": 0.9555187849770516,
+                "p95": 1.029558489726904,
+                "fails": [
+                  {
+                    "beat": 98,
+                    "ratio": 0.9117
+                  },
+                  {
+                    "beat": 39,
+                    "ratio": 0.9468
+                  }
+                ]
+              },
+              "B": {
+                "n": 67,
+                "pass": 0,
+                "passRate": 0,
+                "meanRatio": 0.9052227653467924,
+                "sdRatio": 0.019241269629404974,
+                "minRatio": 0.8231760470819915,
+                "maxRatio": 0.9470194826189464,
+                "p05": 0.8709681792914571,
+                "p95": 0.9322531800159258,
+                "fails": [
+                  {
+                    "beat": 98,
+                    "ratio": 0.8232
+                  },
+                  {
+                    "beat": 39,
+                    "ratio": 0.86
+                  },
+                  {
+                    "beat": 35,
+                    "ratio": 0.8674
+                  },
+                  {
+                    "beat": 22,
+                    "ratio": 0.871
+                  },
+                  {
+                    "beat": 89,
+                    "ratio": 0.8768
+                  },
+                  {
+                    "beat": 117,
+                    "ratio": 0.8829
+                  },
+                  {
+                    "beat": 102,
+                    "ratio": 0.8856
+                  },
+                  {
+                    "beat": 87,
+                    "ratio": 0.8857
+                  },
+                  {
+                    "beat": 46,
+                    "ratio": 0.8878
+                  },
+                  {
+                    "beat": 82,
+                    "ratio": 0.8923
+                  },
+                  {
+                    "beat": 110,
+                    "ratio": 0.8928
+                  },
+                  {
+                    "beat": 37,
+                    "ratio": 0.8929
+                  }
+                ]
+              },
+              "C": {
+                "n": 67,
+                "pass": 0,
+                "passRate": 0,
+                "meanRatio": 0.87140706989861,
+                "sdRatio": 0.019959261418980922,
+                "minRatio": 0.7977244908559582,
+                "maxRatio": 0.9072840945831563,
+                "p05": 0.8360675334316912,
+                "p95": 0.9008689230975787,
+                "fails": [
+                  {
+                    "beat": 98,
+                    "ratio": 0.7977
+                  },
+                  {
+                    "beat": 39,
+                    "ratio": 0.8285
+                  },
+                  {
+                    "beat": 22,
+                    "ratio": 0.8334
+                  },
+                  {
+                    "beat": 35,
+                    "ratio": 0.8361
+                  },
+                  {
+                    "beat": 64,
+                    "ratio": 0.8395
+                  },
+                  {
+                    "beat": 92,
+                    "ratio": 0.8398
+                  },
+                  {
+                    "beat": 37,
+                    "ratio": 0.8412
+                  },
+                  {
+                    "beat": 89,
+                    "ratio": 0.8432
+                  },
+                  {
+                    "beat": 87,
+                    "ratio": 0.8478
+                  },
+                  {
+                    "beat": 5,
+                    "ratio": 0.8526
+                  },
+                  {
+                    "beat": 82,
+                    "ratio": 0.8538
+                  },
+                  {
+                    "beat": 117,
+                    "ratio": 0.8551
+                  }
+                ]
+              },
+              "D": {
+                "n": 67,
+                "pass": 51,
+                "passRate": 0.7611940298507462,
+                "meanRatio": 1.0345440856020636,
+                "sdRatio": 0.021990604282085713,
+                "minRatio": 0.9407771419279949,
+                "maxRatio": 1.0823225112707113,
+                "p05": 0.99539704705994,
+                "p95": 1.0654157022440618,
+                "fails": [
+                  {
+                    "beat": 62,
+                    "ratio": 1.0823
+                  },
+                  {
+                    "beat": 76,
+                    "ratio": 1.0712
+                  },
+                  {
+                    "beat": 27,
+                    "ratio": 1.0705
+                  },
+                  {
+                    "beat": 139,
+                    "ratio": 1.0654
+                  },
+                  {
+                    "beat": 130,
+                    "ratio": 1.065
+                  },
+                  {
+                    "beat": 112,
+                    "ratio": 1.0605
+                  },
+                  {
+                    "beat": 98,
+                    "ratio": 0.9408
+                  },
+                  {
+                    "beat": 6,
+                    "ratio": 1.0582
+                  },
+                  {
+                    "beat": 67,
+                    "ratio": 1.0568
+                  },
+                  {
+                    "beat": 96,
+                    "ratio": 1.0567
+                  },
+                  {
+                    "beat": 99,
+                    "ratio": 1.0566
+                  },
+                  {
+                    "beat": 16,
+                    "ratio": 1.055
+                  }
+                ]
+              }
+            }
+          },
+          "skill": {
+            "nBeats": 22,
+            "perModel": {
+              "A": {
+                "n": 22,
+                "pass": 20,
+                "passRate": 0.9090909090909091,
+                "meanRatio": 0.9925953673423261,
+                "sdRatio": 0.03089127478697566,
+                "minRatio": 0.9357029467376248,
+                "maxRatio": 1.0465265795638814,
+                "p05": 0.9407665505226481,
+                "p95": 1.0438410651400747,
+                "fails": [
+                  {
+                    "beat": 73,
+                    "ratio": 0.9357
+                  },
+                  {
+                    "beat": 141,
+                    "ratio": 0.9408
+                  }
+                ]
+              },
+              "B": {
+                "n": 22,
+                "pass": 12,
+                "passRate": 0.5454545454545454,
+                "meanRatio": 0.953393513126693,
+                "sdRatio": 0.05276091939290224,
+                "minRatio": 0.8521070033468037,
+                "maxRatio": 1.0465265795638814,
+                "p05": 0.8850296903371448,
+                "p95": 1.0438410651400747,
+                "fails": [
+                  {
+                    "beat": 73,
+                    "ratio": 0.8521
+                  },
+                  {
+                    "beat": 141,
+                    "ratio": 0.885
+                  },
+                  {
+                    "beat": 53,
+                    "ratio": 0.8899
+                  },
+                  {
+                    "beat": 50,
+                    "ratio": 0.9032
+                  },
+                  {
+                    "beat": 3,
+                    "ratio": 0.9091
+                  },
+                  {
+                    "beat": 1,
+                    "ratio": 0.9124
+                  },
+                  {
+                    "beat": 13,
+                    "ratio": 0.9193
+                  },
+                  {
+                    "beat": 41,
+                    "ratio": 0.9221
+                  },
+                  {
+                    "beat": 61,
+                    "ratio": 0.932
+                  },
+                  {
+                    "beat": 71,
+                    "ratio": 0.9377
+                  }
+                ]
+              },
+              "C": {
+                "n": 22,
+                "pass": 12,
+                "passRate": 0.5454545454545454,
+                "meanRatio": 0.937616933164204,
+                "sdRatio": 0.06693945202404553,
+                "minRatio": 0.8187333376025022,
+                "maxRatio": 1.0465265795638814,
+                "p05": 0.8552486405548112,
+                "p95": 1.0438410651400747,
+                "fails": [
+                  {
+                    "beat": 73,
+                    "ratio": 0.8187
+                  },
+                  {
+                    "beat": 53,
+                    "ratio": 0.8552
+                  },
+                  {
+                    "beat": 141,
+                    "ratio": 0.8641
+                  },
+                  {
+                    "beat": 3,
+                    "ratio": 0.8693
+                  },
+                  {
+                    "beat": 1,
+                    "ratio": 0.8739
+                  },
+                  {
+                    "beat": 50,
+                    "ratio": 0.8771
+                  },
+                  {
+                    "beat": 13,
+                    "ratio": 0.8799
+                  },
+                  {
+                    "beat": 41,
+                    "ratio": 0.8927
+                  },
+                  {
+                    "beat": 61,
+                    "ratio": 0.895
+                  },
+                  {
+                    "beat": 71,
+                    "ratio": 0.9082
+                  }
+                ]
+              },
+              "D": {
+                "n": 22,
+                "pass": 19,
+                "passRate": 0.8636363636363636,
+                "meanRatio": 1.010625872854997,
+                "sdRatio": 0.03610053501995763,
+                "minRatio": 0.9541983950430357,
+                "maxRatio": 1.065142457740909,
+                "p05": 0.9647181871718113,
+                "p95": 1.053888360585379,
+                "fails": [
+                  {
+                    "beat": 61,
+                    "ratio": 1.0651
+                  },
+                  {
+                    "beat": 41,
+                    "ratio": 1.0539
+                  },
+                  {
+                    "beat": 13,
+                    "ratio": 1.0506
+                  }
+                ]
+              }
+            }
+          },
+          "empty": {
+            "nBeats": 11,
+            "perModel": {
+              "A": {
+                "n": 0,
+                "pass": 0,
+                "passRate": 0,
+                "meanRatio": 0,
+                "sdRatio": 0,
+                "minRatio": 0,
+                "maxRatio": 0,
+                "p05": 0,
+                "p95": 0,
+                "fails": []
+              },
+              "B": {
+                "n": 0,
+                "pass": 0,
+                "passRate": 0,
+                "meanRatio": 0,
+                "sdRatio": 0,
+                "minRatio": 0,
+                "maxRatio": 0,
+                "p05": 0,
+                "p95": 0,
+                "fails": []
+              },
+              "C": {
+                "n": 0,
+                "pass": 0,
+                "passRate": 0,
+                "meanRatio": 0,
+                "sdRatio": 0,
+                "minRatio": 0,
+                "maxRatio": 0,
+                "p05": 0,
+                "p95": 0,
+                "fails": []
+              },
+              "D": {
+                "n": 0,
+                "pass": 0,
+                "passRate": 0,
+                "meanRatio": 0,
+                "sdRatio": 0,
+                "minRatio": 0,
+                "maxRatio": 0,
+                "p05": 0,
+                "p95": 0,
+                "fails": []
+              }
+            }
+          }
+        },
+        "overall": {
+          "A": {
+            "n": 159,
+            "pass": 152,
+            "passRate": 0.9559748427672956,
+            "meanRatio": 0.9926911141358661,
+            "sdRatio": 0.02229076727163251,
+            "minRatio": 0.9057602416684548,
+            "maxRatio": 1.0465265795638814,
+            "p05": 0.9541983950430357,
+            "p95": 1.0258129313915596,
+            "fails": [
+              {
+                "beat": 90,
+                "ratio": 0.9058
+              },
+              {
+                "beat": 98,
+                "ratio": 0.9117
+              },
+              {
+                "beat": 40,
+                "ratio": 0.9315
+              },
+              {
+                "beat": 73,
+                "ratio": 0.9357
+              },
+              {
+                "beat": 141,
+                "ratio": 0.9408
+              },
+              {
+                "beat": 72,
+                "ratio": 0.9457
+              },
+              {
+                "beat": 39,
+                "ratio": 0.9468
+              }
+            ]
+          },
+          "B": {
+            "n": 159,
+            "pass": 12,
+            "passRate": 0.07547169811320754,
+            "meanRatio": 0.9101913813768863,
+            "sdRatio": 0.030958538134354917,
+            "minRatio": 0.8231760470819915,
+            "maxRatio": 1.0465265795638814,
+            "p05": 0.8755501105789883,
+            "p95": 0.9707950552895861,
+            "fails": [
+              {
+                "beat": 98,
+                "ratio": 0.8232
+              },
+              {
+                "beat": 90,
+                "ratio": 0.8285
+              },
+              {
+                "beat": 40,
+                "ratio": 0.842
+              },
+              {
+                "beat": 73,
+                "ratio": 0.8521
+              },
+              {
+                "beat": 39,
+                "ratio": 0.86
+              },
+              {
+                "beat": 72,
+                "ratio": 0.8662
+              },
+              {
+                "beat": 35,
+                "ratio": 0.8674
+              },
+              {
+                "beat": 22,
+                "ratio": 0.871
+              },
+              {
+                "beat": 57,
+                "ratio": 0.8756
+              },
+              {
+                "beat": 155,
+                "ratio": 0.8759
+              },
+              {
+                "beat": 89,
+                "ratio": 0.8768
+              },
+              {
+                "beat": 163,
+                "ratio": 0.8804
+              }
+            ]
+          },
+          "C": {
+            "n": 159,
+            "pass": 12,
+            "passRate": 0.07547169811320754,
+            "meanRatio": 0.8781624104696517,
+            "sdRatio": 0.03807979086109145,
+            "minRatio": 0.792549677929662,
+            "maxRatio": 1.0465265795638814,
+            "p05": 0.8393915769041065,
+            "p95": 0.9685361163724797,
+            "fails": [
+              {
+                "beat": 90,
+                "ratio": 0.7925
+              },
+              {
+                "beat": 98,
+                "ratio": 0.7977
+              },
+              {
+                "beat": 40,
+                "ratio": 0.8151
+              },
+              {
+                "beat": 73,
+                "ratio": 0.8187
+              },
+              {
+                "beat": 72,
+                "ratio": 0.8275
+              },
+              {
+                "beat": 39,
+                "ratio": 0.8285
+              },
+              {
+                "beat": 22,
+                "ratio": 0.8334
+              },
+              {
+                "beat": 35,
+                "ratio": 0.8361
+              },
+              {
+                "beat": 57,
+                "ratio": 0.8394
+              },
+              {
+                "beat": 64,
+                "ratio": 0.8395
+              },
+              {
+                "beat": 92,
+                "ratio": 0.8398
+              },
+              {
+                "beat": 37,
+                "ratio": 0.8412
+              }
+            ]
+          },
+          "D": {
+            "n": 159,
+            "pass": 133,
+            "passRate": 0.8364779874213837,
+            "meanRatio": 1.0292954409272246,
+            "sdRatio": 0.024581372135540146,
+            "minRatio": 0.9407771419279949,
+            "maxRatio": 1.0823225112707113,
+            "p05": 0.9738423530759923,
+            "p95": 1.0592605804265294,
+            "fails": [
+              {
+                "beat": 62,
+                "ratio": 1.0823
+              },
+              {
+                "beat": 18,
+                "ratio": 1.0715
+              },
+              {
+                "beat": 76,
+                "ratio": 1.0712
+              },
+              {
+                "beat": 27,
+                "ratio": 1.0705
+              },
+              {
+                "beat": 139,
+                "ratio": 1.0654
+              },
+              {
+                "beat": 61,
+                "ratio": 1.0651
+              },
+              {
+                "beat": 130,
+                "ratio": 1.065
+              },
+              {
+                "beat": 112,
+                "ratio": 1.0605
+              },
+              {
+                "beat": 136,
+                "ratio": 1.0593
+              },
+              {
+                "beat": 98,
+                "ratio": 0.9408
+              },
+              {
+                "beat": 6,
+                "ratio": 1.0582
+              },
+              {
+                "beat": 67,
+                "ratio": 1.0568
+              }
+            ]
+          }
+        },
+        "overallBeatKind": {
+          "A": {
+            "n": 155,
+            "pass": 141,
+            "passRate": 0.9096774193548387,
+            "meanRatio": 0.9476119433562019,
+            "sdRatio": 0.20787038968192237,
+            "minRatio": 0,
+            "maxRatio": 1.0369127151062045,
+            "p05": 0.9116896490982426,
+            "p95": 1.021739595867036,
+            "fails": [
+              {
+                "beat": 2,
+                "ratio": 0
+              },
+              {
+                "beat": 4,
+                "ratio": 0
+              },
+              {
+                "beat": 14,
+                "ratio": 0
+              },
+              {
+                "beat": 24,
+                "ratio": 0
+              },
+              {
+                "beat": 42,
+                "ratio": 0
+              },
+              {
+                "beat": 79,
+                "ratio": 0
+              },
+              {
+                "beat": 81,
+                "ratio": 0
+              },
+              {
+                "beat": 90,
+                "ratio": 0.9058
+              },
+              {
+                "beat": 98,
+                "ratio": 0.9117
+              },
+              {
+                "beat": 141,
+                "ratio": 0.912
+              },
+              {
+                "beat": 40,
+                "ratio": 0.9315
+              },
+              {
+                "beat": 73,
+                "ratio": 0.9357
+              }
+            ]
+          },
+          "B": {
+            "n": 155,
+            "pass": 0,
+            "passRate": 0,
+            "meanRatio": 0.8623294517377481,
+            "sdRatio": 0.18911696888579432,
+            "minRatio": 0,
+            "maxRatio": 0.9470194826189464,
+            "p05": 0.8285138483934349,
+            "p95": 0.927889337412902,
+            "fails": [
+              {
+                "beat": 2,
+                "ratio": 0
+              },
+              {
+                "beat": 4,
+                "ratio": 0
+              },
+              {
+                "beat": 14,
+                "ratio": 0
+              },
+              {
+                "beat": 24,
+                "ratio": 0
+              },
+              {
+                "beat": 42,
+                "ratio": 0
+              },
+              {
+                "beat": 79,
+                "ratio": 0
+              },
+              {
+                "beat": 81,
+                "ratio": 0
+              },
+              {
+                "beat": 98,
+                "ratio": 0.8232
+              },
+              {
+                "beat": 90,
+                "ratio": 0.8285
+              },
+              {
+                "beat": 141,
+                "ratio": 0.8291
+              },
+              {
+                "beat": 40,
+                "ratio": 0.842
+              },
+              {
+                "beat": 73,
+                "ratio": 0.8521
+              }
+            ]
+          },
+          "C": {
+            "n": 155,
+            "pass": 0,
+            "passRate": 0,
+            "meanRatio": 0.8291571631929476,
+            "sdRatio": 0.1818857322246124,
+            "minRatio": 0,
+            "maxRatio": 0.9072840945831563,
+            "p05": 0.7977244908559582,
+            "p95": 0.8940039479825467,
+            "fails": [
+              {
+                "beat": 2,
+                "ratio": 0
+              },
+              {
+                "beat": 4,
+                "ratio": 0
+              },
+              {
+                "beat": 14,
+                "ratio": 0
+              },
+              {
+                "beat": 24,
+                "ratio": 0
+              },
+              {
+                "beat": 42,
+                "ratio": 0
+              },
+              {
+                "beat": 79,
+                "ratio": 0
+              },
+              {
+                "beat": 81,
+                "ratio": 0
+              },
+              {
+                "beat": 90,
+                "ratio": 0.7925
+              },
+              {
+                "beat": 98,
+                "ratio": 0.7977
+              },
+              {
+                "beat": 141,
+                "ratio": 0.798
+              },
+              {
+                "beat": 40,
+                "ratio": 0.8151
+              },
+              {
+                "beat": 73,
+                "ratio": 0.8187
+              }
+            ]
+          },
+          "D": {
+            "n": 155,
+            "pass": 120,
+            "passRate": 0.7741935483870968,
+            "meanRatio": 0.9855229082069279,
+            "sdRatio": 0.21613465470885448,
+            "minRatio": 0,
+            "maxRatio": 1.0823225112707113,
+            "p05": 0.9468573424043151,
+            "p95": 1.060453037821716,
+            "fails": [
+              {
+                "beat": 2,
+                "ratio": 0
+              },
+              {
+                "beat": 4,
+                "ratio": 0
+              },
+              {
+                "beat": 14,
+                "ratio": 0
+              },
+              {
+                "beat": 24,
+                "ratio": 0
+              },
+              {
+                "beat": 42,
+                "ratio": 0
+              },
+              {
+                "beat": 79,
+                "ratio": 0
+              },
+              {
+                "beat": 81,
+                "ratio": 0
+              },
+              {
+                "beat": 62,
+                "ratio": 1.0823
+              },
+              {
+                "beat": 18,
+                "ratio": 1.0715
+              },
+              {
+                "beat": 63,
+                "ratio": 1.0714
+              },
+              {
+                "beat": 76,
+                "ratio": 1.0712
+              },
+              {
+                "beat": 27,
+                "ratio": 1.0705
+              }
+            ]
+          }
+        },
+        "pop": {
+          "nCells": 348,
+          "perModel": {
+            "A": {
+              "n": 348,
+              "inInterval": 6,
+              "within5": 147,
+              "meanRatio": 1.0127,
+              "perLaneMeanRatio": {
+                "1": 0.9582,
+                "2": 1.0945,
+                "3": 0.9712,
+                "4": 1.0916,
+                "5": 0.9463
+              }
+            },
+            "B": {
+              "n": 348,
+              "inInterval": 0,
+              "within5": 32,
+              "meanRatio": 1.127,
+              "perLaneMeanRatio": {
+                "1": 1.095,
+                "2": 1.2509,
+                "3": 1.1099,
+                "4": 1.0962,
+                "5": 1.0815
+              }
+            },
+            "C": {
+              "n": 348,
+              "inInterval": 0,
+              "within5": 17,
+              "meanRatio": 1.1574,
+              "perLaneMeanRatio": {
+                "1": 1.095,
+                "2": 1.2509,
+                "3": 1.1099,
+                "4": 1.2476,
+                "5": 1.0815
+              }
+            },
+            "D": {
+              "n": 348,
+              "inInterval": 6,
+              "within5": 166,
+              "meanRatio": 0.9861,
+              "perLaneMeanRatio": {
+                "1": 0.9582,
+                "2": 1.0945,
+                "3": 0.9712,
+                "4": 0.9592,
+                "5": 0.9463
+              }
+            }
+          }
+        },
+        "classMismatch": {
+          "simActNoMeas": 0,
+          "measActNoSim": 8
+        },
+        "beatShareOfWhite": 1,
+        "rows": [
+          {
+            "beat": 1,
+            "group": "skill",
+            "meas": 218749,
+            "measAct": true,
+            "simAct": [
+              "P",
+              "photo",
+              "P",
+              "photo",
+              "P",
+              "photo",
+              "P",
+              "photo",
+              "live_bonus"
+            ],
+            "measBeatKind": 218749
+          },
+          {
+            "beat": 2,
+            "group": "skill",
+            "meas": 2662587,
+            "measAct": true,
+            "simAct": [
+              "photo",
+              "P",
+              "P",
+              "photo",
+              "A"
+            ],
+            "measBeatKind": 66910
+          },
+          {
+            "beat": 3,
+            "group": "skill",
+            "meas": 228614,
+            "measAct": true,
+            "simAct": [
+              "P",
+              "photo"
+            ],
+            "measBeatKind": 228614
+          },
+          {
+            "beat": 4,
+            "group": "skill",
+            "meas": 2307151,
+            "measAct": true,
+            "simAct": [
+              "A"
+            ],
+            "measBeatKind": 20579
+          },
+          {
+            "beat": 5,
+            "group": "white_crit",
+            "meas": 358212,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 358212
+          },
+          {
+            "beat": 6,
+            "group": "white_crit",
+            "meas": 285251,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 285251
+          },
+          {
+            "beat": 7,
+            "group": "white_crit",
+            "meas": 252689,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 252689
+          },
+          {
+            "beat": 8,
+            "group": "white",
+            "meas": 240137,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 240137
+          },
+          {
+            "beat": 9,
+            "group": "white_crit",
+            "meas": 268564,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 268564
+          },
+          {
+            "beat": 10,
+            "group": "white",
+            "meas": 245543,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 245543
+          },
+          {
+            "beat": 11,
+            "group": "white",
+            "meas": 254627,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 254627
+          },
+          {
+            "beat": 12,
+            "group": "white",
+            "meas": 256143,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 256143
+          },
+          {
+            "beat": 13,
+            "group": "skill",
+            "meas": 265764,
+            "measAct": true,
+            "simAct": [
+              "P",
+              "photo"
+            ],
+            "measBeatKind": 265764
+          },
+          {
+            "beat": 14,
+            "group": "skill",
+            "meas": 14551809,
+            "measAct": true,
+            "simAct": [
+              "A"
+            ],
+            "measBeatKind": 380144
+          },
+          {
+            "beat": 15,
+            "group": "white_crit",
+            "meas": 292258,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 292258
+          },
+          {
+            "beat": 16,
+            "group": "white_crit",
+            "meas": 313743,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 313743
+          },
+          {
+            "beat": 17,
+            "group": "white",
+            "meas": 274469,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 274469
+          },
+          {
+            "beat": 18,
+            "group": "white",
+            "meas": 266321,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 266321
+          },
+          {
+            "beat": 19,
+            "group": "white_crit",
+            "meas": 315194,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 315194
+          },
+          {
+            "beat": 20,
+            "group": "white_crit",
+            "meas": 303596,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 303596
+          },
+          {
+            "beat": 21,
+            "group": "white_crit",
+            "meas": 304006,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 304006
+          },
+          {
+            "beat": 22,
+            "group": "white_crit",
+            "meas": 295028,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 295028
+          },
+          {
+            "beat": 23,
+            "group": "white",
+            "meas": 267979,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 267979
+          },
+          {
+            "beat": 24,
+            "group": "skill",
+            "meas": 2146475,
+            "measAct": true,
+            "simAct": [
+              "A"
+            ],
+            "measBeatKind": 98312
+          },
+          {
+            "beat": 25,
+            "group": "white",
+            "meas": 274549,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 274549
+          },
+          {
+            "beat": 26,
+            "group": "white",
+            "meas": 269906,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 269906
+          },
+          {
+            "beat": 27,
+            "group": "white_crit",
+            "meas": 340095,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 340095
+          },
+          {
+            "beat": 28,
+            "group": "white",
+            "meas": 272122,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 272122
+          },
+          {
+            "beat": 29,
+            "group": "white",
+            "meas": 267861,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 267861
+          },
+          {
+            "beat": 30,
+            "group": "white",
+            "meas": 268548,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 268548
+          },
+          {
+            "beat": 31,
+            "group": "white",
+            "meas": 284302,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 284302
+          },
+          {
+            "beat": 32,
+            "group": "white",
+            "meas": 281584,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 281584
+          },
+          {
+            "beat": 33,
+            "group": "white",
+            "meas": 281022,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 281022
+          },
+          {
+            "beat": 34,
+            "group": "skill",
+            "meas": 2946467,
+            "measAct": true,
+            "simAct": [
+              "A"
+            ],
+            "measBeatKind": -106867
+          },
+          {
+            "beat": 35,
+            "group": "white_crit",
+            "meas": 317887,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 317887
+          },
+          {
+            "beat": 36,
+            "group": "white_crit",
+            "meas": 315189,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 315189
+          },
+          {
+            "beat": 37,
+            "group": "white_crit",
+            "meas": 446624,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 446624
+          },
+          {
+            "beat": 38,
+            "group": "white",
+            "meas": 262444,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 262444
+          },
+          {
+            "beat": 39,
+            "group": "white_crit",
+            "meas": 283826,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 283826
+          },
+          {
+            "beat": 40,
+            "group": "white",
+            "meas": 249444,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 249444
+          },
+          {
+            "beat": 41,
+            "group": "skill",
+            "meas": 237658,
+            "measAct": true,
+            "simAct": [
+              "P"
+            ],
+            "measBeatKind": 237658
+          },
+          {
+            "beat": 42,
+            "group": "skill",
+            "meas": 3215072,
+            "measAct": true,
+            "simAct": [
+              "A"
+            ],
+            "measBeatKind": 93896
+          },
+          {
+            "beat": 43,
+            "group": "white_crit",
+            "meas": 321838,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 321838
+          },
+          {
+            "beat": 44,
+            "group": "white_crit",
+            "meas": 294816,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 294816
+          },
+          {
+            "beat": 45,
+            "group": "white_crit",
+            "meas": 270203,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 270203
+          },
+          {
+            "beat": 46,
+            "group": "white_crit",
+            "meas": 289024,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 289024
+          },
+          {
+            "beat": 47,
+            "group": "white",
+            "meas": 233537,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 233537
+          },
+          {
+            "beat": 48,
+            "group": "white_crit",
+            "meas": 262911,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 262911
+          },
+          {
+            "beat": 49,
+            "group": "white_crit",
+            "meas": 331437,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 331437
+          },
+          {
+            "beat": 50,
+            "group": "skill",
+            "meas": 268184,
+            "measAct": true,
+            "simAct": [
+              "P",
+              "P",
+              "P",
+              "photo"
+            ],
+            "measBeatKind": 268184
+          },
+          {
+            "beat": 51,
+            "group": "skill",
+            "meas": 1367197,
+            "measAct": true,
+            "simAct": [
+              "A",
+              "P",
+              "photo"
+            ],
+            "measBeatKind": -63611
+          },
+          {
+            "beat": 52,
+            "group": "white",
+            "meas": 294570,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 294570
+          },
+          {
+            "beat": 53,
+            "group": "skill",
+            "meas": 304536,
+            "measAct": true,
+            "simAct": [
+              "P"
+            ],
+            "measBeatKind": 304536
+          },
+          {
+            "beat": 54,
+            "group": "white",
+            "meas": 309474,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 309474
+          },
+          {
+            "beat": 55,
+            "group": "white",
+            "meas": 304384,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 304384
+          },
+          {
+            "beat": 56,
+            "group": "white_crit",
+            "meas": 421647,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 421647
+          },
+          {
+            "beat": 57,
+            "group": "white",
+            "meas": 314255,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 314255
+          },
+          {
+            "beat": 58,
+            "group": "white",
+            "meas": 299546,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 299546
+          },
+          {
+            "beat": 59,
+            "group": "white_crit",
+            "meas": 355330,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 355330
+          },
+          {
+            "beat": 61,
+            "group": "skill",
+            "meas": 271835,
+            "measAct": true,
+            "simAct": [
+              "live_bonus",
+              "P"
+            ],
+            "measBeatKind": 271835
+          },
+          {
+            "beat": 62,
+            "group": "white_crit",
+            "meas": 275271,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 275271
+          },
+          {
+            "beat": 63,
+            "group": "skill",
+            "meas": 594834,
+            "measAct": true,
+            "simAct": [
+              "photo"
+            ],
+            "measBeatKind": 251428
+          },
+          {
+            "beat": 64,
+            "group": "white_crit",
+            "meas": 455732,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 455732
+          },
+          {
+            "beat": 65,
+            "group": "white",
+            "meas": 259626,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 259626
+          },
+          {
+            "beat": 66,
+            "group": "white",
+            "meas": 255389,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 255389
+          },
+          {
+            "beat": 67,
+            "group": "white_crit",
+            "meas": 276146,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 276146
+          },
+          {
+            "beat": 68,
+            "group": "white_crit",
+            "meas": 282026,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 282026
+          },
+          {
+            "beat": 69,
+            "group": "white",
+            "meas": 252675,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 252675
+          },
+          {
+            "beat": 71,
+            "group": "skill",
+            "meas": 372847,
+            "measAct": true,
+            "simAct": [
+              "photo"
+            ],
+            "measBeatKind": 254018
+          },
+          {
+            "beat": 72,
+            "group": "white",
+            "meas": 255802,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 255802
+          },
+          {
+            "beat": 73,
+            "group": "skill",
+            "meas": 296701,
+            "measAct": true,
+            "simAct": [
+              "P",
+              "photo"
+            ],
+            "measBeatKind": 296701
+          },
+          {
+            "beat": 74,
+            "group": "white_crit",
+            "meas": 277543,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 277543
+          },
+          {
+            "beat": 75,
+            "group": "white_crit",
+            "meas": 281048,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 281048
+          },
+          {
+            "beat": 76,
+            "group": "white_crit",
+            "meas": 272809,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 272809
+          },
+          {
+            "beat": 77,
+            "group": "white",
+            "meas": 256743,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 256743
+          },
+          {
+            "beat": 78,
+            "group": "white",
+            "meas": 253211,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 253211
+          },
+          {
+            "beat": 79,
+            "group": "skill",
+            "meas": 2089127,
+            "measAct": true,
+            "simAct": [
+              "A"
+            ],
+            "measBeatKind": 68695
+          },
+          {
+            "beat": 80,
+            "group": "white",
+            "meas": 255334,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 255334
+          },
+          {
+            "beat": 81,
+            "group": "skill",
+            "meas": 6115329,
+            "measAct": true,
+            "simAct": [
+              "A"
+            ],
+            "measBeatKind": 192412
+          },
+          {
+            "beat": 82,
+            "group": "white_crit",
+            "meas": 298306,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 298306
+          },
+          {
+            "beat": 84,
+            "group": "white_crit",
+            "meas": 295574,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 295574
+          },
+          {
+            "beat": 85,
+            "group": "white_crit",
+            "meas": 261886,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 261886
+          },
+          {
+            "beat": 86,
+            "group": "white_crit",
+            "meas": 259580,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 259580
+          },
+          {
+            "beat": 87,
+            "group": "white_crit",
+            "meas": 271277,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 271277
+          },
+          {
+            "beat": 88,
+            "group": "white",
+            "meas": 245016,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 245016
+          },
+          {
+            "beat": 89,
+            "group": "white_crit",
+            "meas": 306237,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 306237
+          },
+          {
+            "beat": 90,
+            "group": "white",
+            "meas": 237681,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 237681
+          },
+          {
+            "beat": 91,
+            "group": "white_crit",
+            "meas": 241557,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 241557
+          },
+          {
+            "beat": 92,
+            "group": "white_crit",
+            "meas": 359346,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 359346
+          },
+          {
+            "beat": 94,
+            "group": "white_crit",
+            "meas": 232991,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 232991
+          },
+          {
+            "beat": 95,
+            "group": "white_crit",
+            "meas": 241542,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 241542
+          },
+          {
+            "beat": 96,
+            "group": "white_crit",
+            "meas": 221910,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 221910
+          },
+          {
+            "beat": 97,
+            "group": "white_crit",
+            "meas": 228980,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 228980
+          },
+          {
+            "beat": 98,
+            "group": "white_crit",
+            "meas": 221401,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 221401
+          },
+          {
+            "beat": 99,
+            "group": "white_crit",
+            "meas": 238341,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 238341
+          },
+          {
+            "beat": 100,
+            "group": "white",
+            "meas": 185455,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 185455
+          },
+          {
+            "beat": 101,
+            "group": "white_crit",
+            "meas": 206771,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 206771
+          },
+          {
+            "beat": 102,
+            "group": "white_crit",
+            "meas": 213588,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 213588
+          },
+          {
+            "beat": 104,
+            "group": "white",
+            "meas": 188993,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 188993
+          },
+          {
+            "beat": 105,
+            "group": "white",
+            "meas": 188915,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 188915
+          },
+          {
+            "beat": 106,
+            "group": "white",
+            "meas": 188269,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 188269
+          },
+          {
+            "beat": 107,
+            "group": "white_crit",
+            "meas": 208891,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 208891
+          },
+          {
+            "beat": 108,
+            "group": "white_crit",
+            "meas": 202037,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 202037
+          },
+          {
+            "beat": 109,
+            "group": "white_crit",
+            "meas": 220605,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 220605
+          },
+          {
+            "beat": 110,
+            "group": "white_crit",
+            "meas": 204135,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 204135
+          },
+          {
+            "beat": 111,
+            "group": "white",
+            "meas": 187483,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 187483
+          },
+          {
+            "beat": 112,
+            "group": "white_crit",
+            "meas": 194465,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 194465
+          },
+          {
+            "beat": 114,
+            "group": "white",
+            "meas": 185603,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 185603
+          },
+          {
+            "beat": 115,
+            "group": "white",
+            "meas": 189469,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 189469
+          },
+          {
+            "beat": 116,
+            "group": "white_crit",
+            "meas": 203396,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 203396
+          },
+          {
+            "beat": 117,
+            "group": "white_crit",
+            "meas": 204364,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 204364
+          },
+          {
+            "beat": 118,
+            "group": "white",
+            "meas": 186798,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 186798
+          },
+          {
+            "beat": 119,
+            "group": "white",
+            "meas": 185436,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 185436
+          },
+          {
+            "beat": 120,
+            "group": "white_crit",
+            "meas": 199455,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 199455
+          },
+          {
+            "beat": 121,
+            "group": "white",
+            "meas": 187137,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 187137
+          },
+          {
+            "beat": 122,
+            "group": "white",
+            "meas": 187615,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 187615
+          },
+          {
+            "beat": 123,
+            "group": "skill",
+            "meas": 2057044,
+            "measAct": true,
+            "simAct": [
+              "A"
+            ],
+            "measBeatKind": -90183
+          },
+          {
+            "beat": 124,
+            "group": "white_crit",
+            "meas": 219540,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 219540
+          },
+          {
+            "beat": 125,
+            "group": "white_crit",
+            "meas": 215729,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 215729
+          },
+          {
+            "beat": 126,
+            "group": "white",
+            "meas": 202476,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 202476
+          },
+          {
+            "beat": 127,
+            "group": "white",
+            "meas": 199864,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 199864
+          },
+          {
+            "beat": 128,
+            "group": "white_crit",
+            "meas": 234285,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 234285
+          },
+          {
+            "beat": 129,
+            "group": "white",
+            "meas": 198516,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 198516
+          },
+          {
+            "beat": 130,
+            "group": "white_crit",
+            "meas": 287525,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 287525
+          },
+          {
+            "beat": 131,
+            "group": "white_crit",
+            "meas": 253474,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 253474
+          },
+          {
+            "beat": 132,
+            "group": "white_crit",
+            "meas": 219549,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 219549
+          },
+          {
+            "beat": 134,
+            "group": "white",
+            "meas": 200812,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 200812
+          },
+          {
+            "beat": 135,
+            "group": "white_crit",
+            "meas": 214330,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 214330
+          },
+          {
+            "beat": 136,
+            "group": "white",
+            "meas": 196235,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 196235
+          },
+          {
+            "beat": 137,
+            "group": "white",
+            "meas": 204261,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 204261
+          },
+          {
+            "beat": 138,
+            "group": "white",
+            "meas": 203377,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 203377
+          },
+          {
+            "beat": 139,
+            "group": "white_crit",
+            "meas": 242373,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 242373
+          },
+          {
+            "beat": 140,
+            "group": "white_crit",
+            "meas": 214593,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 214593
+          },
+          {
+            "beat": 141,
+            "group": "skill",
+            "meas": 326032,
+            "measAct": true,
+            "simAct": [
+              "photo"
+            ],
+            "measBeatKind": 219367
+          },
+          {
+            "beat": 143,
+            "group": "white",
+            "meas": 206166,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 206166
+          },
+          {
+            "beat": 144,
+            "group": "white",
+            "meas": 201601,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 201601
+          },
+          {
+            "beat": 145,
+            "group": "white",
+            "meas": 200014,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 200014
+          },
+          {
+            "beat": 146,
+            "group": "white_crit",
+            "meas": 214071,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 214071
+          },
+          {
+            "beat": 147,
+            "group": "white",
+            "meas": 199370,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 199370
+          },
+          {
+            "beat": 148,
+            "group": "white",
+            "meas": 201939,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 201939
+          },
+          {
+            "beat": 149,
+            "group": "white",
+            "meas": 202961,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 202961
+          },
+          {
+            "beat": 151,
+            "group": "white",
+            "meas": 201076,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 201076
+          },
+          {
+            "beat": 152,
+            "group": "white",
+            "meas": 203859,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 203859
+          },
+          {
+            "beat": 153,
+            "group": "white",
+            "meas": 202158,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 202158
+          },
+          {
+            "beat": 154,
+            "group": "white",
+            "meas": 203388,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 203388
+          },
+          {
+            "beat": 155,
+            "group": "white",
+            "meas": 198507,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 198507
+          },
+          {
+            "beat": 156,
+            "group": "white",
+            "meas": 189375,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 189375
+          },
+          {
+            "beat": 157,
+            "group": "white",
+            "meas": 189506,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 189506
+          },
+          {
+            "beat": 158,
+            "group": "white_crit",
+            "meas": 203187,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 203187
+          },
+          {
+            "beat": 159,
+            "group": "white",
+            "meas": 188867,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 188867
+          },
+          {
+            "beat": 161,
+            "group": "white",
+            "meas": 190473,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 190473
+          },
+          {
+            "beat": 162,
+            "group": "white",
+            "meas": 185237,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 185237
+          },
+          {
+            "beat": 163,
+            "group": "white",
+            "meas": 192976,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 192976
+          },
+          {
+            "beat": 164,
+            "group": "white_crit",
+            "meas": 215320,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 215320
+          },
+          {
+            "beat": 165,
+            "group": "white_crit",
+            "meas": 215295,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 215295
+          },
+          {
+            "beat": 166,
+            "group": "white",
+            "meas": 191894,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 191894
+          },
+          {
+            "beat": 167,
+            "group": "white",
+            "meas": 188214,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 188214
+          },
+          {
+            "beat": 168,
+            "group": "white",
+            "meas": 188776,
+            "measAct": false,
+            "simAct": [],
+            "measBeatKind": 188776
+          },
+          {
+            "beat": 169,
+            "group": "skill",
+            "meas": 2584213,
+            "measAct": true,
+            "simAct": [
+              "A"
+            ],
+            "measBeatKind": -28743
+          }
+        ]
+      },
+      "gap": {
+        "header": {
+          "measTotal": 79411389,
+          "simReplay": 78485270,
+          "simNeutral": 65954705,
+          "replayGap": -926119,
+          "replayGapPct": -0.011662294434870041,
+          "recordedConfirmed": 72176945,
+          "recordedGap": -6222240,
+          "recordedGapPct": -0.08620813751537974,
+          "confirmedGapSelf": -10654852,
+          "critPremiumSim": 2801832,
+          "critPremiumRecord": 7234444,
+          "confirmedGapReconstructed": 3506493
+        },
+        "rows": [
+          {
+            "key": "white",
+            "label": "純粋白ノーツ（クリなし・スキル発動なし）",
+            "sim": 15770344,
+            "meas": 15937315,
+            "gap": -166971,
+            "shareOfGapPct": 18.029108570280926,
+            "note": "70 ビート"
+          },
+          {
+            "key": "white_crit",
+            "label": "白ノーツ＋クリティカル発生",
+            "sim": 17949469,
+            "meas": 18045849,
+            "gap": -96380,
+            "shareOfGapPct": 10.406869959476051,
+            "note": "67 ビート"
+          },
+          {
+            "key": "skill",
+            "label": "スキル発動ビート（A/SP/P/フォト/LB）",
+            "sim": 44765457,
+            "meas": 45428225,
+            "gap": -662768,
+            "shareOfGapPct": 71.56402147024302,
+            "note": "22 ビート"
+          },
+          {
+            "key": "kind_photo",
+            "label": "スキル系（確定値ラン・sim 側内訳）kind=photo",
+            "sim": 1144145,
+            "meas": null,
+            "gap": 0,
+            "shareOfGapPct": 0,
+            "note": "実測側を単独分解できないため sim 内訳のみ（帰属は白ノーツ側に行っている）"
+          },
+          {
+            "key": "kind_A",
+            "label": "スキル系（確定値ラン・sim 側内訳）kind=A",
+            "sim": 31106949,
+            "meas": null,
+            "gap": 0,
+            "shareOfGapPct": 0,
+            "note": "実測側を単独分解できないため sim 内訳のみ（帰属は白ノーツ側に行っている）"
+          }
+        ],
+        "whiteShareOfConfirmedGapPct": 2.6834548329861914,
+        "modelWhiteGap": {
+          "A": {
+            "whiteGap": -166971,
+            "residualGap": -10821823,
+            "residualGapPct": -0.14125943842750585
+          },
+          "B": {
+            "whiteGap": -1562483,
+            "residualGap": -12217335,
+            "residualGapPct": -0.15947533804431216
+          },
+          "C": {
+            "whiteGap": -2138324,
+            "residualGap": -12793176,
+            "residualGapPct": -0.16699190676693249
+          },
+          "D": {
+            "whiteGap": 491126,
+            "residualGap": -10163726,
+            "residualGapPct": -0.13266916554549454
+          }
+        }
+      }
+    }
+  ]
+}

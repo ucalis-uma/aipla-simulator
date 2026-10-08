@@ -1,0 +1,2825 @@
+{
+ "generatedBy": "phase16_action14_a1_s3_l3_cells.ts",
+ "measFile": "..\\aipura_nox\\サンプル3\\measured_data_v3.json",
+ "mode": "lanefans",
+ "laneTotals": [
+  5931931,
+  9859761,
+  18344645,
+  35714608,
+  9560444
+ ],
+ "popSum": [
+  5805300,
+  9741200,
+  15709200,
+  35283100,
+  9255970
+ ],
+ "hiddenCap": [
+  126631,
+  118561,
+  2635445,
+  431508,
+  304474
+ ],
+ "mergedCells": 737,
+ "inlineCells": 733,
+ "backfillOnly": 4,
+ "backfillUnreadable": 793,
+ "simLaneTotal": [
+  6298942,
+  9762261,
+  16613371,
+  34541311,
+  10209817
+ ],
+ "simTotal": 77425702,
+ "hiddenCells": [
+  {
+   "cell": "1:3",
+   "simScore": 35898,
+   "kinds": {
+    "beat": 35898
+   }
+  },
+  {
+   "cell": "13:3",
+   "simScore": 41048,
+   "kinds": {
+    "beat": 41048
+   }
+  },
+  {
+   "cell": "73:3",
+   "simScore": 39093,
+   "kinds": {
+    "beat": 39093
+   }
+  }
+ ],
+ "simHidden": 116039,
+ "ratio": 0.044030135328189356,
+ "l3NoPopBeats": [
+  0,
+  1,
+  4,
+  13,
+  14,
+  34,
+  42,
+  51,
+  60,
+  70,
+  73,
+  81,
+  83,
+  93,
+  103,
+  113,
+  133,
+  142,
+  150,
+  160
+ ],
+ "l3NoPopResidual": 529839,
+ "l3ReadableResidual": 3086780,
+ "totalResidual": 3616619,
+ "beatResidual": [
+  {
+   "beat": 0,
+   "bgs": 0,
+   "popSumAtBeat": 0,
+   "residual": 0,
+   "readLanes": 0,
+   "l3PopReadable": false,
+   "l3Sim": null,
+   "l3MeasNote": null,
+   "l3PopRaw": null
+  },
+  {
+   "beat": 1,
+   "bgs": 218749,
+   "popSumAtBeat": 0,
+   "residual": 218749,
+   "readLanes": 0,
+   "l3PopReadable": false,
+   "l3Sim": 35898,
+   "l3MeasNote": "banner発動者は肖像サムネイル2枚より同定（白石沙季のカードアートと一致）",
+   "l3PopRaw": null
+  },
+  {
+   "beat": 2,
+   "bgs": 2662587,
+   "popSumAtBeat": 553100,
+   "residual": 2109487,
+   "readLanes": 2,
+   "l3PopReadable": true,
+   "l3Sim": 1883500,
+   "l3MeasNote": "bannerに発動者表示なし（右側はスコアポップ）。効果テキスト行なし",
+   "l3PopRaw": {
+    "text": "+123.3K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 3,
+   "bgs": 228614,
+   "popSumAtBeat": 93300,
+   "residual": 135314,
+   "readLanes": 3,
+   "l3PopReadable": true,
+   "l3Sim": 35898,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+41.5K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 4,
+   "bgs": 2307151,
+   "popSumAtBeat": 2300000,
+   "residual": 7151,
+   "readLanes": 1,
+   "l3PopReadable": false,
+   "l3Sim": null,
+   "l3MeasNote": null,
+   "l3PopRaw": null
+  },
+  {
+   "beat": 5,
+   "bgs": 358212,
+   "popSumAtBeat": 358000,
+   "residual": 212,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 39093,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+41.7K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 6,
+   "bgs": 285251,
+   "popSumAtBeat": 285000,
+   "residual": 251,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 39093,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+41.1K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 7,
+   "bgs": 252689,
+   "popSumAtBeat": 252400,
+   "residual": 289,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 39093,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+42K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 8,
+   "bgs": 240137,
+   "popSumAtBeat": 240000,
+   "residual": 137,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 39093,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+43.5K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 9,
+   "bgs": 268564,
+   "popSumAtBeat": 268300,
+   "residual": 264,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 63332,
+   "l3MeasNote": "クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+68.6K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 10,
+   "bgs": 245543,
+   "popSumAtBeat": 245300,
+   "residual": 243,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 39093,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+43.3K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 11,
+   "bgs": 254627,
+   "popSumAtBeat": 254300,
+   "residual": 327,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 41048,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+43.7K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 12,
+   "bgs": 256143,
+   "popSumAtBeat": 255900,
+   "residual": 243,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 41048,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+47.2K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 13,
+   "bgs": 265764,
+   "popSumAtBeat": 222000,
+   "residual": 43764,
+   "readLanes": 4,
+   "l3PopReadable": false,
+   "l3Sim": 41048,
+   "l3MeasNote": "Pスキル再発動（右バッジが60に更新）。発動者は肖像サムネイルより同定",
+   "l3PopRaw": null
+  },
+  {
+   "beat": 14,
+   "bgs": 14551809,
+   "popSumAtBeat": 14500000,
+   "residual": 51809,
+   "readLanes": 1,
+   "l3PopReadable": false,
+   "l3Sim": null,
+   "l3MeasNote": null,
+   "l3PopRaw": null
+  },
+  {
+   "beat": 15,
+   "bgs": 292258,
+   "popSumAtBeat": 292000,
+   "residual": 258,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 41048,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+44.7K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 16,
+   "bgs": 313743,
+   "popSumAtBeat": 313500,
+   "residual": 243,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 41048,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+46K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 17,
+   "bgs": 274469,
+   "popSumAtBeat": 274200,
+   "residual": 269,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 41048,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+46.6K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 18,
+   "bgs": 266321,
+   "popSumAtBeat": 266100,
+   "residual": 221,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 41048,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+45K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 19,
+   "bgs": 315194,
+   "popSumAtBeat": 315000,
+   "residual": 194,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 41048,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+44.5K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 20,
+   "bgs": 303596,
+   "popSumAtBeat": 303300,
+   "residual": 296,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 66498,
+   "l3MeasNote": "クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+72.1K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 21,
+   "bgs": 304006,
+   "popSumAtBeat": 303800,
+   "residual": 206,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 43003,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+46.8K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 22,
+   "bgs": 295028,
+   "popSumAtBeat": 294800,
+   "residual": 228,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 43003,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+46.7K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 23,
+   "bgs": 267979,
+   "popSumAtBeat": 267700,
+   "residual": 279,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 43003,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+48.1K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 24,
+   "bgs": 2146475,
+   "popSumAtBeat": 2100000,
+   "residual": 46475,
+   "readLanes": 1,
+   "l3PopReadable": true,
+   "l3Sim": 1796062,
+   "l3MeasNote": "リテイク採用。初回版はAスキル発動直後の旧効果6チップ表示、リテイクは更新後の5チップ（3段階 ボーカル上昇を含む）を表示。他数値は両版一致。発動者はlane3位置のAマーカー＋センター肖像より白石沙季と同定。青ドット7個（うち1個は2段目）",
+   "l3PopRaw": {
+    "text": "+2.1M",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 25,
+   "bgs": 274549,
+   "popSumAtBeat": 274400,
+   "residual": 149,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 44408,
+   "l3MeasNote": "リテイク採用。初回版は旧効果6チップ表示、リテイクは更新後の5チップ表示。他数値は両版一致",
+   "l3PopRaw": {
+    "text": "+48.9K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 26,
+   "bgs": 269906,
+   "popSumAtBeat": 269700,
+   "residual": 206,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 44408,
+   "l3MeasNote": "リテイク採用。初回版は旧効果6チップ表示、リテイクは更新後の5チップ表示。他数値は両版一致",
+   "l3PopRaw": {
+    "text": "+47.3K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 27,
+   "bgs": 340095,
+   "popSumAtBeat": 339800,
+   "residual": 295,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 71941,
+   "l3MeasNote": "リテイク採用。初回版は旧効果6チップ表示、リテイクは更新後の5チップ表示。他数値は両版一致。クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+77.1K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 28,
+   "bgs": 272122,
+   "popSumAtBeat": 271900,
+   "residual": 222,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 44408,
+   "l3MeasNote": "リテイク採用。初回版は旧効果6チップ表示、リテイクは更新後の5チップ表示。他数値は両版一致",
+   "l3PopRaw": {
+    "text": "+48.6K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 29,
+   "bgs": 267861,
+   "popSumAtBeat": 267500,
+   "residual": 361,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 44408,
+   "l3MeasNote": "リテイク採用。初回版は旧効果6チップ表示、リテイクは更新後の5チップ表示。他数値は両版一致",
+   "l3PopRaw": {
+    "text": "+46.5K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 30,
+   "bgs": 268548,
+   "popSumAtBeat": 268300,
+   "residual": 248,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 44408,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+48.1K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 31,
+   "bgs": 284302,
+   "popSumAtBeat": 284000,
+   "residual": 302,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 46426,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+49.2K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 32,
+   "bgs": 281584,
+   "popSumAtBeat": 281400,
+   "residual": 184,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 46426,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+49.5K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 33,
+   "bgs": 281022,
+   "popSumAtBeat": 280700,
+   "residual": 322,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 46426,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+50.6K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 34,
+   "bgs": 2946467,
+   "popSumAtBeat": 2900000,
+   "residual": 46467,
+   "readLanes": 1,
+   "l3PopReadable": false,
+   "l3Sim": null,
+   "l3MeasNote": null,
+   "l3PopRaw": null
+  },
+  {
+   "beat": 35,
+   "bgs": 317887,
+   "popSumAtBeat": 317600,
+   "residual": 287,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 81160,
+   "l3MeasNote": "クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+85.4K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 36,
+   "bgs": 315189,
+   "popSumAtBeat": 315000,
+   "residual": 189,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 50099,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+52.2K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 37,
+   "bgs": 446624,
+   "popSumAtBeat": 446400,
+   "residual": 224,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 81160,
+   "l3MeasNote": "クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+85.5K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 38,
+   "bgs": 262444,
+   "popSumAtBeat": 262100,
+   "residual": 344,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 50099,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+55.3K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 39,
+   "bgs": 283826,
+   "popSumAtBeat": 283500,
+   "residual": 326,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 44191,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+56.7K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 40,
+   "bgs": 249444,
+   "popSumAtBeat": 249200,
+   "residual": 244,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 44191,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+47.5K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 41,
+   "bgs": 237658,
+   "popSumAtBeat": 172200,
+   "residual": 65458,
+   "readLanes": 4,
+   "l3PopReadable": true,
+   "l3Sim": 46112,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+51.2K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 42,
+   "bgs": 3215072,
+   "popSumAtBeat": 3200000,
+   "residual": 15072,
+   "readLanes": 1,
+   "l3PopReadable": false,
+   "l3Sim": null,
+   "l3MeasNote": null,
+   "l3PopRaw": null
+  },
+  {
+   "beat": 43,
+   "bgs": 321838,
+   "popSumAtBeat": 321600,
+   "residual": 238,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 46112,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+52.3K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 44,
+   "bgs": 294816,
+   "popSumAtBeat": 294600,
+   "residual": 216,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 74702,
+   "l3MeasNote": "クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+81.4K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 45,
+   "bgs": 270203,
+   "popSumAtBeat": 270000,
+   "residual": 203,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 74702,
+   "l3MeasNote": "クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+77.8K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 46,
+   "bgs": 289024,
+   "popSumAtBeat": 288900,
+   "residual": 124,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 42732,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+50.8K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 47,
+   "bgs": 233537,
+   "popSumAtBeat": 233300,
+   "residual": 237,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 42732,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+47.3K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 48,
+   "bgs": 262911,
+   "popSumAtBeat": 262700,
+   "residual": 211,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 69226,
+   "l3MeasNote": "クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+76.9K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 49,
+   "bgs": 331437,
+   "popSumAtBeat": 331000,
+   "residual": 437,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 69226,
+   "l3MeasNote": "クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+75.8K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 50,
+   "bgs": 268184,
+   "popSumAtBeat": 141000,
+   "residual": 127184,
+   "readLanes": 2,
+   "l3PopReadable": true,
+   "l3Sim": 69226,
+   "l3MeasNote": "リテイク採用。初回版は旧効果6チップ表示（10段階 集目・5段階 クリティカル率上昇を含む）、リテイクは更新後の5チップ表示。他数値は両版一致。クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+78.2K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 51,
+   "bgs": 1367197,
+   "popSumAtBeat": 1300000,
+   "residual": 67197,
+   "readLanes": 1,
+   "l3PopReadable": false,
+   "l3Sim": null,
+   "l3MeasNote": "リテイク採用。初回版は旧効果6チップ表示、リテイクは更新後の5チップ表示。他数値は両版一致。先頭バッジ枠は数字なしアイコンのみ（旧残り0のバッジ消滅と判断）",
+   "l3PopRaw": null
+  },
+  {
+   "beat": 52,
+   "bgs": 294570,
+   "popSumAtBeat": 294370,
+   "residual": 200,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 50464,
+   "l3MeasNote": "リテイク採用。初回版は旧効果6チップ表示、リテイクは更新後の5チップ表示。他数値は両版一致。先頭バッジ枠は数字なしアイコンのみ",
+   "l3PopRaw": {
+    "text": "+55.8K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 53,
+   "bgs": 304536,
+   "popSumAtBeat": 204000,
+   "residual": 100536,
+   "readLanes": 4,
+   "l3PopReadable": true,
+   "l3Sim": 50464,
+   "l3MeasNote": "リテイク採用。初回版は旧効果6チップ表示、リテイクは更新後の5チップ表示。他数値は両版一致",
+   "l3PopRaw": {
+    "text": "+57.5K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 54,
+   "bgs": 309474,
+   "popSumAtBeat": 309200,
+   "residual": 274,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 50464,
+   "l3MeasNote": "リテイク採用。初回版は旧効果6チップ表示、リテイクは更新後の5チップ表示。他数値は両版一致",
+   "l3PopRaw": {
+    "text": "+56.3K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 55,
+   "bgs": 304384,
+   "popSumAtBeat": 304100,
+   "residual": 284,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 50464,
+   "l3MeasNote": "リテイク採用。初回版は旧効果6チップ表示、リテイクは更新後の5チップ表示。他数値は両版一致",
+   "l3PopRaw": {
+    "text": "+53.7K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 56,
+   "bgs": 421647,
+   "popSumAtBeat": 421500,
+   "residual": 147,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 81751,
+   "l3MeasNote": "リテイク採用。初回版は旧効果6チップ表示、リテイクは更新後の5チップ表示。他数値は両版一致。クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+92.1K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 57,
+   "bgs": 314255,
+   "popSumAtBeat": 313900,
+   "residual": 355,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 50464,
+   "l3MeasNote": "リテイク採用。初回版は旧効果6チップ表示、リテイクは更新後の5チップ表示。他数値は両版一致",
+   "l3PopRaw": {
+    "text": "+53.9K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 58,
+   "bgs": 299546,
+   "popSumAtBeat": 299300,
+   "residual": 246,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 50464,
+   "l3MeasNote": "リテイク採用。初回版は旧効果6チップ表示、リテイクは更新後の5チップ表示。他数値は両版一致",
+   "l3PopRaw": {
+    "text": "+55.6K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 59,
+   "bgs": 355330,
+   "popSumAtBeat": 355000,
+   "residual": 330,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 81751,
+   "l3MeasNote": "リテイク採用。初回版は旧効果6チップ表示、リテイクは更新後の5チップ表示。他数値は両版一致。クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+88K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 60,
+   "bgs": 0,
+   "popSumAtBeat": 0,
+   "residual": 0,
+   "readLanes": 0,
+   "l3PopReadable": false,
+   "l3Sim": null,
+   "l3MeasNote": "リテイク採用。初回版は旧効果6チップ表示、リテイクは更新後の5チップ表示。他数値は両版一致。COMBO 0にリセット・累積スコアはbeat59と同一（59→60でスコア増加なし、コンボ断絶の可能性。要乖離分析で確認）",
+   "l3PopRaw": null
+  },
+  {
+   "beat": 61,
+   "bgs": 271835,
+   "popSumAtBeat": 183100,
+   "residual": 88735,
+   "readLanes": 4,
+   "l3PopReadable": true,
+   "l3Sim": 65401,
+   "l3MeasNote": "リテイク採用。初回版は旧効果6チップ表示、リテイクは更新後の5チップ表示。他数値は両版一致。クリティカル!表示あり。beat60のコンボ断絶後、コンボ再開",
+   "l3PopRaw": {
+    "text": "+68.4K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 62,
+   "bgs": 275271,
+   "popSumAtBeat": 275100,
+   "residual": 171,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 65401,
+   "l3MeasNote": "リテイク採用。初回版は旧効果6チップ表示、リテイクは更新後の5チップ表示。他数値は両版一致。クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+68K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 63,
+   "bgs": 594834,
+   "popSumAtBeat": 540400,
+   "residual": 54434,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 40371,
+   "l3MeasNote": "リテイク採用。初回版は旧効果6チップ表示、リテイクは更新後の5チップ表示。他数値は両版一致",
+   "l3PopRaw": {
+    "text": "+44.2K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 64,
+   "bgs": 455732,
+   "popSumAtBeat": 455500,
+   "residual": 232,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 65401,
+   "l3MeasNote": "リテイク採用。初回版は旧効果6チップ表示、リテイクは更新後の5チップ表示。他数値は両版一致。クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+71.5K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 65,
+   "bgs": 259626,
+   "popSumAtBeat": 259300,
+   "residual": 326,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 40371,
+   "l3MeasNote": "リテイク採用。初回版は6チップ表示（5段階 クリティカル率上昇・3段階 ボーカル上昇を含むが3段階 スタミナ継続回復なし）、リテイクは5チップ表示（スタミナ回復あり、クリ率・ボーカル上昇なし）。他数値は両版一致。集目が10段階→6段階に更新（再発動の可能性）。beat67-68の単独撮影では両版の和集合相当の6チップ（クリ率あり・ボーカル上昇なし・スタミナ回復あり）のため65-66は遷移途中表示の可能性。乖離分析で要確認",
+   "l3PopRaw": {
+    "text": "+45.3K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 66,
+   "bgs": 255389,
+   "popSumAtBeat": 255100,
+   "residual": 289,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 40371,
+   "l3MeasNote": "リテイク採用。初回版は6チップ表示（クリ率・ボーカル上昇含む、スタミナ回復なし）、リテイクは5チップ表示。他数値は両版一致。beat67-68は和集合相当の6チップ表示のため遷移途中表示の可能性。乖離分析で要確認",
+   "l3PopRaw": {
+    "text": "+41.4K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 67,
+   "bgs": 276146,
+   "popSumAtBeat": 275800,
+   "residual": 346,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 63332,
+   "l3MeasNote": "リテイクなし単独撮影。クリティカル!表示あり。3段階 ボーカル上昇が消滅・5段階 クリティカル率上昇が復活（再発動の可能性）。表示は6チップ（画面表示順で記録）",
+   "l3PopRaw": {
+    "text": "+65.9K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 68,
+   "bgs": 282026,
+   "popSumAtBeat": 281700,
+   "residual": 326,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 63332,
+   "l3MeasNote": "リテイクなし単独撮影。クリティカル!表示あり。効果6チップはbeat67と同一",
+   "l3PopRaw": {
+    "text": "+62.7K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 69,
+   "bgs": 252675,
+   "popSumAtBeat": 252400,
+   "residual": 275,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 39093,
+   "l3MeasNote": "リテイクなし単独撮影。青ドットが7→6に減少（効果消滅の可能性、パネル表示は6チップ維持）",
+   "l3PopRaw": {
+    "text": "+39.5K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 70,
+   "bgs": 0,
+   "popSumAtBeat": 0,
+   "residual": 0,
+   "readLanes": 0,
+   "l3PopReadable": false,
+   "l3Sim": null,
+   "l3MeasNote": "リテイクなし単独撮影。COMBO 0にリセット・累積スコアはbeat69と同一（69→70でスコア増加なし、コンボ断絶の可能性。要乖離分析で確認）",
+   "l3PopRaw": null
+  },
+  {
+   "beat": 71,
+   "bgs": 372847,
+   "popSumAtBeat": 333500,
+   "residual": 39347,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 150850,
+   "l3MeasNote": "リテイクなし単独撮影。スコア獲得スキル発動バナー（発動者表示なし・効果テキスト行なし、beat2と同形式）。スタミナ7279→6757（-522、スキルコスト支払いの可能性）。lane3ライン上にPマーカー＋フォトアイコン表示",
+   "l3PopRaw": {
+    "text": "+120.4K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 72,
+   "bgs": 255802,
+   "popSumAtBeat": 255400,
+   "residual": 402,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 39093,
+   "l3MeasNote": "リテイクなし単独撮影",
+   "l3PopRaw": {
+    "text": "+41.6K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 73,
+   "bgs": 296701,
+   "popSumAtBeat": 232400,
+   "residual": 64301,
+   "readLanes": 4,
+   "l3PopReadable": false,
+   "l3Sim": 39093,
+   "l3MeasNote": "リテイクなし単独撮影。Pスキル再発動（発動者はバナー内肖像サムネイルより同定、beats 1・13と同一スキル）。集目が6段階→10段階に更新。旧バッジ2枠は数字なしアイコンのみ表示のため配列外。スタミナ6802→6271（-531、Pスキルコストの可能性）",
+   "l3PopRaw": null
+  },
+  {
+   "beat": 74,
+   "bgs": 277543,
+   "popSumAtBeat": 277400,
+   "residual": 143,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 63332,
+   "l3MeasNote": "リテイクなし単独撮影。クリティカル!表示あり。スタミナ6271→4231（-2040、スキルコスト支払いの可能性。要乖離分析で確認）。lane3ライン上にAマーカー表示（発動前）。先頭2バッジ枠は数字なしアイコンのみのため配列外",
+   "l3PopRaw": {
+    "text": "+67K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 75,
+   "bgs": 281048,
+   "popSumAtBeat": 280800,
+   "residual": 248,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 63332,
+   "l3MeasNote": "リテイクなし単独撮影。クリティカル!表示あり。先頭2バッジ枠は数字なしアイコンのみのため配列外",
+   "l3PopRaw": {
+    "text": "+69.5K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 76,
+   "bgs": 272809,
+   "popSumAtBeat": 272600,
+   "residual": 209,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 63332,
+   "l3MeasNote": "リテイクなし単独撮影。クリティカル!表示あり。先頭2バッジ枠は数字なしアイコンのみのため配列外",
+   "l3PopRaw": {
+    "text": "+66.5K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 77,
+   "bgs": 256743,
+   "popSumAtBeat": 256500,
+   "residual": 243,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 39093,
+   "l3MeasNote": "リテイクなし単独撮影。先頭2バッジ枠は数字なしアイコンのみのため配列外",
+   "l3PopRaw": {
+    "text": "+42.8K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 78,
+   "bgs": 253211,
+   "popSumAtBeat": 252900,
+   "residual": 311,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 39093,
+   "l3MeasNote": "リテイクなし単独撮影。先頭2バッジ枠は数字なしアイコンのみのため配列外",
+   "l3PopRaw": {
+    "text": "+42.2K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 79,
+   "bgs": 2089127,
+   "popSumAtBeat": 2000000,
+   "residual": 89127,
+   "readLanes": 1,
+   "l3PopReadable": true,
+   "l3Sim": 1771743,
+   "l3MeasNote": "リテイクなし単独撮影。Aスキル発動（発動者はlane3ライン上のAマーカー位置＋バナー内肖像より白石沙季と同定、要検証）。クリティカル率上昇が5段階→10段階に更新。中央バッジ枠はマイクアイコンのみ数字なしのため配列外。先頭50は新規表示（Aスキル由来の可能性）。P由来残り表示は55のまま（54に減らず、要確認）。スタミナ4411→3895（-516、Aスキルコストの可能性）",
+   "l3PopRaw": {
+    "text": "+2M",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 80,
+   "bgs": 255334,
+   "popSumAtBeat": 255100,
+   "residual": 234,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 39093,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+42.6K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 81,
+   "bgs": 6115329,
+   "popSumAtBeat": 6100000,
+   "residual": 15329,
+   "readLanes": 1,
+   "l3PopReadable": false,
+   "l3Sim": null,
+   "l3MeasNote": "右上スコアポップ欄は「-」表示（ポップなし）",
+   "l3PopRaw": null
+  },
+  {
+   "beat": 82,
+   "bgs": 298306,
+   "popSumAtBeat": 298100,
+   "residual": 206,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 66498,
+   "l3MeasNote": "クリティカル!表示あり。Aスキルスコア上昇チップ消滅",
+   "l3PopRaw": {
+    "text": "+71.9K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 83,
+   "bgs": 0,
+   "popSumAtBeat": 0,
+   "residual": 0,
+   "readLanes": 0,
+   "l3PopReadable": false,
+   "l3Sim": null,
+   "l3MeasNote": "COMBO 0にリセット（SP発動ビート）。累積スコアは前ビートと同一値",
+   "l3PopRaw": null
+  },
+  {
+   "beat": 84,
+   "bgs": 295574,
+   "popSumAtBeat": 295300,
+   "residual": 274,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 63332,
+   "l3MeasNote": "クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+71.6K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 85,
+   "bgs": 261886,
+   "popSumAtBeat": 261700,
+   "residual": 186,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 39093,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+41.1K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 86,
+   "bgs": 259580,
+   "popSumAtBeat": 259300,
+   "residual": 280,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 35898,
+   "l3MeasNote": "ボーカルブーストチップ消滅",
+   "l3PopRaw": {
+    "text": "+42.7K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 87,
+   "bgs": 271277,
+   "popSumAtBeat": 271100,
+   "residual": 177,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 58155,
+   "l3MeasNote": "クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+66.6K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 88,
+   "bgs": 245016,
+   "popSumAtBeat": 244800,
+   "residual": 216,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 35898,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+40.7K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 89,
+   "bgs": 306237,
+   "popSumAtBeat": 305900,
+   "residual": 337,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 51297,
+   "l3MeasNote": "クリティカル!表示あり。スコア上昇チップ消滅",
+   "l3PopRaw": {
+    "text": "+64K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 90,
+   "bgs": 237681,
+   "popSumAtBeat": 237400,
+   "residual": 281,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+35.2K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 91,
+   "bgs": 241557,
+   "popSumAtBeat": 241300,
+   "residual": 257,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 51297,
+   "l3MeasNote": "クリティカル!表示あり。集目が10段階→7段階に低下",
+   "l3PopRaw": {
+    "text": "+57.6K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 92,
+   "bgs": 359346,
+   "popSumAtBeat": 359100,
+   "residual": 246,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 51297,
+   "l3MeasNote": "クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+56.6K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 93,
+   "bgs": 0,
+   "popSumAtBeat": 0,
+   "residual": 0,
+   "readLanes": 0,
+   "l3PopReadable": false,
+   "l3Sim": null,
+   "l3MeasNote": "COMBO 0にリセット（A発動ビート）。累積スコアは前ビートと同一値。スタミナ継続回復チップ消滅。右上スコアポップ欄は「-」表示",
+   "l3PopRaw": null
+  },
+  {
+   "beat": 94,
+   "bgs": 232991,
+   "popSumAtBeat": 232800,
+   "residual": 191,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 51297,
+   "l3MeasNote": "クリティカル!表示あり。スタミナは前ビートと同一値（継続回復なし）",
+   "l3PopRaw": {
+    "text": "+54.7K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 95,
+   "bgs": 241542,
+   "popSumAtBeat": 241400,
+   "residual": 142,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 51297,
+   "l3MeasNote": "クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+54.6K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 96,
+   "bgs": 221910,
+   "popSumAtBeat": 221700,
+   "residual": 210,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 51297,
+   "l3MeasNote": "クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+52.7K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 97,
+   "bgs": 228980,
+   "popSumAtBeat": 228800,
+   "residual": 180,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 51297,
+   "l3MeasNote": "クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+57.6K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 98,
+   "bgs": 221401,
+   "popSumAtBeat": 221100,
+   "residual": 301,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+34.1K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 99,
+   "bgs": 238341,
+   "popSumAtBeat": 238100,
+   "residual": 241,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 51297,
+   "l3MeasNote": "クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+52.5K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 100,
+   "bgs": 185455,
+   "popSumAtBeat": 185300,
+   "residual": 155,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+33.5K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 101,
+   "bgs": 206771,
+   "popSumAtBeat": 206500,
+   "residual": 271,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 51297,
+   "l3MeasNote": "クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+54.9K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 102,
+   "bgs": 213588,
+   "popSumAtBeat": 213300,
+   "residual": 288,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 51297,
+   "l3MeasNote": "クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+56.4K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 103,
+   "bgs": 0,
+   "popSumAtBeat": 0,
+   "residual": 0,
+   "readLanes": 0,
+   "l3PopReadable": false,
+   "l3Sim": null,
+   "l3MeasNote": "COMBO 0にリセット（A発動ビート）。累積スコアは前ビートと同一値。右上スコアポップ欄は「-」表示",
+   "l3PopRaw": null
+  },
+  {
+   "beat": 104,
+   "bgs": 188993,
+   "popSumAtBeat": 188700,
+   "residual": 293,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+35.5K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 105,
+   "bgs": 188915,
+   "popSumAtBeat": 188700,
+   "residual": 215,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+33.5K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 106,
+   "bgs": 188269,
+   "popSumAtBeat": 188100,
+   "residual": 169,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+33.5K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 107,
+   "bgs": 208891,
+   "popSumAtBeat": 208600,
+   "residual": 291,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 51297,
+   "l3MeasNote": "クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+52.8K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 108,
+   "bgs": 202037,
+   "popSumAtBeat": 201800,
+   "residual": 237,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+34.4K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 109,
+   "bgs": 220605,
+   "popSumAtBeat": 220500,
+   "residual": 105,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+35.4K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 110,
+   "bgs": 204135,
+   "popSumAtBeat": 203800,
+   "residual": 335,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+34.2K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 111,
+   "bgs": 187483,
+   "popSumAtBeat": 187200,
+   "residual": 283,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+36K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 112,
+   "bgs": 194465,
+   "popSumAtBeat": 194300,
+   "residual": 165,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+30.3K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 113,
+   "bgs": 0,
+   "popSumAtBeat": 0,
+   "residual": 0,
+   "readLanes": 0,
+   "l3PopReadable": false,
+   "l3Sim": null,
+   "l3MeasNote": "コンボ0リセット・累積据え置き・スコアポップなし（右上-表示）",
+   "l3PopRaw": null
+  },
+  {
+   "beat": 114,
+   "bgs": 185603,
+   "popSumAtBeat": 185200,
+   "residual": 403,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+32.2K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 115,
+   "bgs": 189469,
+   "popSumAtBeat": 189300,
+   "residual": 169,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+29.9K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 116,
+   "bgs": 203396,
+   "popSumAtBeat": 203100,
+   "residual": 296,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 51297,
+   "l3MeasNote": "クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+49.6K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 117,
+   "bgs": 204364,
+   "popSumAtBeat": 204100,
+   "residual": 264,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+31.7K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 118,
+   "bgs": 186798,
+   "popSumAtBeat": 186500,
+   "residual": 298,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+30.3K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 119,
+   "bgs": 185436,
+   "popSumAtBeat": 185200,
+   "residual": 236,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+32.1K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 120,
+   "bgs": 199455,
+   "popSumAtBeat": 199200,
+   "residual": 255,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+31K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 121,
+   "bgs": 187137,
+   "popSumAtBeat": 186900,
+   "residual": 237,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+29.8K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 122,
+   "bgs": 187615,
+   "popSumAtBeat": 187300,
+   "residual": 315,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+31.3K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 123,
+   "bgs": 2057044,
+   "popSumAtBeat": 2000000,
+   "residual": 57044,
+   "readLanes": 1,
+   "l3PopReadable": true,
+   "l3Sim": 2147227,
+   "l3MeasNote": "Aスキル発動（lane3位置のAマーカー＋肖像より白石沙季と同定）。クリティカル!表示あり。バナー効果2行目は画面外/非表示のため可視の1行のみ記録",
+   "l3PopRaw": {
+    "text": "+2M",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 124,
+   "bgs": 219540,
+   "popSumAtBeat": 219300,
+   "residual": 240,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 53862,
+   "l3MeasNote": "クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+53.1K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 125,
+   "bgs": 215729,
+   "popSumAtBeat": 215400,
+   "residual": 329,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 33248,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+32K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 126,
+   "bgs": 202476,
+   "popSumAtBeat": 202300,
+   "residual": 176,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 33248,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+32.7K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 127,
+   "bgs": 199864,
+   "popSumAtBeat": 199500,
+   "residual": 364,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 33248,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+32.6K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 128,
+   "bgs": 234285,
+   "popSumAtBeat": 233900,
+   "residual": 385,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 53862,
+   "l3MeasNote": "クリティカル!表示あり。AスキルCTバッジ消滅（中央・右の2バッジのみ）",
+   "l3PopRaw": {
+    "text": "+50.1K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 129,
+   "bgs": 198516,
+   "popSumAtBeat": 198200,
+   "residual": 316,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 33248,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+33K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 130,
+   "bgs": 287525,
+   "popSumAtBeat": 287200,
+   "residual": 325,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 53862,
+   "l3MeasNote": "クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+49.8K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 131,
+   "bgs": 253474,
+   "popSumAtBeat": 253300,
+   "residual": 174,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 33248,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+31.9K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 132,
+   "bgs": 219549,
+   "popSumAtBeat": 219400,
+   "residual": 149,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 53862,
+   "l3MeasNote": "クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+51.7K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 133,
+   "bgs": 0,
+   "popSumAtBeat": 0,
+   "residual": 0,
+   "readLanes": 0,
+   "l3PopReadable": false,
+   "l3Sim": null,
+   "l3MeasNote": "Pスキル発動でコンボ0リセット・累積据え置き・スコアポップなし（右上-表示）。発動者は肖像＋lane3位置のPマーカーより白石沙季と同定",
+   "l3PopRaw": null
+  },
+  {
+   "beat": 134,
+   "bgs": 200812,
+   "popSumAtBeat": 200500,
+   "residual": 312,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": "スタミナが前beat比-1986（フォトスキル発動等の消費とみられる。撮影のみで内訳は断定不可）",
+   "l3PopRaw": {
+    "text": "+34.2K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 135,
+   "bgs": 214330,
+   "popSumAtBeat": 214100,
+   "residual": 230,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+34.3K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 136,
+   "bgs": 196235,
+   "popSumAtBeat": 196000,
+   "residual": 235,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+34.1K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 137,
+   "bgs": 204261,
+   "popSumAtBeat": 203900,
+   "residual": 361,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+34.3K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 138,
+   "bgs": 203377,
+   "popSumAtBeat": 203200,
+   "residual": 177,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+36K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 139,
+   "bgs": 242373,
+   "popSumAtBeat": 242200,
+   "residual": 173,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 51297,
+   "l3MeasNote": "クリティカル!表示あり",
+   "l3PopRaw": {
+    "text": "+55K",
+    "color": "yellow"
+   }
+  },
+  {
+   "beat": 140,
+   "bgs": 214593,
+   "popSumAtBeat": 214300,
+   "residual": 293,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+34K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 141,
+   "bgs": 326032,
+   "popSumAtBeat": 270800,
+   "residual": 55232,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 126778,
+   "l3MeasNote": "番号左上にPアイコン+スコア獲得スキル表示。発動者表示なし",
+   "l3PopRaw": {
+    "text": "+106K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 142,
+   "bgs": 0,
+   "popSumAtBeat": 0,
+   "residual": 0,
+   "readLanes": 0,
+   "l3PopReadable": false,
+   "l3Sim": null,
+   "l3MeasNote": "累積据え置き・コンボ0リセット。右上ポップなし。FAIL/ミス可能",
+   "l3PopRaw": null
+  },
+  {
+   "beat": 143,
+   "bgs": 206166,
+   "popSumAtBeat": 205900,
+   "residual": 266,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+34.1K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 144,
+   "bgs": 201601,
+   "popSumAtBeat": 201300,
+   "residual": 301,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+35.8K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 145,
+   "bgs": 200014,
+   "popSumAtBeat": 199800,
+   "residual": 214,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+34.4K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 146,
+   "bgs": 214071,
+   "popSumAtBeat": 213800,
+   "residual": 271,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+34.2K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 147,
+   "bgs": 199370,
+   "popSumAtBeat": 199100,
+   "residual": 270,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+34.7K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 148,
+   "bgs": 201939,
+   "popSumAtBeat": 201700,
+   "residual": 239,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+36.1K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 149,
+   "bgs": 202961,
+   "popSumAtBeat": 202800,
+   "residual": 161,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+34.4K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 150,
+   "bgs": 0,
+   "popSumAtBeat": 0,
+   "residual": 0,
+   "readLanes": 0,
+   "l3PopReadable": false,
+   "l3Sim": null,
+   "l3MeasNote": "累積据え置き・コンボ0リセット。右上ポップなし。FAIL/ミス可能",
+   "l3PopRaw": null
+  },
+  {
+   "beat": 151,
+   "bgs": 201076,
+   "popSumAtBeat": 201000,
+   "residual": 76,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+34.2K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 152,
+   "bgs": 203859,
+   "popSumAtBeat": 203600,
+   "residual": 259,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+33.8K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 153,
+   "bgs": 202158,
+   "popSumAtBeat": 201900,
+   "residual": 258,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+34.1K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 154,
+   "bgs": 203388,
+   "popSumAtBeat": 203000,
+   "residual": 388,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+35.9K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 155,
+   "bgs": 198507,
+   "popSumAtBeat": 198300,
+   "residual": 207,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+32.8K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 156,
+   "bgs": 189375,
+   "popSumAtBeat": 189100,
+   "residual": 275,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+33.9K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 157,
+   "bgs": 189506,
+   "popSumAtBeat": 189300,
+   "residual": 206,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+33.1K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 158,
+   "bgs": 203187,
+   "popSumAtBeat": 203000,
+   "residual": 187,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+35.4K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 159,
+   "bgs": 188867,
+   "popSumAtBeat": 188600,
+   "residual": 267,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+33.4K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 160,
+   "bgs": 0,
+   "popSumAtBeat": 0,
+   "residual": 0,
+   "readLanes": 0,
+   "l3PopReadable": false,
+   "l3Sim": null,
+   "l3MeasNote": "累積据え置き・コンボ0リセット。右上ポップなし。FAIL/ミス可能",
+   "l3PopRaw": null
+  },
+  {
+   "beat": 161,
+   "bgs": 190473,
+   "popSumAtBeat": 190300,
+   "residual": 173,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+34.4K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 162,
+   "bgs": 185237,
+   "popSumAtBeat": 185000,
+   "residual": 237,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+33.8K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 163,
+   "bgs": 192976,
+   "popSumAtBeat": 192600,
+   "residual": 376,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+35.2K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 164,
+   "bgs": 215320,
+   "popSumAtBeat": 215000,
+   "residual": 320,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+35K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 165,
+   "bgs": 215295,
+   "popSumAtBeat": 215200,
+   "residual": 95,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+33K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 166,
+   "bgs": 191894,
+   "popSumAtBeat": 191700,
+   "residual": 194,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": null,
+   "l3PopRaw": {
+    "text": "+35.5K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 167,
+   "bgs": 188214,
+   "popSumAtBeat": 188000,
+   "residual": 214,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": "FINISH!表示開始。下部カード列は表示継続",
+   "l3PopRaw": {
+    "text": "+32.8K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 168,
+   "bgs": 188776,
+   "popSumAtBeat": 188600,
+   "residual": 176,
+   "readLanes": 5,
+   "l3PopReadable": true,
+   "l3Sim": 31665,
+   "l3MeasNote": "FINISH!表示中",
+   "l3PopRaw": {
+    "text": "+33K",
+    "color": "white"
+   }
+  },
+  {
+   "beat": 169,
+   "bgs": 2584213,
+   "popSumAtBeat": 2500000,
+   "residual": 84213,
+   "readLanes": 1,
+   "l3PopReadable": true,
+   "l3Sim": 2329970,
+   "l3MeasNote": "FINISH!表示。クリティカル!表示あり。発動者はlane3位置のAマーカー＋注目カード表示より白石沙季と同定。cumulative=79411389で期待値と一致",
+   "l3PopRaw": {
+    "text": "+2.5M",
+    "color": "yellow"
+   }
+  }
+ ],
+ "cellEvents": {
+  "1:1": [
+   {
+    "beat": 1,
+    "lane": 1,
+    "sourceKind": "beat",
+    "basicScore": 16852,
+    "skillPowerPermil": 1000,
+    "b1Permil": 1060,
+    "comboFactorPermil": 1000,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 1000,
+    "gainedScore": 24561
+   }
+  ],
+  "1:2": [
+   {
+    "beat": 1,
+    "lane": 2,
+    "sourceKind": "beat",
+    "basicScore": 15787,
+    "skillPowerPermil": 1000,
+    "b1Permil": 1060,
+    "comboFactorPermil": 1000,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 1000,
+    "gainedScore": 23009
+   }
+  ],
+  "1:3": [
+   {
+    "beat": 1,
+    "lane": 3,
+    "sourceKind": "beat",
+    "basicScore": 17593,
+    "skillPowerPermil": 1000,
+    "b1Permil": 1484,
+    "comboFactorPermil": 1000,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 1000,
+    "gainedScore": 35898
+   }
+  ],
+  "1:4": [
+   {
+    "beat": 1,
+    "lane": 4,
+    "sourceKind": "beat",
+    "basicScore": 40641,
+    "skillPowerPermil": 1000,
+    "b1Permil": 1303,
+    "comboFactorPermil": 1000,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 1000,
+    "gainedScore": 72813
+   }
+  ],
+  "1:5": [
+   {
+    "beat": 1,
+    "lane": 5,
+    "sourceKind": "beat",
+    "basicScore": 18184,
+    "skillPowerPermil": 1000,
+    "b1Permil": 1060,
+    "comboFactorPermil": 1000,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 1000,
+    "gainedScore": 59631
+   }
+  ],
+  "13:1": [
+   {
+    "beat": 13,
+    "lane": 1,
+    "sourceKind": "beat",
+    "basicScore": 20625,
+    "skillPowerPermil": 1000,
+    "b1Permil": 1060,
+    "comboFactorPermil": 1050,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 1000,
+    "gainedScore": 31563
+   }
+  ],
+  "13:2": [
+   {
+    "beat": 13,
+    "lane": 2,
+    "sourceKind": "beat",
+    "basicScore": 15787,
+    "skillPowerPermil": 1000,
+    "b1Permil": 1060,
+    "comboFactorPermil": 1050,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 1620,
+    "gainedScore": 39139
+   }
+  ],
+  "13:3": [
+   {
+    "beat": 13,
+    "lane": 3,
+    "sourceKind": "beat",
+    "basicScore": 19159,
+    "skillPowerPermil": 1000,
+    "b1Permil": 1484,
+    "comboFactorPermil": 1050,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 1000,
+    "gainedScore": 41048
+   }
+  ],
+  "13:4": [
+   {
+    "beat": 13,
+    "lane": 4,
+    "sourceKind": "beat",
+    "basicScore": 47966,
+    "skillPowerPermil": 1000,
+    "b1Permil": 1303,
+    "comboFactorPermil": 1050,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 1000,
+    "gainedScore": 90233
+   }
+  ],
+  "13:5": [
+   {
+    "beat": 13,
+    "lane": 5,
+    "sourceKind": "beat",
+    "basicScore": 18184,
+    "skillPowerPermil": 1000,
+    "b1Permil": 1060,
+    "comboFactorPermil": 1050,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 1000,
+    "gainedScore": 62613
+   }
+  ],
+  "73:1": [
+   {
+    "beat": 73,
+    "lane": 1,
+    "sourceKind": "beat",
+    "basicScore": 21202,
+    "skillPowerPermil": 1000,
+    "b1Permil": 1060,
+    "comboFactorPermil": 1000,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 2166,
+    "gainedScore": 66933
+   }
+  ],
+  "73:2": [
+   {
+    "beat": 73,
+    "lane": 2,
+    "sourceKind": "beat",
+    "basicScore": 18232,
+    "skillPowerPermil": 1000,
+    "b1Permil": 1060,
+    "comboFactorPermil": 1000,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 1000,
+    "gainedScore": 26573
+   }
+  ],
+  "73:3": [
+   {
+    "beat": 73,
+    "lane": 3,
+    "sourceKind": "beat",
+    "basicScore": 19159,
+    "skillPowerPermil": 1000,
+    "b1Permil": 1484,
+    "comboFactorPermil": 1000,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 1000,
+    "gainedScore": 39093
+   }
+  ],
+  "73:4": [
+   {
+    "beat": 73,
+    "lane": 4,
+    "sourceKind": "beat",
+    "basicScore": 47443,
+    "skillPowerPermil": 1000,
+    "b1Permil": 1303,
+    "comboFactorPermil": 1000,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 1000,
+    "gainedScore": 85000
+   }
+  ],
+  "73:5": [
+   {
+    "beat": 73,
+    "lane": 5,
+    "sourceKind": "beat",
+    "basicScore": 18184,
+    "skillPowerPermil": 1000,
+    "b1Permil": 1060,
+    "comboFactorPermil": 1000,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 1000,
+    "gainedScore": 59631
+   }
+  ],
+  "2:1": null,
+  "2:2": null,
+  "2:3": [
+   {
+    "beat": 2,
+    "lane": 3,
+    "sourceKind": "photo",
+    "basicScore": 172933,
+    "skillPowerPermil": 400,
+    "b1Permil": 1175,
+    "comboFactorPermil": 1000,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 1000,
+    "gainedScore": 111757
+   },
+   {
+    "beat": 2,
+    "lane": 3,
+    "sourceKind": "A",
+    "basicScore": 172933,
+    "skillPowerPermil": 5100,
+    "b1Permil": 1461,
+    "comboFactorPermil": 1000,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 1000,
+    "gainedScore": 1771743
+   }
+  ],
+  "2:4": null,
+  "2:5": [
+   {
+    "beat": 2,
+    "lane": 5,
+    "sourceKind": "photo",
+    "basicScore": 150074,
+    "skillPowerPermil": 978,
+    "b1Permil": 1000,
+    "comboFactorPermil": 1000,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 1000,
+    "gainedScore": 454077
+   }
+  ],
+  "24:3": [
+   {
+    "beat": 24,
+    "lane": 3,
+    "sourceKind": "A",
+    "basicScore": 172933,
+    "skillPowerPermil": 4700,
+    "b1Permil": 1461,
+    "comboFactorPermil": 1100,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 1000,
+    "gainedScore": 1796062
+   }
+  ],
+  "79:3": [
+   {
+    "beat": 79,
+    "lane": 3,
+    "sourceKind": "A",
+    "basicScore": 172933,
+    "skillPowerPermil": 5100,
+    "b1Permil": 1461,
+    "comboFactorPermil": 1000,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 1000,
+    "gainedScore": 1771743
+   }
+  ],
+  "123:3": [
+   {
+    "beat": 123,
+    "lane": 3,
+    "sourceKind": "A",
+    "basicScore": 172933,
+    "skillPowerPermil": 4700,
+    "b1Permil": 1186,
+    "comboFactorPermil": 1000,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 1620,
+    "gainedScore": 2147227
+   }
+  ],
+  "169:3": [
+   {
+    "beat": 169,
+    "lane": 3,
+    "sourceKind": "A",
+    "basicScore": 172933,
+    "skillPowerPermil": 5100,
+    "b1Permil": 1186,
+    "comboFactorPermil": 1000,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 1620,
+    "gainedScore": 2329970
+   }
+  ],
+  "71:3": [
+   {
+    "beat": 71,
+    "lane": 3,
+    "sourceKind": "beat",
+    "basicScore": 19159,
+    "skillPowerPermil": 1000,
+    "b1Permil": 1484,
+    "comboFactorPermil": 1000,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 1000,
+    "gainedScore": 39093
+   },
+   {
+    "beat": 71,
+    "lane": 3,
+    "sourceKind": "photo",
+    "basicScore": 172933,
+    "skillPowerPermil": 400,
+    "b1Permil": 1175,
+    "comboFactorPermil": 1000,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 1000,
+    "gainedScore": 111757
+   }
+  ],
+  "141:3": [
+   {
+    "beat": 141,
+    "lane": 3,
+    "sourceKind": "beat",
+    "basicScore": 17593,
+    "skillPowerPermil": 1000,
+    "b1Permil": 1309,
+    "comboFactorPermil": 1000,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 1000,
+    "gainedScore": 31665
+   },
+   {
+    "beat": 141,
+    "lane": 3,
+    "sourceKind": "photo",
+    "basicScore": 172933,
+    "skillPowerPermil": 400,
+    "b1Permil": 1000,
+    "comboFactorPermil": 1000,
+    "fanFactorPermil": 1375,
+    "isRatioScore": false,
+    "randPermil": 1000,
+    "critFactorPermil": 1000,
+    "gainedScore": 95113
+   }
+  ]
+ }
+}

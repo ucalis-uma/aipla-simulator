@@ -1,0 +1,2 @@
+﻿236: function fanPermil(audience: number): number {
+257: `audience 補正: deck.json ${declared} → ${derived}人（fan ${fanPermil(declared)}‰ → ${fanPermil(derived)}‰）。` +

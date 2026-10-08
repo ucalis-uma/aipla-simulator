@@ -1,0 +1,40 @@
+﻿1
+Context summary:
+
+## Goal
+Implement Phase 16-Action4 full-house-guarded per-lane fan bonus in `src/` plus explain S3 activation-beat >10% excess (b63/b71/b141).
+
+## State
+- Done:
+  - `src/formula/fan.ts`: added `laneFanFactorsPermil(laneFans,table,maxCapacity?)` + `FAN_LANE_COUNT=5`, validation. Rule: `total>=cap` → uniform `f(floor(cap/5))`; `total<cap` → `f(lane[i])`; no cap → per-lane [Estimate].
+  - `src/timeline/types.ts`: added `SimulateInput.laneFanFactorPermil?`.
+  - `src/timeline/engine.ts`: 2 fan sites (`settleScoreGet`, `settleBeatNote`) now `laneFanF > fanBaseCount(attraction) > fanFactorPermil+focus/stealth`; ratio scores stay 1000.
+  - `src/sim/build.ts`: added `BuildSimOptions.laneFans/maxCapacity`, injects `laneFanFactorPermil`, scalar `fanFactorPermil`=lane mean, warnings “満員/空席”.
+  - `src/cli/simulate.ts`: added `stage.lane_fans[]`, skips audience auto-derive when set, `maxCapacity` from `stages_index`.
+  - Tests +14: `fan.test.ts` +7 (S1/S2/S3/S5, naive S3 L5 1342 -2.4%, validation), `build.test.ts` +6, `engine.test.ts` +2.
+  - Probes: `tmp_a4_s3_beats.ts` extended to b61/b73 + old/new fan total compare; `tmp_a4_banner_gap.mjs` fixed (M-unit, merged `lane_pops_backfill.json`, S2 source=`サンプル2`, n=5 split); regenerated `_out.txt`.
+  - `phase16_action4_report.md` created, §§0-2 partial written (up to §2-1 formula).
+  - Targeted tests 78 pass, typecheck 0 at that point; full run 518 passed /1 skipped reported.
+- In Progress:
+  - Finishing report §§2-2, §§3-5, acceptance appendix.
+  - `research/12_implementation_log.md` §9 append pending.
+  - Final acceptance re-run after latest edits: `npx vitest run`, `npm run typecheck`, T5 golden invariance.
+- Blocked:
+  - Full-house applicability open [Estimate]: display uniform `f(cap/5)` vs attraction per-lane 1356/1568; S3 new path -1.1% (73,020,495 vs 73,826,029) because L3 1568→1375 -12.3% dominates. Default remains legacy path.
+  - Task4 residual offsets (S1 b2, S2 photo fixed+pct, live-bonus) remain continuing work.
+
+## Highlights
+- S1 19/19/18/22/22→1002×5; S2 11996/13543/13741/13255/13496→1539,1570,1574,1565,1569; S3/S4 full→1375×5; S5→1576,1515,1576,1536,1525.
+- Trace `fan` ≠ venue table: `fanFactorPermilByAttraction` per-lane redistribution (S3 avg 1360.8 vs 1375; S3 L3 1568/others 1356).
+- S3 excess cause: banner hides that lane’s note pop 1x (+39K-55K); b63 L5 +335.8K, b71 L3 +120.4K, b141 L3 +106K match banner; S3 n=5 excess only those 3/170 beats, 0 negative gaps → no double-count.
+
+## Next
+1. Finish report §2-2 (S1/S2/T5 redistribution numbers), §3 (3-beat breakdown + `banner_gap` census table), §4 (task4 partial), §5 (final vitest/typecheck/golden numbers).
+2. Append `12_implementation_log.md` §9.
+3. Re-run `npm run typecheck`, `npx vitest run` full, `fan/build/engine` targeted, confirm T5 golden unchanged; record counts in report.
+4. Verify CLI `stage.lane_fans` end-to-end on S2/S3 sample; ensure legacy `laneFans` undefined path unchanged.
+5. Keep `aipura_nox`/`data` untouched; decide tmp files keep vs gitignore before commit.
+
+## Files
+Read: beat_141.PNG, beat_063.PNG, phase16-action4-engine-fan-and-offsets.md, phase16_action2b_s1_audience.md, phase16_action2d_lane_pops_audit.md, phase16_action3_check.txt, phase16_action3b_fan_full_house.md, phase16_action4_report.md, tmp_a4_banner_gap_out.txt, tmp_a4_s3_beats_out.txt, tmp_a4_s3_beats.ts, tmp_lane_fans_out.txt, src/cli/simulate.ts, src/formula/fan.ts, src/formula/scoreEvent.ts, src/sim/build.ts, src/timeline/buffs.ts, build.test.ts, dump_lane_pops.mjs
+Edited: phase16_action4_report.md, tmp_a4_banner_gap.mjs, tmp_a4_s3_beats.ts, src/cli/simulate.ts, src/formula/fan.ts, src/sim/build.ts, src/timeline/engine.ts, src/timeline/types.ts, fan.test.ts, build.test.ts, engine.test.ts

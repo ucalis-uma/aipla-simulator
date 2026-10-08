@@ -1,0 +1,30 @@
+﻿26_data_integrity json: all_master_triggers.json, decay_improvement_comparison.json, diff_s1_v2.json, diff_s2_v2.json, diff_s2_v3.json, diff_s3_v2.json, diff_s3_v3.json, measured_data_s2_v3.json, measured_data_s3_v3.json, patch_plan_s3.json, phase14f_divergence_audit.json, phase14f_revival_audit.json, phase14f_s1_divergence_audit.json, phase14f_s2_divergence_audit.json, phase14f_s3_divergence_audit.json, s1_b136_step11_audit.json, s1_b136_step11_audit_step11revival.json, s3_v3_improvement_report.json, samples_trace_summary.json, skills_audit_raw.json
+
+S1 stage: {"title":"Shine Purity～輝きの純度～","mode":"ハイスコアライブ","stage_id":"qt-area-1-001","difficulty_level":15,"total_beats":177,"target_score":71000,"audience":71000,"audience_note":"deck.jsonの値。画像では未検証（来場者数表示なし）","note_type_header_static":{"lane1":"多/ボーカル","lane2":"SP/ダンス","lane3":"SP/ボーカル","lane4":"多/ボーカル","lane5":"多/ボーカル"},"unit_power":1196831}
+S1 results keys: total_score,rank,rank_plus,scores_by_lane,critical_pct,hit_pct,miss,combo
+S1 results: {"total_score":116537513,"rank":"S","rank_plus":67,"scores_by_lane":{"1":11593657,"2":6108813,"3":84938328,"4":5893074,"5":8003641},"critical_pct":62.6,"hit_pct":94.1,"miss":0,"combo":120}
+S1 timeline n: 177 row1: {"beat":1,"combo":1,"combo_source":"全ビート目視（8シート）。モデル: b<=55 → b / b56 → 0（L2のSPノートFAILでリセット）/ b>=57 → b-56","cumulative_score":0,"beat_gained_score":0,"skill_activations":[2,3,4,5],"sp_note":null,"lanes":{"1":{"idol_name":"赤崎こころ","stat_value":247737,"stat_raw":"247737","current_stamina":8238,"max_stamina":9092,"gained_score_pop":null,"buff_dots":1,"effects":[{"name":"ボーカル上昇","stage":3}]},"2":{"idol_name":"神崎莉央","stat_value":101384,"stat_raw":"101384","current_stamina":8909,"max_stamina":8909,"gained_score_pop":"normal","buff_dots":0,"effects":[]},"3":{"idol_name":"小美山愛","stat_value":294285,"stat_raw":"294285","current_stamina":6933,"max_stamina":6933,"gained_score_pop":"normal","buff_dots":3,"effects":[{"name":"テンションUP","stage":3},{"name":"ボーカルブースト","stage":3},{"name":"集目","stage":7}]},"4":{"idol_name":"白石千紗","stat_value":91712,"stat_raw":"91712","current_stamina":8163,"max_stamina":8343
+S1 summary n: 34 row1: {"order":2,"beat":1,"lane":4,"idol":"白石千紗","type":"P","skill_name":"SOS団のマスコット第二号","effects":["スコアラータイプ2人にテンションUP効果[29ビート]","スコアラータイプ2人の強化効果を増強"],"targets":"スコアラータイプ2人（サムネ2件。効果ボックス上はL3のみ確認）","stamina_display":"8163/8343","stamina_phase":"発動後","file":"order_02.PNG"}
+S1 row.skill_activations sample: [[1],[2,3,4,5],[6],[7]]
+S1 in-timeline pop cells: 793 {"1":156,"2":161,"3":163,"4":158,"5":155}
+
+S1 lane_pops_backfill keys: sample,source_screenshots,method,pops,critical_flag_review,conflicts,existing_contradictions,summary,meta
+S1 backfill pops n: 885 row0: {"beat":0,"lane":1,"displayed":null,"color":null,"readable":false,"note":"該当フレームなし（全フォルダのこのビートで他レーンがフォーカス）","source_frames":[]} row5: {"beat":1,"lane":1,"displayed":null,"color":null,"readable":false,"note":"popなし（2フレームで確認）","source_frames":["L1_beat_000","L1_beat_001"]}
+S1 backfill per-lane: {"1":177,"2":177,"3":177,"4":177,"5":177} readable: 792
+
+サンプル1/deck.json keys: deck,stage,chart,audience,critRate,missedNotes,mentalOverride,disabledSkillIds,myPhotos,photoEquip
+  audience-ish: {"audience":71000,"myPhotos":3,"photoEquip":[["uph-l1-4"],[],["uph-l3-3"],["uph-l4-4"],[]],"disabled":20,"mental":{}}
+  chars: card-kkr-05-mizg-02/? | card-rio-05-fest-01/? | card-ai-05-fest-00/? | card-chs-05-hruh-00/? | card-ski-05-waso-00/?
+  stats: {"vocal":215424,"dance":108997,"visual":94170,"stamina":9092}
+         {"vocal":184121,"dance":101384,"visual":68385,"stamina":8909}
+         {"vocal":240233,"dance":148049,"visual":136705,"stamina":6933}
+         {"vocal":91712,"dance":167309,"visual":143574,"stamina":8343}
+         {"vocal":190040,"dance":102913,"visual":82610,"stamina":8855}
+  photos beat_score terms:
+    L1 赤崎こころ フォト2 (Quality 170):fixed=1300
+    L2 神崎莉央 フォト3 (Quality 85):fixed=230
+    L3 小美山愛 フォト1 (Quality 150):pct=17.5, 小美山愛 フォト2 (Quality 140):pct=19.3
+    L4 白石千紗 フォト3 (Quality 140):fixed=639
+    L5 
+  S1 measured characters n: 5 {"lane":1,"idol_name":"赤崎こころ","card_name":"出航！ユニコーンちゃん","level":182,"rarity":5,"role":"Buffer","kouryu_level":19,"lane_type":"多 / ボーカル","yale_equipped":"Y 自主トレ系（yale.png で確認）","stats":{"base":{"vocal":0,"dance":0,"visual":0,"stamina":0},"total_after_non_skill_modifiers":{"vocal":215424,"dance":10899
+  S1 staff_bonus: {"vocal":5520,"dance":5868,"visual":5520,"stamina":1610,"mental":2554,"critical":689,"source":"staff.PNG 目視（ボイトレLv35/振付師Lv36/スタイリストLv35/フィジカルLv45/セラピストLv47/演出家Lv25・通算強化217回）"} yale: {"dance_pct":4,"vocal_pct":5,"visual_pct":6,"stamina":140,"mental":400,"critical":600,"beat_score_pct":6,"a_skill_score_pct":7,"sp_skill_score_pct":12,"critical_score_pct":12,"source":"yale.png 目視（発動ライブエール: ダンスアップ+4.0/ボーカルアップ+5.0/ビジュアルアップ+6.0/スタミナ+140/メンタル+400/クリティカル+600/ビートスコア+6.0/Aスコア+7.0/SPスコア+12
